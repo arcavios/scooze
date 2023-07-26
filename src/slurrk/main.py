@@ -1,12 +1,11 @@
 from fastapi import FastAPI
-
-from .routers import card
+from slurrk.routers.card import router as CardRouter
 
 app = FastAPI()
 
 
 # Router inclusion
-app.include_router(card.router)
+app.include_router(CardRouter)
 
 
 @app.get("/")

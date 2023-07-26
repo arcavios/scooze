@@ -1,17 +1,12 @@
+import slurrk.database as db
 from fastapi import APIRouter
-from pydantic import BaseModel
+from slurrk.models.card import Card
 
 router = APIRouter(
     prefix="/card",
     tags=["card"],
     responses={404: {"description": "Card not found"}},
 )
-
-
-class Card(BaseModel):
-    id: str
-    name: str
-    color: str
 
 
 @router.get("/")
