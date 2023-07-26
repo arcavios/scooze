@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "slurrk"
+version = "0.1.0"
+description = ""
+authors = ["broadband <iambroadband@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "slurrk", from = "src" }]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.10, <3.11"
+fastapi = "^0.100.0"
+
+[[tool.poetry.source]]
+name = "packagr"
+url = "https://api.packagr.app/aGcEPILd"
+priority = "explicit"
