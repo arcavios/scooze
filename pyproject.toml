@@ -10,10 +10,17 @@ packages = [{ include = "slurrk", from = "src" }]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+src_paths = ["junkwinder", "tests"]
+
 [tool.poetry.dependencies]
 python = ">=3.10, <3.11"
 fastapi = "^0.100.0"
-uvicorn = {extras = ["standard"], version = "^0.23.1"}
+uvicorn = { extras = ["standard"], version = "^0.23.1" }
 
 [[tool.poetry.source]]
 name = "packagr"

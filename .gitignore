@@ -1,0 +1,19 @@
+# Build files
+dist/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+
+# MongoDB
+data/db
+
+# pipenv
+Pipfile
+
+# PyCharm
+*.idea
