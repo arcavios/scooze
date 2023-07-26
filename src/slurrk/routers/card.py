@@ -1,5 +1,6 @@
 import slurrk.database as db
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 from slurrk.models.card import Card
 
 router = APIRouter(
@@ -30,16 +31,31 @@ def add_card(card: Card):
 # Read
 
 
-@router.get("/id/{card_id}")
-def get_card_by_id(card_id: str):
-    # TODO: do oracle id lookup for card
-    return {"card": f"Card associated with {card_id}"}
+@router.get("/id/{id}")
+async def get_card_by_oracle_id(id: str):
+    card = await db.get_card_by_property(property_name="id", value=id)
+    if card:
+        return JSONResponse({"card": card.model_dump(mode="json")})
+    else:
+        return JSONResponse({"card": f"Card with id {id} not found."})
+
+
+@router.get("/oracle_id/{oracle_id}")
+async def get_card_by_oracle_id(oracle_id: str):
+    card = await db.get_card_by_property(property_name="oracle_id", value=oracle_id)
+    if card:
+        return JSONResponse({"card": card.model_dump(mode="json")})
+    else:
+        return JSONResponse({"card": f"Card with oracle_id {oracle_id} not found."})
 
 
 @router.get("/name/{card_name}")
-def get_card_by_name(card_name: str):
-    # TODO: do name (case sensitive) lookup for card
-    return {"card": f"Card named {card_name}"}
+async def get_card_by_name(card_name: str):
+    card = await db.get_card_by_property(property_name="name", value=card_name)
+    if card:
+        return JSONResponse({"card": card.model_dump(mode="json")})
+    else:
+        return JSONResponse({"card": f"Card with name {card_name} not found."})
 
 
 # Update
