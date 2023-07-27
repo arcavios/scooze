@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Dict, List
 
 from bson import ObjectId
@@ -40,6 +41,13 @@ async def get_card_by_property(property_name: str, value) -> CardOut:
     card = await cards_collection.find_one({property_name: value})
     if card:
         return CardOut(**card)
+
+async def get_card_random() -> CardOut:
+    # TODO: docstring?
+    pipeline = [{ "$sample": { "size": 1 } }]
+    item = await cards_collection.aggregate(pipeline).to_list(1)
+    if item[0]:
+        return CardOut(**item[0])
 
 
 async def update_card(id: str, card: CardIn) -> CardOut:

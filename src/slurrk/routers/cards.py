@@ -15,7 +15,7 @@ router = APIRouter(
 @router.get("/")
 def cards_root():
     # TODO: return a few random cards
-    return {"Documentation": f"{router.docs_url}"}
+    return {"Documentation": f"hello world"}
 
 
 # Create
