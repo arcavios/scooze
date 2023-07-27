@@ -7,9 +7,9 @@ from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
 
-def to_camel(string: str) -> str:
-    full_upper = "".join(word.capitalize() for word in string.split("_"))
-    return full_upper[0].lower() + full_upper[1:]
+def to_lower_camel(string: str) -> str:
+    upper_camel = "".join(word.capitalize() for word in string.split("_"))
+    return upper_camel[0].lower() + upper_camel[1:]
 
 
 # Solution to BSON/MongoDB ObjectId issue, provided by Pydantic author:
@@ -42,13 +42,12 @@ class ObjectIdPydanticAnnotation:
 
 class BaseModel(PydanticBaseModel, validate_assignment=True):
     model_config = ConfigDict(
-        alias_generator=to_camel,
+        alias_generator=to_lower_camel,
         arbitrary_types_allowed=True,
         populate_by_name=True,
     )
 
-    # See above for Annoted reasoning
     id: Annotated[ObjectId, ObjectIdPydanticAnnotation] = Field(
-        default=None,  # TODO: need id to have alias. need id to not be required. is there a better  way?
+        default=None,
         alias="_id",
     )

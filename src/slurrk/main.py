@@ -10,4 +10,4 @@ app.include_router(CardRouter)
 
 @app.get("/")
 def read_root():
-    return {"Hello": "Glurg"}
+    return {"Hello": "Go to ./docs for the SwaggerAPI"}
