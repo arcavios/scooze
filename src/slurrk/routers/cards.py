@@ -1,4 +1,4 @@
-from typing import Annotated, List
+from typing import List
 
 import slurrk.database as db
 from fastapi import APIRouter
@@ -13,9 +13,12 @@ router = APIRouter(
 
 
 @router.get("/")
-def cards_root():
-    # TODO: return a few random cards
-    return {"Documentation": f"hello world"}
+async def cards_root(limit: int = 3):
+    cards = await db.get_cards_random(limit=limit)
+    if cards:
+        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]})
+    else:
+        return JSONResponse({"message": "No cards found in the database."})
 
 
 # Create
@@ -30,7 +33,7 @@ async def add_cards(cards: List[CardIn]):
         return JSONResponse({"message": f"Failed to create a new card."}, status_code=400)
 
 
-### TODO: get many
+@router.post("/")
 ### TODO: update many ???
 
 

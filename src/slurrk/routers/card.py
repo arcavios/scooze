@@ -12,8 +12,9 @@ router = APIRouter(
 
 @router.get("/")
 async def card_root():
-    card = await db.get_card_random()
-    if card:
+    cards = await db.get_cards_random(limit=1)
+    if cards:
+        card = cards[0]
         return JSONResponse({"card": card.model_dump(mode="json")})
     else:
         return JSONResponse({"message": "No cards found in the database."})

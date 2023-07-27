@@ -41,13 +41,6 @@ async def get_card_by_property(property_name: str, value) -> CardOut:
     if card:
         return CardOut(**card)
 
-async def get_card_random() -> CardOut:
-    # TODO: docstring?
-    pipeline = [{ "$sample": { "size": 1 } }]
-    item = await cards_collection.aggregate(pipeline).to_list(1)
-    if len(item) > 0:
-        return CardOut(**item[0])
-
 
 async def update_card(id: str, card: CardIn) -> CardOut:
     # TODO: docstrings?
@@ -99,6 +92,17 @@ async def add_cards(cards: List[CardIn]) -> InsertManyResult:
 
 
 ## TODO: get_cards()
+
+async def get_cards_random(limit: int) -> List[CardOut]:
+    # TODO: docstring?
+    pipeline = [{ "$sample": { "size": limit } }]
+    cards = await cards_collection.aggregate(pipeline).to_list(limit)
+    if len(cards) > 0:
+        return [CardOut(**card) for card in cards]
+
+async def get_cards_by_ids(ids: List[str]) -> InsertManyResult:
+    #TODO?
+    return None
 
 ## TODO: update_cards() ???
 
