@@ -46,7 +46,7 @@ async def get_card_random() -> CardOut:
     # TODO: docstring?
     pipeline = [{ "$sample": { "size": 1 } }]
     item = await cards_collection.aggregate(pipeline).to_list(1)
-    if item[0]:
+    if len(item) > 0:
         return CardOut(**item[0])
 
 
