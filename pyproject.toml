@@ -23,6 +23,9 @@ fastapi = "^0.100.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
 
+[tool.poetry.group.dev.dependencies]
+ophidian = { version = "^0.1.1", source = "packagr" }
+
 [[tool.poetry.source]]
 name = "packagr"
 url = "https://api.packagr.app/aGcEPILd"

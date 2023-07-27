@@ -1,10 +1,4 @@
-## Uvicorn
-
-Run the server from `slurrk` root with:
-
-```uvicorn src.slurrk.main:app --reload```
-
-## Mongo
+## MongoDB
 
 1. Installing Mongo (Ubuntu 22.04):
 ```
@@ -15,18 +9,21 @@ sudo apt-get install mongodb-org
 ```
 Run `$ mongod` to run mongo database
 
-Optional steps: 
+Optional steps:
 
-Setup these aliases for running MongoDB on Linux:
+2. Run the local database setup script:
 
-```
-alias mongostart="sudo systemctl start mongod"
-alias mongostop="sudo systemctl stop mongod"
-alias mongostatus="sudo systemctl status mongod"
-alias mongorestart="sudo systemctl restart mongod"
-```
+- Creates a local database containing the Power 9 cards.
+- Flags
+    - `--include-cards` - Which cards do you want to insert into your local database?
+        - `test` - The same as running without any flag. Include _only_ the Power 9 cards.
+        - `oracle` - Include all OracleCards from [Ophidian's](https://github.com/arcavios/ophidian) `oracle_cards.json` bulk file.
+        - `scryfall` - Include all default Cards from [Ophidian's](https://github.com/arcavios/ophidian) `default_cards.json` bulk file.
+        - `all` - Include all.
+    - `--include-decks`
+        - `test` - Include some test Deck data.
 
-2. Run the Mongo shell:
+3. Run the Mongo shell to manually interact with the database:
 
 Run `$ mongosh` to open mongodb shell
 Test database by creating a new collection and adding a new card:
@@ -36,3 +33,8 @@ db.cards.insert({name: "Birds of Paradise", mv: "1"})
 db.cards.find()
 ```
 
+## Uvicorn
+
+Run the FastAPI server from `slurrk` root with:
+
+```uvicorn src.slurrk.main:app --reload```
