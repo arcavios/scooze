@@ -22,7 +22,7 @@ def card_root():
 def add_card(card: Card):
     # TODO: create our card
     return {
-        "card.id": card.id,
+        "card.oracle_id": card.oracle_id,
         "card.name": card.name,
         "card.color": card.color,
     }
@@ -32,7 +32,7 @@ def add_card(card: Card):
 
 
 @router.get("/id/{id}")
-async def get_card_by_oracle_id(id: str):
+async def get_card_by_id(id: str):
     card = await db.get_card_by_property(property_name="id", value=id)
     if card:
         return JSONResponse({"card": card.model_dump(mode="json")})
@@ -65,7 +65,6 @@ async def get_card_by_name(card_name: str):
 def update_card_by_id(card_id: str, card: Card):
     # TODO: update card values
     return {
-        "card.id": card.id,
         "card.name": card.name,
         "card.color": card.color,
     }

@@ -21,4 +21,8 @@ async def get_card_by_property(property_name: str, value) -> Card:
         return Card.model_validate(card)
 
 
+async def update_card_by_id():
+    pass
+
+
 # endregion

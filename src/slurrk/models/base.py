@@ -48,4 +48,4 @@ class BaseModel(PydanticBaseModel, validate_assignment=True):
     )
 
     # See above for Annoted reasoning
-    id: Annotated[ObjectId, ObjectIdPydanticAnnotation] = Field(alias="_id")
+    id: Annotated[ObjectId, ObjectIdPydanticAnnotation] = Field(default=None, alias="_id")
