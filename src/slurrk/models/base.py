@@ -44,7 +44,6 @@ class BaseModel(PydanticBaseModel, validate_assignment=True):
     model_config = ConfigDict(
         alias_generator=to_lower_camel,
         arbitrary_types_allowed=True,
-        populate_by_name=True,
     )
 
     id: Annotated[ObjectId, ObjectIdPydanticAnnotation] = Field(

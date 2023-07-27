@@ -1,4 +1,5 @@
 import slurrk.database as db
+from bson import ObjectId
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from slurrk.models.card import Card
@@ -33,7 +34,7 @@ async def add_card(card: Card):
 
 @router.get("/id/{id}")
 async def get_card_by_id(card_id: str):
-    card = await db.get_card_by_property(property_name="id", value=card_id)
+    card = await db.get_card_by_property(property_name="_id", value=card_id)
     if card:
         return JSONResponse({"card": card.model_dump(mode="json")})
     else:
