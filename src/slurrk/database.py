@@ -1,6 +1,9 @@
+from typing import Dict, List
+
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
+from pymongo.results import DeleteResult, InsertManyResult
 from slurrk.models.card import CardIn, CardOut
 
 # region Motor and Mongo Setup
@@ -14,7 +17,7 @@ cards_collection = database.get_collection("cards")
 
 # endregion
 
-# region Cards
+# region Card
 
 
 async def add_card(card: CardIn) -> CardOut:
@@ -22,8 +25,8 @@ async def add_card(card: CardIn) -> CardOut:
     insert_result = await cards_collection.insert_one(
         card.model_dump(
             mode="json",
-            by_alias=True,
-            exclude={"id"},
+            by_alias=True,  # TODO: do we still need this after the new model setup?
+            exclude={"id"},  # TODO: do we still need this after the new model setup?
         )
     )
     new_card = await cards_collection.find_one({"_id": insert_result.inserted_id})
@@ -60,6 +63,38 @@ async def delete_card(id: str) -> CardOut:
 
     if deleted_card:
         return CardOut(**deleted_card)
+
+
+# endregion
+
+# region Cards
+
+
+async def add_cards(cards: List[CardIn]) -> InsertManyResult:
+    # TODO: docstrings?
+    insert_many_result = await cards_collection.insert_many(
+        [
+            card.model_dump(
+                mode="json",
+                by_alias=True,  # TODO: do we still need this after the new model setup?
+                exclude={"id"},  # TODO: do we still need this after the new model setup?
+            )
+            for card in cards
+        ]
+    )
+    if insert_many_result:
+        return insert_many_result
+
+
+## TODO: get_cards()
+
+## TODO: update_cards() ???
+
+
+async def delete_cards_all() -> DeleteResult:
+    delete_many_result = await cards_collection.delete_many({})  # NOTE: This deletes the entire collection.
+    if delete_many_result:
+        return delete_many_result
 
 
 # endregion
