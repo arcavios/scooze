@@ -1,15 +1,33 @@
-from typing import Annotated, Any
+from typing import Any
 
 from bson import ObjectId
-from pydantic import BaseModel as PydanticBaseModel
-from pydantic import ConfigDict, Field, GetJsonSchemaHandler
+from pydantic import ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
+# region Private Utility Functions
 
-def to_lower_camel(string: str) -> str:
+
+def _to_lower_camel(string: str) -> str:
     upper_camel = "".join(word.capitalize() for word in string.split("_"))
     return upper_camel[0].lower() + upper_camel[1:]
+
+
+# endregion
+
+# region Public Utility Functions
+
+
+def get_base_model_config() -> ConfigDict:
+    return ConfigDict(
+        alias_generator=_to_lower_camel,
+        arbitrary_types_allowed=True,
+    )
+
+
+# endregion
+
+# region Public Utility Classes
 
 
 # Solution to BSON/MongoDB ObjectId issue, provided by Pydantic author:
@@ -40,13 +58,4 @@ class ObjectIdPydanticAnnotation:
         return handler(core_schema.str_schema())
 
 
-class BaseModel(PydanticBaseModel, validate_assignment=True):
-    model_config = ConfigDict(
-        alias_generator=to_lower_camel,
-        arbitrary_types_allowed=True,
-    )
-
-    id: Annotated[ObjectId, ObjectIdPydanticAnnotation] = Field(
-        default=None,
-        alias="_id",
-    )
+# endregion

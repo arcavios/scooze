@@ -1,7 +1,7 @@
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
-from slurrk.models.card import Card
+from slurrk.models.card import CardIn, CardOut
 
 # region Motor and Mongo Setup
 
@@ -17,7 +17,7 @@ cards_collection = database.get_collection("cards")
 # region Cards
 
 
-async def add_card(card: Card) -> Card:
+async def add_card(card: CardIn) -> CardOut:
     # TODO: docstrings?
     insert_result = await cards_collection.insert_one(
         card.model_dump(
@@ -28,19 +28,19 @@ async def add_card(card: Card) -> Card:
     )
     new_card = await cards_collection.find_one({"_id": insert_result.inserted_id})
     if new_card:
-        return Card(**new_card)
+        return CardOut(**new_card)
 
 
-async def get_card_by_property(property_name: str, value) -> Card:
+async def get_card_by_property(property_name: str, value) -> CardOut:
     # TODO: docstrings?
     if property_name == "_id":
         value = ObjectId(value)
     card = await cards_collection.find_one({property_name: value})
     if card:
-        return Card(**card)
+        return CardOut(**card)
 
 
-async def update_card(id: str, card: Card) -> Card:
+async def update_card(id: str, card: CardIn) -> CardOut:
     # TODO: docstrings?
     # Return false if an empty request body is sent.
     if not card.model_fields_set:
@@ -51,15 +51,15 @@ async def update_card(id: str, card: Card) -> Card:
         return_document=ReturnDocument.AFTER,
     )
     if updated_card:
-        return Card(**updated_card)
+        return CardOut(**updated_card)
 
 
-async def delete_card(id: str) -> Card:
+async def delete_card(id: str) -> CardOut:
     # TODO: docstrings?
     deleted_card = await cards_collection.find_one_and_delete({"_id": ObjectId(id)})
 
     if deleted_card:
-        return Card(**deleted_card)
+        return CardOut(**deleted_card)
 
 
 # endregion

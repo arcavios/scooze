@@ -1,8 +1,7 @@
 import slurrk.database as db
-from bson import ObjectId
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from slurrk.models.card import Card
+from slurrk.models.card import CardIn, CardOut
 
 router = APIRouter(
     prefix="/card",
@@ -21,7 +20,7 @@ def card_root():
 
 
 @router.post("/add")
-async def add_card(card: Card):
+async def add_card(card: CardIn):
     new_card = await db.add_card(card=card)
     if new_card:
         return JSONResponse({"card": new_card.model_dump(mode="json")})
@@ -63,7 +62,7 @@ async def get_card_by_name(card_name: str):
 
 
 @router.patch("/update/{card_id}")
-async def update_card(card_id: str, card: Card):
+async def update_card(card_id: str, card: CardIn):
     updated_card = await db.update_card(id=card_id, card=card)
 
     print(f"Updated card: {updated_card}")

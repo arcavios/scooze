@@ -1,8 +1,13 @@
-from pydantic import Field, validator
-from slurrk.models.base import BaseModel
+from typing import Annotated
+
+import slurrk.models.utils as utils
+from bson import ObjectId
+from pydantic import BaseModel, Field, validator
 
 
 class Card(BaseModel):
+    model_config = utils.get_base_model_config()
+
     oracle_id: str = Field(
         default="",
         alias="oid",
@@ -38,3 +43,14 @@ class Card(BaseModel):
             # TODO: can we get these from the mana class in ophidian... should we move that to utils somewhere?
             raise ValueError  # TODO: put a real error message here. should maybe be a warning?
         return v
+
+
+class CardIn(Card):
+    pass
+
+
+class CardOut(Card):
+    id: Annotated[ObjectId, utils.ObjectIdPydanticAnnotation] = Field(
+        default=None,
+        alias="_id",
+    )
