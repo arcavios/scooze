@@ -1,0 +1,13 @@
+{
+  "cards": [
+    {"oracleId":"1","name":"Mox Pearl","color":"{C}","manaValue":"0"},
+    {"oracleId":"2","name":"Mox Sapphire","color":"{C}","manaValue":"0"},
+    {"oracleId":"3","name":"Mox Jet","color":"{C}","manaValue":"0"},
+    {"oracleId":"4","name":"Mox Ruby","color":"{C}","manaValue":"0"},
+    {"oracleId":"5","name":"Mox Emerald","color":"{C}","manaValue":"0"},
+    {"oracleId":"6","name":"Black Lotus","color":"{C}","manaValue":"0"},
+    {"oracleId":"7","name":"Ancestral Recall","color":"{U}","manaValue":"1"},
+    {"oracleId":"8","name":"Time Walk","color":"{U}","manaValue":"2"},
+    {"oracleId":"9","name":"Timetwister","color":"{U}","manaValue":"3"},
+  ]
+}

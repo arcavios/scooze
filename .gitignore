@@ -12,8 +12,5 @@ __pycache__/
 # MongoDB
 data/db
 
-# pipenv
-Pipfile
-
 # PyCharm
 *.idea

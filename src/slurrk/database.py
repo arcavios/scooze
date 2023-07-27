@@ -1,4 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import ReturnDocument
 from slurrk.models.card import Card
 
 # region Motor and Mongo Setup
@@ -16,27 +17,44 @@ cards_collection = database.get_collection("cards")
 
 
 async def add_card(card: Card) -> Card:
-    c = await cards_collection.insert_one(card.model_dump(mode="json"))
-    new_card = await cards_collection.find_one({"_id": c.inserted_id})
+    # TODO: docstrings?
+    insert_result = await cards_collection.insert_one(card.model_dump(mode="json"))
+    new_card = await cards_collection.find_one_and_update(
+        {"_id": insert_result.inserted_id},
+        {"$set": {"id": str(insert_result.inserted_id)}},
+        return_document=ReturnDocument.AFTER,
+    )
     if new_card:
-        return Card.model_validate(new_card)
+        return Card(**new_card)
 
 
 async def get_card_by_property(property_name: str, value) -> Card:
+    # TODO: docstrings?
     card = await cards_collection.find_one({property_name: value})
     if card:
-        return Card.model_validate(card)
+        return Card(**card)
 
-async def update_card(id: str, card: Card) -> bool:
+
+async def update_card(id: str, card: Card) -> Card:
+    # TODO: docstrings?
     # Return false if an empty request body is sent.
-    if not card:
-        return False
-    c = await cards_collection.find_one({"_id": id})
-    if c:
-        updated_card = await cards_collection.update_one({"_id": id}, {"$set": card.model_dump(mode="json")},)
-        if updated_card:
-            return True
-    return False
+    if not card.model_fields_set:
+        raise ValueError  # TODO: empty body, what do?
+    updated_card = await cards_collection.find_one_and_update(
+        {"id": id},
+        {"$set": card.model_dump(mode="json", include=card.model_fields_set)},
+        return_document=ReturnDocument.AFTER,
+    )
+    if updated_card:
+        return Card(**updated_card)
+
+
+async def delete_card(id: str) -> Card:
+    # TODO: docstrings?
+    deleted_card = await cards_collection.find_one_and_delete({"id": id})
+
+    if deleted_card:
+        return Card(**deleted_card)
 
 
 # endregion

@@ -49,6 +49,6 @@ class BaseModel(PydanticBaseModel, validate_assignment=True):
 
     # See above for Annoted reasoning
     id: Annotated[ObjectId, ObjectIdPydanticAnnotation] = Field(
-        default=None,
+        default=None,  # TODO: need id to have alias. need id to not be required. is there a better  way?
         alias="_id",
     )
