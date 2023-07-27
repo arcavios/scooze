@@ -6,12 +6,13 @@ from slurrk.models.card import Card
 router = APIRouter(
     prefix="/card",
     tags=["card"],
-    responses={404: {"description": "Card not found"}},
+    responses={404: {"description": "Card Not Found"}},
 )
 
 
 @router.get("/")
 def card_root():
+    # TODO: return a random card
     return {"Documentation": f"{router.docs_url}"}
 
 
@@ -19,13 +20,12 @@ def card_root():
 
 
 @router.post("/add")
-def add_card(card: Card):
-    # TODO: create our card
-    return {
-        "card.oracle_id": card.oracle_id,
-        "card.name": card.name,
-        "card.color": card.color,
-    }
+async def add_card(card: Card):
+    new_card = await db.add_card(card=card)
+    if new_card:
+        return JSONResponse({"card": new_card.model_dump(mode="json")})
+    else:
+        return JSONResponse({"card": f"Failed to create a new card."})
 
 
 # Read
@@ -61,9 +61,9 @@ async def get_card_by_name(card_name: str):
 # Update
 
 
-@router.put("/update/{card_id}")
-def update_card_by_id(card_id: str, card: Card):
-    # TODO: update card values
+@router.patch("/update/{card_id}")
+def update_card(card_id: str, card: Card):
+    updated = db.update_card_by_id
     return {
         "card.name": card.name,
         "card.color": card.color,
