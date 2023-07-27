@@ -65,8 +65,6 @@ async def get_card_by_name(card_name: str):
 async def update_card(card_id: str, card: CardIn):
     updated_card = await db.update_card(id=card_id, card=card)
 
-    print(f"Updated card: {updated_card}")
-
     if updated_card:
         # TODO: along with all the rest, should this be update_card: "message"? or some other convention?
         return JSONResponse({"message": f"Card with id {card_id} updated."}, status_code=200)

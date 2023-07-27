@@ -25,8 +25,7 @@ async def add_card(card: CardIn) -> CardOut:
     insert_result = await cards_collection.insert_one(
         card.model_dump(
             mode="json",
-            by_alias=True,  # TODO: do we still need this after the new model setup?
-            exclude={"id"},  # TODO: do we still need this after the new model setup?
+            by_alias=True,
         )
     )
     new_card = await cards_collection.find_one({"_id": insert_result.inserted_id})
@@ -50,7 +49,13 @@ async def update_card(id: str, card: CardIn) -> CardOut:
         raise ValueError  # TODO: empty body, what do?
     updated_card = await cards_collection.find_one_and_update(
         {"_id": ObjectId(id)},
-        {"$set": card.model_dump(mode="json", include=card.model_fields_set)},
+        {
+            "$set": card.model_dump(
+                mode="json",
+                by_alias=True,
+                include=card.model_fields_set,
+            )
+        },
         return_document=ReturnDocument.AFTER,
     )
     if updated_card:
