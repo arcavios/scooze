@@ -1,7 +1,6 @@
 import argparse
 import asyncio
 import json
-from pprint import pprint
 
 from src.slurrk import database as db
 from src.slurrk.models.card import CardIn
