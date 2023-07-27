@@ -12,7 +12,7 @@ def parse_args():
     arg_desc = (
         f"""Welcome to the slurrk setup tool!\n"""
         f"""---------------------------------\n"""
-        f"""This tool is meant to setup a local MongoDB to test with.\n"""
+        f"""This tool is meant to setup a local MongoDB of Magic card and deck data to test with.\n"""
         f"""Use -h, --help for more information."""
     )
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=arg_desc)
