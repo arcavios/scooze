@@ -5,7 +5,6 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
 from pymongo.results import DeleteResult, InsertManyResult
 from slurrk.models.card import CardIn, CardOut
-from slurrk.models.utils import ModelAttribute
 
 # region Motor and Mongo Setup
 
