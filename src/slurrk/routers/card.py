@@ -15,9 +15,9 @@ async def card_root():
     cards = await db.get_cards_random(limit=1)
     if cards:
         card = cards[0]
-        return JSONResponse({"card": card.model_dump(mode="json")})
+        return JSONResponse({"card": card.model_dump(mode="json")}, status_code=200)
     else:
-        return JSONResponse({"message": "No cards found in the database."})
+        return JSONResponse({"message": "No cards found in the database."}, status_code=404)
 
 
 # Create

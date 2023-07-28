@@ -58,13 +58,9 @@ class ObjectIdPydanticAnnotation:
         return handler(core_schema.str_schema())
 
 
-class ModelAttributes(BaseModel):
-    attribute: str = Field(
-        default="_id",
-    )
-
-    values: List[Any] = Field(
-        default=[],
+class ModelAttribute(BaseModel):
+    value: Any = Field(
+        default=None,
     )
 
 

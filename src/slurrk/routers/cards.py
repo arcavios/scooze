@@ -4,7 +4,7 @@ import slurrk.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from slurrk.models.card import CardIn, CardOut
-from slurrk.models.utils import ModelAttributes
+from slurrk.models.utils import ModelAttribute
 
 router = APIRouter(
     prefix="/cards",
@@ -35,10 +35,10 @@ async def add_cards(cards: List[CardIn]):
 
 
 @router.post("/by")
-async def get_cards_by(attrs: ModelAttributes):
-    cards = await db.get_cards_by_property(attrs)
+async def get_cards_by(property_name: str, items: List[ModelAttribute]):
+    cards = await db.get_cards_by_property(property_name=property_name, items=items)
     if cards:
-        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]})
+        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]}, status_code=200)
     else:
         return JSONResponse({"message": f"Cards not found."}, status_code=404)
 

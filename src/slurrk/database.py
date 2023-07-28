@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
 from pymongo.results import DeleteResult, InsertManyResult
 from slurrk.models.card import CardIn, CardOut
-from slurrk.models.utils import ModelAttributes
+from slurrk.models.utils import ModelAttribute
 
 # region Motor and Mongo Setup
 
@@ -103,15 +103,15 @@ async def get_cards_random(limit: int) -> List[CardOut]:
         return [CardOut(**card) for card in cards]
 
 
-async def get_cards_by_property(attrs: ModelAttributes) -> List[CardOut]:
+async def get_cards_by_property(property_name: str, items: List[ModelAttribute]) -> List[CardOut]:
     # TODO: docstrings?
-    match attrs.attribute:
+    match property_name:
         case "_id":
-            values = [ObjectId(v) for v in attrs.values]  # Handle ObjectIds
+            values = [ObjectId(i.value) for i in items]  # Handle ObjectIds
         case _:
-            values = [v for v in attrs.values]
+            values = [i.value for i in items]
     limit = 10  # TODO: how do I know what the limit should be? do we need to paginate? what's the solution here?
-    cards = await cards_collection.find({"$or": [{attrs.attribute: v} for v in values]}).to_list(limit)
+    cards = await cards_collection.find({"$or": [{property_name: v} for v in values]}).to_list(limit)
 
     if len(cards) > 0:
         return [CardOut(**card) for card in cards]
