@@ -54,7 +54,7 @@ async def main():
         clean = True if input("Delete all CARDS before importing? [y/n]") == "y" else False
         if clean:
             print("Deleting all cards from your local database...")
-            await db.delete_cards_all() # TODO: this need async for now, but maybe slurrk will have a python pkg?
+            await db.delete_cards_all()  # TODO: this need async for now, but maybe slurrk will have a python pkg?
 
     if args["--clean-decks"]:
         clean = True if input("Delete all DECKS before importing? [y/n]") == "y" else False
@@ -69,7 +69,7 @@ async def main():
                     print("Inserting test cards into the database...")
                     cards_json = json.load(cards_file)
                     cards = [CardIn(**card) for card in cards_json["p9"]]
-                    await db.add_cards(cards) # TODO: this need async for now, but maybe slurrk will have a python pkg?
+                    await db.add_cards(cards)  # TODO: this need async for now, but maybe slurrk will have a python pkg?
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":

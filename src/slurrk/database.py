@@ -1,10 +1,11 @@
-from typing import Dict, List
+from typing import List
 
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
 from pymongo.results import DeleteResult, InsertManyResult
 from slurrk.models.card import CardIn, CardOut
+from slurrk.models.utils import ModelAttributes
 
 # region Motor and Mongo Setup
 
@@ -56,6 +57,7 @@ async def update_card(id: str, card: CardIn) -> CardOut:
                 include=card.model_fields_set,
             )
         },
+        # projection={'_id': True, 'oracleId': True},
         return_document=ReturnDocument.AFTER,
     )
     if updated_card:
@@ -81,8 +83,7 @@ async def add_cards(cards: List[CardIn]) -> InsertManyResult:
         [
             card.model_dump(
                 mode="json",
-                by_alias=True,  # TODO: do we still need this after the new model setup?
-                exclude={"id"},  # TODO: do we still need this after the new model setup?
+                by_alias=True,
             )
             for card in cards
         ]
@@ -93,18 +94,27 @@ async def add_cards(cards: List[CardIn]) -> InsertManyResult:
 
 ## TODO: get_cards()
 
+
 async def get_cards_random(limit: int) -> List[CardOut]:
     # TODO: docstring?
-    pipeline = [{ "$sample": { "size": limit } }]
+    pipeline = [{"$sample": {"size": limit}}]
     cards = await cards_collection.aggregate(pipeline).to_list(limit)
     if len(cards) > 0:
         return [CardOut(**card) for card in cards]
 
-async def get_cards_by_ids(ids: List[str]) -> InsertManyResult:
-    #TODO?
-    return None
 
-## TODO: update_cards() ???
+async def get_cards_by_property(attrs: ModelAttributes) -> List[CardOut]:
+    # TODO: docstrings?
+    match attrs.attribute:
+        case "_id":
+            values = [ObjectId(v) for v in attrs.values]  # Handle ObjectIds
+        case _:
+            values = [v for v in attrs.values]
+    limit = 10  # TODO: how do I know what the limit should be? do we need to paginate? what's the solution here?
+    cards = await cards_collection.find({"$or": [{attrs.attribute: v} for v in values]}).to_list(limit)
+
+    if len(cards) > 0:
+        return [CardOut(**card) for card in cards]
 
 
 async def delete_cards_all() -> DeleteResult:

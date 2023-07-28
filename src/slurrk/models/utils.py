@@ -1,7 +1,7 @@
-from typing import Any
+from typing import Any, List
 
 from bson import ObjectId
-from pydantic import ConfigDict, GetJsonSchemaHandler
+from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
@@ -56,6 +56,16 @@ class ObjectIdPydanticAnnotation:
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> JsonSchemaValue:
         return handler(core_schema.str_schema())
+
+
+class ModelAttributes(BaseModel):
+    attribute: str = Field(
+        default="_id",
+    )
+
+    values: List[Any] = Field(
+        default=[],
+    )
 
 
 # endregion

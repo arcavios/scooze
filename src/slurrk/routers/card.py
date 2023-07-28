@@ -46,7 +46,7 @@ async def get_card_by_id(card_id: str):
 
 @router.get("/oracle_id/{oracle_id}")
 async def get_card_by_oracle_id(oracle_id: str):
-    card = await db.get_card_by_property(property_name="oracle_id", value=oracle_id)
+    card = await db.get_card_by_property(property_name="oracleId", value=oracle_id)
     if card:
         return JSONResponse({"card": card.model_dump(mode="json")}, status_code=200)
     else:
@@ -70,8 +70,7 @@ async def update_card(card_id: str, card: CardIn):
     updated_card = await db.update_card(id=card_id, card=card)
 
     if updated_card:
-        # TODO: along with all the rest, should this be update_card: "message"? or some other convention?
-        return JSONResponse({"message": f"Card with id {card_id} updated."}, status_code=200)
+        return JSONResponse({"card": updated_card.model_dump(mode="json")}, status_code=200)
     else:
         # TODO: NOTE: in this setup, there isn't a way to distinguish between actually
         # changing a value and finding something but not changing, do we care?

@@ -4,6 +4,7 @@ import slurrk.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from slurrk.models.card import CardIn, CardOut
+from slurrk.models.utils import ModelAttributes
 
 router = APIRouter(
     prefix="/cards",
@@ -16,9 +17,9 @@ router = APIRouter(
 async def cards_root(limit: int = 3):
     cards = await db.get_cards_random(limit=limit)
     if cards:
-        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]})
+        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]}, status_code=200)
     else:
-        return JSONResponse({"message": "No cards found in the database."})
+        return JSONResponse({"message": "No cards found in the database."}, status_code=404)
 
 
 # Create
@@ -33,8 +34,13 @@ async def add_cards(cards: List[CardIn]):
         return JSONResponse({"message": f"Failed to create a new card."}, status_code=400)
 
 
-@router.post("/")
-### TODO: update many ???
+@router.post("/by")
+async def get_cards_by(attrs: ModelAttributes):
+    cards = await db.get_cards_by_property(attrs)
+    if cards:
+        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]})
+    else:
+        return JSONResponse({"message": f"Cards not found."}, status_code=404)
 
 
 # Delete
