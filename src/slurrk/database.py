@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -57,7 +57,6 @@ async def update_card(id: str, card: CardIn) -> CardOut:
                 include=card.model_fields_set,
             )
         },
-        # projection={'_id': True, 'oracleId': True},
         return_document=ReturnDocument.AFTER,
     )
     if updated_card:
@@ -103,15 +102,21 @@ async def get_cards_random(limit: int) -> List[CardOut]:
         return [CardOut(**card) for card in cards]
 
 
-async def get_cards_by_property(property_name: str, items: List[ModelAttribute]) -> List[CardOut]:
+async def get_cards_by_property(
+    property_name: str, items: List[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+) -> List[CardOut]:
     # TODO: docstrings?
     match property_name:
         case "_id":
-            values = [ObjectId(i.value) for i in items]  # Handle ObjectIds
+            values = [ObjectId(i) for i in items]  # Handle ObjectIds
         case _:
-            values = [i.value for i in items]
-    limit = 10  # TODO: how do I know what the limit should be? do we need to paginate? what's the solution here?
-    cards = await cards_collection.find({"$or": [{property_name: v} for v in values]}).to_list(limit)
+            values = [i for i in items]
+
+    cards = (
+        await cards_collection.find({"$or": [{property_name: v} for v in values]})
+        .skip((page - 1) * page_size if paginated else 0)
+        .to_list(page_size if paginated else None)
+    )
 
     if len(cards) > 0:
         return [CardOut(**card) for card in cards]

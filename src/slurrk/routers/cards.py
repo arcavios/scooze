@@ -1,10 +1,9 @@
-from typing import List
+from typing import Any, List
 
 import slurrk.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from slurrk.models.card import CardIn, CardOut
-from slurrk.models.utils import ModelAttribute
+from slurrk.models.card import CardIn
 
 router = APIRouter(
     prefix="/cards",
@@ -17,7 +16,7 @@ router = APIRouter(
 async def cards_root(limit: int = 3):
     cards = await db.get_cards_random(limit=limit)
     if cards:
-        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]}, status_code=200)
+        return JSONResponse([card.model_dump(mode="json") for card in cards], status_code=200)
     else:
         return JSONResponse({"message": "No cards found in the database."}, status_code=404)
 
@@ -35,10 +34,14 @@ async def add_cards(cards: List[CardIn]):
 
 
 @router.post("/by")
-async def get_cards_by(property_name: str, items: List[ModelAttribute]):
-    cards = await db.get_cards_by_property(property_name=property_name, items=items)
+async def get_cards_by(
+    property_name: str, items: List[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+):
+    cards = await db.get_cards_by_property(
+        property_name=property_name, items=items, paginated=paginated, page=page, page_size=page_size
+    )
     if cards:
-        return JSONResponse({"cards": [card.model_dump(mode="json") for card in cards]}, status_code=200)
+        return JSONResponse([card.model_dump(mode="json") for card in cards], status_code=200)
     else:
         return JSONResponse({"message": f"Cards not found."}, status_code=404)
 
@@ -46,7 +49,7 @@ async def get_cards_by(property_name: str, items: List[ModelAttribute]):
 # Delete
 
 
-@router.delete("/delete_all/")
+@router.delete("/delete/all/")
 async def delete_cards_all():
     delete_many_response = await db.delete_cards_all()
 

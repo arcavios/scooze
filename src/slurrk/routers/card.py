@@ -1,7 +1,7 @@
 import slurrk.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from slurrk.models.card import CardIn, CardOut
+from slurrk.models.card import CardIn
 
 router = APIRouter(
     prefix="/card",
@@ -15,7 +15,7 @@ async def card_root():
     cards = await db.get_cards_random(limit=1)
     if cards:
         card = cards[0]
-        return JSONResponse({"card": card.model_dump(mode="json")}, status_code=200)
+        return JSONResponse(card.model_dump(mode="json"), status_code=200)
     else:
         return JSONResponse({"message": "No cards found in the database."}, status_code=404)
 
@@ -27,7 +27,7 @@ async def card_root():
 async def add_card(card: CardIn):
     new_card = await db.add_card(card=card)
     if new_card:
-        return JSONResponse({"card": new_card.model_dump(mode="json")}, status_code=200)
+        return JSONResponse(new_card.model_dump(mode="json"), status_code=200)
     else:
         return JSONResponse({"message": f"Failed to create a new card."}, status_code=400)
 
@@ -39,7 +39,7 @@ async def add_card(card: CardIn):
 async def get_card_by_id(card_id: str):
     card = await db.get_card_by_property(property_name="_id", value=card_id)
     if card:
-        return JSONResponse({"card": card.model_dump(mode="json")}, status_code=200)
+        return JSONResponse(card.model_dump(mode="json"), status_code=200)
     else:
         return JSONResponse({"message": f"Card with id {card_id} not found."}, status_code=404)
 
@@ -48,7 +48,7 @@ async def get_card_by_id(card_id: str):
 async def get_card_by_oracle_id(oracle_id: str):
     card = await db.get_card_by_property(property_name="oracleId", value=oracle_id)
     if card:
-        return JSONResponse({"card": card.model_dump(mode="json")}, status_code=200)
+        return JSONResponse(card.model_dump(mode="json"), status_code=200)
     else:
         return JSONResponse({"message": f"Card with oracle_id {oracle_id} not found."}, status_code=404)
 
@@ -57,7 +57,7 @@ async def get_card_by_oracle_id(oracle_id: str):
 async def get_card_by_name(card_name: str):
     card = await db.get_card_by_property(property_name="name", value=card_name)
     if card:
-        return JSONResponse({"card": card.model_dump(mode="json")}, status_code=200)
+        return JSONResponse(card.model_dump(mode="json"), status_code=200)
     else:
         return JSONResponse({"message": f"Card with name {card_name} not found."}, status_code=404)
 
@@ -70,7 +70,7 @@ async def update_card(card_id: str, card: CardIn):
     updated_card = await db.update_card(id=card_id, card=card)
 
     if updated_card:
-        return JSONResponse({"card": updated_card.model_dump(mode="json")}, status_code=200)
+        return JSONResponse(updated_card.model_dump(mode="json"), status_code=200)
     else:
         # TODO: NOTE: in this setup, there isn't a way to distinguish between actually
         # changing a value and finding something but not changing, do we care?

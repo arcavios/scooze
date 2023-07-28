@@ -58,10 +58,4 @@ class ObjectIdPydanticAnnotation:
         return handler(core_schema.str_schema())
 
 
-class ModelAttribute(BaseModel):
-    value: Any = Field(
-        default=None,
-    )
-
-
 # endregion
