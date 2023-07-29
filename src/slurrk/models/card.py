@@ -2,7 +2,7 @@ from typing import Annotated
 
 import slurrk.models.utils as utils
 from bson import ObjectId
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class Card(BaseModel, validate_assignment=True):
@@ -37,7 +37,7 @@ class Card(BaseModel, validate_assignment=True):
     # TODO: can we make mana_value an int?
     # TODO: add missing fields from SimpleCard or whatever it's called
 
-    @validator("color")
+    @field_validator("color")
     def not_color(cls, v):
         if v not in ["{W}", "{U}", "{B}", "{R}", "{G}", "{C}"]:
             # TODO: can we get these from the mana class in ophidian... should we move that to utils somewhere?

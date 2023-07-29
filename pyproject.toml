@@ -25,8 +25,13 @@ motor = "^3.2.0"
 
 [tool.poetry.group.dev.dependencies]
 ophidian = { version = "^0.1.1", source = "packagr" }
+pytest = "^7.4.0"
+httpx = "^0.24.1"
 
 [[tool.poetry.source]]
 name = "packagr"
 url = "https://api.packagr.app/aGcEPILd"
 priority = "explicit"
+
+[tool.pytest.ini_options]
+markers = ["router_card: related to /card routes"]
