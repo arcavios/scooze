@@ -1,20 +1,41 @@
 [tool.poetry]
-name = "slurrk"
+name = "scooze"
 version = "0.1.0"
-description = ""
-authors = ["broadband <iambroadband@gmail.com>"]
+description = "API tools for interacting with MongoDB for Magic: the Gathering tournaments, decklists, and cards."
+authors = [
+    "Alex Gimmi <iambroadband@gmail.com>",
+    "Ben Horkley <ben.horkley@gmail.com>",
+    "Jacob Ginsparg <jacobginsparg@gmail.com>",
+]
 readme = "README.md"
-packages = [{ include = "slurrk", from = "src" }]
+packages = [{ include = "scooze", from = "src" }]
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+src_paths = ["scooze", "tests"]
+
 [tool.poetry.dependencies]
 python = ">=3.10, <3.11"
 fastapi = "^0.100.0"
+uvicorn = { extras = ["standard"], version = "^0.23.1" }
+motor = "^3.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ophidian = { version = "^0.1.1", source = "packagr" }
+pytest = "^7.4.0"
+httpx = "^0.24.1"
 
 [[tool.poetry.source]]
 name = "packagr"
 url = "https://api.packagr.app/aGcEPILd"
 priority = "explicit"
+
+[tool.pytest.ini_options]
+markers = ["router_card: related to /card routes"]
