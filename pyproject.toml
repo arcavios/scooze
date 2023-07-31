@@ -40,4 +40,11 @@ url = "https://api.packagr.app/aGcEPILd"
 priority = "explicit"
 
 [tool.pytest.ini_options]
-markers = ["router_card: related to /card routes"]
+# addopts = "-m 'not slow'"
+markers = [
+    "slow: expected to be slow.",
+    "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
+    "deck_count: related to Deck.count_X()",
+    "deck_export: related to exporting a Deck as text or some other format.",
+    "router_card: related to /card routes",
+]
