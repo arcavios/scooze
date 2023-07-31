@@ -10,26 +10,18 @@ class Card(BaseModel, validate_assignment=True):
 
     oracle_id: str = Field(
         default="",
-        alias="oid",
-        alias_priority=1,
         description="The oracle_id from Scryfall",
     )
     name: str = Field(
         default="",
-        alias="n",
-        alias_priority=1,
         description="Name",
     )
     color: str = Field(
         default="",
-        alias="c",
-        alias_priority=1,
         description="Color",
     )
     mana_value: float = Field(
         default="",
-        alias="cmc",
-        alias_priority=1,
         description="Mana Value/Converted Mana Cost",
     )
 
