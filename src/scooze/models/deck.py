@@ -8,7 +8,6 @@ from pendulum import DateTime
 from pydantic import BaseModel, Field, field_validator
 from scooze.models.card import Card
 from scooze.models.matchdata import MatchData
-from scooze.models.utils import DecklistFormatter, Format
 from scooze.utils import ExtendedEnum, get_logger
 from strenum import StrEnum
 
@@ -65,7 +64,7 @@ class Deck(BaseModel, validate_assignment=True):
         default="",
         description="The archetype of this Deck.",
     )
-    format: Format = Field(
+    format: model_utils.Format = Field(
         default=None,
         description="The format legality of the cards in this Deck.",
     )
@@ -77,11 +76,11 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[Card] = Field( # TODO: use DecklistCard
+    main: Counter[Card] = Field(  # TODO: use DecklistCard
         default={},
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[Card] = Field( # TODO: use DecklistCard
+    side: Counter[Card] = Field(  # TODO: use DecklistCard
         default={},
         description="The sideboard. Typically 15 cards maximum.",
     )
@@ -137,7 +136,7 @@ class Deck(BaseModel, validate_assignment=True):
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None: # TODO: use DecklistCard
+    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:  # TODO: use DecklistCard
         """
         Adds the given cards to this Deck.
 
@@ -148,8 +147,7 @@ class Deck(BaseModel, validate_assignment=True):
         for c, q in cards.items():
             self.add_card(card=c, quantity=q, in_the=in_the)
 
-
-    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None: # TODO: use DecklistCard
+    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:  # TODO: use DecklistCard
         """
         Adds a given quantity of a given card to this Deck.
 
@@ -178,7 +176,7 @@ class Deck(BaseModel, validate_assignment=True):
         """
         return len(self.main) + len(self.side)
 
-    def to_decklist(self, decklist_formatter: DecklistFormatter = None) -> str:
+    def to_decklist(self, decklist_formatter: model_utils.DecklistFormatter = None) -> str:
         """
         Exports this Deck as a str with the given DecklistFormatter.
 
@@ -190,11 +188,11 @@ class Deck(BaseModel, validate_assignment=True):
         """
 
         match decklist_formatter:
-            case DecklistFormatter.ARENA:
+            case model_utils.DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
                 # TODO: filter out cards that are not on Arena. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for Arena.")
-            case DecklistFormatter.MTGO:
+            case model_utils.DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
                 # TODO: filter out cards that are not on MTGO. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for MTGO.")
@@ -202,7 +200,7 @@ class Deck(BaseModel, validate_assignment=True):
                 sb_prefix = ""  # Default
                 self._logger.warning(
                     f"""{self.archetype} - Unable to export with the given format: {decklist_formatter}. """
-                    f"""'export_format' must be one of {DecklistFormatter.list()}. Using default format."""
+                    f"""'export_format' must be one of {model_utils.DecklistFormatter.list()}. Using default format."""
                 )
         sb_prefix = "\n\n" + sb_prefix
 

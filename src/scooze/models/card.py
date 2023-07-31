@@ -35,7 +35,7 @@ class Card(BaseModel, validate_assignment=True):
     #         raise ValueError  # TODO: put a real error message here. should maybe be a warning?
     #     return v
 
-    def __hash__(self): # TODO: placeholder hash function so Gimmi could run tests against Deck model
+    def __hash__(self):  # TODO: placeholder hash function so Gimmi could run tests against Deck model
         return self.name.__hash__()
 
 

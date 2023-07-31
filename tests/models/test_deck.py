@@ -92,7 +92,7 @@ def test_format(format):
 
 
 def test_date_played(today):
-    deck = Deck.model_validate({"datePlayed":today})
+    deck = Deck.model_validate({"datePlayed": today})
     assert deck.date_played == today
 
 
@@ -102,6 +102,7 @@ def test_add_card_new(new_card, main_cards):
     deck.add_card(card=new_card)
     main_cards.update({new_card: 1})
     assert deck.main == main_cards
+
 
 # TODO: finish writing the tests for Deck model
 
