@@ -28,12 +28,15 @@ class Card(BaseModel, validate_assignment=True):
     # TODO: add more validation for other fields.
     # TODO: add missing fields from SimpleCard or whatever it's called
 
-    @field_validator("color")
-    def validate_color(cls, v):
-        if v not in ["{W}", "{U}", "{B}", "{R}", "{G}", "{C}"]:
-            # TODO: can we get these from the mana class in ophidian... should we move that to utils somewhere?
-            raise ValueError  # TODO: put a real error message here. should maybe be a warning?
-        return v
+    # @field_validator("color")
+    # def validate_color(cls, v):
+    #     if v not in ["{W}", "{U}", "{B}", "{R}", "{G}", "{C}"]:
+    #         # TODO: can we get these from the mana class in ophidian... should we move that to utils somewhere?
+    #         raise ValueError  # TODO: put a real error message here. should maybe be a warning?
+    #     return v
+
+    def __hash__(self): # TODO: placeholder hash function so Gimmi could run tests against Deck model
+        return self.name.__hash__()
 
 
 class CardIn(Card):

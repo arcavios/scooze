@@ -68,7 +68,6 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
 
     ARENA = auto()
     MTGO = auto()
-    TEXT = auto()
 
 
 class Format(ExtendedEnum, StrEnum):

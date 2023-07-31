@@ -106,13 +106,15 @@ class Deck(BaseModel, validate_assignment=True):
     @field_validator("main")
     def validate_main_size(cls, v):
         if len(v) < 60:
-            raise ValueError  # TODO: put a real error message here. should maybe be a warning?
+            pass
+            # raise ValueError  # TODO: put a real error message here. should maybe be a warning?
         return v
 
     @field_validator("side")
     def validate_side_size(cls, v):
         if len(v) > 15:
-            raise ValueError  # TODO: put a real error message here. should maybe be a warning?
+            pass
+            # raise ValueError  # TODO: put a real error message here. should maybe be a warning?
         return v
 
     # endregion
@@ -127,7 +129,7 @@ class Deck(BaseModel, validate_assignment=True):
         )
 
     def __str__(self):
-        decklist = self.to_decklist(DecklistFormatter.TEXT)
+        decklist = self.to_decklist()
         return (
             f"""Archetype: {self.archetype}\n"""
             f"""Date Played: {self.date_played}\n"""
@@ -160,12 +162,12 @@ class Deck(BaseModel, validate_assignment=True):
         match in_the:
             case InThe.MAIN:
                 self.main.update({card: quantity})
-                self.logger.debug(f"{self.archetype} - Added {quantity} copies of {card.name} to the main deck.")
+                self._logger.debug(f"{self.archetype} - Added {quantity} copies of {card.name} to the main deck.")
             case InThe.SIDE:
                 self.side.update({card: quantity})
-                self.logger.debug(f"{self.archetype} - Added {quantity} copies of {card.name} to the sideboard.")
+                self._logger.debug(f"{self.archetype} - Added {quantity} copies of {card.name} to the sideboard.")
             case _:
-                self.logger.error(
+                self._logger.error(
                     f"{self.archetype} - Unable to add {quantity} copies of {card.name} to the deck. 'in' must be one of {InThe.list()}"
                 )
 
@@ -191,21 +193,21 @@ class Deck(BaseModel, validate_assignment=True):
             case DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
                 # TODO: filter out cards that are not on Arena. Log a WARNING with those cards.
-                self.logger.debug(f"{self.archetype} - Exporting for Arena.")
+                self._logger.debug(f"{self.archetype} - Exporting for Arena.")
             case DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
                 # TODO: filter out cards that are not on MTGO. Log a WARNING with those cards.
-                self.logger.debug(f"{self.archetype} - Exporting for MTGO.")
+                self._logger.debug(f"{self.archetype} - Exporting for MTGO.")
             case _:
                 sb_prefix = ""  # Default
-                self.logger.warning(
+                self._logger.warning(
                     f"""{self.archetype} - Unable to export with the given format: {decklist_formatter}. """
                     f"""'export_format' must be one of {DecklistFormatter.list()}. Using default format."""
                 )
         sb_prefix = "\n\n" + sb_prefix
 
         # Build the decklist string
-        main = "\n".join([f"{quantity} {card.name}" for card, quantity in self.main])
+        main = "\n".join([f"{quantity} {card.name}" for card, quantity in self.main.items()])
         side = sb_prefix + "\n".join([f"{quantity} {card.name}" for card, quantity in self.side.items()])
         decklist = f"{main}{side if len(self.side) > 0 else ''}"
         return decklist
