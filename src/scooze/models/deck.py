@@ -32,20 +32,20 @@ class Deck(BaseModel, validate_assignment=True):
         The archetype of this Deck.
     format : Format
         The format legality of the cards in this Deck.
-    date_played : datetime
+    date_played : DateTime
         The date this Deck was played.
     matches : MatchData
         Match data for this Deck.
-    main : dict[str:int]
+    main : Counter[Card] # TODO: use DecklistCard
         The main deck. Typically 60 cards minimum.
-    side : dict[str:int]
+    side : Counter[Card] # TODO: use DecklistCard
         The sideboard. Typically 15 cards maximum.
 
     Methods
     -------
     add_card(card: Card, quantity: int, in_the: InThe):
         Adds a given quantity of a given card to this Deck.
-    add_cards(cards: List[Card], in_the: InThe):
+    add_cards(cards: Counter[Card], in_the: InThe):
         Adds the given cards to this Deck.
     count():
         Counts all of the cards in this Deck.
@@ -57,8 +57,8 @@ class Deck(BaseModel, validate_assignment=True):
     model_config = model_utils.get_base_model_config()
 
     # Set up logger
-    log_filename = "deck.log"
-    logger = get_logger(log_filename, "deck")
+    _log_filename = "deck.log"
+    _logger = get_logger(_log_filename, "deck")
 
     ## Fields
     archetype: str = Field(
@@ -77,12 +77,12 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[Card, int] = Field( # TODO: use DecklistCard
-        default=[],
+    main: Counter[Card] = Field( # TODO: use DecklistCard
+        default={},
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[Card, int] = Field( # TODO: use DecklistCard
-        default=[],
+    side: Counter[Card] = Field( # TODO: use DecklistCard
+        default={},
         description="The sideboard. Typically 15 cards maximum.",
     )
 
@@ -135,7 +135,7 @@ class Deck(BaseModel, validate_assignment=True):
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def add_cards(self, cards: Counter[Card, int], in_the: InThe = InThe.MAIN) -> None: # TODO: use DecklistCard
+    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None: # TODO: use DecklistCard
         """
         Adds the given cards to this Deck.
 
