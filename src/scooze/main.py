@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from slurrk.routers.card import router as CardRouter
-from slurrk.routers.cards import router as CardsRouter
+from scooze.routers.card import router as CardRouter
+from scooze.routers.cards import router as CardsRouter
 
 app = FastAPI()
 

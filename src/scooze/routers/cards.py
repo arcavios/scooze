@@ -1,9 +1,9 @@
 from typing import Any, List
 
-import slurrk.database as db
+import scooze.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from slurrk.models.card import CardIn
+from scooze.models.card import CardIn
 
 router = APIRouter(
     prefix="/cards",

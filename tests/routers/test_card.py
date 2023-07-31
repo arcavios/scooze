@@ -2,8 +2,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
-from slurrk.main import app
-from slurrk.models.card import Card, CardIn, CardOut
+from scooze.main import app
+from scooze.models.card import Card, CardIn, CardOut
 
 # region Fixtures
 
@@ -29,7 +29,7 @@ def request_body_card() -> CardIn:
 
 
 @pytest.mark.router_card
-@patch("slurrk.database.add_card")
+@patch("scooze.database.add_card")
 def test_add_card(mock_add: MagicMock, client: TestClient, request_body_card: CardIn):
     card_json = request_body_card.model_dump(mode="json", by_alias=True)
     mock_add.return_value: CardOut = CardOut(**card_json)
@@ -41,7 +41,7 @@ def test_add_card(mock_add: MagicMock, client: TestClient, request_body_card: Ca
 
 
 @pytest.mark.router_card
-@patch("slurrk.database.add_card")
+@patch("scooze.database.add_card")
 def test_add_card_bad(mock_add: MagicMock, client: TestClient, request_body_card: CardIn):
     card_json = request_body_card.model_dump(mode="json", by_alias=True)
     mock_add.return_value = None
