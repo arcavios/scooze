@@ -16,10 +16,10 @@ Optional steps:
 - Creates a local database containing the Power 9 cards.
 - Flags
     - `--include-cards` - Which cards do you want to insert into your local database?
-        - `test` - The same as running without any flag. Include _only_ the Power 9 cards.
-        - `oracle` - Include all OracleCards from [Ophidian's](https://github.com/arcavios/ophidian) `oracle_cards.json` bulk file.
-        - `scryfall` - Include all default Cards from [Ophidian's](https://github.com/arcavios/ophidian) `default_cards.json` bulk file.
-        - `all` - Include all.
+        - `test` - A set of cards that includes the Power 9 for testing purposes. (default)
+        - `oracle` - A set of cards that includes one version of each card ever printed.
+        - `scryfall` - A set of cards that includes every version of each card ever printed. (in English where available)
+        - `all` - A set of every version of all cards and game objects in all available languages.
     - `--include-decks`
         - `test` - Include some test Deck data.
 

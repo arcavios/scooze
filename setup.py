@@ -1,20 +1,29 @@
 import argparse
 import asyncio
 import json
+from argparse import ArgumentParser
 
 from src.slurrk import database as db
 from src.slurrk.models.card import CardIn
 
 
+class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
+
+    def _split_lines(self, text, width):
+        if text.startswith('R|'):
+            return text[2:].splitlines()
+        # this is the RawTextHelpFormatter._split_lines
+        return argparse.HelpFormatter._split_lines(self, text, width)
+
 def parse_args():
     # Construct the argument parser and parse the arguments
     arg_desc = (
-        f"""Welcome to the slurrk setup tool!\n"""
+        f"""R|Welcome to the slurrk setup tool!\n"""
         f"""---------------------------------\n"""
         f"""This tool is meant to setup a local MongoDB of Magic card and deck data to test with.\n"""
         f"""Use -h, --help for more information."""
     )
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=arg_desc)
+    parser = argparse.ArgumentParser(description=arg_desc, formatter_class=SmartFormatter)
 
     parser.add_argument(
         "--clean-cards",
@@ -31,7 +40,13 @@ def parse_args():
     parser.add_argument(
         "--include-cards",
         dest="cards",
-        help="Cards to include - [test, oracle, scryfall, all]",
+        help=(
+            f"""R|Cards to include - [test, oracle, prints, all]\n"""
+            f"""\ttest - A set of cards that includes the Power 9 for testing purposes. (default)\n"""
+            f"""\toracle - A set of cards that includes one version of each card ever printed.\n"""
+            f"""\tprints - A set of cards that includes every version of each card ever printed. (in English where available)\n"""
+            f"""\tall - A set of every version of all cards and game objects in all available languages.\n"""
+        ),
     )
     parser.add_argument(
         "--include-decks",
