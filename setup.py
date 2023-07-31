@@ -3,8 +3,8 @@ import asyncio
 import json
 from argparse import ArgumentParser
 
-from src.slurrk import database as db
-from src.slurrk.models.card import CardIn
+from src.scooze import database as db
+from src.scooze.models.card import CardIn
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
@@ -18,7 +18,7 @@ class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatte
 def parse_args():
     # Construct the argument parser and parse the arguments
     arg_desc = (
-        f"""R|Welcome to the slurrk setup tool!\n"""
+        f"""R|Welcome to the scooze setup tool!\n"""
         f"""---------------------------------\n"""
         f"""This tool is meant to setup a local MongoDB of Magic card and deck data to test with.\n"""
         f"""Use -h, --help for more information."""
@@ -69,7 +69,7 @@ async def main():
         clean = True if input("Delete all CARDS before importing? [y/n]") == "y" else False
         if clean:
             print("Deleting all cards from your local database...")
-            await db.delete_cards_all()  # TODO: this need async for now, but maybe slurrk will have a python pkg?
+            await db.delete_cards_all()  # TODO: this need async for now, but maybe scooze will have a python pkg?
 
     if args["--clean-decks"]:
         clean = True if input("Delete all DECKS before importing? [y/n]") == "y" else False
@@ -84,7 +84,7 @@ async def main():
                     print("Inserting test cards into the database...")
                     cards_json = json.load(cards_file)
                     cards = [CardIn(**card) for card in cards_json["p9"]]
-                    await db.add_cards(cards)  # TODO: this need async for now, but maybe slurrk will have a python pkg?
+                    await db.add_cards(cards)  # TODO: this need async for now, but maybe scooze will have a python pkg?
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
