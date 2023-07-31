@@ -172,7 +172,7 @@ class Deck(BaseModel, validate_assignment=True):
     def count(self) -> int:
         """
         Returns:
-            int: The number of cards in this Deck.
+            count (int): The number of cards in this Deck.
         """
         return len(self.main) + len(self.side)
 
