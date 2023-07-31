@@ -1,6 +1,6 @@
 from typing import Annotated
 
-import slurrk.models.utils as utils
+import scooze.models.utils as utils
 from bson import ObjectId
 from pydantic import BaseModel, Field, field_validator
 

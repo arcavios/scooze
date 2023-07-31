@@ -4,13 +4,13 @@ from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
 from pymongo.results import DeleteResult, InsertManyResult
-from slurrk.models.card import CardIn, CardOut
+from scooze.models.card import CardIn, CardOut
 
 # region Motor and Mongo Setup
 
 MONGO_URI = "mongodb://127.0.0.1:27017"
 client = AsyncIOMotorClient(MONGO_URI)
-database = client.slurrk
+database = client.scooze
 
 # Collections
 cards_collection = database.get_collection("cards")

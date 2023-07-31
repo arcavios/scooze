@@ -35,6 +35,6 @@ db.cards.find()
 
 ## Uvicorn
 
-Run the FastAPI server from `slurrk` root with:
+Run the FastAPI server from `scooze` root with:
 
-```uvicorn src.slurrk.main:app --reload```
+```uvicorn src.scooze.main:app --reload```

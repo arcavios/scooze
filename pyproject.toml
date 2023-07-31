@@ -1,10 +1,14 @@
 [tool.poetry]
-name = "slurrk"
+name = "scooze"
 version = "0.1.0"
-description = ""
-authors = ["broadband <iambroadband@gmail.com>"]
+description = "API tools for interacting with MongoDB for Magic: the Gathering tournaments, decklists, and cards."
+authors = [
+    "Alex Gimmi <iambroadband@gmail.com>",
+    "Ben Horkley <ben.horkley@gmail.com>",
+    "Jacob Ginsparg <jacobginsparg@gmail.com>",
+]
 readme = "README.md"
-packages = [{ include = "slurrk", from = "src" }]
+packages = [{ include = "scooze", from = "src" }]
 
 [build-system]
 requires = ["poetry-core"]
@@ -15,7 +19,7 @@ line-length = 120
 
 [tool.isort]
 profile = "black"
-src_paths = ["junkwinder", "tests"]
+src_paths = ["scooze", "tests"]
 
 [tool.poetry.dependencies]
 python = ">=3.10, <3.11"
