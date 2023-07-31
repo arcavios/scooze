@@ -42,9 +42,9 @@ priority = "explicit"
 [tool.pytest.ini_options]
 # addopts = "-m 'not slow'"
 markers = [
-    "slow: expected to be slow.",
+    "slow: expected to be slow",
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
-    "deck_count: related to Deck.count_X()",
-    "deck_export: related to exporting a Deck as text or some other format.",
+    "deck_count: related to Deck.count()",
+    "deck_export: related to exporting a Deck as text or some other format",
     "router_card: related to /card routes",
 ]
