@@ -95,7 +95,7 @@ async def main():
             except OSError as e:
                 print_error(e, "all cards")
         case _:
-            print("No cards imporeted.")
+            print("No cards imported.")
 
     match args["decks"]:
         case "test":
