@@ -8,12 +8,12 @@ from src.scooze.models.card import CardIn
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
-
     def _split_lines(self, text, width):
-        if text.startswith('R|'):
+        if text.startswith("R|"):
             return text[2:].splitlines()
         # this is the RawTextHelpFormatter._split_lines
         return argparse.HelpFormatter._split_lines(self, text, width)
+
 
 def parse_args():
     # Construct the argument parser and parse the arguments
