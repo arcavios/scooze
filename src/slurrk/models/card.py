@@ -26,15 +26,14 @@ class Card(BaseModel, validate_assignment=True):
         alias_priority=1,
         description="Color",
     )
-    mana_value: str = Field(
+    mana_value: float = Field(
         default="",
-        alias=["converted_cost", "mv", "cmc"],
+        alias="cmc",
         alias_priority=1,
         description="Mana Value/Converted Mana Cost",
     )
 
     # TODO: add more validation for other fields.
-    # TODO: can we make mana_value an int?
     # TODO: add missing fields from SimpleCard or whatever it's called
 
     @field_validator("color")
