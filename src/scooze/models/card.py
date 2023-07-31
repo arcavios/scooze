@@ -1,12 +1,12 @@
 from typing import Annotated
 
-import scooze.models.utils as utils
+import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field, field_validator
 
 
 class Card(BaseModel, validate_assignment=True):
-    model_config = utils.get_base_model_config()
+    model_config = model_utils.get_base_model_config()
 
     oracle_id: str = Field(
         default="",
@@ -41,7 +41,7 @@ class CardIn(Card):
 
 
 class CardOut(Card):
-    id: Annotated[ObjectId, utils.ObjectIdPydanticAnnotation] = Field(
+    id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
         default=None,
         alias="_id",
     )
