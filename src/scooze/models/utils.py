@@ -1,9 +1,12 @@
+from enum import auto
 from typing import Any, List
 
 from bson import ObjectId
 from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
+from scooze.utils import ExtendedEnum
+from strenum import StrEnum
 
 # region Private Utility Functions
 
@@ -56,6 +59,44 @@ class ObjectIdPydanticAnnotation:
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> JsonSchemaValue:
         return handler(core_schema.str_schema())
+
+
+class DecklistFormatter(ExtendedEnum, StrEnum):
+    """
+    A method of formatting a decklist for external systems.
+    """
+
+    ARENA = auto()
+    MTGO = auto()
+    TEXT = auto()
+
+
+class Format(ExtendedEnum, StrEnum):
+    """
+    A Magic: the Gathering competitive format.
+    """
+
+    ALCHEMY = auto()
+    BRAWL = auto()
+    COMMANDER = auto()
+    DUEL = auto()
+    EXPLORER = auto()
+    FUTURE = auto()
+    GLADIATOR = auto()
+    HISTORIC = auto()
+    HISTORICBRAWL = auto()
+    LEGACY = auto()
+    MODERN = auto()
+    OATHBREAKER = auto()
+    OLDSCHOOL = auto()
+    PAUPER = auto()
+    PAUPERCOMMANDER = auto()
+    PENNY = auto()
+    PIONEER = auto()
+    PREDH = auto()
+    PREMODERN = auto()
+    STANDARD = auto()
+    VINTAGE = auto()
 
 
 # endregion
