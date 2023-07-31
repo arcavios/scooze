@@ -10,11 +10,28 @@ packages = [{ include = "slurrk", from = "src" }]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+src_paths = ["junkwinder", "tests"]
+
 [tool.poetry.dependencies]
 python = ">=3.10, <3.11"
 fastapi = "^0.100.0"
+uvicorn = { extras = ["standard"], version = "^0.23.1" }
+motor = "^3.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ophidian = { version = "^0.1.1", source = "packagr" }
+pytest = "^7.4.0"
+httpx = "^0.24.1"
 
 [[tool.poetry.source]]
 name = "packagr"
 url = "https://api.packagr.app/aGcEPILd"
 priority = "explicit"
+
+[tool.pytest.ini_options]
+markers = ["router_card: related to /card routes"]
