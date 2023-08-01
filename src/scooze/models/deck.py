@@ -97,16 +97,13 @@ class Deck(BaseModel, validate_assignment=True):
     #   validate that this is a valid date after 1993?
     # match win/loss (match_data) - tuple of (wins, losses, draws)
     #   validate that they are not negative numbers?
-    # main - list of cards in the main deck
-    #   validate that it is no fewer than 60 cards. validate that the cards are real?
-    # side - list of cards in the sideboard
-    #   validate that it is no more than 15 cards. validate that the cards are real?
 
-    @field_validator("format", mode="before")
-    @classmethod
-    def validate_format(cls, v: model_utils.Format):
-        print(f"Format was {v}")
-        return v
+    def _validate_deck(self):
+        """
+        Helper function used to revalidate this Deck after performing a mutable action.
+        """
+        deck = self.validate_main().validate_side()
+        self.main, self.side = deck.main, deck.side
 
     @model_validator(mode="after")
     def validate_main(self):
@@ -151,19 +148,24 @@ class Deck(BaseModel, validate_assignment=True):
         Adds the given cards to this Deck.
 
         Parameters:
-            cards Dict[str:int]: The cards to add.
+            cards Counter[Card]: The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
         """
 
-        for c, q in cards.items():
-            self.add_card(card=c, quantity=q, in_the=in_the)
+        match in_the:
+            case InThe.MAIN:
+                self.main.update(cards)
+            case InThe.SIDE:
+                self.side.update(cards)
+
+        self._validate_deck()
 
     def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:  # TODO: use DecklistCard
         """
         Adds a given quantity of a given card to this Deck.
 
         Parameters:
-            card (str): The card to add.
+            card (Card): The card to add.
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
         """
@@ -180,9 +182,7 @@ class Deck(BaseModel, validate_assignment=True):
                     f"{self.archetype} - Unable to add {quantity} copies of {card.name} to the deck. 'in' must be one of {InThe.list()}"
                 )
 
-        # self.main = self.validate_main().main
-        # self.main = self.validate_main_size(self.main)
-        # self.side = Deck.validate_side(self.side)
+        self._validate_deck()
 
     def count(self) -> int:
         """
