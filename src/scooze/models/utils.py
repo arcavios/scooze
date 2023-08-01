@@ -104,6 +104,7 @@ class Format(ExtendedEnum, StrEnum):
         """
         Given a Format, what are the required min and max size for a main deck?
         """
+
         match self.value:
             case Format.LIMITED:
                 return (40, maxsize)
@@ -148,6 +149,7 @@ class Format(ExtendedEnum, StrEnum):
         """
         Given a Format, what are the min and max size for a sideboard?
         """
+
         match self.value:
             case Format.LIMITED:
                 return (0, maxsize)
