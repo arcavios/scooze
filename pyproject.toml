@@ -26,6 +26,8 @@ python = ">=3.10, <3.11"
 fastapi = "^0.100.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
+pendulum = "^2.1.2"
+strenum = "^0.4.15"
 
 [tool.poetry.group.dev.dependencies]
 ophidian = { version = "^0.1.1", source = "packagr" }
@@ -38,4 +40,11 @@ url = "https://api.packagr.app/aGcEPILd"
 priority = "explicit"
 
 [tool.pytest.ini_options]
-markers = ["router_card: related to /card routes"]
+# addopts = "-m 'not slow'"
+markers = [
+    "slow: expected to be slow",
+    "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
+    "deck_count: related to Deck.count()",
+    "deck_export: related to exporting a Deck as text or some other format",
+    "router_card: related to /card routes",
+]
