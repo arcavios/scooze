@@ -46,5 +46,6 @@ markers = [
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
     "deck_count: related to Deck.count()",
     "deck_export: related to exporting a Deck as text or some other format",
+    "deck_validation: related to forcing ValidationErrors from Pydantic",
     "router_card: related to /card routes",
 ]
