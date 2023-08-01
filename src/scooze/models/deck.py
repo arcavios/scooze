@@ -66,7 +66,7 @@ class Deck(BaseModel, validate_assignment=True):
     )
     format: model_utils.Format = Field(
         default=None,
-        description="The format legality of the cards in this Deck.",
+        description="The format of the tournament where this Deck was played.",
     )
     date_played: DateTime = Field(
         default=None,
@@ -174,7 +174,7 @@ class Deck(BaseModel, validate_assignment=True):
         Returns:
             count (int): The number of cards in this Deck.
         """
-        return len(self.main) + len(self.side)
+        return self.main.total() + self.side.total()
 
     def to_decklist(self, decklist_formatter: model_utils.DecklistFormatter = None) -> str:
         """
