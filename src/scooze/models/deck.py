@@ -91,7 +91,6 @@ class Deck(BaseModel, validate_assignment=True):
     # archetype - str
     #   validated against a list of melee deck archetypes? Maybe we store that in a table?
     # format - Format
-    #   one of many formats allowed by the Format enum. Validate against the enum
     #   validate if the cards in the list are legal in the given format?
     # date_played - Date this deck was played
     #   validate that this is a valid date after 1993?

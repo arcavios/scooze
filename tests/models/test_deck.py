@@ -93,6 +93,12 @@ def test_format(format, main_cards):
     assert deck.format == format
 
 
+@pytest.mark.deck_validation
+def test_format_validation(format, main_cards):
+    with pytest.raises(ValueError) as e:
+        Deck.model_validate({"archetype": "test_format_validation", "format": "not a real format"})
+
+
 def test_date_played(today):
     deck = Deck.model_validate({"datePlayed": today})
     assert deck.date_played == today
