@@ -1,11 +1,11 @@
 from collections import Counter
 from enum import auto
-from typing import Annotated
+from typing import Annotated, Any
 
 import scooze.models.utils as model_utils
 from bson import ObjectId
 from pendulum import DateTime
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from scooze.models.card import Card
 from scooze.models.matchdata import MatchData
 from scooze.utils import ExtendedEnum, get_logger
@@ -65,7 +65,7 @@ class Deck(BaseModel, validate_assignment=True):
         description="The archetype of this Deck.",
     )
     format: model_utils.Format = Field(
-        default=None,
+        default=model_utils.Format.NONE,
         description="The format of the tournament where this Deck was played.",
     )
     date_played: DateTime = Field(
@@ -77,11 +77,11 @@ class Deck(BaseModel, validate_assignment=True):
         description="Match data for this Deck.",
     )
     main: Counter[Card] = Field(  # TODO: use DecklistCard
-        default={},
+        default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
     side: Counter[Card] = Field(  # TODO: use DecklistCard
-        default={},
+        default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
 
@@ -102,19 +102,29 @@ class Deck(BaseModel, validate_assignment=True):
     # side - list of cards in the sideboard
     #   validate that it is no more than 15 cards. validate that the cards are real?
 
-    @field_validator("main")
-    def validate_main_size(cls, v):
-        if len(v) < 60:
-            pass
-            # raise ValueError  # TODO: put a real error message here. should maybe be a warning?
+    @field_validator("format", mode="before")
+    @classmethod
+    def validate_format(cls, v: model_utils.Format):
+        print(f"Format was {v}")
         return v
 
-    @field_validator("side")
-    def validate_side_size(cls, v):
-        if len(v) > 15:
-            pass
-            # raise ValueError  # TODO: put a real error message here. should maybe be a warning?
-        return v
+    @model_validator(mode="after")
+    def validate_main(self):
+        m_min, m_max = self.format.main_size()
+        if self.main.total() < m_min:
+            raise ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
+        elif self.main.total() > m_max:
+            raise ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
+        return self
+
+    @model_validator(mode="after")
+    def validate_side(self):
+        s_min, s_max = self.format.side_size()
+        if self.side.total() < s_min:
+            raise ValueError(f"Not enough cards in sideboard. Provided sideboard has {self.side.total()} cards.")
+        elif self.side.total() > s_max:
+            raise ValueError(f"Too many cards in sideboard. Provided sideboards has {self.side.total()} cards.")
+        return self
 
     # endregion
 
@@ -144,6 +154,7 @@ class Deck(BaseModel, validate_assignment=True):
             cards Dict[str:int]: The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
         """
+
         for c, q in cards.items():
             self.add_card(card=c, quantity=q, in_the=in_the)
 
@@ -156,7 +167,7 @@ class Deck(BaseModel, validate_assignment=True):
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
         """
-        # TODO: when adding a card, we need to revalidate. What's the right way to do that?
+
         match in_the:
             case InThe.MAIN:
                 self.main.update({card: quantity})
@@ -169,11 +180,16 @@ class Deck(BaseModel, validate_assignment=True):
                     f"{self.archetype} - Unable to add {quantity} copies of {card.name} to the deck. 'in' must be one of {InThe.list()}"
                 )
 
+        # self.main = self.validate_main().main
+        # self.main = self.validate_main_size(self.main)
+        # self.side = Deck.validate_side(self.side)
+
     def count(self) -> int:
         """
         Returns:
             count (int): The number of cards in this Deck.
         """
+
         return self.main.total() + self.side.total()
 
     def to_decklist(self, decklist_formatter: model_utils.DecklistFormatter = None) -> str:

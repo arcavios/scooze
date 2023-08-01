@@ -56,7 +56,7 @@ def main_cards() -> Counter:
         {
             Card.model_validate({"name": "Expedition Map", "manaValue": 1}): 1,
             Card.model_validate({"name": "Boseiju, Who Endures", "manaValue": 0}): 2,
-            Card.model_validate({"name": "Forest", "manaValue": 0}): 4,
+            Card.model_validate({"name": "Forest", "manaValue": 0}): 57,
         }
     )
     return main_cards
@@ -73,6 +73,7 @@ def side_cards() -> Counter:
         {
             Card.model_validate({"name": "Pithing Needle", "manaValue": 1}): 1,
             Card.model_validate({"name": "Trail of Crumbs", "manaValue": 2}): 2,
+            Card.model_validate({"name": "Forest", "manaValue": 0}): 11,
         }
     )
     return side_cards
@@ -86,8 +87,8 @@ def test_archetype(archetype):
     assert deck.archetype == archetype
 
 
-def test_format(format):
-    deck = Deck.model_validate({"format": format})
+def test_format(format, main_cards):
+    deck = Deck.model_validate({"format": format, "main": main_cards})
     assert deck.format == format
 
 
@@ -104,45 +105,44 @@ def test_add_card_new(new_card, main_cards):
     assert deck.main == main_cards
 
 
-# TODO: finish writing the tests for Deck model
-
-# @pytest.mark.deck_add_cards
-# def test_add_card_side(existing_card, side_cards):
-#     deck = Deck(archetype="test_add_card_side", main=side_cards)
-#     deck.add_card(card=existing_card, in_the=InThe.SIDE)
-#     side_cards.update({existing_card: 1})
-#     assert deck.as_cards() == side_cards
+@pytest.mark.deck_add_cards
+def test_add_card_side(existing_card, main_cards, side_cards):
+    deck = Deck.model_validate({"archetype": "test_add_card_side", "main": main_cards, "side": side_cards})
+    deck.add_card(card=existing_card, in_the=InThe.SIDE)
+    side_cards.update({existing_card: 1})
+    assert deck.side == side_cards
 
 
-# @pytest.mark.deck_add_cards
-# def test_add_card_multi(new_card, main_cards):
-#     quantity = 4
-#     deck = Deck(archetype="test_add_card_multi", main=main_cards)
-#     deck.add_card(card=new_card, quantity=quantity)
-#     main_cards.update({new_card: quantity})
-#     assert deck.as_cards() == main_cards
+@pytest.mark.deck_add_cards
+def test_add_card_multi(new_card, main_cards):
+    quantity = 4
+    deck = Deck.model_validate({"archetype": "test_add_card_multi", "main": main_cards})
+    deck.add_card(card=new_card, quantity=quantity)
+    main_cards.update({new_card: quantity})
+    assert deck.main == main_cards
 
 
-# @pytest.mark.deck_add_cards
-# def test_add_cards_main(main_cards):
-#     deck = Deck(archetype="test_add_cards_main")
-#     deck.add_cards(cards=main_cards, in_the=InThe.MAIN)
-#     assert deck.as_cards() == main_cards
+@pytest.mark.deck_add_cards
+def test_add_cards_main(main_cards):
+    deck = Deck.model_validate({"archetype": "test_add_cards_main", "main": main_cards})
+    deck.add_cards(cards=main_cards, in_the=InThe.MAIN)
+    main_cards.update(main_cards)
+    assert deck.main == main_cards
 
 
-# @pytest.mark.deck_add_cards
-# def test_add_cards_side(side_cards):
-#     deck = Deck(archetype="test_add_cards_side")
-#     deck.add_cards(cards=side_cards, in_the=InThe.SIDE)
-#     assert deck.as_cards() == side_cards
+@pytest.mark.deck_add_cards
+def test_add_cards_side(main_cards, side_cards):
+    deck = Deck.model_validate({"archetype": "test_add_cards_side", "main": main_cards})
+    deck.add_cards(cards=side_cards, in_the=InThe.SIDE)
+    assert deck.side == side_cards
 
 
-# @pytest.mark.deck_add_cards
-# def test_add_cards_main_and_side(main_cards, side_cards):
-#     deck = Deck(archetype="test_add_cards_main_and_side")
-#     deck.add_cards(cards=main_cards, in_the=InThe.MAIN)
-#     deck.add_cards(cards=side_cards, in_the=InThe.SIDE)
-#     assert deck.main == main_cards and deck.side == side_cards
+@pytest.mark.deck_add_cards
+def test_add_cards_main_and_side(main_cards, side_cards):
+    deck = Deck.model_validate({"archetype": "test_add_cards_main_and_side"})
+    deck.add_cards(cards=main_cards, in_the=InThe.MAIN)
+    deck.add_cards(cards=side_cards, in_the=InThe.SIDE)
+    assert deck.main == main_cards and deck.side == side_cards
 
 
 # @pytest.mark.deck_count

@@ -1,5 +1,6 @@
 from enum import auto
-from typing import Any, List
+from sys import maxsize
+from typing import Any, Tuple
 
 from bson import ObjectId
 from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
@@ -85,7 +86,9 @@ class Format(ExtendedEnum, StrEnum):
     HISTORIC = auto()
     HISTORICBRAWL = auto()
     LEGACY = auto()
+    LIMITED = auto()
     MODERN = auto()
+    NONE = auto()
     OATHBREAKER = auto()
     OLDSCHOOL = auto()
     PAUPER = auto()
@@ -96,6 +99,94 @@ class Format(ExtendedEnum, StrEnum):
     PREMODERN = auto()
     STANDARD = auto()
     VINTAGE = auto()
+
+    def main_size(self) -> Tuple[int, int]:
+        """
+        Given a Format, what are the required min and max size for a main deck?
+        """
+        match self.value:
+            case Format.LIMITED:
+                return (40, maxsize)
+
+            case Format.OATHBREAKER:
+                return (58, 58)
+
+            case (
+                Format.ALCHEMY
+                | Format.EXPLORER
+                | Format.FUTURE
+                | Format.HISTORIC
+                | Format.LEGACY
+                | Format.MODERN
+                | Format.OLDSCHOOL
+                | Format.PAUPER
+                | Format.PENNY
+                | Format.PIONEER
+                | Format.PREMODERN
+                | Format.STANDARD
+                | Format.VINTAGE
+            ):
+                return (60, maxsize)
+
+            case (
+                Format.BRAWL
+                | Format.COMMANDER
+                | Format.DUEL
+                | Format.HISTORICBRAWL
+                | Format.PAUPERCOMMANDER
+                | Format.PREDH
+            ):
+                return (99, 99)
+
+            case Format.GLADIATOR:
+                return (100, 100)
+
+            case _:
+                return (0, maxsize)
+
+    def side_size(self) -> Tuple[int, int]:
+        """
+        Given a Format, what are the min and max size for a sideboard?
+        """
+        match self.value:
+            case Format.LIMITED:
+                return (0, maxsize)
+
+            case Format.OATHBREAKER:
+                return (2, 2)  # TODO: commander support?
+
+            case (
+                Format.ALCHEMY
+                | Format.EXPLORER
+                | Format.FUTURE
+                | Format.HISTORIC
+                | Format.LEGACY
+                | Format.MODERN
+                | Format.OLDSCHOOL
+                | Format.PAUPER
+                | Format.PENNY
+                | Format.PIONEER
+                | Format.PREMODERN
+                | Format.STANDARD
+                | Format.VINTAGE
+            ):
+                return (0, 15)
+
+            case (
+                Format.BRAWL
+                | Format.COMMANDER
+                | Format.DUEL
+                | Format.HISTORICBRAWL
+                | Format.PAUPERCOMMANDER
+                | Format.PREDH
+            ):
+                return (1, 1)  # TODO: commander support?
+
+            case Format.GLADIATOR:
+                return (0, 0)
+
+            case _:
+                return (0, maxsize)
 
 
 # endregion
