@@ -13,15 +13,15 @@ class Card(BaseModel, validate_assignment=True):
         description="The oracle_id from Scryfall",
     )
     name: str = Field(
-        default="",
+        default="", # TODO: should probably be required and therefore not have a default?
         description="Name",
     )
     color: str = Field(
-        default="",
+        default="", # TODO: should probably be required and therefore not have a default?
         description="Color",
     )
     mana_value: float = Field(
-        default="",
+        default=0, # TODO: should probably be required and therefore not have a default?
         description="Mana Value/Converted Mana Cost",
     )
 
