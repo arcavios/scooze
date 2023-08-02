@@ -27,6 +27,7 @@ class MatchData(BaseModel, validate_assignment=True):
 
     # region Validators
     @field_validator("wins", "losses", "draws")
+    @classmethod
     def validate_non_negative(cls, v):
         if v < 0:
             raise ValueError  # TODO: put a real error message here. should maybe be a warning?

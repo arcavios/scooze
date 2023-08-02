@@ -1,13 +1,15 @@
 from enum import auto
-from sys import maxsize
 from typing import Any, Tuple
+from sys import maxsize
 
 from bson import ObjectId
-from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
+from pydantic import ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
-from scooze.utils import ExtendedEnum
 from strenum import StrEnum
+
+from scooze.enums import Format
+from scooze.utils import ExtendedEnum
 
 # region Private Utility Functions
 
@@ -27,6 +29,92 @@ def get_base_model_config() -> ConfigDict:
         alias_generator=_to_lower_camel,
         arbitrary_types_allowed=True,
     )
+
+
+def main_size(fmt: Format) -> Tuple[int, int]:
+    """
+    Given a Format, what are the required min and max size for a main deck?
+    """
+
+    match fmt.value:
+        # TODO: Limited doesn't show up in Scryfall's enum, but could still be relevant for deck data;
+        #   how should it be supported?
+        # case Format.LIMITED:
+        #     return (40, maxsize)
+
+        case Format.OATHBREAKER:
+            return 58, 58
+
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 60, maxsize
+
+        case (
+            Format.BRAWL | Format.COMMANDER | Format.DUEL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH
+        ):
+            return 99, 99
+
+        case Format.GLADIATOR:
+            return 100, 100
+
+        case _:
+            return 0, maxsize
+
+
+def side_size(fmt: Format) -> Tuple[int, int]:
+    """
+    Given a Format, what are the min and max size for a sideboard?
+    """
+
+    match fmt.value:
+        # TODO: Limited doesn't show up in Scryfall's enum, but could still be relevant for deck data;
+        #   how should it be supported?
+        # case Format.LIMITED:
+        #     return 0, maxsize
+
+        case Format.OATHBREAKER:
+            return 2, 2  # TODO: commander support?
+
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 0, 15
+
+        case (
+            Format.BRAWL | Format.COMMANDER | Format.DUEL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH
+        ):
+            return 1, 1  # TODO: commander support?
+
+        case Format.GLADIATOR:
+            return 0, 0
+
+        case _:
+            return 0, maxsize
 
 
 # endregion
@@ -69,126 +157,6 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
 
     ARENA = auto()
     MTGO = auto()
-
-
-class Format(ExtendedEnum, StrEnum):
-    """
-    A Magic: the Gathering competitive format.
-    """
-
-    ALCHEMY = auto()
-    BRAWL = auto()
-    COMMANDER = auto()
-    DUEL = auto()
-    EXPLORER = auto()
-    FUTURE = auto()
-    GLADIATOR = auto()
-    HISTORIC = auto()
-    HISTORICBRAWL = auto()
-    LEGACY = auto()
-    LIMITED = auto()
-    MODERN = auto()
-    NONE = auto()
-    OATHBREAKER = auto()
-    OLDSCHOOL = auto()
-    PAUPER = auto()
-    PAUPERCOMMANDER = auto()
-    PENNY = auto()
-    PIONEER = auto()
-    PREDH = auto()
-    PREMODERN = auto()
-    STANDARD = auto()
-    VINTAGE = auto()
-
-    def main_size(self) -> Tuple[int, int]:
-        """
-        Given a Format, what are the required min and max size for a main deck?
-        """
-
-        match self.value:
-            case Format.LIMITED:
-                return (40, maxsize)
-
-            case Format.OATHBREAKER:
-                return (58, 58)
-
-            case (
-                Format.ALCHEMY
-                | Format.EXPLORER
-                | Format.FUTURE
-                | Format.HISTORIC
-                | Format.LEGACY
-                | Format.MODERN
-                | Format.OLDSCHOOL
-                | Format.PAUPER
-                | Format.PENNY
-                | Format.PIONEER
-                | Format.PREMODERN
-                | Format.STANDARD
-                | Format.VINTAGE
-            ):
-                return (60, maxsize)
-
-            case (
-                Format.BRAWL
-                | Format.COMMANDER
-                | Format.DUEL
-                | Format.HISTORICBRAWL
-                | Format.PAUPERCOMMANDER
-                | Format.PREDH
-            ):
-                return (99, 99)
-
-            case Format.GLADIATOR:
-                return (100, 100)
-
-            case _:
-                return (0, maxsize)
-
-    def side_size(self) -> Tuple[int, int]:
-        """
-        Given a Format, what are the min and max size for a sideboard?
-        """
-
-        match self.value:
-            case Format.LIMITED:
-                return (0, maxsize)
-
-            case Format.OATHBREAKER:
-                return (2, 2)  # TODO: commander support?
-
-            case (
-                Format.ALCHEMY
-                | Format.EXPLORER
-                | Format.FUTURE
-                | Format.HISTORIC
-                | Format.LEGACY
-                | Format.MODERN
-                | Format.OLDSCHOOL
-                | Format.PAUPER
-                | Format.PENNY
-                | Format.PIONEER
-                | Format.PREMODERN
-                | Format.STANDARD
-                | Format.VINTAGE
-            ):
-                return (0, 15)
-
-            case (
-                Format.BRAWL
-                | Format.COMMANDER
-                | Format.DUEL
-                | Format.HISTORICBRAWL
-                | Format.PAUPERCOMMANDER
-                | Format.PREDH
-            ):
-                return (1, 1)  # TODO: commander support?
-
-            case Format.GLADIATOR:
-                return (0, 0)
-
-            case _:
-                return (0, maxsize)
 
 
 # endregion

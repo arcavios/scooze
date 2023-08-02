@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from fastapi.testclient import TestClient
 from scooze.main import app
-from scooze.models.card import Card, CardIn, CardOut
+from scooze.models.card import CardIn, CardOut
 
 # region Fixtures
 
@@ -19,8 +19,8 @@ def request_body_card() -> CardIn:
         {
             "oracleId": "1",
             "name": "Snapcaster Mage",
-            "color": "{U}",
-            "manaValue": "2",
+            "colors": ["U"],
+            "cmc": 2.0,
         }
     )
 

@@ -22,7 +22,7 @@ profile = "black"
 src_paths = ["scooze", "tests"]
 
 [tool.poetry.dependencies]
-python = ">=3.10, <3.11"
+python = ">=3.10, <3.12"
 fastapi = "^0.100.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
@@ -30,9 +30,9 @@ pendulum = "^2.1.2"
 strenum = "^0.4.15"
 
 [tool.poetry.group.dev.dependencies]
-ophidian = { version = "^0.1.1", source = "packagr" }
 pytest = "^7.4.0"
 httpx = "^0.24.1"
+black = "^23.7.0"
 
 [[tool.poetry.source]]
 name = "packagr"

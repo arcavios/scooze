@@ -6,6 +6,7 @@ import scooze.models.utils as model_utils
 from bson import ObjectId
 from pendulum import DateTime
 from pydantic import BaseModel, Field, field_validator, model_validator
+from scooze.enums import Format
 from scooze.models.card import Card
 from scooze.models.matchdata import MatchData
 from scooze.utils import ExtendedEnum, get_logger
@@ -64,8 +65,8 @@ class Deck(BaseModel, validate_assignment=True):
         default="",
         description="The archetype of this Deck.",
     )
-    format: model_utils.Format = Field(
-        default=model_utils.Format.NONE,
+    format: Format = Field(
+        default=Format.NONE,
         description="The format of the tournament where this Deck was played.",
     )
     date_played: DateTime = Field(
@@ -106,7 +107,7 @@ class Deck(BaseModel, validate_assignment=True):
 
     @model_validator(mode="after")
     def validate_main(self):
-        m_min, m_max = self.format.main_size()
+        m_min, m_max = model_utils.main_size(self.format)
         if self.main.total() < m_min:
             raise ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
         elif self.main.total() > m_max:
@@ -115,7 +116,7 @@ class Deck(BaseModel, validate_assignment=True):
 
     @model_validator(mode="after")
     def validate_side(self):
-        s_min, s_max = self.format.side_size()
+        s_min, s_max = model_utils.side_size(self.format)
         if self.side.total() < s_min:
             raise ValueError(f"Not enough cards in sideboard. Provided sideboard has {self.side.total()} cards.")
         elif self.side.total() > s_max:
