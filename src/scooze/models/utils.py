@@ -11,7 +11,7 @@ from strenum import StrEnum
 from scooze.enums import Format
 from scooze.utils import ExtendedEnum
 
-# # region Private Utility Functions
+# region Private Utility Functions
 
 
 def _to_lower_camel(string: str) -> str:
@@ -19,7 +19,7 @@ def _to_lower_camel(string: str) -> str:
     return upper_camel[0].lower() + upper_camel[1:]
 
 
-# # endregion
+# endregion
 
 # region Public Utility Functions
 
