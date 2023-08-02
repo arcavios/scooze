@@ -1,11 +1,11 @@
-from datetime import datetime
+import datetime
 from typing import Annotated, Dict, List
 
 from bson import ObjectId
 from pydantic import BaseModel, Field
 
 import scooze.models.utils as model_utils
-from scooze.enums import Color, Format, Legality
+from scooze.enums import *
 
 
 class Card(BaseModel, validate_assignment=True):
@@ -150,7 +150,9 @@ class CardFace(BaseModel, validate_assignment=True):
     illustration_id: int | None = Field(
         description="Scryfall illustration ID of this face, if any.",
     )
-    image_uris: ImageUris | None = Field(description="URIs for images of this face on Scryfall.")
+    image_uris: ImageUris | None = Field(
+        description="URIs for images of this face on Scryfall.",
+    )
     layout: str | None = Field(
         # TODO: layout enum?
         description="Layout of this face, if any.",
@@ -176,7 +178,9 @@ class CardFace(BaseModel, validate_assignment=True):
     power: str | None = Field(
         description="Power of this face, if any.",
     )
-    printed_name: str | None = Field(description="Printed name of this face, for localized non-English cards.")
+    printed_name: str | None = Field(
+        description="Printed name of this face, for localized non-English cards.",
+    )
     printed_text: str | None = Field(
         description="Printed text of this face, for localized non-English cards.",
     )
@@ -229,7 +233,7 @@ class Preview(BaseModel, validate_assignment=True):
         source_uri: str | None
     """
 
-    previewed_at: datetime | None = Field(
+    previewed_at: datetime.date | None = Field(
         description="Date/time of preview being shown or added to Scryfall.",
     )
     source: str | None = Field(
@@ -255,13 +259,219 @@ class RelatedCard(BaseModel, validate_assignment=True):
         uri: str
     """
 
-    id: str = Field(description="ID of linked component.")
-    object: str = Field(description="Always `related_card` for this object.")
-    # TODO: validator method for component
-    component: str = Field(description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.")
-    name: str = Field(description="Name of linked component.")
-    type_line: str = Field(description="Type line of linked component.")
-    uri: str = Field(description="URI of linked component.")
+    id: str = Field(
+        description="ID of linked component.",
+    )
+    object: str = Field(
+        description="Always `related_card` for this object.",
+    )
+    # TODO: convert to enum?
+    component: str = Field(
+        description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.",
+    )
+    name: str = Field(
+        description="Name of linked component.",
+    )
+    type_line: str = Field(
+        description="Type line of linked component.",
+    )
+    uri: str = Field(
+        description="URI of linked component.",
+    )
+
+
+class FullCard(DecklistCard, validate_assignment=True):
+    """
+    Card object that supports all fields available from Scryfall's JSON data.
+    Scryfall documentation: https://scryfall.com/docs/api/cards
+
+    Attributes:
+        ### Core fields
+        arena_id: int | None
+        id: str
+        # TODO: convert to enum?
+        lang: str
+        mtgo_id: int | None
+        mtgo_foil_id: int | None
+        multiverse_ids: List[int] | None
+        tcgplayer_id: int | None
+        tcgplayer_etched_id: int | None
+        cardmarket_id: int | None
+        object: str
+        oracle_id: str
+        prints_search_uri: str
+        rulings_uri: str
+        scryfall_uri: str
+        uri: str
+
+        ### Gameplay fields
+        all_parts: List[RelatedCard] | None
+        card_faces: List[CardFace] | None
+        cmc: float
+        color_identity: List[Color]
+        color_indicator: List[Color]
+        edhrec_rank: int | None
+        hand_modifier: str | None
+        keywords: List[str]
+        layout: str
+        legalities: Dict[Format, Legality]
+        life_modifier: str | None
+        loyalty: str | None
+        mana_cost: str | None
+        name: str
+        oracle_text: str | None
+        oversized: bool
+        penny_rank: int | None
+        power: str | None
+        produced_mana: List[Color] | None
+        reserved: bool
+        toughness: str | None
+        type_line: str
+
+        ### Print fields
+        artist: str | None
+        attraction_lights: List[int] | None
+        booster: bool
+        border_color: BorderColor
+        card_back_id: str
+        collector_number: str
+        content_warning: bool
+        digital: bool
+        finishes: List[Finish]
+        flavor_name: str | None
+        flavor_text: str | None
+        # TODO: convert to enum?
+        frame_effects: List[str] | None
+        frame: str
+        full_art: bool
+        games: List[Game]
+        highres_image: bool
+        illustation_id: str | None
+        # TODO: convert to enum?
+        image_status: str
+        image_uris: ImageUris | None
+        preview: Preview | None
+        prices: Prices | None
+        printed_name: str | None
+        printed_text: str | None
+        printed_type_line: str | None
+        promo: bool
+        promo_types: List[str]
+        # TODO: convert to object?
+        purchase_uris: Dict[str, str]
+        rarity: Rarity
+        # TODO: convert to object?
+        related_uris: Dict[str, str]
+        released_at: datetime.date
+        reprint: bool
+        scryfall_set_uri: str
+        set_name: str
+        set_search_uri: str
+        set_type: str
+        set_uri: str
+        set: str
+        set_id: str
+        story_spotlight: bool
+        textless: bool
+        variation: bool
+        variation_of: str | None
+        # TODO: convert to enum?
+        security_stamp: str | None
+        watermark: str | None
+    """
+
+    ### Core fields
+    arena_id: int | None
+    id: str
+    # TODO: convert to enum?
+    lang: str
+    mtgo_id: int | None
+    mtgo_foil_id: int | None
+    multiverse_ids: List[int] | None
+    tcgplayer_id: int | None
+    tcgplayer_etched_id: int | None
+    cardmarket_id: int | None
+    object: str
+    oracle_id: str
+    prints_search_uri: str
+    rulings_uri: str
+    scryfall_uri: str
+    uri: str
+
+    ### Gameplay fields
+    all_parts: List[RelatedCard] | None
+    card_faces: List[CardFace] | None
+    cmc: float
+    color_identity: List[Color]
+    color_indicator: List[Color]
+    edhrec_rank: int | None
+    hand_modifier: str | None
+    keywords: List[str]
+    layout: str
+    legalities: Dict[Format, Legality]
+    life_modifier: str | None
+    loyalty: str | None
+    mana_cost: str | None
+    name: str
+    oracle_text: str | None
+    oversized: bool
+    penny_rank: int | None
+    power: str | None
+    produced_mana: List[Color] | None
+    reserved: bool
+    toughness: str | None
+    type_line: str
+
+    ### Print fields
+    artist: str | None
+    attraction_lights: List[int] | None
+    booster: bool
+    border_color: BorderColor
+    card_back_id: str
+    collector_number: str
+    content_warning: bool
+    digital: bool
+    finishes: List[Finish]
+    flavor_name: str | None
+    flavor_text: str | None
+    # TODO: convert to enum?
+    frame_effects: List[str] | None
+    frame: str
+    full_art: bool
+    games: List[Game]
+    highres_image: bool
+    illustation_id: str | None
+    # TODO: convert to enum?
+    image_status: str
+    image_uris: ImageUris | None
+    preview: Preview | None
+    prices: Prices | None
+    printed_name: str | None
+    printed_text: str | None
+    printed_type_line: str | None
+    promo: bool
+    promo_types: List[str]
+    # TODO: convert to object?
+    purchase_uris: Dict[str, str]
+    rarity: Rarity
+    # TODO: convert to object?
+    related_uris: Dict[str, str]
+    released_at: datetime.date
+    reprint: bool
+    scryfall_set_uri: str
+    set_name: str
+    set_search_uri: str
+    set_type: str
+    set_uri: str
+    set: str
+    set_id: str
+    story_spotlight: bool
+    textless: bool
+    variation: bool
+    variation_of: str | None
+    # TODO: convert to enum?
+    security_stamp: str | None
+    watermark: str | None
 
 
 class CardIn(Card):
