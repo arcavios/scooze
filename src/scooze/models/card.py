@@ -391,22 +391,62 @@ class FullCard(DecklistCard, validate_assignment=True):
 
     # region Core fields
 
-    arena_id: int | None
-    id: str
+    arena_id: int | None = Field(
+        description="This card's Arena ID, if applicable.",
+    )
+    id: str = Field(
+        default="",
+        description="Scryfall's unique ID for this card.",
+    )
     # TODO: convert to enum?
-    lang: str
-    mtgo_id: int | None
-    mtgo_foil_id: int | None
-    multiverse_ids: List[int] | None
-    tcgplayer_id: int | None
-    tcgplayer_etched_id: int | None
-    cardmarket_id: int | None
-    object: str
-    oracle_id: str
-    prints_search_uri: str
-    rulings_uri: str
-    scryfall_uri: str
-    uri: str
+    lang: str = Field(
+        # TODO: better default?
+        default="en",
+        description="The language code for this print; see https://scryfall.com/docs/api/languages",
+    )
+    mtgo_id: int | None = Field(
+        description="This card's MTGO Catalog ID, if applicable.",
+    )
+    mtgo_foil_id: int | None = Field(
+        description="This card's foil MTGO Catalog ID, if applicable.",
+    )
+    multiverse_ids: List[int] | None = Field(
+        description="This card's multiverse IDs on Gatherer, if any.",
+    )
+    tcgplayer_id: int | None = Field(
+        description="This card's ID on TCGplayer, or `productId` in their system.",
+    )
+    tcgplayer_etched_id: int | None = Field(
+        description="This card's ID on TCGplayer, for the etched version if that is a separate product.",
+    )
+    cardmarket_id: int | None = Field(
+        description="This card's ID on Cardmarket, or `idProduct` in their system.",
+    )
+    object: str = Field(
+        default="card",
+        description="Always `card` for Card objects.",
+    )
+    oracle_id: str = Field(
+        # TODO: better default?
+        default="",
+        description="A UUID for this card's oracle identity; shared across prints of the same card but not same-named objects with different gameplay properties.",
+    )
+    prints_search_uri: str = Field(
+        default="",
+        description="A link to begin paginating through all prints of this card in Scryfall's API.",
+    )
+    rulings_uri: str = Field(
+        default="",
+        description="A link to rulings for this card in Scryfall's API.",
+    )
+    scryfall_uri: str = Field(
+        default="",
+        description="A link to the Scryfall page for this card.",
+    )
+    uri: str = Field(
+        default="",
+        description="A link to this card object in Scryfall's API.",
+    )
 
     # endregion
 
