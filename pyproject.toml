@@ -33,6 +33,7 @@ strenum = "^0.4.15"
 pytest = "^7.4.0"
 httpx = "^0.24.1"
 black = "^23.7.0"
+isort = "^5.12.0"
 
 [[tool.poetry.source]]
 name = "packagr"

@@ -1,15 +1,14 @@
 from enum import auto
-from typing import Any, Tuple
 from sys import maxsize
+from typing import Any, Tuple
 
 from bson import ObjectId
 from pydantic import ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
-from strenum import StrEnum
-
 from scooze.enums import Format
 from scooze.utils import ExtendedEnum
+from strenum import StrEnum
 
 # region Private Utility Functions
 
