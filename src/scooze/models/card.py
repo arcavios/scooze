@@ -22,12 +22,15 @@ class Card(BaseModel, validate_assignment=True):
     model_config = model_utils.get_base_model_config()
 
     oracle_id: str | None = Field(
+        default="",  # TODO: make non-required and remove default
         description="The oracle_id from Scryfall",
     )
     cmc: float | None = Field(
+        default=0.0,  # TODO: make non-required and remove default
         description="Mana Value/Converted Mana Cost",
     )
     colors: List[Color] | None = Field(
+        default=[],  # TODO: make non-required and remove default
         description="Color",
     )
     name: str = Field(

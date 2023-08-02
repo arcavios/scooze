@@ -32,6 +32,7 @@ def existing_card() -> str:
         {
             "name": "Expedition Map",
             "manaValue": 1,
+            "colors": [],
         }
     )
 
@@ -42,6 +43,7 @@ def new_card() -> str:
         {
             "name": "Primeval Titan",
             "manaValue": 6,
+            "colors": ["G"],
         }
     )
 
@@ -73,7 +75,7 @@ def side_cards() -> Counter:
     side_cards = Counter(
         {
             Card.model_validate({"name": "Pithing Needle", "manaValue": 1}): 1,
-            Card.model_validate({"name": "Trail of Crumbs", "manaValue": 2}): 2,
+            Card.model_validate({"name": "Trail of Crumbs", "manaValue": 2, "colors": ["G"]}): 2,
             Card.model_validate({"name": "Forest", "manaValue": 0}): 11,
         }
     )
