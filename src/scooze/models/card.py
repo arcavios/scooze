@@ -174,6 +174,7 @@ class RelatedCard(BaseModel, validate_assignment=True):
 
     id: str = Field(description="ID of linked component.")
     object: str = Field(description="Always `related_card` for this object.")
+    # TODO: validator method for component
     component: str = Field(description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.")
     name: str = Field(description="Name of linked component.")
     type_line: str = Field(description="Type line of linked component.")
