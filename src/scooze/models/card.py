@@ -5,7 +5,7 @@ from bson import ObjectId
 from pydantic import BaseModel, Field
 
 import scooze.models.utils as model_utils
-from scooze.enums import *
+import scooze.enums as enums
 
 
 class Card(BaseModel, validate_assignment=True):
@@ -29,7 +29,7 @@ class Card(BaseModel, validate_assignment=True):
         default=0.0,  # TODO: make non-required and remove default
         description="Mana Value/Converted Mana Cost",
     )
-    colors: List[Color] | None = Field(
+    colors: List[enums.Color] | None = Field(
         default=[],  # TODO: make non-required and remove default
         description="Color",
     )
@@ -59,7 +59,7 @@ class DecklistCard(Card, validate_assignment=True):
 
     # cmc defined by base object
     # colors defined by base object
-    legalities: Dict[Format, Legality] | None = Field(
+    legalities: Dict[enums.Format, enums.Legality] | None = Field(
         description="Formats and the legality status of that card in them.",
     )
     mana_cost: str = Field(
@@ -141,10 +141,10 @@ class CardFace(BaseModel, validate_assignment=True):
     cmc: float | None = Field(
         description="Mana value of this face.",
     )
-    color_indicator: List[Color] | None = Field(
+    color_indicator: List[enums.Color] | None = Field(
         description="Color indicator on this face, if any.",
     )
-    colors: List[Color] | None = Field(
+    colors: List[enums.Color] | None = Field(
         description="Colors of this face.",
     )
     flavor_text: str | None = Field(
@@ -405,13 +405,13 @@ class FullCard(DecklistCard, validate_assignment=True):
     all_parts: List[RelatedCard] | None
     card_faces: List[CardFace] | None
     cmc: float
-    color_identity: List[Color]
-    color_indicator: List[Color]
+    color_identity: List[enums.Color]
+    color_indicator: List[enums.Color]
     edhrec_rank: int | None
     hand_modifier: str | None
     keywords: List[str]
     layout: str
-    legalities: Dict[Format, Legality]
+    legalities: Dict[enums.Format, enums.Legality]
     life_modifier: str | None
     loyalty: str | None
     mana_cost: str | None
@@ -420,7 +420,7 @@ class FullCard(DecklistCard, validate_assignment=True):
     oversized: bool
     penny_rank: int | None
     power: str | None
-    produced_mana: List[Color] | None
+    produced_mana: List[enums.Color] | None
     reserved: bool
     toughness: str | None
     type_line: str
@@ -429,19 +429,19 @@ class FullCard(DecklistCard, validate_assignment=True):
     artist: str | None
     attraction_lights: List[int] | None
     booster: bool
-    border_color: BorderColor
+    border_color: enums.BorderColor
     card_back_id: str
     collector_number: str
     content_warning: bool
     digital: bool
-    finishes: List[Finish]
+    finishes: List[enums.Finish]
     flavor_name: str | None
     flavor_text: str | None
     # TODO: convert to enum?
     frame_effects: List[str] | None
     frame: str
     full_art: bool
-    games: List[Game]
+    games: List[enums.Game]
     highres_image: bool
     illustation_id: str | None
     # TODO: convert to enum?
@@ -456,7 +456,7 @@ class FullCard(DecklistCard, validate_assignment=True):
     promo_types: List[str]
     # TODO: convert to object?
     purchase_uris: Dict[str, str]
-    rarity: Rarity
+    rarity: enums.Rarity
     # TODO: convert to object?
     related_uris: Dict[str, str]
     released_at: datetime.date
