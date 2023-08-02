@@ -90,10 +90,14 @@ def test_format(format, main_cards):
     assert deck.format == format
 
 
+@pytest.mark.deck.format
 @pytest.mark.deck_validation
 def test_format_validation():
     with pytest.raises(ValueError) as e:
         Deck.model_validate({"archetype": "test_format_validation", "format": "not a real format"})
+
+
+# TODO: add tests for validating the main/side min/max for several formats.
 
 
 def test_date_played(today):
@@ -153,9 +157,17 @@ def test_add_cards_main_and_side(main_cards, side_cards):
 @pytest.mark.deck_validation
 def test_remove_card_main_validation(format, main_cards, existing_card):
     # TODO: create remove card and remove_cards. use it here
-    deck = Deck.model_validate({"archetype": "test_add_cards_validation", "format": format, "main": main_cards, })
+    deck = Deck.model_validate(
+        {
+            "archetype": "test_add_cards_validation",
+            "format": format,
+            "main": main_cards,
+        }
+    )
     with pytest.raises(ValueError) as e:
-        deck.add_card(card=existing_card, quantity=-1, in_the=InThe.MAIN, revalidate_after=True)  # fewer than 60 in the main
+        deck.add_card(
+            card=existing_card, quantity=-1, in_the=InThe.MAIN, revalidate_after=True
+        )  # fewer than 60 in the main
 
 
 @pytest.mark.deck_add_cards
@@ -191,7 +203,6 @@ def test_to_decklist_no_side(main_cards, main_string):
     assert deck.to_decklist() == f"{main_string}"
 
 
-
 @pytest.mark.deck_export
 def test_to_decklist_arena(main_cards, side_cards, main_string, side_string):
     deck = Deck.model_construct(archetype="test_to_decklist_arena", main=main_cards, side=side_cards)
@@ -200,9 +211,11 @@ def test_to_decklist_arena(main_cards, side_cards, main_string, side_string):
 
 # TODO: add test: test_to_decklist_arena_no_side
 
+
 @pytest.mark.deck_export
 def test_to_decklist_mtgo(main_cards, side_cards, main_string, side_string):
     deck = Deck.model_construct(archetype="test_to_decklist_mtgo", main=main_cards, side=side_cards)
     assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_string}\n\nSIDEBOARD:\n{side_string}"
+
 
 # TODO: add test: test_to_decklist_mtgo_no_side
