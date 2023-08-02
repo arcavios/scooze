@@ -95,8 +95,14 @@ class CardFace(BaseModel, validate_assignment=True):
         watermark: str | None
     """
 
-    artist: str | None = Field(default=None, description="Illustrator for art on this face.")
-    cmc: float = Field(default=0.0, description="Mana value of this face.")
+    artist: str | None = Field(
+        default=None,
+        description="Illustrator for art on this face.",
+    )
+    cmc: float = Field(
+        default=0.0,
+        description="Mana value of this face.",
+    )
     # TODO: update to use Color enum
     color_indicator: List[str] | None = Field()
     colors: List[str] | None = Field()
@@ -117,6 +123,40 @@ class CardFace(BaseModel, validate_assignment=True):
     toughness: str | None = Field()
     type_line: str = Field()
     watermark: str | None = Field()
+
+
+class Prices(BaseModel, validate_assignment=True):
+    """Object for all price data associated with a Card object.
+
+    Attributes:
+        usd: float
+        usd_foil: float
+        eur: float
+        tix: float"""
+
+    usd: float | None = Field(default=None, description="Price in US dollars, from TCGplayer.")
+    usd_foil: float | None = Field(default=None, description="Foil price in US dollars, from TCGplayer.")
+    eur: float | None = Field(default=None, description="Price in Euros, from Cardmarket.")
+    tix: float | None = Field(default=None, description="Price in MTGO tix, from Cardhoarder.")
+
+
+class Preview(BaseModel, validate_assignment=True):
+    """Object for information about where and when a card was previewed.
+
+    Attributes:
+        previewed_at
+        source: str | None
+        source_uri: str | None"""
+
+    # TODO: previewed_at as a datetime?
+    source: str | None = Field(
+        default=None,
+        description="Name of preview source",
+    )
+    source_uri: str | None = Field(
+        default=None,
+        description="Location of preview source",
+    )
 
 
 class CardIn(Card):
