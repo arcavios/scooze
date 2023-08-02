@@ -4,6 +4,18 @@ from scooze.utils import ExtendedEnum
 from strenum import StrEnum
 
 
+class Color(ExtendedEnum, StrEnum):
+    """
+    A color that Magic: the Gathering cards can be.
+    """
+
+    WHITE = "W"
+    BLUE = "U"
+    BLACK = "B"
+    RED = "R"
+    GREEN = "G"
+
+
 class Format(ExtendedEnum, StrEnum):
     """
     A Magic: the Gathering competitive format.
@@ -46,15 +58,3 @@ class Legality(ExtendedEnum, StrEnum):
     NOT_LEGAL = auto()
     BANNED = auto()
     RESTRICTED = auto()
-
-
-class Color(ExtendedEnum, StrEnum):
-    """
-    A color that Magic: the Gathering cards can be.
-    """
-
-    WHITE = "W"
-    BLUE = "U"
-    BLACK = "B"
-    RED = "R"
-    GREEN = "G"

@@ -4,7 +4,7 @@ from bson import ObjectId
 from pydantic import BaseModel, Field
 
 import scooze.models.utils as model_utils
-import scooze.enums as enums
+from scooze.enums import Color, Format, Legality
 
 
 class Card(BaseModel, validate_assignment=True):
@@ -14,7 +14,7 @@ class Card(BaseModel, validate_assignment=True):
     Attributes:
        oracle_id: str
        cmc: float
-       colors: List[str]
+       colors: List[Color]
        name: str
     """
 
@@ -28,7 +28,7 @@ class Card(BaseModel, validate_assignment=True):
         default=0.0,  # TODO: should probably be required and therefore not have a default?
         description="Mana Value/Converted Mana Cost",
     )
-    colors: List[str] = Field(
+    colors: List[Color] = Field(
         default=[],  # TODO: should probably be required and therefore not have a default?
         description="Color",
     )
@@ -58,7 +58,7 @@ class DecklistCard(Card, validate_assignment=True):
 
     Attributes:
         cmc: float
-        colors: List[str]
+        colors: List[Color]
         legalities: Dict[Format, Legality]
         mana_cost: str
         name: str
@@ -67,7 +67,7 @@ class DecklistCard(Card, validate_assignment=True):
 
     # cmc defined by base object
     # colors defined by base object
-    legalities: Dict[enums.Format, enums.Legality] = Field(
+    legalities: Dict[Format, Legality] = Field(
         description="Color",
     )
     mana_cost: str = Field(
@@ -88,8 +88,8 @@ class CardFace(BaseModel, validate_assignment=True):
     Attributes:
         artist: str | None
         cmc: float
-        color_indicator: List[str] | None
-        colors: List[str] | None
+        color_indicator: List[Color] | None
+        colors: List[Color] | None
         flavor_text: str | None
         illustration_id: int | None
         image_uris: List[str] | None
@@ -117,9 +117,8 @@ class CardFace(BaseModel, validate_assignment=True):
         default=0.0,
         description="Mana value of this face.",
     )
-    # TODO: update to use Color enum
-    color_indicator: List[str] | None = Field()
-    colors: List[str] | None = Field()
+    color_indicator: List[Color] | None = Field()
+    colors: List[Color] | None = Field()
     flavor_text: str | None = Field()
     illustration_id: int | None = Field()
     image_uris: List[str] | None = Field()
