@@ -34,6 +34,7 @@ class Card(BaseModel, validate_assignment=True):
         description="Color",
     )
     name: str = Field(
+        default="",  # TODO: make non-required and remove default
         description="Name",
     )
 

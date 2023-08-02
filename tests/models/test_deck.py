@@ -32,7 +32,6 @@ def existing_card() -> str:
         {
             "name": "Expedition Map",
             "manaValue": 1,
-            "colors": [],
         }
     )
 
