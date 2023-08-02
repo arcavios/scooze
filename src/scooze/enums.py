@@ -64,6 +64,9 @@ class Format(ExtendedEnum, StrEnum):
     PREMODERN = auto()
     STANDARD = auto()
     VINTAGE = auto()
+    # non-Scryfall formats
+    LIMITED = auto()
+    NONE = auto()
 
 
 class Game(ExtendedEnum, StrEnum):
