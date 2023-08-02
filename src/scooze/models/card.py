@@ -23,11 +23,11 @@ class Card(BaseModel, validate_assignment=True):
         description="The oracle_id from Scryfall",
     )
     cmc: float = Field(
-        default=0,  # TODO: should probably be required and therefore not have a default?
+        default=0.0,  # TODO: should probably be required and therefore not have a default?
         description="Mana Value/Converted Mana Cost",
     )
     colors: List[str] = Field(
-        default="",  # TODO: should probably be required and therefore not have a default?
+        default=[],  # TODO: should probably be required and therefore not have a default?
         description="Color",
     )
     name: str = Field(
