@@ -66,6 +66,16 @@ class Format(ExtendedEnum, StrEnum):
     VINTAGE = auto()
 
 
+class Game(ExtendedEnum, StrEnum):
+    """
+    An official Magic game a card print can be available in.
+    """
+
+    PAPER = auto()
+    ARENA = auto()
+    MTGO = auto()
+
+
 class Legality(ExtendedEnum, StrEnum):
     """
     String enum of different legalities that a card can have in a format.
@@ -80,3 +90,16 @@ class Legality(ExtendedEnum, StrEnum):
     NOT_LEGAL = auto()
     BANNED = auto()
     RESTRICTED = auto()
+
+
+class Rarity(ExtendedEnum, StrEnum):
+    """
+    A rarity that a print of a Magic card can be.
+    """
+
+    COMMON = auto()
+    UNCOMMON = auto()
+    RARE = auto()
+    SPECIAL = auto()
+    MYTHIC = auto()
+    BONUS = auto()
