@@ -1,4 +1,4 @@
-from typing import Annotated, List
+from typing import Annotated, Dict, List
 
 import scooze.models.utils as model_utils
 from bson import ObjectId
@@ -12,17 +12,17 @@ class Card(BaseModel, validate_assignment=True):
         default="",
         description="The oracle_id from Scryfall",
     )
-    name: str = Field(
-        default="",  # TODO: should probably be required and therefore not have a default?
-        description="Name",
+    cmc: float = Field(
+        default=0,  # TODO: should probably be required and therefore not have a default?
+        description="Mana Value/Converted Mana Cost",
     )
-    color: str = Field(
+    colors: List[str] = Field(
         default="",  # TODO: should probably be required and therefore not have a default?
         description="Color",
     )
-    mana_value: float = Field(
-        default=0,  # TODO: should probably be required and therefore not have a default?
-        description="Mana Value/Converted Mana Cost",
+    name: str = Field(
+        default="",  # TODO: should probably be required and therefore not have a default?
+        description="Name",
     )
 
     # TODO: add more validation for other fields.
@@ -37,6 +37,33 @@ class Card(BaseModel, validate_assignment=True):
 
     def __hash__(self):  # TODO: placeholder hash function so Gimmi could run tests against Deck model
         return self.name.__hash__()
+
+
+class DecklistCard(Card, validate_assignment=True):
+    """Card subclass intended for using card data in a decklist-informed setting or similar.
+    All information in this class is print-agnostic.
+
+    Attributes:
+        cmc: float
+        colors: List[str]
+        legalities: Dict[Format, Legality]
+        mana_cost: str
+        name: str
+        type_line: str
+    """
+
+    # cmc defined by base object
+    # colors defined by base object
+    legalities: Dict[model_utils.Format, model_utils.Legality] = Field(
+        description="Color",
+    )
+    mana_cost: str = Field(
+        description="Mana cost, as string of mana symbols",
+    )
+    # name defined by base object
+    type_line: str = Field(
+        description="Type line",
+    )
 
 
 class CardFace(BaseModel, validate_assignment=True):
