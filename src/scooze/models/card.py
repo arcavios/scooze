@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, Dict, List
 
 from bson import ObjectId
@@ -20,32 +21,20 @@ class Card(BaseModel, validate_assignment=True):
 
     model_config = model_utils.get_base_model_config()
 
-    oracle_id: str = Field(
-        default="",
+    oracle_id: str | None = Field(
         description="The oracle_id from Scryfall",
     )
-    cmc: float = Field(
-        default=0.0,  # TODO: should probably be required and therefore not have a default?
+    cmc: float | None = Field(
         description="Mana Value/Converted Mana Cost",
     )
-    colors: List[Color] = Field(
-        default=[],  # TODO: should probably be required and therefore not have a default?
+    colors: List[Color] | None = Field(
         description="Color",
     )
     name: str = Field(
-        default="",  # TODO: should probably be required and therefore not have a default?
         description="Name",
     )
 
-    # TODO: add more validation for other fields.
-    # TODO: add missing fields from SimpleCard or whatever it's called
-
-    # @field_validator("color")
-    # def validate_color(cls, v):
-    #     if v not in ["{W}", "{U}", "{B}", "{R}", "{G}", "{C}"]:
-    #         # TODO: can we get these from the mana class in ophidian... should we move that to utils somewhere?
-    #         raise ValueError  # TODO: put a real error message here. should maybe be a warning?
-    #     return v
+    # TODO: field validators?
 
     def __hash__(self):  # TODO: replace this placeholder with more permanent solution, and overwrite in subclasses
         return self.name.__hash__()
@@ -57,18 +46,18 @@ class DecklistCard(Card, validate_assignment=True):
     All information in this class is print-agnostic.
 
     Attributes:
-        cmc: float
-        colors: List[Color]
-        legalities: Dict[Format, Legality]
-        mana_cost: str
+        cmc: float | None
+        colors: List[Color] | None
+        legalities: Dict[Format, Legality] | None
+        mana_cost: str | None
         name: str
         type_line: str
     """
 
     # cmc defined by base object
     # colors defined by base object
-    legalities: Dict[Format, Legality] = Field(
-        description="Color",
+    legalities: Dict[Format, Legality] | None = Field(
+        description="Formats and the legality status of that card in them.",
     )
     mana_cost: str = Field(
         description="Mana cost, as string of mana symbols",
@@ -76,6 +65,40 @@ class DecklistCard(Card, validate_assignment=True):
     # name defined by base object
     type_line: str = Field(
         description="Type line",
+    )
+
+
+class ImageUris(BaseModel, validate_assignment=True):
+    """
+    URIs of images associated with this object on Scryfall.
+    Scryfall documentation: https://scryfall.com/docs/api/images
+
+    Attributes:
+        png: str | None
+        border_crop: str | None
+        art_crop: str | None
+        large: str | None
+        normal: str | None
+        small: str | None
+    """
+
+    png: str | None = Field(
+        description="Full card, high quality image with transparent background and rounded corners.",
+    )
+    border_crop: str | None = Field(
+        description="Full card image with corners and majority of border cropped out.",
+    )
+    art_crop: str | None = Field(
+        description="Rectangular crop to just art box; may not be perfect for cards with strange layouts."
+    )
+    large: str | None = Field(
+        description="Large JPG image (672x936)",
+    )
+    normal: str | None = Field(
+        description="Medium JPG image (488x860)",
+    )
+    small: str | None = Field(
+        description="Small JPG image (146x204)",
     )
 
 
@@ -87,7 +110,7 @@ class CardFace(BaseModel, validate_assignment=True):
 
     Attributes:
         artist: str | None
-        cmc: float
+        cmc: float | None
         color_indicator: List[Color] | None
         colors: List[Color] | None
         flavor_text: str | None
@@ -105,37 +128,70 @@ class CardFace(BaseModel, validate_assignment=True):
         printed_text: str | None
         printed_type_line: str | None
         toughness: str | None
-        type_line: str
+        type_line: str | None
         watermark: str | None
     """
 
     artist: str | None = Field(
-        default=None,
         description="Illustrator for art on this face.",
     )
-    cmc: float = Field(
-        default=0.0,
+    cmc: float | None = Field(
         description="Mana value of this face.",
     )
-    color_indicator: List[Color] | None = Field()
-    colors: List[Color] | None = Field()
-    flavor_text: str | None = Field()
-    illustration_id: int | None = Field()
-    image_uris: List[str] | None = Field()
-    layout: str | None = Field()
-    loyalty: int | None = Field()
-    mana_cost: str = Field()
-    name: str = Field()
-    object: str = Field()
-    oracle_id: str | None = Field()
-    oracle_text: str | None = Field()
-    power: str | None = Field()
-    printed_name: str | None = Field()
-    printed_text: str | None = Field()
-    printed_type_line: str | None = Field()
-    toughness: str | None = Field()
-    type_line: str = Field()
-    watermark: str | None = Field()
+    color_indicator: List[Color] | None = Field(
+        description="Color indicator on this face, if any.",
+    )
+    colors: List[Color] | None = Field(
+        description="Colors of this face.",
+    )
+    flavor_text: str | None = Field(
+        description="Flavor text of this face, if any.",
+    )
+    illustration_id: int | None = Field(
+        description="Scryfall illustration ID of this face, if any.",
+    )
+    image_uris: ImageUris | None = Field(description="URIs for images of this face on Scryfall.")
+    layout: str | None = Field(
+        # TODO: layout enum?
+        description="Layout of this face, if any.",
+    )
+    loyalty: int | None = Field(
+        description="Starting planeswalker loyalty of this face, if any.",
+    )
+    mana_cost: str = Field(
+        description="Mana cost of this face.",
+    )
+    name: str = Field(
+        description="Name of this face.",
+    )
+    object: str = Field(
+        description="Always `card_face`, for a card face object.",
+    )
+    oracle_id: str | None = Field(
+        description="Oracle ID of this face, for reversible cards.",
+    )
+    oracle_text: str | None = Field(
+        description="Oracle text of this face, if any.",
+    )
+    power: str | None = Field(
+        description="Power of this face, if any.",
+    )
+    printed_name: str | None = Field(description="Printed name of this face, for localized non-English cards.")
+    printed_text: str | None = Field(
+        description="Printed text of this face, for localized non-English cards.",
+    )
+    printed_type_line: str | None = Field(
+        description="Printed type line of this face, for localized non-English cards.",
+    )
+    toughness: str | None = Field(
+        description="Toughness of this face, if any.",
+    )
+    type_line: str = Field(
+        description="Type line of this face, if any.",
+    )
+    watermark: str | None = Field(
+        description="Watermark printed on this face, if any.",
+    )
 
 
 class Prices(BaseModel, validate_assignment=True):
@@ -149,10 +205,18 @@ class Prices(BaseModel, validate_assignment=True):
         tix: float
     """
 
-    usd: float | None = Field(default=None, description="Price in US dollars, from TCGplayer.")
-    usd_foil: float | None = Field(default=None, description="Foil price in US dollars, from TCGplayer.")
-    eur: float | None = Field(default=None, description="Price in Euros, from Cardmarket.")
-    tix: float | None = Field(default=None, description="Price in MTGO tix, from Cardhoarder.")
+    usd: float | None = Field(
+        description="Price in US dollars, from TCGplayer.",
+    )
+    usd_foil: float | None = Field(
+        description="Foil price in US dollars, from TCGplayer.",
+    )
+    eur: float | None = Field(
+        description="Price in Euros, from Cardmarket.",
+    )
+    tix: float | None = Field(
+        description="Price in MTGO tix, from Cardhoarder.",
+    )
 
 
 class Preview(BaseModel, validate_assignment=True):
@@ -160,18 +224,18 @@ class Preview(BaseModel, validate_assignment=True):
     Object for information about where and when a card was previewed.
 
     Attributes:
-        previewed_at
+        previewed_at: datetime | None
         source: str | None
         source_uri: str | None
     """
 
-    # TODO: previewed_at as a datetime?
+    previewed_at: datetime | None = Field(
+        description="Date/time of preview being shown or added to Scryfall.",
+    )
     source: str | None = Field(
-        default=None,
         description="Name of preview source",
     )
     source_uri: str | None = Field(
-        default=None,
         description="Location of preview source",
     )
 
