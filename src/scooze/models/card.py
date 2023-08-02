@@ -207,10 +207,11 @@ class Prices(BaseModel, validate_assignment=True):
     Object for all price data associated with a Card object.
 
     Attributes:
-        usd: float
-        usd_foil: float
-        eur: float
-        tix: float
+        usd: float | None
+        usd_foil: float | None
+        usd_etched: float | None
+        eur: float | None
+        tix: float | None
     """
 
     usd: float | None = Field(
@@ -218,6 +219,9 @@ class Prices(BaseModel, validate_assignment=True):
     )
     usd_foil: float | None = Field(
         description="Foil price in US dollars, from TCGplayer.",
+    )
+    usd_etched: float | None = Field(
+        description="Etched foil price in US dollars, from TCGplayer.",
     )
     eur: float | None = Field(
         description="Price in Euros, from Cardmarket.",
@@ -314,6 +318,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         cmc: float
         color_identity: List[Color]
         color_indicator: List[Color]
+        colors: List[color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: List[str]
@@ -360,7 +365,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         printed_text: str | None
         printed_type_line: str | None
         promo: bool
-        promo_types: List[str]
+        promo_types: List[str] | None
         # TODO: convert to object?
         purchase_uris: Dict[str, str]
         rarity: Rarity
@@ -384,7 +389,8 @@ class FullCard(DecklistCard, validate_assignment=True):
         watermark: str | None
     """
 
-    ### Core fields
+    # region Core fields
+
     arena_id: int | None
     id: str
     # TODO: convert to enum?
@@ -402,21 +408,25 @@ class FullCard(DecklistCard, validate_assignment=True):
     scryfall_uri: str
     uri: str
 
-    ### Gameplay fields
+    # endregion
+
+    # region Gameplay fields
+
     all_parts: List[RelatedCard] | None
     card_faces: List[CardFace] | None
-    cmc: float
+    # cmc defined in parent class
     color_identity: List[enums.Color]
     color_indicator: List[enums.Color]
+    # colors defined in parent class
     edhrec_rank: int | None
     hand_modifier: str | None
     keywords: List[str]
     layout: str
-    legalities: Dict[enums.Format, enums.Legality]
+    # legalities defined in parent class
     life_modifier: str | None
     loyalty: str | None
-    mana_cost: str | None
-    name: str
+    # mana_cost defined in parent class
+    # name defined in parent class
     oracle_text: str | None
     oversized: bool
     penny_rank: int | None
@@ -424,58 +434,167 @@ class FullCard(DecklistCard, validate_assignment=True):
     produced_mana: List[enums.Color] | None
     reserved: bool
     toughness: str | None
-    type_line: str
+    # type_line defined in parent class
 
-    ### Print fields
-    artist: str | None
-    attraction_lights: List[int] | None
-    booster: bool
-    border_color: enums.BorderColor
-    card_back_id: str
-    collector_number: str
-    content_warning: bool
-    digital: bool
-    finishes: List[enums.Finish]
-    flavor_name: str | None
-    flavor_text: str | None
+    # endregion
+
+    # region Print fields
+
+    artist: str | None = Field(
+        description="Artist for this card.",
+    )
+    attraction_lights: List[int] | None = Field(
+        description="Attraction lights lit on this card, if applicable.",
+    )
+    booster: bool = Field(
+        description="Whether this card can be opened in booster packs.",
+    )
+    border_color: enums.BorderColor = Field(
+        description="Border color of this card, from among black, white, borderless, silver, and gold.",
+    )
+    card_back_id: str = Field(
+        description="Scryfall UUID of the card back design for this card.",
+    )
+    collector_number: str = Field(
+        description="This card's collector number; can contain non-numeric characters.",
+    )
+    content_warning: bool = Field(
+        description="True if use of this print should be avoided; see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220",
+    )
+    digital: bool = Field(
+        description="True if this card was only released in a video game.",
+    )
+    finishes: List[enums.Finish] = Field(
+        description="Finishes this card is available in, from among foil, nonfoil, and etched.",
+    )
+    flavor_name: str | None = Field(
+        description="Alternate name for this card, such as on Godzilla series.",
+    )
+    flavor_text: str | None = Field(
+        description="Flavor text on this card, if any.",
+    )
     # TODO: convert to enum?
-    frame_effects: List[str] | None
-    frame: str
-    full_art: bool
-    games: List[enums.Game]
-    highres_image: bool
-    illustation_id: str | None
+    frame_effects: List[str] | None = Field(
+        description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
+    )
+    frame: str = Field(
+        description="This card's frame layout; see https://scryfall.com/docs/api/frames",
+    )
+    full_art: bool = Field(
+        description="Whether this print is full-art.",
+    )
+    games: List[enums.Game] = Field(
+        description="Which games this print is available on, from among paper, mtgo, and arena.",
+    )
+    highres_image: bool = Field(
+        description="Whether this card has a high-res image available.",
+    )
+    illustation_id: str | None = Field(
+        description="A UUID for the particlar artwork on this print, consistent across art reprints.",
+    )
     # TODO: convert to enum?
-    image_status: str
-    image_uris: ImageUris | None
-    preview: Preview | None
-    prices: Prices | None
-    printed_name: str | None
-    printed_text: str | None
-    printed_type_line: str | None
-    promo: bool
-    promo_types: List[str]
+    image_status: str = Field(
+        description="The quality/status of images available for this card. Either missing, placeholder, lowres, or highres_scan.",
+    )
+    image_uris: ImageUris | None = Field(
+        description="Links to images of this card in various qualities.",
+    )
+    preview: Preview | None = Field(
+        description="Information about where, when, and how this print was previewed.",
+    )
+    prices: Prices | None = Field(
+        description="Prices for this card on various marketplaces.",
+    )
+    printed_name: str | None = Field(
+        description="Printed name of this card, for localized non-English cards.",
+    )
+    printed_text: str | None = Field(
+        description="Printed text of this card, for localized non-English cards.",
+    )
+    printed_type_line: str | None = Field(
+        description="Printed type line of this card, for localized non-English cards.",
+    )
+    promo: bool = Field(
+        default=False,
+        description="Whether this print is a promo.",
+    )
+    promo_types: List[str] | None = Field(
+        description="Which promo categories this print falls into, if any.",
+    )
     # TODO: convert to object?
-    purchase_uris: Dict[str, str]
-    rarity: enums.Rarity
+    purchase_uris: Dict[str, str] = Field(
+        default={},
+        description="Links to purchase this print from marketplaces.",
+    )
+    rarity: enums.Rarity = Field(
+        # TODO: default value?
+        description="The rarity of this print.",
+    )
     # TODO: convert to object?
-    related_uris: Dict[str, str]
-    released_at: datetime.date
-    reprint: bool
-    scryfall_set_uri: str
-    set_name: str
-    set_search_uri: str
-    set_type: str
-    set_uri: str
-    set: str
-    set_id: str
-    story_spotlight: bool
-    textless: bool
-    variation: bool
-    variation_of: str | None
+    related_uris: Dict[str, str] = Field(
+        default={},
+        description="Links to this print's listing on other online resources.",
+    )
+    released_at: datetime.date = Field(
+        # TODO: default value?
+        description="The date this card was first released.",
+    )
+    reprint: bool = Field(
+        default=False,
+        description="Whether this print is a reprint from an earlier set.",
+    )
+    scryfall_set_uri: str = Field(
+        default="",
+        description="Link to the Scryfall set page for the set of this print.",
+    )
+    set_name: str = Field(
+        default="",
+        description="Full name of the set this print belongs to.",
+    )
+    set_search_uri: str = Field(
+        default="",
+        description="Link to Scryfall API to start paginating through this print's full set.",
+    )
+    set_type: str = Field(
+        default="",
+        description="",
+    )
+    set_uri: str = Field(
+        default="",
+        description="Link to the set object for this print in Scryfall's API.",
+    )
+    set: str = Field(
+        default="",
+        description="Set code of the set this print belongs to.",
+    )
+    set_id: str = Field(
+        default="",
+        description="UUID of the set this print belongs to.",
+    )
+    story_spotlight: bool = Field(
+        default=False,
+        description="Whether this print is a Story Spotlight.",
+    )
+    textless: bool = Field(
+        default=False,
+        description="Whether this print is textless.",
+    )
+    variation: bool = Field(
+        default=False,
+        description="Whether this card print is a variation of another card object.",
+    )
+    variation_of: str | None = Field(
+        description="Which card object this object is a variant of, if any.",
+    )
     # TODO: convert to enum?
-    security_stamp: str | None
-    watermark: str | None
+    security_stamp: str | None = Field(
+        description="Security stamp on this card, if any.",
+    )
+    watermark: str | None = Field(
+        description="Watermark printed on this card, if any.",
+    )
+
+    # endregion
 
 
 class CardIn(Card):
