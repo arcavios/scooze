@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 
 import scooze.models.utils as model_utils
 from bson import ObjectId
@@ -13,15 +13,15 @@ class Card(BaseModel, validate_assignment=True):
         description="The oracle_id from Scryfall",
     )
     name: str = Field(
-        default="", # TODO: should probably be required and therefore not have a default?
+        default="",  # TODO: should probably be required and therefore not have a default?
         description="Name",
     )
     color: str = Field(
-        default="", # TODO: should probably be required and therefore not have a default?
+        default="",  # TODO: should probably be required and therefore not have a default?
         description="Color",
     )
     mana_value: float = Field(
-        default=0, # TODO: should probably be required and therefore not have a default?
+        default=0,  # TODO: should probably be required and therefore not have a default?
         description="Mana Value/Converted Mana Cost",
     )
 
@@ -37,6 +37,59 @@ class Card(BaseModel, validate_assignment=True):
 
     def __hash__(self):  # TODO: placeholder hash function so Gimmi could run tests against Deck model
         return self.name.__hash__()
+
+
+class CardFace(BaseModel, validate_assignment=True):
+    """Object for a single side of a double-faced card object.
+
+    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
+
+    Attributes:
+        artist: str | None
+        cmc: float
+        color_indicator: List[str] | None
+        colors: List[str] | None
+        flavor_text: str | None
+        illustration_id: int | None
+        image_uris: List[str] | None
+        layout: str | None
+        loyalty: int | None
+        mana_cost: str
+        name: str
+        object: str
+        oracle_id: str | None
+        oracle_text: str | None
+        power: str | None
+        printed_name: str | None
+        printed_text: str | None
+        printed_type_line: str | None
+        toughness: str | None
+        type_line: str
+        watermark: str | None
+    """
+
+    artist: str | None = Field(default=None, description="Illustrator for art on this face.")
+    cmc: float = Field(default=0.0, description="Mana value of this face.")
+    # TODO: update to use Color enum
+    color_indicator: List[str] | None = Field()
+    colors: List[str] | None = Field()
+    flavor_text: str | None = Field()
+    illustration_id: int | None = Field()
+    image_uris: List[str] | None = Field()
+    layout: str | None = Field()
+    loyalty: int | None = Field()
+    mana_cost: str = Field()
+    name: str = Field()
+    object: str = Field()
+    oracle_id: str | None = Field()
+    oracle_text: str | None = Field()
+    power: str | None = Field()
+    printed_name: str | None = Field()
+    printed_text: str | None = Field()
+    printed_type_line: str | None = Field()
+    toughness: str | None = Field()
+    type_line: str = Field()
+    watermark: str | None = Field()
 
 
 class CardIn(Card):
