@@ -1,8 +1,10 @@
 from typing import Annotated, Dict, List
 
-import scooze.models.utils as model_utils
 from bson import ObjectId
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
+
+import scooze.models.utils as model_utils
+import scooze.enums as enums
 
 
 class Card(BaseModel, validate_assignment=True):
@@ -65,7 +67,7 @@ class DecklistCard(Card, validate_assignment=True):
 
     # cmc defined by base object
     # colors defined by base object
-    legalities: Dict[model_utils.Format, model_utils.Legality] = Field(
+    legalities: Dict[enums.Format, enums.Legality] = Field(
         description="Color",
     )
     mana_cost: str = Field(
