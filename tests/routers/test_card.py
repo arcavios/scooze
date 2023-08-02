@@ -19,8 +19,8 @@ def request_body_card() -> CardIn:
         {
             "oracleId": "1",
             "name": "Snapcaster Mage",
-            "color": "{U}",
-            "manaValue": "2",
+            "colors": ["U"],
+            "cmc": "2",
         }
     )
 
