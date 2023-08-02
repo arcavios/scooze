@@ -2,9 +2,9 @@ from collections import Counter
 from enum import auto
 from typing import Annotated, Any
 
+from datetime import datetime, timezone
 import scooze.models.utils as model_utils
 from bson import ObjectId
-from pendulum import DateTime
 from pydantic import BaseModel, Field, field_validator, model_validator
 from scooze.enums import Format
 from scooze.models.card import Card
@@ -32,7 +32,7 @@ class Deck(BaseModel, validate_assignment=True):
         The archetype of this Deck.
     format : Format
         The format legality of the cards in this Deck.
-    date_played : DateTime
+    date_played : datetime
         The date this Deck was played.
     matches : MatchData
         Match data for this Deck.
@@ -69,7 +69,7 @@ class Deck(BaseModel, validate_assignment=True):
         default=Format.NONE,
         description="The format of the tournament where this Deck was played.",
     )
-    date_played: DateTime = Field(
+    date_played: datetime = Field(
         default=None,
         description="The date this Deck was played.",
     )
@@ -135,7 +135,7 @@ class Deck(BaseModel, validate_assignment=True):
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:  # TODO: use DecklistCard
+    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:  # TODO: use DecklistCard
         """
         Adds the given cards to this Deck.
 
@@ -150,9 +150,10 @@ class Deck(BaseModel, validate_assignment=True):
             case InThe.SIDE:
                 self.side.update(cards)
 
-        self._validate_deck()
+        if revalidate_after:
+            self._validate_deck()
 
-    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:  # TODO: use DecklistCard
+    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:  # TODO: use DecklistCard
         """
         Adds a given quantity of a given card to this Deck.
 
@@ -174,7 +175,8 @@ class Deck(BaseModel, validate_assignment=True):
                     f"{self.archetype} - Unable to add {quantity} copies of {card.name} to the deck. 'in' must be one of {InThe.list()}"
                 )
 
-        self._validate_deck()
+        if revalidate_after:
+            self._validate_deck()
 
     def count(self) -> int:
         """
