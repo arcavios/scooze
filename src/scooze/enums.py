@@ -6,7 +6,7 @@ from strenum import StrEnum
 
 class BorderColor(ExtendedEnum, StrEnum):
     """
-    A color that borders of Magic: the Gathering cards can be.
+    A color that borders of Magic cards can be.
     """
 
     BLACK = auto()
@@ -18,7 +18,7 @@ class BorderColor(ExtendedEnum, StrEnum):
 
 class Color(ExtendedEnum, StrEnum):
     """
-    A color that Magic: the Gathering cards can be.
+    A color that Magic cards can be.
     """
 
     WHITE = "W"
@@ -26,6 +26,16 @@ class Color(ExtendedEnum, StrEnum):
     BLACK = "B"
     RED = "R"
     GREEN = "G"
+
+
+class Finish(ExtendedEnum, StrEnum):
+    """
+    A finish type that a Magic card can be printed with.
+    """
+
+    FOIL = auto()
+    NONFOIL = auto()
+    ETCHED = auto()
 
 
 class Format(ExtendedEnum, StrEnum):
