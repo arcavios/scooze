@@ -135,7 +135,9 @@ class Deck(BaseModel, validate_assignment=True):
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:  # TODO: use DecklistCard
+    def add_cards(
+        self, cards: Counter[Card], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:  # TODO: use DecklistCard
         """
         Adds the given cards to this Deck.
 
@@ -153,7 +155,9 @@ class Deck(BaseModel, validate_assignment=True):
         if revalidate_after:
             self._validate_deck()
 
-    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:  # TODO: use DecklistCard
+    def add_card(
+        self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:  # TODO: use DecklistCard
         """
         Adds a given quantity of a given card to this Deck.
 
