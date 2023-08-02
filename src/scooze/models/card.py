@@ -317,7 +317,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         card_faces: List[CardFace] | None
         cmc: float
         color_identity: List[Color]
-        color_indicator: List[Color]
+        color_indicator: List[Color] | None
         colors: List[color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
@@ -412,28 +412,68 @@ class FullCard(DecklistCard, validate_assignment=True):
 
     # region Gameplay fields
 
-    all_parts: List[RelatedCard] | None
-    card_faces: List[CardFace] | None
+    all_parts: List[RelatedCard] | None = Field(
+        description="RelatedCard objects for tokens/meld pairs/other associated parts to this card, if applicable.",
+    )
+    card_faces: List[CardFace] | None = Field(
+        description="All component CardFace objects of this card, for multifaced cards.",
+    )
     # cmc defined in parent class
-    color_identity: List[enums.Color]
-    color_indicator: List[enums.Color]
+    color_identity: List[enums.Color] = Field(
+        default=[],
+        description="This card's color identity, for Commander variant deckbuilding.",
+    )
+    color_indicator: List[enums.Color] | None = Field(
+        description="The colors in this card's color indicator, if it has one.",
+    )
     # colors defined in parent class
-    edhrec_rank: int | None
-    hand_modifier: str | None
-    keywords: List[str]
-    layout: str
+    edhrec_rank: int | None = Field(
+        description="This card's rank/popularity on EDHREC, if applicable.",
+    )
+    hand_modifier: str | None = Field(
+        description="This card's Vanguard hand size modifier, if applicable.",
+    )
+    keywords: List[str] = Field(
+        default=[],
+        description="Keywords and keyword actions this card uses.",
+    )
+    layout: str = Field(
+        # TODO: better default?
+        default="normal",
+        description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
+    )
     # legalities defined in parent class
-    life_modifier: str | None
-    loyalty: str | None
+    life_modifier: str | None = Field(
+        description="This card's Vanguard life modifier value, if applicable.",
+    )
+    loyalty: str | None = Field(
+        description="This card's starting planeswalker loyalty, if applicable.",
+    )
     # mana_cost defined in parent class
     # name defined in parent class
-    oracle_text: str | None
-    oversized: bool
-    penny_rank: int | None
-    power: str | None
-    produced_mana: List[enums.Color] | None
-    reserved: bool
-    toughness: str | None
+    oracle_text: str | None = Field(
+        description="This card's oracle text, if any.",
+    )
+    oversized: bool = Field(
+        default=False,
+        description="Whether this card is oversized.",
+    )
+    penny_rank: int | None = Field(
+        description="This card's rank/popularity on Penny Dreadful.",
+    )
+    power: str | None = Field(
+        description="Power of this card, if applicable.",
+    )
+    produced_mana: List[enums.Color] | None = Field(
+        description="Which colors of mana this card can produce.",
+    )
+    reserved: bool = Field(
+        default=False,
+        description="Whether this card is on the Reserved List.",
+    )
+    toughness: str | None = Field(
+        description="Toughness of this card, if applicable.",
+    )
     # type_line defined in parent class
 
     # endregion
