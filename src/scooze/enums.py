@@ -4,6 +4,18 @@ from scooze.utils import ExtendedEnum
 from strenum import StrEnum
 
 
+class BorderColor(ExtendedEnum, StrEnum):
+    """
+    A color that borders of Magic: the Gathering cards can be.
+    """
+
+    BLACK = auto()
+    WHITE = auto()
+    BORDERLESS = auto()
+    SILVER = auto()
+    GOLD = auto()
+
+
 class Color(ExtendedEnum, StrEnum):
     """
     A color that Magic: the Gathering cards can be.
