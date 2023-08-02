@@ -6,6 +6,16 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Card(BaseModel, validate_assignment=True):
+    """
+    Object for a basic Card object with minimal fields.
+
+    Attributes:
+       oracle_id: str
+       cmc: float
+       colors: List[str]
+       name: str
+    """
+
     model_config = model_utils.get_base_model_config()
 
     oracle_id: str = Field(
@@ -35,12 +45,13 @@ class Card(BaseModel, validate_assignment=True):
     #         raise ValueError  # TODO: put a real error message here. should maybe be a warning?
     #     return v
 
-    def __hash__(self):  # TODO: placeholder hash function so Gimmi could run tests against Deck model
+    def __hash__(self):  # TODO: replace this placeholder with more permanent solution, and overwrite in subclasses
         return self.name.__hash__()
 
 
 class DecklistCard(Card, validate_assignment=True):
-    """Card subclass intended for using card data in a decklist-informed setting or similar.
+    """
+    Card subclass intended for using card data in a decklist-informed setting or similar.
     All information in this class is print-agnostic.
 
     Attributes:
@@ -67,7 +78,8 @@ class DecklistCard(Card, validate_assignment=True):
 
 
 class CardFace(BaseModel, validate_assignment=True):
-    """Object for a single side of a double-faced card object.
+    """
+    Object for a single side of a double-faced card object.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
@@ -126,13 +138,15 @@ class CardFace(BaseModel, validate_assignment=True):
 
 
 class Prices(BaseModel, validate_assignment=True):
-    """Object for all price data associated with a Card object.
+    """
+    Object for all price data associated with a Card object.
 
     Attributes:
         usd: float
         usd_foil: float
         eur: float
-        tix: float"""
+        tix: float
+    """
 
     usd: float | None = Field(default=None, description="Price in US dollars, from TCGplayer.")
     usd_foil: float | None = Field(default=None, description="Foil price in US dollars, from TCGplayer.")
@@ -141,12 +155,14 @@ class Prices(BaseModel, validate_assignment=True):
 
 
 class Preview(BaseModel, validate_assignment=True):
-    """Object for information about where and when a card was previewed.
+    """
+    Object for information about where and when a card was previewed.
 
     Attributes:
         previewed_at
         source: str | None
-        source_uri: str | None"""
+        source_uri: str | None
+    """
 
     # TODO: previewed_at as a datetime?
     source: str | None = Field(
@@ -160,7 +176,8 @@ class Preview(BaseModel, validate_assignment=True):
 
 
 class RelatedCard(BaseModel, validate_assignment=True):
-    """Data about Scryfall objects related to this card (tokens, cards referenced by name, meld pairs, etc.)
+    """
+    Data about Scryfall objects related to this card (tokens, cards referenced by name, meld pairs, etc.)
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
@@ -170,7 +187,8 @@ class RelatedCard(BaseModel, validate_assignment=True):
         component: str
         name: str
         type_line: str
-        uri: str"""
+        uri: str
+    """
 
     id: str = Field(description="ID of linked component.")
     object: str = Field(description="Always `related_card` for this object.")
