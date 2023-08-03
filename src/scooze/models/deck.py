@@ -6,7 +6,7 @@ from typing import Annotated, Any
 import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field, field_validator, model_validator
-from scooze.enums import Format, ExtendedEnum
+from scooze.enums import ExtendedEnum, Format
 from scooze.models.card import Card
 from scooze.models.matchdata import MatchData
 from scooze.utils import get_logger

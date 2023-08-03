@@ -1,8 +1,9 @@
+from sys import maxsize
+from typing import Tuple
+
+import pytest
 import scooze.models.utils as model_utils
 from scooze.enums import Format
-from typing import Tuple
-from sys import maxsize
-import pytest
 
 # region Fixtures
 
@@ -133,9 +134,11 @@ def fmt_none() -> Format:
 
 # region Main Size
 
+
 @pytest.fixture
 def main_size_40() -> Tuple[int, int]:
     return (40, maxsize)
+
 
 @pytest.fixture
 def main_size_58() -> Tuple[int, int]:
@@ -165,6 +168,7 @@ def main_size_any() -> Tuple[int, int]:
 # endregion
 
 # region Side Size
+
 
 @pytest.fixture
 def side_size_0() -> Tuple[int, int]:
@@ -201,6 +205,7 @@ def side_size_any() -> Tuple[int, int]:
 # region Test Format Deck Size
 
 # region Main Size
+
 
 @pytest.mark.format_size
 def test_fmt_alchemy_size_main(fmt_alchemy, main_size_60):
@@ -311,13 +316,16 @@ def test_fmt_vintage_size_main(fmt_vintage, main_size_60):
 def test_fmt_limited_size_main(fmt_limited, main_size_40):
     assert model_utils.main_size(fmt_limited) == main_size_40
 
+
 @pytest.mark.format_size
 def test_fmt_none_size_main(fmt_none, main_size_any):
     assert model_utils.main_size(fmt_none) == main_size_any
 
+
 # endregion
 
 # region Side Size
+
 
 @pytest.mark.format_size
 def test_fmt_alchemy_size_side(fmt_alchemy, side_size_15):
@@ -428,9 +436,11 @@ def test_fmt_vintage_size_side(fmt_vintage, side_size_15):
 def test_fmt_limited_size_side(fmt_limited, side_size_any):
     assert model_utils.side_size(fmt_limited) == side_size_any
 
+
 @pytest.mark.format_size
 def test_fmt_none_size_side(fmt_none, side_size_any):
     assert model_utils.side_size(fmt_none) == side_size_any
+
 
 # endregion
 

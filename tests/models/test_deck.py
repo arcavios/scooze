@@ -4,9 +4,9 @@ from datetime import datetime, timezone
 
 import pytest
 from pydantic_core import ValidationError
-from scooze.models.card import Card
-from scooze.models.deck import Deck, InThe, DecklistFormatter
 from scooze.enums import Format
+from scooze.models.card import Card
+from scooze.models.deck import Deck, DecklistFormatter, InThe
 
 # region Fixtures
 
@@ -94,9 +94,6 @@ def test_format(format, main_cards):
 def test_format_validation():
     with pytest.raises(ValueError) as e:
         Deck.model_validate({"archetype": "test_format_validation", "format": "not a real format"})
-
-
-# TODO: add tests for validating the main/side min/max for several formats.
 
 
 def test_date_played(today):
@@ -208,7 +205,10 @@ def test_to_decklist_arena(main_cards, side_cards, main_string, side_string):
     assert deck.to_decklist(DecklistFormatter.ARENA) == f"{main_string}\n\nSideboard\n{side_string}"
 
 
-# TODO: add test: test_to_decklist_arena_no_side
+@pytest.mark.deck_export
+def test_to_decklist_arena_no_side(main_cards, main_string):
+    deck = Deck.model_construct(archetype="test_to_decklist_arena_no_side", main=main_cards)
+    assert deck.to_decklist(DecklistFormatter.ARENA) == f"{main_string}"
 
 
 @pytest.mark.deck_export
@@ -217,4 +217,7 @@ def test_to_decklist_mtgo(main_cards, side_cards, main_string, side_string):
     assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_string}\n\nSIDEBOARD:\n{side_string}"
 
 
-# TODO: add test: test_to_decklist_mtgo_no_side
+@pytest.mark.deck_export
+def test_to_decklist_mtgo_no_side(main_cards, main_string):
+    deck = Deck.model_construct(archetype="test_to_decklist_mtgo_no_side", main=main_cards)
+    assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_string}"
