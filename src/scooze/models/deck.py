@@ -45,9 +45,9 @@ class Deck(BaseModel, validate_assignment=True):
         The date this Deck was played.
     matches : MatchData
         Match data for this Deck.
-    main : Counter[DecklistCard] # TODO: use DecklistCard
+    main : Counter[DecklistCard]
         The main deck. Typically 60 cards minimum.
-    side : Counter[DecklistCard] # TODO: use DecklistCard
+    side : Counter[DecklistCard]
         The sideboard. Typically 15 cards maximum.
 
     Methods
@@ -86,11 +86,11 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[DecklistCard] = Field(  # TODO: use DecklistCard
+    main: Counter[DecklistCard] = Field(
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[DecklistCard] = Field(  # TODO: use DecklistCard
+    side: Counter[DecklistCard] = Field(
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
@@ -146,7 +146,7 @@ class Deck(BaseModel, validate_assignment=True):
 
     def add_cards(
         self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
-    ) -> None:  # TODO: use DecklistCard
+    ) -> None:
         """
         Adds the given cards to this Deck.
 
@@ -166,7 +166,7 @@ class Deck(BaseModel, validate_assignment=True):
 
     def add_card(
         self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
-    ) -> None:  # TODO: use DecklistCard
+    ) -> None:
         """
         Adds a given quantity of a given card to this Deck.
 
