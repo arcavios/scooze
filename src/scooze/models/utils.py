@@ -7,7 +7,6 @@ from pydantic import ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 from scooze.enums import Format
-from scooze.utils import ExtendedEnum
 from strenum import StrEnum
 
 # region Private Utility Functions
@@ -143,15 +142,6 @@ class ObjectIdPydanticAnnotation:
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> JsonSchemaValue:
         return handler(core_schema.str_schema())
-
-
-class DecklistFormatter(ExtendedEnum, StrEnum):
-    """
-    A method of formatting a decklist for external systems.
-    """
-
-    ARENA = auto()
-    MTGO = auto()
 
 
 # endregion

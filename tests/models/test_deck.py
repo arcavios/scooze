@@ -1,6 +1,7 @@
 import json
 from collections import Counter
 from datetime import datetime, timezone
+from sys import maxsize
 
 import pytest
 from pydantic_core import ValidationError
@@ -45,16 +46,16 @@ def new_card() -> str:
 
 @pytest.fixture
 def main_string() -> str:
-    return "1 Expedition Map\n2 Boseiju, Who Endures\n57 Forest"
+    return "2 Expedition Map\n2 Boseiju, Who Endures\n56 Forest"
 
 
 @pytest.fixture
 def main_cards() -> Counter:
     main_cards = Counter(
         {
-            DecklistCard.model_construct(name="Expedition Map", mana_value=1): 1,
+            DecklistCard.model_construct(name="Expedition Map", mana_value=1): 2,
             DecklistCard.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
-            DecklistCard.model_construct(name="Forest", mana_value=0): 57,
+            DecklistCard.model_construct(name="Forest", mana_value=0): 56,
         }
     )
     return main_cards
@@ -62,7 +63,7 @@ def main_cards() -> Counter:
 
 @pytest.fixture
 def side_string() -> str:
-    return "1 Pithing Needle\n2 Trail of Crumbs\n11 Forest"
+    return "1 Pithing Needle\n2 Trail of Crumbs\n9 Forest\n2 Expedition Map"
 
 
 @pytest.fixture
@@ -71,7 +72,8 @@ def side_cards() -> Counter:
         {
             DecklistCard.model_construct(name="Pithing Needle", mana_value=1): 1,
             DecklistCard.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
-            DecklistCard.model_construct(name="Forest", mana_value=0): 11,
+            DecklistCard.model_construct(name="Forest", mana_value=0): 9,
+            DecklistCard.model_construct(name="Expedition Map", mana_value=1): 2,
         }
     )
     return side_cards
@@ -99,6 +101,42 @@ def test_format_validation():
 def test_date_played(today):
     deck = Deck.model_construct(date_played=today)
     assert deck.date_played == today
+
+
+def test_str(archetype, format, today, main_cards, side_cards):
+    deck = Deck.model_construct(
+        archetype=archetype,
+        format=format,
+        date_played=today,
+        main=main_cards,
+        side=side_cards,
+    )
+    decklist = deck.to_decklist()
+    deck_str = (
+        f"""Archetype: {archetype}\n"""
+        f"""Format: {format}\n"""
+        f"""Date Played: {today}\n"""
+        f"""Decklist:\n{decklist}\n"""
+    )
+    assert str(deck) == deck_str
+
+
+def test_eq(archetype, format, today, main_cards, side_cards):
+    deckA = Deck.model_construct(
+        archetype=archetype,
+        format=format,
+        date_played=today,
+        main=main_cards,
+        side=side_cards,
+    )
+    deckB = Deck.model_construct(
+        archetype=archetype,
+        format=format,
+        date_played=today,
+        main=main_cards,
+        side=side_cards,
+    )
+    assert deckA == deckB
 
 
 @pytest.mark.deck_add_cards
@@ -151,23 +189,6 @@ def test_add_cards_main_and_side(main_cards, side_cards):
 
 @pytest.mark.deck_add_cards
 @pytest.mark.deck_validation
-def test_remove_card_main_validation(format, main_cards, existing_card):
-    # TODO: create remove card and remove_cards. use it here
-    deck = Deck.model_validate(
-        {
-            "archetype": "test_add_cards_validation",
-            "format": format,
-            "main": main_cards,
-        }
-    )
-    with pytest.raises(ValueError) as e:
-        deck.add_card(
-            card=existing_card, quantity=-1, in_the=InThe.MAIN, revalidate_after=True
-        )  # fewer than 60 in the main
-
-
-@pytest.mark.deck_add_cards
-@pytest.mark.deck_validation
 def test_add_cards_side_validation(format, main_cards, side_cards):
     deck = Deck.model_validate(
         {
@@ -179,6 +200,54 @@ def test_add_cards_side_validation(format, main_cards, side_cards):
     )
     with pytest.raises(ValueError) as e:
         deck.add_cards(cards=side_cards, in_the=InThe.SIDE, revalidate_after=True)  # more than 15 in the sideboard
+
+
+@pytest.mark.deck_add_cards
+@pytest.mark.deck_validation
+def test_remove_card_main_validation(format, main_cards, existing_card):
+    deck = Deck.model_validate(
+        {
+            "archetype": "test_remove_card_main_validation",
+            "format": format,
+            "main": main_cards,
+        }
+    )
+    with pytest.raises(ValueError) as e:
+        deck.remove_card(
+            card=existing_card, quantity=1, in_the=InThe.MAIN, revalidate_after=True
+        )  # fewer than 60 in the main
+
+
+@pytest.mark.deck_remove_cards
+def test_remove_card(main_cards, existing_card):
+    deck = Deck.model_construct(archetype="test_remove_card", main=main_cards)
+    deck.remove_card(card=existing_card, quantity=1)
+    main_cards = main_cards - Counter({existing_card: 1})
+    assert deck.main == main_cards
+
+
+@pytest.mark.deck_remove_cards
+def test_remove_card_all(main_cards, existing_card):
+    deck = Deck.model_construct(archetype="test_remove_card_all", main=main_cards)
+    deck.remove_card(card=existing_card)
+    main_cards = main_cards - Counter({existing_card: maxsize})
+    assert deck.main == main_cards
+
+
+@pytest.mark.deck_remove_cards
+def test_remove_card_side(side_cards, existing_card):
+    deck = Deck.model_construct(archetype="test_remove_card_side", side=side_cards)
+    deck.remove_card(card=existing_card, quantity=1, in_the=InThe.SIDE)
+    side_cards = side_cards - Counter({existing_card: 1})
+    assert deck.side == side_cards
+
+
+@pytest.mark.deck_remove_cards
+def test_remove_cards(main_cards):
+    double_main = main_cards + main_cards
+    deck = Deck.model_construct(archetype="test_remove_cards", main=double_main)
+    deck.remove_cards(main_cards)
+    assert deck.main == main_cards
 
 
 @pytest.mark.deck_count

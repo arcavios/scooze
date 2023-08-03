@@ -1,8 +1,8 @@
 from collections import Counter
 from datetime import datetime, timezone
 from enum import auto
-from typing import Annotated, Any
 from sys import maxsize
+from typing import Annotated, Any
 
 import scooze.models.utils as model_utils
 from bson import ObjectId
@@ -138,8 +138,8 @@ class Deck(BaseModel, validate_assignment=True):
     def __eq__(self, other):
         return (
             self.archetype == other.archetype
-            and self.date_played == other.date_played
             and self.format == other.format
+            and self.date_played == other.date_played
             and self.main == other.main
             and self.side == other.side
         )
@@ -148,8 +148,8 @@ class Deck(BaseModel, validate_assignment=True):
         decklist = self.to_decklist()
         return (
             f"""Archetype: {self.archetype}\n"""
-            f"""Date Played: {self.date_played}\n"""
             f"""Format: {self.format}\n"""
+            f"""Date Played: {self.date_played}\n"""  # TODO: format date str?
             f"""Decklist:\n{decklist}\n"""
         )
 
@@ -200,7 +200,9 @@ class Deck(BaseModel, validate_assignment=True):
         if revalidate_after:
             self._validate_deck()
 
-    def remove_card(self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:
+    def remove_card(
+        self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
 
@@ -210,18 +212,21 @@ class Deck(BaseModel, validate_assignment=True):
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
 
+        # using counterA - counterB results in a new counter with only positive results
         match in_the:
             case InThe.MAIN:
-                self.main = self.main - {card: quantity}
+                self.main = self.main - Counter({card: quantity})
             case InThe.SIDE:
-                self.side = self.side - {card: quantity}
+                self.side = self.side - Counter({card: quantity})
             case _:
                 pass
 
         if revalidate_after:
             self._validate_deck()
 
-    def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:
+    def remove_cards(
+        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:
         """
         Removes a given quantity of a given card from this Deck.
 
@@ -230,6 +235,7 @@ class Deck(BaseModel, validate_assignment=True):
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
 
+        # using counterA - counterB results in a new counter with only positive results
         match in_the:
             case InThe.MAIN:
                 self.main = self.main - cards

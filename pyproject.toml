@@ -45,6 +45,7 @@ markers = [
     "slow: expected to be slow",
     "format_size: related to format deck size",
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
+    "deck_remove_cards: related to Deck.remove_card() and Deck.remove_cards()",
     "deck_count: related to Deck.count()",
     "deck_export: related to exporting a Deck as text or some other format",
     "deck_validation: related to forcing ValidationErrors from Pydantic",
