@@ -7,7 +7,7 @@ import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field, field_validator, model_validator
 from scooze.enums import ExtendedEnum, Format
-from scooze.models.card import Card
+from scooze.models.card import DecklistCard
 from scooze.models.matchdata import MatchData
 from scooze.utils import get_logger
 from strenum import StrEnum
@@ -45,16 +45,16 @@ class Deck(BaseModel, validate_assignment=True):
         The date this Deck was played.
     matches : MatchData
         Match data for this Deck.
-    main : Counter[Card] # TODO: use DecklistCard
+    main : Counter[DecklistCard] # TODO: use DecklistCard
         The main deck. Typically 60 cards minimum.
-    side : Counter[Card] # TODO: use DecklistCard
+    side : Counter[DecklistCard] # TODO: use DecklistCard
         The sideboard. Typically 15 cards maximum.
 
     Methods
     -------
-    add_card(card: Card, quantity: int, in_the: InThe):
+    add_card(card: DecklistCard, quantity: int, in_the: InThe):
         Adds a given quantity of a given card to this Deck.
-    add_cards(cards: Counter[Card], in_the: InThe):
+    add_cards(cards: Counter[DecklistCard], in_the: InThe):
         Adds the given cards to this Deck.
     count():
         Counts all of the cards in this Deck.
@@ -86,11 +86,11 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[Card] = Field(  # TODO: use DecklistCard
+    main: Counter[DecklistCard] = Field(  # TODO: use DecklistCard
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[Card] = Field(  # TODO: use DecklistCard
+    side: Counter[DecklistCard] = Field(  # TODO: use DecklistCard
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
@@ -145,13 +145,13 @@ class Deck(BaseModel, validate_assignment=True):
         )
 
     def add_cards(
-        self, cards: Counter[Card], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
     ) -> None:  # TODO: use DecklistCard
         """
         Adds the given cards to this Deck.
 
         Parameters:
-            cards Counter[Card]: The cards to add.
+            cards Counter[DecklistCard]: The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
         """
 
@@ -165,7 +165,7 @@ class Deck(BaseModel, validate_assignment=True):
             self._validate_deck()
 
     def add_card(
-        self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+        self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
     ) -> None:  # TODO: use DecklistCard
         """
         Adds a given quantity of a given card to this Deck.

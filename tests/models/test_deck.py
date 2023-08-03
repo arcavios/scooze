@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import pytest
 from pydantic_core import ValidationError
 from scooze.enums import Format
-from scooze.models.card import Card
+from scooze.models.card import DecklistCard
 from scooze.models.deck import Deck, DecklistFormatter, InThe
 
 # region Fixtures
@@ -28,7 +28,7 @@ def today() -> datetime:
 
 @pytest.fixture
 def existing_card() -> str:
-    return Card.model_construct(
+    return DecklistCard.model_construct(
         name="Expedition Map",
         mana_value=1,
     )
@@ -36,7 +36,7 @@ def existing_card() -> str:
 
 @pytest.fixture
 def new_card() -> str:
-    return Card.model_construct(
+    return DecklistCard.model_construct(
         name="Primeval Titan",
         mana_value=6,
         color=["G"],
@@ -52,9 +52,9 @@ def main_string() -> str:
 def main_cards() -> Counter:
     main_cards = Counter(
         {
-            Card.model_construct(name="Expedition Map", mana_value=1): 1,
-            Card.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
-            Card.model_construct(name="Forest", mana_value=0): 57,
+            DecklistCard.model_construct(name="Expedition Map", mana_value=1): 1,
+            DecklistCard.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
+            DecklistCard.model_construct(name="Forest", mana_value=0): 57,
         }
     )
     return main_cards
@@ -69,9 +69,9 @@ def side_string() -> str:
 def side_cards() -> Counter:
     side_cards = Counter(
         {
-            Card.model_construct(name="Pithing Needle", mana_value=1): 1,
-            Card.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
-            Card.model_construct(name="Forest", mana_value=0): 11,
+            DecklistCard.model_construct(name="Pithing Needle", mana_value=1): 1,
+            DecklistCard.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
+            DecklistCard.model_construct(name="Forest", mana_value=0): 11,
         }
     )
     return side_cards
