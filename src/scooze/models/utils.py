@@ -36,10 +36,8 @@ def main_size(fmt: Format) -> Tuple[int, int]:
     """
 
     match fmt.value:
-        # TODO: Limited doesn't show up in Scryfall's enum, but could still be relevant for deck data;
-        #   how should it be supported?
-        # case Format.LIMITED:
-        #     return (40, maxsize)
+        case Format.LIMITED:
+            return 40, maxsize
 
         case Format.OATHBREAKER:
             return 58, 58
@@ -79,10 +77,8 @@ def side_size(fmt: Format) -> Tuple[int, int]:
     """
 
     match fmt.value:
-        # TODO: Limited doesn't show up in Scryfall's enum, but could still be relevant for deck data;
-        #   how should it be supported?
-        # case Format.LIMITED:
-        #     return 0, maxsize
+        case Format.LIMITED:
+            return 0, maxsize
 
         case Format.OATHBREAKER:
             return 2, 2  # TODO(#51): commander support?
