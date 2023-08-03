@@ -200,7 +200,7 @@ class Deck(BaseModel, validate_assignment=True):
         if revalidate_after:
             self._validate_deck()
 
-    def remove_card(self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
+    def remove_card(self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
 
@@ -218,7 +218,10 @@ class Deck(BaseModel, validate_assignment=True):
             case _:
                 pass
 
-    def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
+        if revalidate_after:
+            self._validate_deck()
+
+    def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False) -> None:
         """
         Removes a given quantity of a given card from this Deck.
 
@@ -234,6 +237,9 @@ class Deck(BaseModel, validate_assignment=True):
                 self.side = self.side - cards
             case _:
                 pass
+
+        if revalidate_after:
+            self._validate_deck()
 
     def count(self) -> int:
         """
