@@ -1,15 +1,15 @@
 from collections import Counter
+from datetime import datetime, timezone
 from enum import auto
 from typing import Annotated, Any
 
-from datetime import datetime, timezone
 import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field, field_validator, model_validator
-from scooze.enums import Format
+from scooze.enums import Format, ExtendedEnum
 from scooze.models.card import Card
 from scooze.models.matchdata import MatchData
-from scooze.utils import ExtendedEnum, get_logger
+from scooze.utils import get_logger
 from strenum import StrEnum
 
 
@@ -20,6 +20,15 @@ class InThe(ExtendedEnum, StrEnum):
 
     MAIN = auto()
     SIDE = auto()
+
+
+class DecklistFormatter(ExtendedEnum, StrEnum):
+    """
+    A method of formatting a decklist for external systems.
+    """
+
+    ARENA = auto()
+    MTGO = auto()
 
 
 class Deck(BaseModel, validate_assignment=True):
@@ -190,7 +199,7 @@ class Deck(BaseModel, validate_assignment=True):
 
         return self.main.total() + self.side.total()
 
-    def to_decklist(self, decklist_formatter: model_utils.DecklistFormatter = None) -> str:
+    def to_decklist(self, decklist_formatter: DecklistFormatter = None) -> str:
         """
         Exports this Deck as a str with the given DecklistFormatter.
 
@@ -202,11 +211,11 @@ class Deck(BaseModel, validate_assignment=True):
         """
 
         match decklist_formatter:
-            case model_utils.DecklistFormatter.ARENA:
+            case DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
                 # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for Arena.")
-            case model_utils.DecklistFormatter.MTGO:
+            case DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for MTGO.")
@@ -214,7 +223,7 @@ class Deck(BaseModel, validate_assignment=True):
                 sb_prefix = ""  # Default
                 self._logger.warning(
                     f"""{self.archetype} - Unable to export with the given format: {decklist_formatter}. """
-                    f"""'export_format' must be one of {model_utils.DecklistFormatter.list()}. Using default format."""
+                    f"""'export_format' must be one of {DecklistFormatter.list()}. Using default format."""
                 )
         sb_prefix = "\n\n" + sb_prefix
 

@@ -1,12 +1,12 @@
 import json
 from collections import Counter
+from datetime import datetime, timezone
 
 import pytest
-from datetime import datetime, timezone
 from pydantic_core import ValidationError
 from scooze.models.card import Card
-from scooze.models.deck import Deck, InThe
-from scooze.models.utils import DecklistFormatter, Format
+from scooze.models.deck import Deck, InThe, DecklistFormatter
+from scooze.enums import Format
 
 # region Fixtures
 
@@ -90,7 +90,6 @@ def test_format(format, main_cards):
     assert deck.format == format
 
 
-@pytest.mark.deck.format
 @pytest.mark.deck_validation
 def test_format_validation():
     with pytest.raises(ValueError) as e:

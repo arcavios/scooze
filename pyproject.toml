@@ -43,6 +43,7 @@ priority = "explicit"
 # addopts = "-m 'not slow'"
 markers = [
     "slow: expected to be slow",
+    "format_size: related to format deck size",
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
     "deck_count: related to Deck.count()",
     "deck_export: related to exporting a Deck as text or some other format",
