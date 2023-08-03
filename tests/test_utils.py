@@ -208,117 +208,117 @@ def side_size_any() -> Tuple[int, int]:
 
 
 @pytest.mark.format_size
-def test_fmt_alchemy_size_main(fmt_alchemy, main_size_60):
+def test_fmt_alchemy_main_size(fmt_alchemy, main_size_60):
     assert model_utils.main_size(fmt_alchemy) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_brawl_size_main(fmt_brawl, main_size_99):
+def test_fmt_brawl_main_size(fmt_brawl, main_size_99):
     assert model_utils.main_size(fmt_brawl) == main_size_99
 
 
 @pytest.mark.format_size
-def test_fmt_commander_size_main(fmt_commander, main_size_99):
+def test_fmt_commander_main_size(fmt_commander, main_size_99):
     assert model_utils.main_size(fmt_commander) == main_size_99
 
 
 @pytest.mark.format_size
-def test_fmt_duel_size_main(fmt_duel, main_size_99):
+def test_fmt_duel_main_size(fmt_duel, main_size_99):
     assert model_utils.main_size(fmt_duel) == main_size_99
 
 
 @pytest.mark.format_size
-def test_fmt_explorer_size_main(fmt_explorer, main_size_60):
+def test_fmt_explorer_main_size(fmt_explorer, main_size_60):
     assert model_utils.main_size(fmt_explorer) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_future_size_main(fmt_future, main_size_60):
+def test_fmt_future_main_size(fmt_future, main_size_60):
     assert model_utils.main_size(fmt_future) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_gladiator_size_main(fmt_gladiator, main_size_100):
+def test_fmt_gladiator_main_size(fmt_gladiator, main_size_100):
     assert model_utils.main_size(fmt_gladiator) == main_size_100
 
 
 @pytest.mark.format_size
-def test_fmt_historic_size_main(fmt_historic, main_size_60):
+def test_fmt_historic_main_size(fmt_historic, main_size_60):
     assert model_utils.main_size(fmt_historic) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_historicbrawl_size_main(fmt_historicbrawl, main_size_99):
+def test_fmt_historicbrawl_main_size(fmt_historicbrawl, main_size_99):
     assert model_utils.main_size(fmt_historicbrawl) == main_size_99
 
 
 @pytest.mark.format_size
-def test_fmt_legacy_size_main(fmt_legacy, main_size_60):
+def test_fmt_legacy_main_size(fmt_legacy, main_size_60):
     assert model_utils.main_size(fmt_legacy) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_modern_size_main(fmt_modern, main_size_60):
+def test_fmt_modern_main_size(fmt_modern, main_size_60):
     assert model_utils.main_size(fmt_modern) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_oathbreaker_size_main(fmt_oathbreaker, main_size_58):
+def test_fmt_oathbreaker_main_size(fmt_oathbreaker, main_size_58):
     assert model_utils.main_size(fmt_oathbreaker) == main_size_58
 
 
 @pytest.mark.format_size
-def test_fmt_oldschool_size_main(fmt_oldschool, main_size_60):
+def test_fmt_oldschool_main_size(fmt_oldschool, main_size_60):
     assert model_utils.main_size(fmt_oldschool) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_pauper_size_main(fmt_pauper, main_size_60):
+def test_fmt_pauper_main_size(fmt_pauper, main_size_60):
     assert model_utils.main_size(fmt_pauper) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_paupercommander_size_main(fmt_paupercommander, main_size_99):
+def test_fmt_paupercommander_main_size(fmt_paupercommander, main_size_99):
     assert model_utils.main_size(fmt_paupercommander) == main_size_99
 
 
 @pytest.mark.format_size
-def test_fmt_penny_size_main(fmt_penny, main_size_60):
+def test_fmt_penny_main_size(fmt_penny, main_size_60):
     assert model_utils.main_size(fmt_penny) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_pioneer_size_main(fmt_pioneer, main_size_60):
+def test_fmt_pioneer_main_size(fmt_pioneer, main_size_60):
     assert model_utils.main_size(fmt_pioneer) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_predh_size_main(fmt_predh, main_size_99):
+def test_fmt_predh_main_size(fmt_predh, main_size_99):
     assert model_utils.main_size(fmt_predh) == main_size_99
 
 
 @pytest.mark.format_size
-def test_fmt_premodern_size_main(fmt_premodern, main_size_60):
+def test_fmt_premodern_main_size(fmt_premodern, main_size_60):
     assert model_utils.main_size(fmt_premodern) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_standard_size_main(fmt_standard, main_size_60):
+def test_fmt_standard_main_size(fmt_standard, main_size_60):
     assert model_utils.main_size(fmt_standard) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_vintage_size_main(fmt_vintage, main_size_60):
+def test_fmt_vintage_main_size(fmt_vintage, main_size_60):
     assert model_utils.main_size(fmt_vintage) == main_size_60
 
 
 @pytest.mark.format_size
-def test_fmt_limited_size_main(fmt_limited, main_size_40):
+def test_fmt_limited_main_size(fmt_limited, main_size_40):
     assert model_utils.main_size(fmt_limited) == main_size_40
 
 
 @pytest.mark.format_size
-def test_fmt_none_size_main(fmt_none, main_size_any):
+def test_fmt_none_main_size(fmt_none, main_size_any):
     assert model_utils.main_size(fmt_none) == main_size_any
 
 
@@ -328,117 +328,117 @@ def test_fmt_none_size_main(fmt_none, main_size_any):
 
 
 @pytest.mark.format_size
-def test_fmt_alchemy_size_side(fmt_alchemy, side_size_15):
+def test_fmt_alchemy_side_size(fmt_alchemy, side_size_15):
     assert model_utils.side_size(fmt_alchemy) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_brawl_size_side(fmt_brawl, side_size_1):
+def test_fmt_brawl_side_size(fmt_brawl, side_size_1):
     assert model_utils.side_size(fmt_brawl) == side_size_1
 
 
 @pytest.mark.format_size
-def test_fmt_commander_size_side(fmt_commander, side_size_1):
+def test_fmt_commander_side_size(fmt_commander, side_size_1):
     assert model_utils.side_size(fmt_commander) == side_size_1
 
 
 @pytest.mark.format_size
-def test_fmt_duel_size_side(fmt_duel, side_size_1):
+def test_fmt_duel_side_size(fmt_duel, side_size_1):
     assert model_utils.side_size(fmt_duel) == side_size_1
 
 
 @pytest.mark.format_size
-def test_fmt_explorer_size_side(fmt_explorer, side_size_15):
+def test_fmt_explorer_side_size(fmt_explorer, side_size_15):
     assert model_utils.side_size(fmt_explorer) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_future_size_side(fmt_future, side_size_15):
+def test_fmt_future_side_size(fmt_future, side_size_15):
     assert model_utils.side_size(fmt_future) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_gladiator_size_side(fmt_gladiator, side_size_0):
+def test_fmt_gladiator_side_size(fmt_gladiator, side_size_0):
     assert model_utils.side_size(fmt_gladiator) == side_size_0
 
 
 @pytest.mark.format_size
-def test_fmt_historic_size_side(fmt_historic, side_size_15):
+def test_fmt_historic_side_size(fmt_historic, side_size_15):
     assert model_utils.side_size(fmt_historic) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_historicbrawl_size_side(fmt_historicbrawl, side_size_1):
+def test_fmt_historicbrawl_side_size(fmt_historicbrawl, side_size_1):
     assert model_utils.side_size(fmt_historicbrawl) == side_size_1
 
 
 @pytest.mark.format_size
-def test_fmt_legacy_size_side(fmt_legacy, side_size_15):
+def test_fmt_legacy_side_size(fmt_legacy, side_size_15):
     assert model_utils.side_size(fmt_legacy) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_modern_size_side(fmt_modern, side_size_15):
+def test_fmt_modern_side_size(fmt_modern, side_size_15):
     assert model_utils.side_size(fmt_modern) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_oathbreaker_size_side(fmt_oathbreaker, side_size_2):
+def test_fmt_oathbreaker_side_size(fmt_oathbreaker, side_size_2):
     assert model_utils.side_size(fmt_oathbreaker) == side_size_2
 
 
 @pytest.mark.format_size
-def test_fmt_oldschool_size_side(fmt_oldschool, side_size_15):
+def test_fmt_oldschool_side_size(fmt_oldschool, side_size_15):
     assert model_utils.side_size(fmt_oldschool) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_pauper_size_side(fmt_pauper, side_size_15):
+def test_fmt_pauper_side_size(fmt_pauper, side_size_15):
     assert model_utils.side_size(fmt_pauper) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_paupercommander_size_side(fmt_paupercommander, side_size_1):
+def test_fmt_paupercommander_side_size(fmt_paupercommander, side_size_1):
     assert model_utils.side_size(fmt_paupercommander) == side_size_1
 
 
 @pytest.mark.format_size
-def test_fmt_penny_size_side(fmt_penny, side_size_15):
+def test_fmt_penny_side_size(fmt_penny, side_size_15):
     assert model_utils.side_size(fmt_penny) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_pioneer_size_side(fmt_pioneer, side_size_15):
+def test_fmt_pioneer_side_size(fmt_pioneer, side_size_15):
     assert model_utils.side_size(fmt_pioneer) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_predh_size_side(fmt_predh, side_size_1):
+def test_fmt_predh_side_size(fmt_predh, side_size_1):
     assert model_utils.side_size(fmt_predh) == side_size_1
 
 
 @pytest.mark.format_size
-def test_fmt_premodern_size_side(fmt_premodern, side_size_15):
+def test_fmt_premodern_side_size(fmt_premodern, side_size_15):
     assert model_utils.side_size(fmt_premodern) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_standard_size_side(fmt_standard, side_size_15):
+def test_fmt_standard_side_size(fmt_standard, side_size_15):
     assert model_utils.side_size(fmt_standard) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_vintage_size_side(fmt_vintage, side_size_15):
+def test_fmt_vintage_side_size(fmt_vintage, side_size_15):
     assert model_utils.side_size(fmt_vintage) == side_size_15
 
 
 @pytest.mark.format_size
-def test_fmt_limited_size_side(fmt_limited, side_size_any):
+def test_fmt_limited_side_size(fmt_limited, side_size_any):
     assert model_utils.side_size(fmt_limited) == side_size_any
 
 
 @pytest.mark.format_size
-def test_fmt_none_size_side(fmt_none, side_size_any):
+def test_fmt_none_side_size(fmt_none, side_size_any):
     assert model_utils.side_size(fmt_none) == side_size_any
 
 
