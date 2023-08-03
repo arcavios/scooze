@@ -2,6 +2,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from enum import auto
 from typing import Annotated, Any
+from sys import maxsize
 
 import scooze.models.utils as model_utils
 from bson import ObjectId
@@ -56,6 +57,10 @@ class Deck(BaseModel, validate_assignment=True):
         Adds a given quantity of a given card to this Deck.
     add_cards(cards: Counter[DecklistCard], in_the: InThe):
         Adds the given cards to this Deck.
+    remove_card(card: DecklistCard, quantity: int, in_the: InThe):
+        Removes a given quantity of a given card from this Deck.
+    remove_cards(cards: Counter[DecklistCard], in_the: InThe):
+        Removes the given cards from this Deck.
     count():
         Counts all of the cards in this Deck.
     to_decklist(DecklistFormat):
@@ -110,9 +115,13 @@ class Deck(BaseModel, validate_assignment=True):
     def validate_main(self):
         m_min, m_max = model_utils.main_size(self.format)
         if self.main.total() < m_min:
-            raise ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
+            e = ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
+            self._logger.error(e)
+            raise e
         elif self.main.total() > m_max:
-            raise ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
+            e = ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
+            self._logger.error(e)
+            raise e
         return self
 
     @model_validator(mode="after")
@@ -144,26 +153,6 @@ class Deck(BaseModel, validate_assignment=True):
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def add_cards(
-        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
-    ) -> None:
-        """
-        Adds the given cards to this Deck.
-
-        Parameters:
-            cards Counter[DecklistCard]: The cards to add.
-            in_the (InThe): Where to add the cards (main, side, etc)
-        """
-
-        match in_the:
-            case InThe.MAIN:
-                self.main.update(cards)
-            case InThe.SIDE:
-                self.side.update(cards)
-
-        if revalidate_after:
-            self._validate_deck()
-
     def add_card(
         self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
     ) -> None:
@@ -171,7 +160,7 @@ class Deck(BaseModel, validate_assignment=True):
         Adds a given quantity of a given card to this Deck.
 
         Parameters:
-            card (Card): The card to add.
+            card (DecklistCard): The card to add.
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
         """
@@ -190,6 +179,61 @@ class Deck(BaseModel, validate_assignment=True):
 
         if revalidate_after:
             self._validate_deck()
+
+    def add_cards(
+        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:
+        """
+        Adds the given cards to this Deck.
+
+        Parameters:
+            cards (Counter[DecklistCard]): The cards to add.
+            in_the (InThe): Where to add the cards (main, side, etc)
+        """
+
+        match in_the:
+            case InThe.MAIN:
+                self.main.update(cards)
+            case InThe.SIDE:
+                self.side.update(cards)
+
+        if revalidate_after:
+            self._validate_deck()
+
+    def remove_card(self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
+        """
+        Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
+
+        Parameters:
+            card (DecklistCard): The card to remove.
+            quantity (int): The number of copies of the card to be removed.
+            in_the (InThe): Where to remove the cards from (main, side, etc)
+        """
+
+        match in_the:
+            case InThe.MAIN:
+                self.main = self.main - {card: quantity}
+            case InThe.SIDE:
+                self.side = self.side - {card: quantity}
+            case _:
+                pass
+
+    def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
+        """
+        Removes a given quantity of a given card from this Deck.
+
+        Parameters:
+            cards (Counter[DecklistCard]): The cards to remove.
+            in_the (InThe): Where to remove the cards from (main, side, etc)
+        """
+
+        match in_the:
+            case InThe.MAIN:
+                self.main = self.main - cards
+            case InThe.SIDE:
+                self.side = self.side - cards
+            case _:
+                pass
 
     def count(self) -> int:
         """
