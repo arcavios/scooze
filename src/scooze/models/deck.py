@@ -1,5 +1,5 @@
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 from enum import auto
 from sys import maxsize
 from typing import Annotated, Any
@@ -42,7 +42,7 @@ class Deck(BaseModel, validate_assignment=True):
         The archetype of this Deck.
     format : Format
         The format legality of the cards in this Deck.
-    date_played : datetime
+    date_played : date
         The date this Deck was played.
     matches : MatchData
         Match data for this Deck.
@@ -83,7 +83,7 @@ class Deck(BaseModel, validate_assignment=True):
         default=Format.NONE,
         description="The format of the tournament where this Deck was played.",
     )
-    date_played: datetime = Field(
+    date_played: date = Field(
         default=None,
         description="The date this Deck was played.",
     )
@@ -163,6 +163,7 @@ class Deck(BaseModel, validate_assignment=True):
             card (DecklistCard): The card to add.
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         match in_the:
@@ -189,6 +190,7 @@ class Deck(BaseModel, validate_assignment=True):
         Parameters:
             cards (Counter[DecklistCard]): The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         match in_the:
@@ -210,6 +212,7 @@ class Deck(BaseModel, validate_assignment=True):
             card (DecklistCard): The card to remove.
             quantity (int): The number of copies of the card to be removed.
             in_the (InThe): Where to remove the cards from (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         # using counterA - counterB results in a new counter with only positive results
@@ -233,6 +236,7 @@ class Deck(BaseModel, validate_assignment=True):
         Parameters:
             cards (Counter[DecklistCard]): The cards to remove.
             in_the (InThe): Where to remove the cards from (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         # using counterA - counterB results in a new counter with only positive results
