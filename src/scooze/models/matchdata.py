@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field, field_validator
 class MatchData(BaseModel, validate_assignment=True):
     model_config = model_utils.get_base_model_config()
 
-    # TODO: match data should ideally be a list of matches played and information about what was played against
+    # TODO(#22): match data should ideally be a list of matches played and information about what was played against
 
     wins: int = Field(
         default=0,
@@ -30,7 +30,7 @@ class MatchData(BaseModel, validate_assignment=True):
     @classmethod
     def validate_non_negative(cls, v):
         if v < 0:
-            raise ValueError  # TODO: put a real error message here. should maybe be a warning?
+            raise ValueError(f"Can't have negative win/loss/draw!")
         return v
 
     # endregion

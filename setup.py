@@ -69,13 +69,13 @@ async def main():
         clean = True if input("Delete all CARDS before importing? [y/n]") == "y" else False
         if clean:
             print("Deleting all cards from your local database...")
-            await db.delete_cards_all()  # TODO: this need async for now, but maybe scooze will have a python pkg?
+            await db.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
 
     if args["--clean-decks"]:
         clean = True if input("Delete all DECKS before importing? [y/n]") == "y" else False
         if clean:
             print("Deleting all decks from your local database...")
-            # TODO: needs endpoints
+            # TODO(#30): needs deck endpoints
 
     match args["cards"]:
         case "test":
@@ -84,29 +84,27 @@ async def main():
                     print("Inserting test cards into the database...")
                     cards_json = json.load(cards_file)
                     cards = [CardIn(**card) for card in cards_json["p9"]]
-                    await db.add_cards(cards)  # TODO: this need async for now, but maybe scooze will have a python pkg?
+                    await db.add_cards(cards)  # TODO(#7): this need async for now, replace with Python API
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
             try:
-                # TODO: setup Ophidian to create bulk files here
                 with open("./data/bulk/oracle_cards.json") as cards_file:
                     print("Inserting oracle cards into the database...")
-                    # TODO: not yet supported
+                # TODO(#44): read bulk files here
             except OSError as e:
                 print_error(e, "oracle cards")
         case "scryfall":
             try:
-                # TODO: setup Ophidian to create bulk files here
                 with open("./data/bulk/scryfall_cards.json") as cards_file:
                     print("Inserting Scryfall cards into the database...")
-                    # TODO: not yet supported
+                    # TODO(#44): read bulk files here
             except OSError as e:
                 print_error(e, "scryfall cards")
         case "all":
             try:
                 print("Inserting ALL cards into the database...")
-                # TODO: do we read the oracle_cards file and the scryfall_cards file into the database here?
+                # TODO(#44): read bulk files here
             except OSError as e:
                 print_error(e, "all cards")
         case _:
