@@ -73,7 +73,7 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="The date this Deck was played.",
     )
-    matches: MatchData = Field(  # TODO: replace with List[MatchData] with opposing deck info not just (w,l,d)
+    matches: MatchData = Field(  # TODO: replace with List[MatchData] with opposing deck info not just (w,l,d) [#22]
         default=None,
         description="Match data for this Deck.",
     )
@@ -88,15 +88,7 @@ class Deck(BaseModel, validate_assignment=True):
 
     # region Validators
 
-    # TODO: add validation for fields
-    # archetype - str
-    #   validated against a list of melee deck archetypes? Maybe we store that in a table?
-    # format - Format
-    #   validate if the cards in the list are legal in the given format?
-    # date_played - Date this deck was played
-    #   validate that this is a valid date after 1993?
-    # match win/loss (match_data) - tuple of (wins, losses, draws)
-    #   validate that they are not negative numbers?
+    # TODO: add validation for fields [#49]
 
     def _validate_deck(self):
         """
@@ -206,11 +198,11 @@ class Deck(BaseModel, validate_assignment=True):
         match decklist_formatter:
             case model_utils.DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
-                # TODO: filter out cards that are not on Arena. Log a WARNING with those cards.
+                # TODO: filter out cards that are not on Arena. Log a WARNING with those cards. [#50]
                 self._logger.debug(f"{self.archetype} - Exporting for Arena.")
             case model_utils.DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
-                # TODO: filter out cards that are not on MTGO. Log a WARNING with those cards.
+                # TODO: filter out cards that are not on MTGO. Log a WARNING with those cards. [#50]
                 self._logger.debug(f"{self.archetype} - Exporting for MTGO.")
             case _:
                 sb_prefix = ""  # Default
