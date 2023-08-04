@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field, field_validator
 class MatchData(BaseModel, validate_assignment=True):
     model_config = model_utils.get_base_model_config()
 
-    # TODO: match data should ideally be a list of matches played and information about what was played against [#22]
+    # TODO(#22): match data should ideally be a list of matches played and information about what was played against
 
     wins: int = Field(
         default=0,

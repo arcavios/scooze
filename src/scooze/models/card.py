@@ -37,9 +37,9 @@ class Card(BaseModel, validate_assignment=True):
         description="Name",
     )
 
-    # TODO: add Card field validators [#46]
+    # TODO(#46): add Card field validators
 
-    def __hash__(self):  # TODO: placeholder hash function. replace with real one [#19]
+    def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
         return self.name.__hash__()
 
 
@@ -157,7 +157,7 @@ class CardFace(BaseModel, validate_assignment=True):
         description="URIs for images of this face on Scryfall.",
     )
     layout: str | None = Field(
-        # TODO: convert to enum? [#36]
+        # TODO(#36): convert to enum?
         description="Layout of this face, if any.",
     )
     loyalty: int | None = Field(
@@ -272,7 +272,7 @@ class RelatedCard(BaseModel, validate_assignment=True):
     object: str = Field(
         description="Always `related_card` for this object.",
     )
-    # TODO: convert to enum? [#36]
+    # TODO(#36): convert to enum?
     component: str = Field(
         description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.",
     )
@@ -296,7 +296,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         ### Core fields
         arena_id: int | None
         id: str
-        # TODO: convert to enum? [#36]
+        # TODO(#36): convert to enum?
         lang: str
         mtgo_id: int | None
         mtgo_foil_id: int | None
@@ -321,7 +321,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: List[str]
-        # TODO: convert to enum? [#36]
+        # TODO(#36): convert to enum?
         layout: str
         legalities: Dict[Format, Legality]
         life_modifier: str | None
@@ -349,14 +349,14 @@ class FullCard(DecklistCard, validate_assignment=True):
         finishes: List[Finish]
         flavor_name: str | None
         flavor_text: str | None
-        # TODO: convert to enum? [#36]
+        # TODO(#36): convert to enum?
         frame_effects: List[str] | None
         frame: str
         full_art: bool
         games: List[Game]
         highres_image: bool
         illustation_id: str | None
-        # TODO: convert to enum? [#36]
+        # TODO(#36): convert to enum?
         image_status: str
         image_uris: ImageUris | None
         preview: Preview | None
@@ -366,10 +366,10 @@ class FullCard(DecklistCard, validate_assignment=True):
         printed_type_line: str | None
         promo: bool
         promo_types: List[str] | None
-        # TODO: convert to object? [#47]
+        # TODO(#47): convert to object?
         purchase_uris: Dict[str, str]
         rarity: Rarity
-        # TODO: convert to object? [#47]
+        # TODO(#47): convert to object?
         related_uris: Dict[str, str]
         released_at: datetime.date
         reprint: bool
@@ -384,7 +384,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         textless: bool
         variation: bool
         variation_of: str | None
-        # TODO: convert to enum? [#36]
+        # TODO(#36): convert to enum?
         security_stamp: str | None
         watermark: str | None
     """
@@ -398,9 +398,9 @@ class FullCard(DecklistCard, validate_assignment=True):
         default="",
         description="Scryfall's unique ID for this card.",
     )
-    # TODO: convert to enum? [#36]
+    # TODO(#36): convert to enum?
     lang: str = Field(
-        # TODO: better default? [#48]
+        # TODO(#48): better default?
         default="en",
         description="The language code for this print; see https://scryfall.com/docs/api/languages",
     )
@@ -476,7 +476,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         default=[],
         description="Keywords and keyword actions this card uses.",
     )
-    # TODO: convert to enum? [#36]
+    # TODO(#36): convert to enum?
     layout: str = Field(
         default="normal",
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
@@ -552,7 +552,7 @@ class FullCard(DecklistCard, validate_assignment=True):
     flavor_text: str | None = Field(
         description="Flavor text on this card, if any.",
     )
-    # TODO: convert to enum? [#36]
+    # TODO(#36): convert to enum?
     frame_effects: List[str] | None = Field(
         description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
     )
@@ -571,7 +571,7 @@ class FullCard(DecklistCard, validate_assignment=True):
     illustation_id: str | None = Field(
         description="A UUID for the particlar artwork on this print, consistent across art reprints.",
     )
-    # TODO: convert to enum? [#36]
+    # TODO(#36): convert to enum?
     image_status: str = Field(
         description="The quality/status of images available for this card. Either missing, placeholder, lowres, or highres_scan.",
     )
@@ -600,22 +600,22 @@ class FullCard(DecklistCard, validate_assignment=True):
     promo_types: List[str] | None = Field(
         description="Which promo categories this print falls into, if any.",
     )
-    # TODO: convert to object? [#47]
+    # TODO(#47): convert to object?
     purchase_uris: Dict[str, str] = Field(
         default={},
         description="Links to purchase this print from marketplaces.",
     )
     rarity: enums.Rarity = Field(
-        # TODO: better default? [#48]
+        # TODO(#48): better default?
         description="The rarity of this print.",
     )
-    # TODO: convert to object? [#47]
+    # TODO(#47): convert to object?
     related_uris: Dict[str, str] = Field(
         default={},
         description="Links to this print's listing on other online resources.",
     )
     released_at: datetime.date = Field(
-        # TODO: better default? [#48]
+        # TODO(#48): better default?
         description="The date this card was first released.",
     )
     reprint: bool = Field(
@@ -665,7 +665,7 @@ class FullCard(DecklistCard, validate_assignment=True):
     variation_of: str | None = Field(
         description="Which card object this object is a variant of, if any.",
     )
-    # TODO: convert to enum? [#36]
+    # TODO(#36): convert to enum?
     security_stamp: str | None = Field(
         description="Security stamp on this card, if any.",
     )

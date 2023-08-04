@@ -85,7 +85,7 @@ def side_size(fmt: Format) -> Tuple[int, int]:
         #     return 0, maxsize
 
         case Format.OATHBREAKER:
-            return 2, 2  # TODO: commander support? [#51]
+            return 2, 2  # TODO(#51): commander support?
 
         case (
             Format.ALCHEMY
@@ -107,7 +107,7 @@ def side_size(fmt: Format) -> Tuple[int, int]:
         case (
             Format.BRAWL | Format.COMMANDER | Format.DUEL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH
         ):
-            return 1, 1  # TODO: commander support? [#51]
+            return 1, 1  # TODO(#51): commander support?
 
         case Format.GLADIATOR:
             return 0, 0

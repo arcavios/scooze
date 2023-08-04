@@ -73,7 +73,7 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="The date this Deck was played.",
     )
-    matches: MatchData = Field(  # TODO: replace with List[MatchData] with opposing deck info not just (w,l,d) [#22]
+    matches: MatchData = Field(  # TODO(#22): replace with List[MatchData] with opposing deck info not just (w,l,d)
         default=None,
         description="Match data for this Deck.",
     )
@@ -88,7 +88,7 @@ class Deck(BaseModel, validate_assignment=True):
 
     # region Validators
 
-    # TODO: add validation for fields [#49]
+    # TODO(#49): add validation for fields
 
     def _validate_deck(self):
         """
@@ -198,11 +198,11 @@ class Deck(BaseModel, validate_assignment=True):
         match decklist_formatter:
             case model_utils.DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
-                # TODO: filter out cards that are not on Arena. Log a WARNING with those cards. [#50]
+                # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for Arena.")
             case model_utils.DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
-                # TODO: filter out cards that are not on MTGO. Log a WARNING with those cards. [#50]
+                # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for MTGO.")
             case _:
                 sb_prefix = ""  # Default

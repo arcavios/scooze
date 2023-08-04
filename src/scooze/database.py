@@ -21,7 +21,7 @@ cards_collection = database.get_collection("cards")
 
 
 async def add_card(card: CardIn) -> CardOut:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     insert_result = await cards_collection.insert_one(
         card.model_dump(
             mode="json",
@@ -34,7 +34,7 @@ async def add_card(card: CardIn) -> CardOut:
 
 
 async def get_card_by_property(property_name: str, value) -> CardOut:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     if property_name == "_id":
         value = ObjectId(value)
     card = await cards_collection.find_one({property_name: value})
@@ -43,7 +43,7 @@ async def get_card_by_property(property_name: str, value) -> CardOut:
 
 
 async def update_card(id: str, card: CardIn) -> CardOut:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     # Return false if an empty request body is sent.
     if not card.model_fields_set:
         raise ValueError(f"No data given, skipping update for Card with id: {id}")
@@ -63,7 +63,7 @@ async def update_card(id: str, card: CardIn) -> CardOut:
 
 
 async def delete_card(id: str) -> CardOut:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     deleted_card = await cards_collection.find_one_and_delete({"_id": ObjectId(id)})
 
     if deleted_card:
@@ -76,7 +76,7 @@ async def delete_card(id: str) -> CardOut:
 
 
 async def add_cards(cards: List[CardIn]) -> InsertManyResult:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     insert_many_result = await cards_collection.insert_many(
         [
             card.model_dump(
@@ -91,7 +91,7 @@ async def add_cards(cards: List[CardIn]) -> InsertManyResult:
 
 
 async def get_cards_random(limit: int) -> List[CardOut]:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     pipeline = [{"$sample": {"size": limit}}]
     cards = await cards_collection.aggregate(pipeline).to_list(limit)
     if len(cards) > 0:
@@ -101,7 +101,7 @@ async def get_cards_random(limit: int) -> List[CardOut]:
 async def get_cards_by_property(
     property_name: str, items: List[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> List[CardOut]:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     match property_name:
         case "_id":
             values = [ObjectId(i) for i in items]  # Handle ObjectIds
@@ -119,7 +119,7 @@ async def get_cards_by_property(
 
 
 async def delete_cards_all() -> DeleteResult:
-    # TODO: router docstrings [#45]
+    # TODO(#45): router docstrings
     delete_many_result = await cards_collection.delete_many({})  # NOTE: This deletes the entire collection.
     if delete_many_result:
         return delete_many_result
