@@ -40,7 +40,7 @@ def new_card() -> str:
     return DecklistCard.model_construct(
         name="Primeval Titan",
         mana_value=6,
-        color=["G"],
+        colors=["G"],
     )
 
 

@@ -1,12 +1,12 @@
 from collections import Counter
-from datetime import datetime, timezone, date
+from datetime import date
 from enum import auto
 from sys import maxsize
-from typing import Annotated, Any
+from typing import Annotated
 
 import scooze.models.utils as model_utils
 from bson import ObjectId
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, model_validator
 from scooze.enums import ExtendedEnum, Format
 from scooze.models.card import DecklistCard
 from scooze.models.matchdata import MatchData
@@ -224,9 +224,12 @@ class Deck(BaseModel, validate_assignment=True):
         match in_the:
             case InThe.MAIN:
                 self.main = self.main - Counter({card: quantity})
+                self._logger.debug(f"{self.archetype} - Removed {card.name} from the main deck.")
             case InThe.SIDE:
                 self.side = self.side - Counter({card: quantity})
+                self._logger.debug(f"{self.archetype} - Removed {card.name} from the sideboard.")
             case _:
+                self._logger.warning(f"{self.archetype} - Failed to remove card.")
                 pass
 
         if revalidate_after:
@@ -247,10 +250,19 @@ class Deck(BaseModel, validate_assignment=True):
         # using counterA - counterB results in a new counter with only positive results
         match in_the:
             case InThe.MAIN:
+                main_pretotal = self.main.total()
                 self.main = self.main - cards
+                self._logger.debug(
+                    f"{self.archetype} - Removed {self.main.total() - main_pretotal} cards from the main deck."
+                )
             case InThe.SIDE:
+                side_pretotal = self.side.total()
                 self.side = self.side - cards
+                self._logger.debug(
+                    f"{self.archetype} - Removed {self.side.total() - side_pretotal} cards from the sideboard."
+                )
             case _:
+                self._logger.warning(f"{self.archetype} - Failed to remove cards.")
                 pass
 
         if revalidate_after:
