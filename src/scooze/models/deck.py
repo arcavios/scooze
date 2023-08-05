@@ -13,6 +13,8 @@ from scooze.models.matchdata import MatchData
 from scooze.utils import get_logger
 from strenum import StrEnum
 
+# region Deck Enums
+
 
 class InThe(ExtendedEnum, StrEnum):
     """
@@ -30,6 +32,9 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
 
     ARENA = auto()
     MTGO = auto()
+
+
+# endregion
 
 
 class Deck(BaseModel, validate_assignment=True):
