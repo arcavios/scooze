@@ -106,3 +106,15 @@ class Rarity(ExtendedEnum, StrEnum):
     SPECIAL = auto()
     MYTHIC = auto()
     BONUS = auto()
+
+
+class ScryfallBulkFile(ExtendedEnum, StrEnum):
+    """
+    URIs for Scryfall bulk files.
+    """
+
+    ORACLE = "oracle_cards"
+    ARTWORK = "unique_artwork"
+    DEFAULT = "default_cards"
+    ALL = "all_cards"
+    # TODO(#26): support for Rulings file

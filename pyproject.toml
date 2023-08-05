@@ -28,6 +28,7 @@ uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
 pendulum = "^2.1.2"
 strenum = "^0.4.15"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
