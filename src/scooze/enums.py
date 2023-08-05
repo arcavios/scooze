@@ -2,6 +2,8 @@ from enum import Enum, EnumMeta, auto
 
 from strenum import StrEnum
 
+# region Enum Extensions
+
 
 class CaseInsensitiveEnumMeta(EnumMeta):
     """
@@ -27,6 +29,11 @@ class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
     @classmethod
     def list(cls):
         return list(map(lambda c: c.value, cls))
+
+
+# endregion
+
+# region Card Enums
 
 
 class BorderColor(ExtendedEnum, StrEnum):
@@ -131,3 +138,6 @@ class Rarity(ExtendedEnum, StrEnum):
     SPECIAL = auto()
     MYTHIC = auto()
     BONUS = auto()
+
+
+# endregion
