@@ -1,16 +1,19 @@
 from collections import Counter
+from datetime import date
 from enum import auto
-from typing import Annotated, Any
+from sys import maxsize
+from typing import Annotated
 
 import scooze.models.utils as model_utils
 from bson import ObjectId
-from pendulum import DateTime
-from pydantic import BaseModel, Field, field_validator, model_validator
-from scooze.enums import Format
-from scooze.models.card import Card
+from pydantic import BaseModel, Field, model_validator
+from scooze.enums import ExtendedEnum, Format
+from scooze.models.card import DecklistCard
 from scooze.models.matchdata import MatchData
-from scooze.utils import ExtendedEnum, get_logger
+from scooze.utils import get_logger
 from strenum import StrEnum
+
+# region Deck Enums
 
 
 class InThe(ExtendedEnum, StrEnum):
@@ -20,6 +23,18 @@ class InThe(ExtendedEnum, StrEnum):
 
     MAIN = auto()
     SIDE = auto()
+
+
+class DecklistFormatter(ExtendedEnum, StrEnum):
+    """
+    A method of formatting a decklist for external systems.
+    """
+
+    ARENA = auto()
+    MTGO = auto()
+
+
+# endregion
 
 
 class Deck(BaseModel, validate_assignment=True):
@@ -32,21 +47,25 @@ class Deck(BaseModel, validate_assignment=True):
         The archetype of this Deck.
     format : Format
         The format legality of the cards in this Deck.
-    date_played : DateTime
+    date_played : date
         The date this Deck was played.
     matches : MatchData
         Match data for this Deck.
-    main : Counter[Card] # TODO: use DecklistCard
+    main : Counter[DecklistCard]
         The main deck. Typically 60 cards minimum.
-    side : Counter[Card] # TODO: use DecklistCard
+    side : Counter[DecklistCard]
         The sideboard. Typically 15 cards maximum.
 
     Methods
     -------
-    add_card(card: Card, quantity: int, in_the: InThe):
+    add_card(card: DecklistCard, quantity: int, in_the: InThe):
         Adds a given quantity of a given card to this Deck.
-    add_cards(cards: Counter[Card], in_the: InThe):
+    add_cards(cards: Counter[DecklistCard], in_the: InThe):
         Adds the given cards to this Deck.
+    remove_card(card: DecklistCard, quantity: int, in_the: InThe):
+        Removes a given quantity of a given card from this Deck.
+    remove_cards(cards: Counter[DecklistCard], in_the: InThe):
+        Removes the given cards from this Deck.
     count():
         Counts all of the cards in this Deck.
     to_decklist(DecklistFormat):
@@ -69,7 +88,7 @@ class Deck(BaseModel, validate_assignment=True):
         default=Format.NONE,
         description="The format of the tournament where this Deck was played.",
     )
-    date_played: DateTime = Field(
+    date_played: date = Field(
         default=None,
         description="The date this Deck was played.",
     )
@@ -77,11 +96,11 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[Card] = Field(  # TODO: use DecklistCard
+    main: Counter[DecklistCard] = Field(
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[Card] = Field(  # TODO: use DecklistCard
+    side: Counter[DecklistCard] = Field(
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
@@ -101,9 +120,13 @@ class Deck(BaseModel, validate_assignment=True):
     def validate_main(self):
         m_min, m_max = model_utils.main_size(self.format)
         if self.main.total() < m_min:
-            raise ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
+            e = ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
+            self._logger.error(e)
+            raise e
         elif self.main.total() > m_max:
-            raise ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
+            e = ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
+            self._logger.error(e)
+            raise e
         return self
 
     @model_validator(mode="after")
@@ -120,8 +143,8 @@ class Deck(BaseModel, validate_assignment=True):
     def __eq__(self, other):
         return (
             self.archetype == other.archetype
-            and self.date_played == other.date_played
             and self.format == other.format
+            and self.date_played == other.date_played
             and self.main == other.main
             and self.side == other.side
         )
@@ -130,36 +153,22 @@ class Deck(BaseModel, validate_assignment=True):
         decklist = self.to_decklist()
         return (
             f"""Archetype: {self.archetype}\n"""
-            f"""Date Played: {self.date_played}\n"""
             f"""Format: {self.format}\n"""
+            f"""Date Played: {self.date_played}\n"""  # TODO: format date str?
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:  # TODO: use DecklistCard
-        """
-        Adds the given cards to this Deck.
-
-        Parameters:
-            cards Counter[Card]: The cards to add.
-            in_the (InThe): Where to add the cards (main, side, etc)
-        """
-
-        match in_the:
-            case InThe.MAIN:
-                self.main.update(cards)
-            case InThe.SIDE:
-                self.side.update(cards)
-
-        self._validate_deck()
-
-    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:  # TODO: use DecklistCard
+    def add_card(
+        self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:
         """
         Adds a given quantity of a given card to this Deck.
 
         Parameters:
-            card (Card): The card to add.
+            card (DecklistCard): The card to add.
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         match in_the:
@@ -174,7 +183,90 @@ class Deck(BaseModel, validate_assignment=True):
                     f"{self.archetype} - Unable to add {quantity} copies of {card.name} to the deck. 'in' must be one of {InThe.list()}"
                 )
 
-        self._validate_deck()
+        if revalidate_after:
+            self._validate_deck()
+
+    def add_cards(
+        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:
+        """
+        Adds the given cards to this Deck.
+
+        Parameters:
+            cards (Counter[DecklistCard]): The cards to add.
+            in_the (InThe): Where to add the cards (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
+        """
+
+        match in_the:
+            case InThe.MAIN:
+                self.main.update(cards)
+            case InThe.SIDE:
+                self.side.update(cards)
+
+        if revalidate_after:
+            self._validate_deck()
+
+    def remove_card(
+        self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:
+        """
+        Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
+
+        Parameters:
+            card (DecklistCard): The card to remove.
+            quantity (int): The number of copies of the card to be removed.
+            in_the (InThe): Where to remove the cards from (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
+        """
+
+        # using counterA - counterB results in a new counter with only positive results
+        match in_the:
+            case InThe.MAIN:
+                self.main = self.main - Counter({card: quantity})
+                self._logger.debug(f"{self.archetype} - Removed {card.name} from the main deck.")
+            case InThe.SIDE:
+                self.side = self.side - Counter({card: quantity})
+                self._logger.debug(f"{self.archetype} - Removed {card.name} from the sideboard.")
+            case _:
+                self._logger.warning(f"{self.archetype} - Failed to remove card.")
+                pass
+
+        if revalidate_after:
+            self._validate_deck()
+
+    def remove_cards(
+        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+    ) -> None:
+        """
+        Removes a given quantity of a given card from this Deck.
+
+        Parameters:
+            cards (Counter[DecklistCard]): The cards to remove.
+            in_the (InThe): Where to remove the cards from (main, side, etc)
+            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
+        """
+
+        # using counterA - counterB results in a new counter with only positive results
+        match in_the:
+            case InThe.MAIN:
+                main_pretotal = self.main.total()
+                self.main = self.main - cards
+                self._logger.debug(
+                    f"{self.archetype} - Removed {self.main.total() - main_pretotal} cards from the main deck."
+                )
+            case InThe.SIDE:
+                side_pretotal = self.side.total()
+                self.side = self.side - cards
+                self._logger.debug(
+                    f"{self.archetype} - Removed {self.side.total() - side_pretotal} cards from the sideboard."
+                )
+            case _:
+                self._logger.warning(f"{self.archetype} - Failed to remove cards.")
+                pass
+
+        if revalidate_after:
+            self._validate_deck()
 
     def count(self) -> int:
         """
@@ -184,7 +276,7 @@ class Deck(BaseModel, validate_assignment=True):
 
         return self.main.total() + self.side.total()
 
-    def to_decklist(self, decklist_formatter: model_utils.DecklistFormatter = None) -> str:
+    def to_decklist(self, decklist_formatter: DecklistFormatter = None) -> str:
         """
         Exports this Deck as a str with the given DecklistFormatter.
 
@@ -196,11 +288,11 @@ class Deck(BaseModel, validate_assignment=True):
         """
 
         match decklist_formatter:
-            case model_utils.DecklistFormatter.ARENA:
+            case DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
                 # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for Arena.")
-            case model_utils.DecklistFormatter.MTGO:
+            case DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
                 self._logger.debug(f"{self.archetype} - Exporting for MTGO.")
@@ -208,7 +300,7 @@ class Deck(BaseModel, validate_assignment=True):
                 sb_prefix = ""  # Default
                 self._logger.warning(
                     f"""{self.archetype} - Unable to export with the given format: {decklist_formatter}. """
-                    f"""'export_format' must be one of {model_utils.DecklistFormatter.list()}. Using default format."""
+                    f"""'export_format' must be one of {DecklistFormatter.list()}. Using default format."""
                 )
         sb_prefix = "\n\n" + sb_prefix
 

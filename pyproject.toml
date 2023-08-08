@@ -26,7 +26,6 @@ python = ">=3.10, <3.12"
 fastapi = "^0.100.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
-pendulum = "^2.1.2"
 strenum = "^0.4.15"
 requests = "^2.31.0"
 
@@ -45,7 +44,9 @@ priority = "explicit"
 # addopts = "-m 'not slow'"
 markers = [
     "slow: expected to be slow",
+    "format_size: related to format deck size",
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
+    "deck_remove_cards: related to Deck.remove_card() and Deck.remove_cards()",
     "deck_count: related to Deck.count()",
     "deck_export: related to exporting a Deck as text or some other format",
     "deck_validation: related to forcing ValidationErrors from Pydantic",

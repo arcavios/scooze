@@ -7,7 +7,6 @@ from pydantic import ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 from scooze.enums import Format
-from scooze.utils import ExtendedEnum
 from strenum import StrEnum
 
 # region Private Utility Functions
@@ -36,10 +35,8 @@ def main_size(fmt: Format) -> Tuple[int, int]:
     """
 
     match fmt.value:
-        # TODO: Limited doesn't show up in Scryfall's enum, but could still be relevant for deck data;
-        #   how should it be supported?
-        # case Format.LIMITED:
-        #     return (40, maxsize)
+        case Format.LIMITED:
+            return 40, maxsize
 
         case Format.OATHBREAKER:
             return 58, 58
@@ -79,10 +76,8 @@ def side_size(fmt: Format) -> Tuple[int, int]:
     """
 
     match fmt.value:
-        # TODO: Limited doesn't show up in Scryfall's enum, but could still be relevant for deck data;
-        #   how should it be supported?
-        # case Format.LIMITED:
-        #     return 0, maxsize
+        case Format.LIMITED:
+            return 0, maxsize
 
         case Format.OATHBREAKER:
             return 2, 2  # TODO(#51): commander support?
@@ -147,15 +142,6 @@ class ObjectIdPydanticAnnotation:
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> JsonSchemaValue:
         return handler(core_schema.str_schema())
-
-
-class DecklistFormatter(ExtendedEnum, StrEnum):
-    """
-    A method of formatting a decklist for external systems.
-    """
-
-    ARENA = auto()
-    MTGO = auto()
 
 
 # endregion
