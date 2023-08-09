@@ -13,4 +13,4 @@ app.include_router(CardsRouter)
 
 @app.get("/")
 def read_root():
-    return RedirectResponse(url='/docs')
+    return RedirectResponse(url="/docs")
