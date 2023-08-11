@@ -37,7 +37,6 @@ class ImageUris:
 
 class CardFace:
     """
-    TODO: docstring
     Object for a single side of a double-faced Card object.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
@@ -52,9 +51,9 @@ class CardFace:
         image_uris: List[str] | None
         layout: str | None
         loyalty: int | None
-        mana_cost: str
-        name: str
-        object: str
+        mana_cost: str | None
+        name: str | None
+        object: str | None
         oracle_id: str | None
         oracle_text: str | None
         power: str | None
@@ -115,7 +114,6 @@ class CardFace:
 
 class Prices:
     """
-    TODO: docstring
     Object for all price data associated with a Card object.
 
     Attributes:
@@ -143,7 +141,6 @@ class Prices:
 
 class Preview:
     """
-    TODO: docstring
     Object for information about where and when a card was previewed.
 
     Attributes:
@@ -165,18 +162,17 @@ class Preview:
 
 class RelatedCard:
     """
-    TODO: docstring
     Data about Scryfall objects related to this card (tokens, cards referenced by name, meld pairs, etc.)
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
-        id: str
-        object: str
-        component: str
-        name: str
-        type_line: str
-        uri: str
+        id: str | None
+        object: str | None
+        component: str | None
+        name: str | None
+        type_line: str | None
+        uri: str | None
     """
 
     def __init__(
