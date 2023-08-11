@@ -7,14 +7,13 @@ from scooze.data.cardparts import CardFace, ImageUris, Preview, Prices, RelatedC
 
 class Card:
     """
-    TODO: docstring
-    Model for a basic Card object with minimal fields.
+    Object for a basic Card with minimal fields.
 
     Attributes:
        oracle_id: str
-       cmc: float
-       colors: List[Color]
-       name: str
+       cmc: float | None
+       colors: List[Color] | None
+       name: str | None
     """
 
     def __init__(
@@ -35,7 +34,6 @@ class Card:
 
 class DecklistCard(Card):
     """
-    TODO: docstring
     Card subclass intended for using card data in a decklist-informed setting or similar.
     All information in this class is print-agnostic.
 
@@ -45,13 +43,15 @@ class DecklistCard(Card):
         legalities: Dict[Format, Legality] | None
         mana_cost: str | None
         name: str | None
-        type_line: str
+        oracle_text: str | None
+        type_line: str | None
     """
 
     def __init__(
         self,
         legalities: Dict[enums.Format, enums.Legality] | None = None,
         mana_cost: str | None = None,
+        oracle_text: str | None = None,
         type_line: str | None = None,
     ):
         # cmc defined by base object
@@ -59,12 +59,12 @@ class DecklistCard(Card):
         self.legalities = legalities
         self.mana_cost = mana_cost
         # name defined by base object
+        self.oracle_text = oracle_text
         self.type_line = type_line
 
 
 class FullCard(DecklistCard):
     """
-    TODO: docstring
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
 
@@ -72,8 +72,7 @@ class FullCard(DecklistCard):
         ### Core fields
         arena_id: int | None
         id: str
-        # TODO(#36): convert to enum?
-        lang: str
+        lang: str # TODO(#36): convert to enum?
         mtgo_id: int | None
         mtgo_foil_id: int | None
         multiverse_ids: List[int] | None
@@ -97,13 +96,12 @@ class FullCard(DecklistCard):
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: List[str]
-        # TODO(#36): convert to enum?
-        layout: str
+        layout: str # TODO(#36): convert to enum?
         legalities: Dict[Format, Legality]
         life_modifier: str | None
         loyalty: str | None
         mana_cost: str | None
-        name: str
+        name: str | None
         oracle_text: str | None
         oversized: bool
         penny_rank: int | None
@@ -111,29 +109,27 @@ class FullCard(DecklistCard):
         produced_mana: List[Color] | None
         reserved: bool
         toughness: str | None
-        type_line: str
+        type_line: str | None
 
         ### Print fields
         artist: str | None
         attraction_lights: List[int] | None
-        booster: bool
-        border_color: BorderColor
-        card_back_id: str
-        collector_number: str
-        content_warning: bool
-        digital: bool
-        finishes: List[Finish]
+        booster: bool | None
+        border_color: BorderColor | None
+        card_back_id: str | None
+        collector_number: str | None
+        content_warning: bool | None
+        digital: bool | None
+        finishes: List[Finish] | None
         flavor_name: str | None
         flavor_text: str | None
-        # TODO(#36): convert to enum?
-        frame_effects: List[str] | None
-        frame: str
-        full_art: bool
-        games: List[Game]
-        highres_image: bool
+        frame_effects: List[str] | None # TODO(#36): convert to enum?
+        frame: str | None
+        full_art: bool | None
+        games: List[Game] | None
+        highres_image: bool | None
         illustation_id: str | None
-        # TODO(#36): convert to enum?
-        image_status: str
+        image_status: str | None # TODO(#36): convert to enum?
         image_uris: ImageUris | None
         preview: Preview | None
         prices: Prices | None
@@ -142,14 +138,13 @@ class FullCard(DecklistCard):
         printed_type_line: str | None
         promo: bool
         promo_types: List[str] | None
-        # TODO(#47): convert to object?
-        purchase_uris: Dict[str, str]
-        rarity: Rarity
-        # TODO(#47): convert to object?
-        related_uris: Dict[str, str]
-        released_at: datetime
+        purchase_uris: Dict[str, str] | None # TODO(#47): convert to object?
+        rarity: Rarity | None
+        related_uris: Dict[str, str] | None # TODO(#47): convert to object?
+        released_at: datetime | None
         reprint: bool
         scryfall_set_uri: str
+        security_stamp: str | None # TODO(#36): convert to enum?
         set_name: str
         set_search_uri: str
         set_type: str
@@ -160,8 +155,6 @@ class FullCard(DecklistCard):
         textless: bool
         variation: bool
         variation_of: str | None
-        # TODO(#36): convert to enum?
-        security_stamp: str | None
         watermark: str | None
     """
 
@@ -191,7 +184,6 @@ class FullCard(DecklistCard):
         layout: str = "normal",
         life_modifier: str | None = None,
         loyalty: str | None = None,
-        oracle_text: str | None = None,
         oversized: bool = False,
         penny_rank: int | None = None,
         power: str | None = None,
@@ -243,6 +235,7 @@ class FullCard(DecklistCard):
         variation_of: str | None = None,
         watermark: str | None = None,
     ):
+
         # region Core Fields
 
         self.arena_id = arena_id
@@ -280,14 +273,14 @@ class FullCard(DecklistCard):
         self.loyalty = loyalty
         # mana_cost defined by parent class
         # name defined by parent class
-        self.oracle_text = oracle_text
+        # oracle_text defined by parent class
         self.oversized = oversized
         self.penny_rank = penny_rank
         self.power = power
         self.produced_mana = produced_mana
         self.reserved = reserved
         self.toughness = toughness
-        # type_line defined in parent class
+        # type_line defined by parent class
 
         # endregion
 
