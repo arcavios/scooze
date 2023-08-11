@@ -235,7 +235,6 @@ class FullCard(DecklistCard):
         variation_of: str | None = None,
         watermark: str | None = None,
     ):
-
         # region Core Fields
 
         self.arena_id = arena_id
