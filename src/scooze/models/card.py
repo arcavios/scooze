@@ -82,7 +82,6 @@ class DecklistCardModel(BaseCardModel, validate_assignment=True):
     )
 
 
-
 class FullCardModel(DecklistCardModel, validate_assignment=True):
     """
     Card object that supports all fields available from Scryfall's JSON data.
