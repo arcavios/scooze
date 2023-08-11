@@ -14,7 +14,7 @@ from scooze.models.cardparts import (
 )
 
 
-class CardModel(BaseModel, validate_assignment=True):
+class BaseCardModel(BaseModel, validate_assignment=True):
     """
     Model for a basic Card object with minimal fields. Contains all information you might use to sort a decklist.
 
@@ -442,11 +442,11 @@ class FullCardModel(CardModel, validate_assignment=True):
     # endregion
 
 
-class CardModelIn(CardModel):
+class CardModelIn(BaseCardModel):
     pass
 
 
-class CardModelOut(CardModel):
+class CardModelOut(BaseCardModel):
     id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
         default=None,
         alias="_id",
