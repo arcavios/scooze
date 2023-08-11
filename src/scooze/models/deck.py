@@ -154,7 +154,7 @@ class Deck(BaseModel, validate_assignment=True):
         return (
             f"""Archetype: {self.archetype}\n"""
             f"""Format: {self.format}\n"""
-            f"""Date Played: {self.date_played}\n"""  # TODO: format date str?
+            f"""Date Played: {self.date_played}\n"""
             f"""Decklist:\n{decklist}\n"""
         )
 
