@@ -6,7 +6,6 @@ import scooze.enums as enums
 
 class ImageUris:
     """
-    TODO: docstring
     URIs of images associated with this object on Scryfall.
     Scryfall documentation: https://scryfall.com/docs/api/images
 
@@ -39,7 +38,7 @@ class ImageUris:
 class CardFace:
     """
     TODO: docstring
-    Object for a single side of a double-faced card object.
+    Object for a single side of a double-faced Card object.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
