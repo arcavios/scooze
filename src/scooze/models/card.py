@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import Annotated, Dict, List
 
+import pydantic
 import scooze.enums as enums
 import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field
-from scooze.models.cardparts import (CardFace, ImageUris, Preview, Prices,
-                                     RelatedCard)
+from scooze.models.cardparts import CardFace, ImageUris, Preview, Prices, RelatedCard
 
 
 class BaseCardModel(BaseModel, validate_assignment=True):
