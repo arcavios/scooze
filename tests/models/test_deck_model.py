@@ -1,4 +1,3 @@
-import json
 from collections import Counter
 from datetime import datetime, timezone
 from sys import maxsize
