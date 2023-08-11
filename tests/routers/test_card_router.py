@@ -48,3 +48,6 @@ def test_add_card_bad(mock_add: MagicMock, client: TestClient, request_body_card
     response = client.post("/card/add", json={"card": card_json})
     assert response.status_code == 400
     assert response.json()["message"] == "Failed to create a new card."
+
+
+# TODO(#13): Complete testing for Card router
