@@ -61,21 +61,26 @@ class DecklistCardModel(BaseCardModel, validate_assignment=True):
         legalities: Dict[Format, Legality] | None
         mana_cost: str
         name: str
+        oracle_text: str | None
         type_line: str
     """
 
-    # cmc defined by base object
-    # colors defined by base object
+    # cmc defined by base model
+    # colors defined by base model
     legalities: Dict[enums.Format, enums.Legality] | None = Field(
         description="Formats and the legality status of that card in them.",
     )
     mana_cost: str = Field(
         description="Mana cost, as string of mana symbols",
     )
-    # name defined by base object
+    # name defined by base model
+    oracle_text: str | None = Field(
+        description="This card's oracle text, if any.",
+    )
     type_line: str = Field(
         description="Type line",
     )
+
 
 
 class FullCardModel(DecklistCardModel, validate_assignment=True):
@@ -245,7 +250,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     card_faces: List[CardFaceModel] | None = Field(
         description="All component CardFace objects of this card, for multifaced cards.",
     )
-    # cmc defined in parent class
+    # cmc defined by base model
     color_identity: List[enums.Color] = Field(
         default=[],
         description="This card's color identity, for Commander variant deckbuilding.",
@@ -253,7 +258,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     color_indicator: List[enums.Color] | None = Field(
         description="The colors in this card's color indicator, if it has one.",
     )
-    # colors defined in parent class
+    # colors defined by base model
     edhrec_rank: int | None = Field(
         description="This card's rank/popularity on EDHREC, if applicable.",
     )
@@ -269,18 +274,16 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         default="normal",
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
     )
-    # legalities defined in parent class
+    # legalities defined by base model
     life_modifier: str | None = Field(
         description="This card's Vanguard life modifier value, if applicable.",
     )
     loyalty: str | None = Field(
         description="This card's starting planeswalker loyalty, if applicable.",
     )
-    # mana_cost defined in parent class
-    # name defined in parent class
-    oracle_text: str | None = Field(
-        description="This card's oracle text, if any.",
-    )
+    # mana_cost defined by base model
+    # name defined by base model
+    # oracle_text defined by base model
     oversized: bool = Field(
         default=False,
         description="Whether this card is oversized.",
@@ -301,7 +304,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     toughness: str | None = Field(
         description="Toughness of this card, if applicable.",
     )
-    # type_line defined in parent class
+    # type_line defined by base model
 
     # endregion
 

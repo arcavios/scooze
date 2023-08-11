@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 class ImageUrisModel(BaseModel, validate_assignment=True):
     """
-    URIs of images associated with this object on Scryfall.
+    URIs of images associated with this model on Scryfall.
     Scryfall documentation: https://scryfall.com/docs/api/images
 
     Attributes:
@@ -41,7 +41,7 @@ class ImageUrisModel(BaseModel, validate_assignment=True):
 
 class CardFaceModel(BaseModel, validate_assignment=True):
     """
-    Object for a single side of a double-faced card object.
+    Model for a single side of a double-faced CardModel.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
@@ -137,7 +137,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
 
 class PricesModel(BaseModel, validate_assignment=True):
     """
-    Object for all price data associated with a Card object.
+    Model for all price data associated with a CardModel.
 
     Attributes:
         usd: float | None
