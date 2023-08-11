@@ -1,7 +1,7 @@
 import scooze.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from scooze.models.card import CardIn
+from scooze.models.card import CardModelIn
 
 router = APIRouter(
     prefix="/card",
@@ -24,7 +24,7 @@ async def card_root():
 
 
 @router.post("/add")
-async def add_card(card: CardIn):
+async def add_card(card: CardModelIn):
     new_card = await db.add_card(card=card)
     if new_card:
         return JSONResponse(new_card.model_dump(mode="json"), status_code=200)
@@ -66,7 +66,7 @@ async def get_card_by_name(card_name: str):
 
 
 @router.patch("/update/{card_id}")
-async def update_card(card_id: str, card: CardIn):
+async def update_card(card_id: str, card: CardModelIn):
     updated_card = await db.update_card(id=card_id, card=card)
 
     if updated_card:

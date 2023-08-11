@@ -7,7 +7,7 @@ from bson import ObjectId
 from pydantic import BaseModel, Field
 
 
-class Card(BaseModel, validate_assignment=True):
+class CardModel(BaseModel, validate_assignment=True):
     """
     Object for a basic Card object with minimal fields.
 
@@ -43,7 +43,7 @@ class Card(BaseModel, validate_assignment=True):
         return self.name.__hash__()
 
 
-class DecklistCard(Card, validate_assignment=True):
+class DecklistCard(CardModel, validate_assignment=True):
     """
     Card subclass intended for using card data in a decklist-informed setting or similar.
     All information in this class is print-agnostic.
@@ -676,11 +676,11 @@ class FullCard(DecklistCard, validate_assignment=True):
     # endregion
 
 
-class CardIn(Card):
+class CardModelIn(CardModel):
     pass
 
 
-class CardOut(Card):
+class CardModelOut(CardModel):
     id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
         default=None,
         alias="_id",
