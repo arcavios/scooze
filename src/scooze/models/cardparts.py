@@ -5,7 +5,7 @@ import scooze.enums as enums
 from pydantic import BaseModel, Field
 
 
-class ImageUris(BaseModel, validate_assignment=True):
+class ImageUrisModel(BaseModel, validate_assignment=True):
     """
     URIs of images associated with this object on Scryfall.
     Scryfall documentation: https://scryfall.com/docs/api/images
@@ -39,7 +39,7 @@ class ImageUris(BaseModel, validate_assignment=True):
     )
 
 
-class CardFace(BaseModel, validate_assignment=True):
+class CardFaceModel(BaseModel, validate_assignment=True):
     """
     Object for a single side of a double-faced card object.
 
@@ -87,7 +87,7 @@ class CardFace(BaseModel, validate_assignment=True):
     illustration_id: int | None = Field(
         description="Scryfall illustration ID of this face, if any.",
     )
-    image_uris: ImageUris | None = Field(
+    image_uris: ImageUrisModel | None = Field(
         description="URIs for images of this face on Scryfall.",
     )
     layout: str | None = Field(
@@ -135,7 +135,7 @@ class CardFace(BaseModel, validate_assignment=True):
     )
 
 
-class Prices(BaseModel, validate_assignment=True):
+class PricesModel(BaseModel, validate_assignment=True):
     """
     Object for all price data associated with a Card object.
 
@@ -164,7 +164,7 @@ class Prices(BaseModel, validate_assignment=True):
     )
 
 
-class Preview(BaseModel, validate_assignment=True):
+class PreviewModel(BaseModel, validate_assignment=True):
     """
     Object for information about where and when a card was previewed.
 
@@ -185,7 +185,7 @@ class Preview(BaseModel, validate_assignment=True):
     )
 
 
-class RelatedCard(BaseModel, validate_assignment=True):
+class RelatedCardModel(BaseModel, validate_assignment=True):
     """
     Data about Scryfall objects related to this card (tokens, cards referenced by name, meld pairs, etc.)
 

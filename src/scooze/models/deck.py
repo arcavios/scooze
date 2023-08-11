@@ -8,7 +8,7 @@ import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field, model_validator
 from scooze.enums import ExtendedEnum, Format
-from scooze.models.card import DecklistCard
+from scooze.models.card import DecklistCardModel
 from scooze.models.matchdata import MatchData
 from scooze.utils import get_logger
 from strenum import StrEnum
@@ -96,11 +96,11 @@ class Deck(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[DecklistCard] = Field(
+    main: Counter[DecklistCardModel] = Field(
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[DecklistCard] = Field(
+    side: Counter[DecklistCardModel] = Field(
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
@@ -159,7 +159,7 @@ class Deck(BaseModel, validate_assignment=True):
         )
 
     def add_card(
-        self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+        self, card: DecklistCardModel, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
     ) -> None:
         """
         Adds a given quantity of a given card to this Deck.
@@ -187,7 +187,7 @@ class Deck(BaseModel, validate_assignment=True):
             self._validate_deck()
 
     def add_cards(
-        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+        self, cards: Counter[DecklistCardModel], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
     ) -> None:
         """
         Adds the given cards to this Deck.
@@ -208,7 +208,11 @@ class Deck(BaseModel, validate_assignment=True):
             self._validate_deck()
 
     def remove_card(
-        self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+        self,
+        card: DecklistCardModel,
+        quantity: int = maxsize,
+        in_the: InThe = InThe.MAIN,
+        revalidate_after: bool = False,
     ) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
@@ -236,7 +240,7 @@ class Deck(BaseModel, validate_assignment=True):
             self._validate_deck()
 
     def remove_cards(
-        self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
+        self, cards: Counter[DecklistCardModel], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
     ) -> None:
         """
         Removes a given quantity of a given card from this Deck.

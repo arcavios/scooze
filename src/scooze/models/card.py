@@ -1,12 +1,17 @@
 from datetime import datetime
 from typing import Annotated, Dict, List
 
-import pydantic
 import scooze.enums as enums
 import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field
-from scooze.models.cardparts import CardFace, ImageUris, Preview, Prices, RelatedCard
+from scooze.models.cardparts import (
+    CardFaceModel,
+    ImageUrisModel,
+    PreviewModel,
+    PricesModel,
+    RelatedCardModel,
+)
 
 
 class BaseCardModel(BaseModel, validate_assignment=True):
@@ -45,7 +50,7 @@ class BaseCardModel(BaseModel, validate_assignment=True):
         return self.name.__hash__()
 
 
-class DecklistCard(BaseCardModel, validate_assignment=True):
+class DecklistCardModel(BaseCardModel, validate_assignment=True):
     """
     Card subclass intended for using card data in a decklist-informed setting or similar.
     All information in this class is print-agnostic.
@@ -54,7 +59,7 @@ class DecklistCard(BaseCardModel, validate_assignment=True):
         cmc: float | None
         colors: List[Color] | None
         legalities: Dict[Format, Legality] | None
-        mana_cost: str | None
+        mana_cost: str
         name: str
         type_line: str
     """
@@ -73,7 +78,7 @@ class DecklistCard(BaseCardModel, validate_assignment=True):
     )
 
 
-class FullCard(DecklistCard, validate_assignment=True):
+class FullCardModel(DecklistCardModel, validate_assignment=True):
     """
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
@@ -160,6 +165,8 @@ class FullCard(DecklistCard, validate_assignment=True):
         released_at: datetime
         reprint: bool
         scryfall_set_uri: str
+        # TODO(#36): convert to enum?
+        security_stamp: str | None
         set_name: str
         set_search_uri: str
         set_type: str
@@ -170,8 +177,6 @@ class FullCard(DecklistCard, validate_assignment=True):
         textless: bool
         variation: bool
         variation_of: str | None
-        # TODO(#36): convert to enum?
-        security_stamp: str | None
         watermark: str | None
     """
 
@@ -212,10 +217,7 @@ class FullCard(DecklistCard, validate_assignment=True):
         default="card",
         description="Always `card` for Card objects.",
     )
-    oracle_id: str = Field(
-        default="",
-        description="A UUID for this card's oracle identity; shared across prints of the same card but not same-named objects with different gameplay properties.",
-    )
+    # oracle_id defined by base model
     prints_search_uri: str = Field(
         default="",
         description="A link to begin paginating through all prints of this card in Scryfall's API.",
@@ -237,10 +239,10 @@ class FullCard(DecklistCard, validate_assignment=True):
 
     # region Gameplay fields
 
-    all_parts: List[RelatedCard] | None = Field(
+    all_parts: List[RelatedCardModel] | None = Field(
         description="RelatedCard objects for tokens/meld pairs/other associated parts to this card, if applicable.",
     )
-    card_faces: List[CardFace] | None = Field(
+    card_faces: List[CardFaceModel] | None = Field(
         description="All component CardFace objects of this card, for multifaced cards.",
     )
     # cmc defined in parent class
@@ -361,13 +363,13 @@ class FullCard(DecklistCard, validate_assignment=True):
     image_status: str = Field(
         description="The quality/status of images available for this card. Either missing, placeholder, lowres, or highres_scan.",
     )
-    image_uris: ImageUris | None = Field(
+    image_uris: ImageUrisModel | None = Field(
         description="Links to images of this card in various qualities.",
     )
-    preview: Preview | None = Field(
+    preview: PreviewModel | None = Field(
         description="Information about where, when, and how this print was previewed.",
     )
-    prices: Prices | None = Field(
+    prices: PricesModel | None = Field(
         description="Prices for this card on various marketplaces.",
     )
     printed_name: str | None = Field(
@@ -412,6 +414,10 @@ class FullCard(DecklistCard, validate_assignment=True):
         default="",
         description="Link to the Scryfall set page for the set of this print.",
     )
+    # TODO(#36): convert to enum?
+    security_stamp: str | None = Field(
+        description="Security stamp on this card, if any.",
+    )
     set_name: str = Field(
         default="",
         description="Full name of the set this print belongs to.",
@@ -450,10 +456,6 @@ class FullCard(DecklistCard, validate_assignment=True):
     )
     variation_of: str | None = Field(
         description="Which card object this object is a variant of, if any.",
-    )
-    # TODO(#36): convert to enum?
-    security_stamp: str | None = Field(
-        description="Security stamp on this card, if any.",
     )
     watermark: str | None = Field(
         description="Watermark printed on this card, if any.",
