@@ -49,9 +49,6 @@ class Deck:
         Exports the Deck as a str with the given DecklistFormat.
     """
 
-    ## Class Attributes
-    model_config = model_utils.get_base_model_config()
-
     # Set up logger
     _log_filename = "deck.log"
     _logger = get_logger(_log_filename, "deck")
