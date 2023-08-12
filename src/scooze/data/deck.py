@@ -1,41 +1,50 @@
 from collections import Counter
 from datetime import date
-from typing import Annotated
+from sys import maxsize
 
 import scooze.models.utils as model_utils
-from bson import ObjectId
-from pydantic import BaseModel, Field, model_validator
-from scooze.enums import ExtendedEnum, Format
-from scooze.models.card import OracleCardModel
-from scooze.models.matchdata import MatchData
+from scooze.data.card import DecklistCard
+from scooze.data.matchdata import MatchData
+from scooze.enums import DecklistFormatter, Format, InThe
 from scooze.utils import get_logger
 
+# TODO: create a ticket for updating the to_decklist() function because
+# it uses a lot of repeated code for each deck part.
 
-class DeckModel(BaseModel, validate_assignment=True):
+
+class Deck:
     """
-    A model to represent a deck of Magic: the Gathering cards.
+    A class to represent a deck of Magic: the Gathering cards.
 
     Attributes
     ----------
     archetype : str
-        The archetype of this DeckModel.
+        The archetype of this Deck.
     format : Format
-        The format legality of the cards in this DeckModel.
+        The format legality of the cards in this Deck.
     date_played : date
-        The date this DeckModel was played.
+        The date this Deck was played.
     matches : MatchData
-        Match data for this DeckModel.
-    main : Counter[DecklistCardModel]
+        Match data for this Deck.
+    main : Counter[DecklistCard]
         The main deck. Typically 60 cards minimum.
-    side : Counter[DecklistCardModel]
+    side : Counter[DecklistCard]
         The sideboard. Typically 15 cards maximum.
-    cmdr : Counter[DecklistCardModel]
+    cmdr : Counter[DecklistCard]
         The command zone. Typically 1 card in Commander formats.
 
     Methods
     -------
+    add_card(card: DecklistCard, quantity: int, in_the: InThe):
+        Adds a given quantity of a given card to this Deck.
+    add_cards(cards: Counter[DecklistCard], in_the: InThe):
+        Adds the given cards to this Deck.
+    remove_card(card: DecklistCard, quantity: int, in_the: InThe):
+        Removes a given quantity of a given card from this Deck.
+    remove_cards(cards: Counter[DecklistCard], in_the: InThe):
+        Removes the given cards from this Deck.
     count():
-        Counts all of the cards in this DeckModel.
+        Counts all of the cards in this Deck.
     to_decklist(DecklistFormat):
         Exports the Deck as a str with the given DecklistFormat.
     """
@@ -47,63 +56,23 @@ class DeckModel(BaseModel, validate_assignment=True):
     _log_filename = "deck.log"
     _logger = get_logger(_log_filename, "deck")
 
-    ## Fields
-    archetype: str = Field(
-        default="",
-        description="The archetype of this Deck.",
-    )
-    format: Format = Field(
-        default=Format.NONE,
-        description="The format of the tournament where this Deck was played.",
-    )
-    date_played: date = Field(
-        default=None,
-        description="The date this Deck was played.",
-    )
-    matches: MatchData = Field(  # TODO(#22): replace with List[MatchData] with opposing deck info not just (w,l,d)
-        default=None,
-        description="Match data for this Deck.",
-    )
-    main: Counter[OracleCardModel] = Field(
-        default=Counter(),
-        description="The main deck. Typically 60 cards minimum.",
-    )
-    side: Counter[OracleCardModel] = Field(
-        default=Counter(),
-        description="The sideboard. Typically 15 cards maximum.",
-    )
-    cmdr: Counter[DecklistCardModel] = Field(
-        default=Counter(),
-        description="The command zone. Typically 1 card in Commander formats.",
-    )
-
-    # region Validators
-
-    # TODO(#49): add validation for fields
-
-    @model_validator(mode="after")
-    def validate_main(self):
-        m_min, m_max = model_utils.main_size(self.format)
-        if self.main.total() < m_min:
-            e = ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
-            self._logger.error(e)
-            raise e
-        elif self.main.total() > m_max:
-            e = ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
-            self._logger.error(e)
-            raise e
-        return self
-
-    @model_validator(mode="after")
-    def validate_side(self):
-        s_min, s_max = model_utils.side_size(self.format)
-        if self.side.total() < s_min:
-            raise ValueError(f"Not enough cards in sideboard. Provided sideboard has {self.side.total()} cards.")
-        elif self.side.total() > s_max:
-            raise ValueError(f"Too many cards in sideboard. Provided sideboards has {self.side.total()} cards.")
-        return self
-
-    # endregion
+    def __init__(
+        self,
+        archetype: str | None = None,
+        format: Format = Format.NONE,
+        date_played: date | None = None,
+        matches: MatchData | None = None,
+        main: Counter[DecklistCard] = Counter(),
+        side: Counter[DecklistCard] = Counter(),
+        cmdr: Counter[DecklistCard] = Counter(),
+    ):
+        self.archetype = archetype
+        self.format = format
+        self.date_played = date_played
+        self.matches = matches
+        self.main = main
+        self.side = side
+        self.cmdr = cmdr
 
     def __eq__(self, other):
         return (
@@ -127,9 +96,7 @@ class DeckModel(BaseModel, validate_assignment=True):
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def add_card(
-        self, card: OracleCardModel, quantity: int = 1, in_the: InThe = InThe.MAIN, revalidate_after: bool = False
-    ) -> None:
+    def add_card(self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
         Adds a given quantity of a given card to this Deck.
 
@@ -137,7 +104,6 @@ class DeckModel(BaseModel, validate_assignment=True):
             card (DecklistCard): The card to add.
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
-            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         match in_the:
@@ -152,19 +118,13 @@ class DeckModel(BaseModel, validate_assignment=True):
                     f"{self.archetype} - Unable to add {quantity} copies of {card.name} to the deck. 'in' must be one of {InThe.list()}"
                 )
 
-        if revalidate_after:
-            self._validate_deck()
-
-    def add_cards(
-        self, cards: Counter[OracleCardModel], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
-    ) -> None:
+    def add_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
         """
         Adds the given cards to this Deck.
 
         Parameters:
             cards (Counter[DecklistCard]): The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
-            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         match in_the:
@@ -173,16 +133,7 @@ class DeckModel(BaseModel, validate_assignment=True):
             case InThe.SIDE:
                 self.side.update(cards)
 
-        if revalidate_after:
-            self._validate_deck()
-
-    def remove_card(
-        self,
-        card: OracleCardModel,
-        quantity: int = maxsize,
-        in_the: InThe = InThe.MAIN,
-        revalidate_after: bool = False,
-    ) -> None:
+    def remove_card(self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
 
@@ -190,7 +141,6 @@ class DeckModel(BaseModel, validate_assignment=True):
             card (DecklistCard): The card to remove.
             quantity (int): The number of copies of the card to be removed.
             in_the (InThe): Where to remove the cards from (main, side, etc)
-            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         # using counterA - counterB results in a new counter with only positive results
@@ -205,12 +155,7 @@ class DeckModel(BaseModel, validate_assignment=True):
                 self._logger.warning(f"{self.archetype} - Failed to remove card.")
                 pass
 
-        if revalidate_after:
-            self._validate_deck()
-
-    def remove_cards(
-        self, cards: Counter[OracleCardModel], in_the: InThe = InThe.MAIN, revalidate_after: bool = False
-    ) -> None:
+    def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
         """
         Removes a given quantity of a given card from this Deck.
 
@@ -238,26 +183,23 @@ class DeckModel(BaseModel, validate_assignment=True):
                 self._logger.warning(f"{self.archetype} - Failed to remove cards.")
                 pass
 
-        if revalidate_after:
-            self._validate_deck()
-
     def count(self) -> int:
         """
         Returns:
-            count (int): The number of cards in this DeckModel.
+            count (int): The number of cards in this Deck.
         """
 
         return self.main.total() + self.side.total() + self.cmdr.total()
 
     def to_decklist(self, decklist_formatter: DecklistFormatter = None) -> str:
         """
-        Exports this DeckModel as a str with the given DecklistFormatter.
+        Exports this Deck as a str with the given DecklistFormatter.
 
         Parameters:
-            export_format (DecklistFormatter): The format of the exported DeckModel.
+            export_format (DecklistFormatter): The format of the exported Deck.
 
         Returns:
-            decklist (str): A string containing the names and quantities of the cards in this DeckModel.
+            decklist (str): A string containing the names and quantities of the cards in this Deck.
         """
 
         match decklist_formatter:
@@ -283,14 +225,3 @@ class DeckModel(BaseModel, validate_assignment=True):
         cmdr = "Commander\n" + "\n".join([f"{quantity} {card.name}" for card, quantity in self.cmdr.items()])
         decklist = f"{cmdr if len(self.cmdr) > 0 else ''}{main}{side if len(self.side) > 0 else ''}"
         return decklist
-
-
-class DeckModelIn(DeckModel):
-    pass
-
-
-class DeckModelOut(DeckModel):
-    id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
-        default=None,
-        alias="_id",
-    )
