@@ -685,6 +685,7 @@ def side_modern_4c(
     card_dress_down,
     card_flusterstorm,
     card_hallowed_moonlight,
+    card_kaheera_the_orphanguard,
     card_prismatic_ending,
     card_supreme_verdict,
     card_veil_of_summer,
@@ -699,6 +700,7 @@ def side_modern_4c(
             card_dress_down: 1,
             card_flusterstorm: 1,
             card_hallowed_moonlight: 2,
+            card_kaheera_the_orphanguard: 1,
             card_prismatic_ending: 1,
             card_supreme_verdict: 1,
             card_veil_of_summer: 2,
@@ -718,6 +720,7 @@ def side_modern_4c_str(
     card_dress_down,
     card_flusterstorm,
     card_hallowed_moonlight,
+    card_kaheera_the_orphanguard,
     card_prismatic_ending,
     card_supreme_verdict,
     card_veil_of_summer,
@@ -731,6 +734,7 @@ def side_modern_4c_str(
         f"1 {card_dress_down.name}\n"
         f"1 {card_flusterstorm.name}\n"
         f"2 {card_hallowed_moonlight.name}\n"
+        f"1 {card_kaheera_the_orphanguard.name}\n"
         f"1 {card_prismatic_ending.name}\n"
         f"1 {card_supreme_verdict.name}\n"
         f"2 {card_veil_of_summer.name}\n"

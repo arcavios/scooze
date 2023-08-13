@@ -55,6 +55,7 @@ def test_diff(
     card_dress_down,
     card_flusterstorm,
     card_hallowed_moonlight,
+    card_kaheera_the_orphanguard,
     card_prismatic_ending,
     card_supreme_verdict,
     card_veil_of_summer,
@@ -69,6 +70,7 @@ def test_diff(
         card_dovins_veto: (1, 0),
         card_dress_down: (1, 0),
         card_flusterstorm: (1, 0),
+        card_kaheera_the_orphanguard: (1, 0),
         card_prismatic_ending: (1, 0),
         card_supreme_verdict: (1, 0),
         card_veil_of_summer: (2, 1),
@@ -98,11 +100,6 @@ def test_add_cards(some_cards):
     part.add_cards(some_cards)
     some_cards.update(some_cards)
     assert part.cards == some_cards
-
-
-# card_chalice_of_the_void: 4,
-# card_hallowed_moonlight: 2,
-# card_veil_of_summer: 1,
 
 
 @pytest.mark.deck_remove_cards

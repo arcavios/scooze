@@ -1,22 +1,39 @@
 from collections import Counter
-from datetime import datetime, timezone
 from sys import maxsize
 
 import pytest
-from pydantic_core import ValidationError
 from scooze.enums import Format, InThe
-from scooze.models.card import DecklistCardModel
-from scooze.models.deck import DecklistFormatter, DeckModel
+from scooze.data.card import DecklistCard
+from scooze.data.deck import DeckPart, Deck
 
-"""
-Attributes
-----------
-    archetype : str
-    format : Format
-    main : DeckPart
-    side : DeckPart
-    cmdr : DeckPart
-"""
+@pytest.fixture
+def cmdr_part(card_omnath_locus_of_creation) -> DeckPart:
+    cards = Counter({card_omnath_locus_of_creation: 1})
+    return DeckPart(cards=cards)
+
+def test_archetype(archetype_modern_4c):
+    deck = Deck(archetype=archetype_modern_4c)
+    assert deck.archetype == archetype_modern_4c
+
+
+def test_format(format_modern):
+    deck = Deck(archetype="test_format", format=format_modern)
+    assert deck.format == format_modern
+
+
+def test_main(main_modern_4c):
+    deck = Deck(archetype="test_main", main=main_modern_4c)
+    assert deck.main == main_modern_4c
+
+
+def test_side(side_modern_4c):
+    deck = Deck(archetype="test_main", side=side_modern_4c)
+    assert deck.side == side_modern_4c
+
+
+def test_cmdr(cmdr_part):
+    deck = Deck(archetype="test_cmdr", cmdr=cmdr_part)
+    assert deck.cmdr == cmdr_part
 
 
 """
@@ -30,6 +47,14 @@ Methods
     remove_cards(cards: Counter[DecklistCard], in_the: InThe):
     to_decklist(DecklistFormat):
 """
+
+def test_total(deck_modern_4c):
+    assert deck_modern_4c.total() == 75
+
+def test_diff_none(deck_modern_4c):
+    assert deck_modern_4c.diff(deck_modern_4c) == {"main_diff": {}, "side_diff": {}, "cmdr_diff": {}}
+
+
 # TODO: UPDATE THESE TESTS TO USE PYTHON OBJECT AND NOT MODEL
 # TODO: ADD TESTS FOR CMDR TO THIS AND ALSO TO THE MODEL
 
@@ -105,27 +130,6 @@ Methods
 
 
 # # endregion
-
-
-# def test_archetype(archetype):
-#     deck = DeckModel.model_construct(archetype=archetype)
-#     assert deck.archetype == archetype
-
-
-# def test_format(format, main_cards):
-#     deck = DeckModel.model_construct(format=format, main=main_cards)
-#     assert deck.format == format
-
-
-# @pytest.mark.deck_validation
-# def test_format_validation():
-#     with pytest.raises(ValueError) as e:
-#         DeckModel.model_validate({"archetype": "test_format_validation", "format": "not a real format"})
-
-
-# def test_date_played(today):
-#     deck = DeckModel.model_construct(date_played=today)
-#     assert deck.date_played == today
 
 
 # def test_str(archetype, format, today, main_cards, side_cards):
