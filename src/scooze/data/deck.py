@@ -6,7 +6,7 @@ import scooze.models.utils as model_utils
 from scooze.data.card import DecklistCard
 from scooze.data.matchdata import MatchData
 from scooze.enums import DecklistFormatter, Format, InThe
-from scooze.utils import get_logger
+from scooze.utils import get_logger, dict_diff
 
 # TODO: create a ticket for updating the to_decklist() function because
 # it uses a lot of repeated code for each deck part.
@@ -22,10 +22,6 @@ class Deck:
         The archetype of this Deck.
     format : Format
         The format legality of the cards in this Deck.
-    date_played : date
-        The date this Deck was played.
-    matches : MatchData
-        Match data for this Deck.
     main : Counter[DecklistCard]
         The main deck. Typically 60 cards minimum.
     side : Counter[DecklistCard]
@@ -57,16 +53,12 @@ class Deck:
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        date_played: date | None = None,
-        matches: MatchData | None = None,
         main: Counter[DecklistCard] = Counter(),
         side: Counter[DecklistCard] = Counter(),
         cmdr: Counter[DecklistCard] = Counter(),
     ):
         self.archetype = archetype
         self.format = format
-        self.date_played = date_played
-        self.matches = matches
         self.main = main
         self.side = side
         self.cmdr = cmdr
@@ -75,7 +67,6 @@ class Deck:
         return (
             self.archetype == other.archetype
             and self.format == other.format
-            and self.date_played == other.date_played
             and self.main == other.main
             and self.side == other.side
             and self.cmdr == other.cmdr
@@ -222,3 +213,11 @@ class Deck:
         cmdr = "Commander\n" + "\n".join([f"{quantity} {card.name}" for card, quantity in self.cmdr.items()])
         decklist = f"{cmdr if len(self.cmdr) > 0 else ''}{main}{side if len(self.side) > 0 else ''}"
         return decklist
+
+    def diff(self, other):
+        # TODO: docstring
+        return {
+            "main_diff": utils.dict_diff(self.main, other.main),
+            "side_diff": utils.dict_diff(self.side, other.side),
+            "cmdr_diff": utils.dict_diff(self.cmdr, other.cmdr),
+        }

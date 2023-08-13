@@ -110,6 +110,7 @@ class DeckModel(BaseModel, validate_assignment=True):
             self.archetype == other.archetype
             and self.format == other.format
             and self.date_played == other.date_played
+            and self.matches == other.matches
             and self.main == other.main
             and self.side == other.side
             and self.cmdr == other.cmdr

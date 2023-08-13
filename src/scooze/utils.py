@@ -45,3 +45,11 @@ def get_logger(
     logger.addHandler(ch)
 
     return logger
+
+def dict_diff(d1: dict, d2: dict, NO_KEY=0):
+    # TODO: docstring
+    both = d1.keys() & d2.keys()
+    diff = {k:(d1[k], d2[k]) for k in both if d1[k] != d2[k]}
+    diff.update({k:(d1[k], NO_KEY) for k in d1.keys() - both})
+    diff.update({k:(NO_KEY, d2[k]) for k in d2.keys() - both})
+    return diff
