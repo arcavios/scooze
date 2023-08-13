@@ -6,9 +6,8 @@ from scooze.data.deck import Deck, DeckPart
 from scooze.enums import Color, Format
 
 # NOTE: These fixtures can be used in any tests in this directory.
-# TODO: Write tests for commander
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
-# It was chosen because it has many colors of cards, lots of words, and many types
+# It was chosen because it has many colors of cards, lots of words, and many types.
 
 
 # region DecklistCards

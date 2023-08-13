@@ -8,6 +8,28 @@ from scooze.enums import Format, InThe
 from scooze.models.card import DecklistCardModel
 from scooze.models.deck import DecklistFormatter, DeckModel
 
+"""
+Attributes
+----------
+    archetype : str
+    format : Format
+    main : DeckPart
+    side : DeckPart
+    cmdr : DeckPart
+"""
+
+
+"""
+Methods
+-------
+    total():
+    diff(other: Deck):
+    add_card(card: DecklistCard, quantity: int, in_the: InThe):
+    add_cards(cards: Counter[DecklistCard], in_the: InThe):
+    remove_card(card: DecklistCard, quantity: int, in_the: InThe):
+    remove_cards(cards: Counter[DecklistCard], in_the: InThe):
+    to_decklist(DecklistFormat):
+"""
 # TODO: UPDATE THESE TESTS TO USE PYTHON OBJECT AND NOT MODEL
 # TODO: ADD TESTS FOR CMDR TO THIS AND ALSO TO THE MODEL
 
