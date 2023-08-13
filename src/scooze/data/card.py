@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Dict, List
 
 import scooze.enums as enums
 from scooze.data.cardparts import CardFace, ImageUris, Preview, Prices, RelatedCard
@@ -12,7 +11,7 @@ class Card:
     Attributes:
        oracle_id: str | None
        cmc: float | None
-       colors: List[Color] | None
+       colors: list[Color] | None
        name: str | None
     """
 
@@ -21,7 +20,7 @@ class Card:
         oracle_id: str | None = None,
         name: str | None = None,
         cmc: float | None = None,
-        colors: List[enums.Color] | None = None,
+        colors: list[enums.Color] | None = None,
     ):
         self.oracle_id = oracle_id
         self.name = name
@@ -41,8 +40,8 @@ class DecklistCard(Card):
         oracle_id: str | None
         name: str | None
         cmc: float | None
-        colors: List[Color] | None
-        legalities: Dict[Format, Legality] | None
+        colors: list[Color] | None
+        legalities: dict[Format, Legality] | None
         mana_cost: str | None
         oracle_text: str | None
         type_line: str | None
@@ -81,7 +80,7 @@ class FullCard(DecklistCard):
         lang: str
         mtgo_id: int | None
         mtgo_foil_id: int | None
-        multiverse_ids: List[int] | None
+        multiverse_ids: list[int] | None
         tcgplayer_id: int | None
         tcgplayer_etched_id: int | None
         cardmarket_id: int | None
@@ -93,12 +92,12 @@ class FullCard(DecklistCard):
         uri: str
 
         ### Gameplay fields
-        all_parts: List[RelatedCard] | None
-        card_faces: List[CardFace] | None
+        all_parts: list[RelatedCard] | None
+        card_faces: list[CardFace] | None
         cmc: float
-        color_identity: List[Color]
-        color_indicator: List[Color] | None
-        colors: List[color] | None
+        color_identity: list[Color]
+        color_indicator: list[Color] | None
+        colors: list[color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: list[str]
@@ -112,27 +111,27 @@ class FullCard(DecklistCard):
         oversized: bool
         penny_rank: int | None
         power: str | None
-        produced_mana: List[Color] | None
+        produced_mana: list[Color] | None
         reserved: bool
         toughness: str | None
         type_line: str | None
 
         ### Print fields
         artist: str | None
-        attraction_lights: List[int] | None
+        attraction_lights: list[int] | None
         booster: bool | None
         border_color: BorderColor | None
         card_back_id: str | None
         collector_number: str | None
         content_warning: bool | None
         digital: bool | None
-        finishes: List[Finish] | None
+        finishes: list[Finish] | None
         flavor_name: str | None
         flavor_text: str | None
         frame_effects: list[str] | None
         frame: str | None
         full_art: bool | None
-        games: List[Game] | None
+        games: list[Game] | None
         highres_image: bool | None
         illustation_id: str | None
         image_status: str | None
@@ -171,7 +170,7 @@ class FullCard(DecklistCard):
         lang: str = "en", # TODO(#36): convert to enum?
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
-        multiverse_ids: List[int] | None = None,
+        multiverse_ids: list[int] | None = None,
         tcgplayer_id: int | None = None,
         tcgplayer_etched_id: int | None = None,
         cardmarket_id: int | None = None,
@@ -200,25 +199,25 @@ class FullCard(DecklistCard):
         oversized: bool = False,
         penny_rank: int | None = None,
         power: str | None = None,
-        produced_mana: List[enums.Color] | None = None,
+        produced_mana: list[enums.Color] | None = None,
         reserved: bool = False,
         toughness: str | None = None,
         type_line: str | None = None,
         artist: str | None = None,
-        attraction_lights: List[int] | None = None,
+        attraction_lights: list[int] | None = None,
         booster: bool | None = None,
         border_color: enums.BorderColor | None = None,
         card_back_id: str | None = None,
         collector_number: str | None = None,
         content_warning: bool | None = None,
         digital: bool | None = None,
-        finishes: List[enums.Finish] | None = None,
+        finishes: list[enums.Finish] | None = None,
         flavor_name: str | None = None,
         flavor_text: str | None = None,
         frame_effects: list[str] | None = None, # TODO(#36): convert to enum?
         frame: str | None = None,
         full_art: bool | None = None,
-        games: List[enums.Game] | None = None,
+        games: list[enums.Game] | None = None,
         highres_image: bool | None = None,
         illustration_id: str | None = None,
         image_status: str | None = None, # TODO(#36): convert to enum?
