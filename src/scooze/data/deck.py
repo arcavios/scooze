@@ -1,16 +1,9 @@
 from collections import Counter
-from datetime import date
 from sys import maxsize
 
-import scooze.models.utils as model_utils
 from scooze.data.card import DecklistCard
-from scooze.data.matchdata import MatchData
 from scooze.enums import DecklistFormatter, Format, InThe
-from scooze.utils import get_logger, dict_diff
-
-# TODO: create a ticket for updating the to_decklist() function because
-# it uses a lot of repeated code for each deck part.
-
+import scooze.utils as utils
 
 class Deck:
     """
@@ -44,10 +37,6 @@ class Deck:
     to_decklist(DecklistFormat):
         Exports the Deck as a str with the given DecklistFormat.
     """
-
-    # Set up logger
-    _log_filename = "deck.log"
-    _logger = get_logger(_log_filename, "deck")
 
     def __init__(
         self,
@@ -84,6 +73,43 @@ class Deck:
             f"""Decklist:\n{decklist}\n"""
         )
 
+    def diff(self, other) -> dict[str, dict[DecklistCard, tuple(int, int)]]:
+        # TODO: should this use an object instead of a dict[str, dict]?
+        """
+        Generates a diff between this Deck and another.
+
+        Parameters:
+            other (Deck): The other Deck.
+
+        Returns:
+            diff (dict[str, dict[DecklistCard, tuple(int, int)]]): Returns a dict with keys for each deck part.
+                Each contains a dict of every card in both decks and their counts.
+        """
+
+        return {
+            "main_diff": utils.dict_diff(self.main, other.main),
+            "side_diff": utils.dict_diff(self.side, other.side),
+            "cmdr_diff": utils.dict_diff(self.cmdr, other.cmdr),
+        }
+
+    def same_list(self, other):
+        # TODO: needs a new name
+        """
+        Determines if this Deck contains exactly the same cards as another.
+
+        Parameters:
+            other (Deck): The other Deck.
+
+        Returns:
+            same (bool): True if this Deck contains exactly the same cards as another, else False.
+        """
+
+        diff = self.diff(other)
+        same_main = bool(diff["main_diff"])
+        same_side = bool(diff["side_diff"])
+        same_cmdr = bool(diff["cmdr_diff"])
+        return same_main and same_side and same_cmdr
+
     def add_card(self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
         Adds a given quantity of a given card to this Deck.
@@ -97,14 +123,10 @@ class Deck:
         match in_the:
             case InThe.MAIN:
                 self.main.update({card: quantity})
-                self._logger.debug(f"{self.archetype} - Added {quantity} copies of {card.name} to the main deck.")
             case InThe.SIDE:
                 self.side.update({card: quantity})
-                self._logger.debug(f"{self.archetype} - Added {quantity} copies of {card.name} to the sideboard.")
             case _:
-                self._logger.error(
-                    f"{self.archetype} - Unable to add {quantity} copies of {card.name} to the deck. 'in' must be one of {InThe.list()}"
-                )
+                pass # 'in' must be one of InThe.list()
 
     def add_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -135,13 +157,10 @@ class Deck:
         match in_the:
             case InThe.MAIN:
                 self.main = self.main - Counter({card: quantity})
-                self._logger.debug(f"{self.archetype} - Removed {card.name} from the main deck.")
             case InThe.SIDE:
                 self.side = self.side - Counter({card: quantity})
-                self._logger.debug(f"{self.archetype} - Removed {card.name} from the sideboard.")
             case _:
-                self._logger.warning(f"{self.archetype} - Failed to remove card.")
-                pass
+                pass # failed to remove card
 
     def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -158,18 +177,11 @@ class Deck:
             case InThe.MAIN:
                 main_pretotal = self.main.total()
                 self.main = self.main - cards
-                self._logger.debug(
-                    f"{self.archetype} - Removed {self.main.total() - main_pretotal} cards from the main deck."
-                )
             case InThe.SIDE:
                 side_pretotal = self.side.total()
                 self.side = self.side - cards
-                self._logger.debug(
-                    f"{self.archetype} - Removed {self.side.total() - side_pretotal} cards from the sideboard."
-                )
             case _:
-                self._logger.warning(f"{self.archetype} - Failed to remove cards.")
-                pass
+                pass # failed to remove cards
 
     def count(self) -> int:
         """
@@ -194,17 +206,11 @@ class Deck:
             case DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
                 # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
-                self._logger.debug(f"{self.archetype} - Exporting for Arena.")
             case DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
-                self._logger.debug(f"{self.archetype} - Exporting for MTGO.")
             case _:
                 sb_prefix = ""  # Default
-                self._logger.warning(
-                    f"""{self.archetype} - Unable to export with the given format: {decklist_formatter}. """
-                    f"""'export_format' must be one of {DecklistFormatter.list()}. Using default format."""
-                )
         sb_prefix = "\n\n" + sb_prefix
 
         # Build the decklist string
@@ -213,11 +219,3 @@ class Deck:
         cmdr = "Commander\n" + "\n".join([f"{quantity} {card.name}" for card, quantity in self.cmdr.items()])
         decklist = f"{cmdr if len(self.cmdr) > 0 else ''}{main}{side if len(self.side) > 0 else ''}"
         return decklist
-
-    def diff(self, other):
-        # TODO: docstring
-        return {
-            "main_diff": utils.dict_diff(self.main, other.main),
-            "side_diff": utils.dict_diff(self.side, other.side),
-            "cmdr_diff": utils.dict_diff(self.cmdr, other.cmdr),
-        }

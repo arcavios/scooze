@@ -1,5 +1,6 @@
 import logging
 import os.path
+from typing import Any
 from sys import stdout
 
 
@@ -46,8 +47,20 @@ def get_logger(
 
     return logger
 
-def dict_diff(d1: dict, d2: dict, NO_KEY=0):
-    # TODO: docstring
+# Source:  https://code.activestate.com/recipes/576644-diff-two-dictionaries/#c9
+def dict_diff(d1: dict, d2: dict, NO_KEY=0) -> dict[Any, tuple(Any, Any)]:
+    """
+    Helper function to generate a diff between two dicts.
+
+    Parameters:
+        d1 (dict): The first dict.
+        d2 (dict): The second dict.
+        NO_KEY: Default value to use when a key is in one dict, but not the other.
+
+    Returns:
+        diff (dict{k: tuple(value, value)}): returns a dict with all keys from both dicts. The values are tuple(v, v) for the values in each dict.
+    """
+
     both = d1.keys() & d2.keys()
     diff = {k:(d1[k], d2[k]) for k in both if d1[k] != d2[k]}
     diff.update({k:(d1[k], NO_KEY) for k in d1.keys() - both})
