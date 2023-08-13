@@ -2,14 +2,16 @@ from collections import Counter
 from sys import maxsize
 
 import pytest
-from scooze.enums import Format, InThe
 from scooze.data.card import DecklistCard
-from scooze.data.deck import DeckPart, Deck
+from scooze.data.deck import Deck, DeckPart
+from scooze.enums import Format, InThe
+
 
 @pytest.fixture
 def cmdr_part(card_omnath_locus_of_creation) -> DeckPart:
     cards = Counter({card_omnath_locus_of_creation: 1})
     return DeckPart(cards=cards)
+
 
 def test_archetype(archetype_modern_4c):
     deck = Deck(archetype=archetype_modern_4c)
@@ -48,8 +50,10 @@ Methods
     to_decklist(DecklistFormat):
 """
 
+
 def test_total(deck_modern_4c):
     assert deck_modern_4c.total() == 75
+
 
 def test_diff_none(deck_modern_4c):
     assert deck_modern_4c.diff(deck_modern_4c) == {"main_diff": {}, "side_diff": {}, "cmdr_diff": {}}
