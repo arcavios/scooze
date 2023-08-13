@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import Annotated
 
-import scooze.enums as enums
 import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field
+from scooze.enums import Color, Format, Legality
 from scooze.models.cardparts import (
     CardFaceModel,
     ImageUrisModel,
@@ -35,7 +35,7 @@ class BaseCardModel(BaseModel, validate_assignment=True):
         default=0.0,
         description="Mana Value/Converted Mana Cost",
     )
-    colors: list[enums.Color] | None = Field(
+    colors: list[Color] | None = Field(
         default=[],
         description="Color",
     )
@@ -67,7 +67,7 @@ class DecklistCardModel(BaseCardModel, validate_assignment=True):
 
     # cmc defined by base model
     # colors defined by base model
-    legalities: dict[enums.Format, enums.Legality] | None = Field(
+    legalities: dict[Format, Legality] | None = Field(
         description="Formats and the legality status of that card in them.",
     )
     mana_cost: str = Field(
@@ -91,7 +91,6 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         ### Core fields
         arena_id: int | None
         id: str
-        # TODO(#36): convert to enum?
         lang: str
         mtgo_id: int | None
         mtgo_foil_id: int | None
@@ -116,7 +115,6 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: list[str]
-        # TODO(#36): convert to enum?
         layout: str
         legalities: dict[Format, Legality]
         life_modifier: str | None
@@ -144,14 +142,12 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         finishes: list[Finish]
         flavor_name: str | None
         flavor_text: str | None
-        # TODO(#36): convert to enum?
         frame_effects: list[str] | None
         frame: str
         full_art: bool
         games: list[Game]
         highres_image: bool
         illustation_id: str | None
-        # TODO(#36): convert to enum?
         image_status: str
         image_uris: ImageUris | None
         preview: Preview | None
@@ -161,15 +157,12 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         printed_type_line: str | None
         promo: bool
         promo_types: list[str] | None
-        # TODO(#47): convert to object?
         purchase_uris: dict[str, str]
         rarity: Rarity
-        # TODO(#47): convert to object?
         related_uris: dict[str, str]
         released_at: datetime
         reprint: bool
         scryfall_set_uri: str
-        # TODO(#36): convert to enum?
         security_stamp: str | None
         set_name: str
         set_search_uri: str
@@ -250,11 +243,11 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         description="All component CardFace objects of this card, for multifaced cards.",
     )
     # cmc defined by base model
-    color_identity: list[enums.Color] = Field(
+    color_identity: list[Color] = Field(
         default=[],
         description="This card's color identity, for Commander variant deckbuilding.",
     )
-    color_indicator: list[enums.Color] | None = Field(
+    color_indicator: list[Color] | None = Field(
         description="The colors in this card's color indicator, if it has one.",
     )
     # colors defined by base model
@@ -293,7 +286,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     power: str | None = Field(
         description="Power of this card, if applicable.",
     )
-    produced_mana: list[enums.Color] | None = Field(
+    produced_mana: list[Color] | None = Field(
         description="Which colors of mana this card can produce.",
     )
     reserved: bool = Field(
@@ -318,7 +311,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     booster: bool = Field(
         description="Whether this card can be opened in booster packs.",
     )
-    border_color: enums.BorderColor = Field(
+    border_color: BorderColor = Field(
         description="Border color of this card, from among black, white, borderless, silver, and gold.",
     )
     card_back_id: str = Field(
@@ -333,7 +326,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     digital: bool = Field(
         description="True if this card was only released in a video game.",
     )
-    finishes: list[enums.Finish] = Field(
+    finishes: list[Finish] = Field(
         description="Finishes this card is available in, from among foil, nonfoil, and etched.",
     )
     flavor_name: str | None = Field(
@@ -352,7 +345,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     full_art: bool = Field(
         description="Whether this print is full-art.",
     )
-    games: list[enums.Game] = Field(
+    games: list[Game] = Field(
         description="Which games this print is available on, from among paper, mtgo, and arena.",
     )
     highres_image: bool = Field(
@@ -395,7 +388,7 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         default={},
         description="Links to purchase this print from marketplaces.",
     )
-    rarity: enums.Rarity = Field(
+    rarity: Rarity = Field(
         # TODO(#48): better default?
         description="The rarity of this print.",
     )

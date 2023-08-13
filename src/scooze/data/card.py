@@ -1,7 +1,7 @@
 from datetime import datetime
 
-import scooze.enums as enums
 from scooze.data.cardparts import CardFace, ImageUris, Preview, Prices, RelatedCard
+from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 
 
 class Card:
@@ -20,7 +20,7 @@ class Card:
         oracle_id: str | None = None,
         name: str | None = None,
         cmc: float | None = None,
-        colors: list[enums.Color] | None = None,
+        colors: list[Color] | None = None,
     ):
         self.oracle_id = oracle_id
         self.name = name
@@ -52,8 +52,8 @@ class DecklistCard(Card):
         oracle_id: str | None = None,
         name: str | None = None,
         cmc: float | None = None,
-        colors: list[enums.Color] | None = None,
-        legalities: dict[enums.Format, enums.Legality] | None = None,
+        colors: list[Color] | None = None,
+        legalities: dict[Format, Legality] | None = None,
         mana_cost: str | None = None,
         oracle_text: str | None = None,
         type_line: str | None = None,
@@ -167,7 +167,7 @@ class FullCard(DecklistCard):
         self,
         arena_id: int | None = None,
         scryfall_id: str = "",
-        lang: str = "en", # TODO(#36): convert to enum?
+        lang: str = "en",  # TODO(#36): convert to enum?
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
         multiverse_ids: list[int] | None = None,
@@ -183,14 +183,14 @@ class FullCard(DecklistCard):
         all_parts: list[RelatedCard] | None = None,
         card_faces: list[CardFace] | None = None,
         cmc: float | None = None,
-        color_identity: list[enums.Color] = [],
-        color_indicator: list[enums.Color] | None = None,
-        colors: list[enums.Color] | None = None,
+        color_identity: list[Color] = [],
+        color_indicator: list[Color] | None = None,
+        colors: list[Color] | None = None,
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
         keywords: list[str] = [],
-        layout: str = "normal", # TODO(#36): convert to enum?
-        legalities: dict[enums.Format, enums.Legality] | None = None,
+        layout: str = "normal",  # TODO(#36): convert to enum?
+        legalities: dict[Format, Legality] | None = None,
         life_modifier: str | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
@@ -199,28 +199,28 @@ class FullCard(DecklistCard):
         oversized: bool = False,
         penny_rank: int | None = None,
         power: str | None = None,
-        produced_mana: list[enums.Color] | None = None,
+        produced_mana: list[Color] | None = None,
         reserved: bool = False,
         toughness: str | None = None,
         type_line: str | None = None,
         artist: str | None = None,
         attraction_lights: list[int] | None = None,
         booster: bool | None = None,
-        border_color: enums.BorderColor | None = None,
+        border_color: BorderColor | None = None,
         card_back_id: str | None = None,
         collector_number: str | None = None,
         content_warning: bool | None = None,
         digital: bool | None = None,
-        finishes: list[enums.Finish] | None = None,
+        finishes: list[Finish] | None = None,
         flavor_name: str | None = None,
         flavor_text: str | None = None,
-        frame_effects: list[str] | None = None, # TODO(#36): convert to enum?
+        frame_effects: list[str] | None = None,  # TODO(#36): convert to enum?
         frame: str | None = None,
         full_art: bool | None = None,
-        games: list[enums.Game] | None = None,
+        games: list[Game] | None = None,
         highres_image: bool | None = None,
         illustration_id: str | None = None,
-        image_status: str | None = None, # TODO(#36): convert to enum?
+        image_status: str | None = None,  # TODO(#36): convert to enum?
         image_uris: ImageUris | None = None,
         preview: Preview | None = None,
         prices: Prices | None = None,
@@ -229,13 +229,13 @@ class FullCard(DecklistCard):
         printed_type_line: str | None = None,
         promo: bool = False,
         promo_types: list[str] | None = None,
-        purchase_uris: dict[str, str] = {}, # TODO(#47): convert to object?
-        rarity: enums.Rarity | None = None,  # TODO(#48): better default?
-        related_uris: dict[str, str] = {}, # TODO(#47): convert to object?
-        released_at: datetime | None = None, # TODO(#48): better default?
+        purchase_uris: dict[str, str] = {},  # TODO(#47): convert to object?
+        rarity: Rarity | None = None,  # TODO(#48): better default?
+        related_uris: dict[str, str] = {},  # TODO(#47): convert to object?
+        released_at: datetime | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
-        security_stamp: str | None = None, # TODO(#36): convert to enum?
+        security_stamp: str | None = None,  # TODO(#36): convert to enum?
         set_name: str = "",
         set_search_uri: str = "",
         set_type: str = "",
@@ -344,7 +344,6 @@ class FullCard(DecklistCard):
         self.watermark = watermark
 
         # endregion
-
 
 
 # TODO: what to do with the MongoDB id?
