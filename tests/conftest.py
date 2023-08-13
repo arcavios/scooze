@@ -315,7 +315,7 @@ def card_supreme_verdict() -> DecklistCard:
         type_line="Sorcery",
     )
 
-
+@pytest.fixture
 def card_teferi_time_raveler() -> DecklistCard:
     return DecklistCard(
         name="Teferi, Time Raveler",
@@ -324,7 +324,7 @@ def card_teferi_time_raveler() -> DecklistCard:
         type_line="Legendary Planeswalker - Teferi",
     )
 
-
+@pytest.fixture
 def card_temple_garden() -> DecklistCard:
     return DecklistCard(
         name="Temple Garden",
@@ -333,7 +333,7 @@ def card_temple_garden() -> DecklistCard:
         type_line="Land - Forest Plains",
     )
 
-
+@pytest.fixture
 def card_the_one_ring() -> DecklistCard:
     return DecklistCard(
         name="The One Ring",
@@ -342,7 +342,7 @@ def card_the_one_ring() -> DecklistCard:
         type_line="Legendary Artifact",
     )
 
-
+@pytest.fixture
 def card_veil_of_summer() -> DecklistCard:
     return DecklistCard(
         name="Veil of Summer",
@@ -351,7 +351,7 @@ def card_veil_of_summer() -> DecklistCard:
         type_line="Instant",
     )
 
-
+@pytest.fixture
 def card_wear_tear() -> DecklistCard:
     return DecklistCard(
         name="Wear // Tear",
@@ -360,7 +360,7 @@ def card_wear_tear() -> DecklistCard:
         type_line="Instant",  # TODO: what is Wear//Tear's type line?
     )
 
-
+@pytest.fixture
 def card_windswept_heath() -> DecklistCard:
     return DecklistCard(
         name="Windswept Heath",
@@ -369,7 +369,7 @@ def card_windswept_heath() -> DecklistCard:
         type_line="Land",
     )
 
-
+@pytest.fixture
 def card_wrenn_and_six() -> DecklistCard:
     return DecklistCard(
         name="Wrenn and Six",
@@ -378,7 +378,7 @@ def card_wrenn_and_six() -> DecklistCard:
         type_line="Legendary Planeswalker - Wrenn",
     )
 
-
+@pytest.fixture
 def card_zagoth_triome() -> DecklistCard:
     return DecklistCard(
         name="Zagoth Triome",

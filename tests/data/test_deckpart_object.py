@@ -29,6 +29,7 @@ def some_cards(card_forest, card_solitude, card_wrenn_and_six) -> Counter[Deckli
             card_wrenn_and_six: 4,
         }
     )
+    return cards
 
 
 @pytest.fixture
@@ -53,7 +54,7 @@ def test_ne(some_cards):
     assert partA != partB
 
 
-def test_str(some_cards):
+def test_str(some_cards, some_cards_str):
     part = DeckPart(cards=some_cards)
     assert str(part) == some_cards_str
 

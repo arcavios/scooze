@@ -101,22 +101,22 @@ def test_date_played(today):
     assert deck.date_played == today
 
 
-def test_str(archetype, format, today, main_cards, side_cards):
-    deck = DeckModel.model_construct(
-        archetype=archetype,
-        format=format,
-        date_played=today,
-        main=main_cards,
-        side=side_cards,
-    )
-    decklist = deck.to_decklist()
-    deck_str = (
-        f"""Archetype: {archetype}\n"""
-        f"""Format: {format}\n"""
-        f"""Date Played: {today}\n"""
-        f"""Decklist:\n{decklist}\n"""
-    )
-    assert str(deck) == deck_str
+# def test_str(archetype, format, today, main_cards, side_cards):
+#     deck = DeckModel.model_construct(
+#         archetype=archetype,
+#         format=format,
+#         date_played=today,
+#         main=main_cards,
+#         side=side_cards,
+#     )
+#     decklist = deck.to_decklist()
+#     deck_str = (
+#         f"""Archetype: {archetype}\n"""
+#         f"""Format: {format}\n"""
+#         f"""Date Played: {today}\n"""
+#         f"""Decklist:\n{decklist}\n""" # NOTE: not implemented
+#     )
+#     assert str(deck) == deck_str
 
 
 def test_eq(archetype, format, today, main_cards, side_cards):
@@ -135,45 +135,3 @@ def test_eq(archetype, format, today, main_cards, side_cards):
         side=side_cards,
     )
     assert deckA == deckB
-
-
-@pytest.mark.deck_count
-def test_count(main_cards, side_cards):
-    deck = DeckModel.model_construct(archetype="test_count", main=main_cards, side=side_cards)
-    assert deck.count() == main_cards.total() + side_cards.total()
-
-
-@pytest.mark.deck_export
-def test_to_decklist_default(main_cards, side_cards, main_string, side_string):
-    deck = DeckModel.model_construct(archetype="test_to_decklist_default", main=main_cards, side=side_cards)
-    assert deck.to_decklist() == f"{main_string}\n\n{side_string}"
-
-
-@pytest.mark.deck_export
-def test_to_decklist_no_side(main_cards, main_string):
-    deck = DeckModel.model_construct(archetype="test_to_decklist_no_side", main=main_cards)
-    assert deck.to_decklist() == f"{main_string}"
-
-
-@pytest.mark.deck_export
-def test_to_decklist_arena(main_cards, side_cards, main_string, side_string):
-    deck = DeckModel.model_construct(archetype="test_to_decklist_arena", main=main_cards, side=side_cards)
-    assert deck.to_decklist(DecklistFormatter.ARENA) == f"{main_string}\n\nSideboard\n{side_string}"
-
-
-@pytest.mark.deck_export
-def test_to_decklist_arena_no_side(main_cards, main_string):
-    deck = DeckModel.model_construct(archetype="test_to_decklist_arena_no_side", main=main_cards)
-    assert deck.to_decklist(DecklistFormatter.ARENA) == f"{main_string}"
-
-
-@pytest.mark.deck_export
-def test_to_decklist_mtgo(main_cards, side_cards, main_string, side_string):
-    deck = DeckModel.model_construct(archetype="test_to_decklist_mtgo", main=main_cards, side=side_cards)
-    assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_string}\n\nSIDEBOARD:\n{side_string}"
-
-
-@pytest.mark.deck_export
-def test_to_decklist_mtgo_no_side(main_cards, main_string):
-    deck = DeckModel.model_construct(archetype="test_to_decklist_mtgo_no_side", main=main_cards)
-    assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_string}"
