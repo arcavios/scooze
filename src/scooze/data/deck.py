@@ -37,7 +37,7 @@ class DeckPart:
         return self.cards == other.cards
 
     def __ne__(self, other):
-        return not self == other
+        return not self.__eq__(other)
 
     def __str__(self):
         return "\n".join([f"{quantity} {card.name}" for card, quantity in self.cards.items()]) + "\n"
@@ -268,7 +268,7 @@ class Deck:
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
 
-        # using counterA - counterB results in a new counter with only positive results
+        # using counterA - counterB results in a new Counter with only positive results
         match in_the:
             case InThe.MAIN:
                 self.main.remove_card(card=card, quantity=quantity)
@@ -288,7 +288,7 @@ class Deck:
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
 
-        # using counterA - counterB results in a new counter with only positive results
+        # using counterA - counterB results in a new Counter with only positive results
         match in_the:
             case InThe.MAIN:
                 self.main.remove_cards(cards=cards)

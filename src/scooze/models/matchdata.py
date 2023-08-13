@@ -25,6 +25,12 @@ class MatchData(BaseModel, validate_assignment=True):
         description="The number of match draws.",
     )
 
+    def __eq__(self, other):
+        return self.wins == other.wins and self.losses == other.losses and self.draws == other.draws
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     # region Validators
     @field_validator("wins", "losses", "draws")
     @classmethod
