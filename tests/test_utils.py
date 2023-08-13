@@ -1,5 +1,4 @@
 from sys import maxsize
-from typing import Tuple
 
 import pytest
 import scooze.models.utils as model_utils
@@ -136,32 +135,32 @@ def fmt_none() -> Format:
 
 
 @pytest.fixture
-def main_size_40() -> Tuple[int, int]:
+def main_size_40() -> tuple[int, int]:
     return (40, maxsize)
 
 
 @pytest.fixture
-def main_size_58() -> Tuple[int, int]:
+def main_size_58() -> tuple[int, int]:
     return (58, 58)
 
 
 @pytest.fixture
-def main_size_60() -> Tuple[int, int]:
+def main_size_60() -> tuple[int, int]:
     return (60, maxsize)
 
 
 @pytest.fixture
-def main_size_99() -> Tuple[int, int]:
+def main_size_99() -> tuple[int, int]:
     return (99, 99)
 
 
 @pytest.fixture
-def main_size_100() -> Tuple[int, int]:
+def main_size_100() -> tuple[int, int]:
     return (100, 100)
 
 
 @pytest.fixture
-def main_size_any() -> Tuple[int, int]:
+def main_size_any() -> tuple[int, int]:
     return (0, maxsize)
 
 
@@ -171,27 +170,27 @@ def main_size_any() -> Tuple[int, int]:
 
 
 @pytest.fixture
-def side_size_0() -> Tuple[int, int]:
+def side_size_0() -> tuple[int, int]:
     return (0, 0)
 
 
 @pytest.fixture
-def side_size_1() -> Tuple[int, int]:
+def side_size_1() -> tuple[int, int]:
     return (1, 1)
 
 
 @pytest.fixture
-def side_size_2() -> Tuple[int, int]:
+def side_size_2() -> tuple[int, int]:
     return (2, 2)
 
 
 @pytest.fixture
-def side_size_15() -> Tuple[int, int]:
+def side_size_15() -> tuple[int, int]:
     return (0, 15)
 
 
 @pytest.fixture
-def side_size_any() -> Tuple[int, int]:
+def side_size_any() -> tuple[int, int]:
     return (0, maxsize)
 
 

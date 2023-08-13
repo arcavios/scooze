@@ -1,6 +1,6 @@
 from enum import auto
 from sys import maxsize
-from typing import Any, Tuple
+from typing import Any
 
 from bson import ObjectId
 from pydantic import ConfigDict, GetJsonSchemaHandler
@@ -29,7 +29,7 @@ def get_base_model_config() -> ConfigDict:
     )
 
 
-def main_size(fmt: Format) -> Tuple[int, int]:
+def main_size(fmt: Format) -> tuple[int, int]:
     """
     Given a Format, what are the required min and max size for a main deck?
     """
@@ -70,7 +70,7 @@ def main_size(fmt: Format) -> Tuple[int, int]:
             return 0, maxsize
 
 
-def side_size(fmt: Format) -> Tuple[int, int]:
+def side_size(fmt: Format) -> tuple[int, int]:
     """
     Given a Format, what are the min and max size for a sideboard?
     """
