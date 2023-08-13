@@ -45,6 +45,7 @@ markers = [
     "slow: expected to be slow",
     "utils: related to utils helpers",
     "model_utils: related to model_utils helpers",
+    "deck_diff: related to  Deck.diff()",
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
     "deck_remove_cards: related to Deck.remove_card() and Deck.remove_cards()",
     "deck_count: related to Deck.count()",

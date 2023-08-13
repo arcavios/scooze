@@ -70,7 +70,7 @@ class DeckPart:
         """
 
         # using counterA - counterB results in a new counter with only positive results
-        self.main = self.main - Counter({card: quantity})
+        self.cards = self.cards - Counter({card: quantity})
 
     def remove_cards(self, cards: Counter[DecklistCard]) -> None:
         """
@@ -81,7 +81,7 @@ class DeckPart:
         """
 
         # using counterA - counterB results in a new counter with only positive results
-        self.main = self.main - cards
+        self.cards = self.cards - cards
 
 
 class Deck:

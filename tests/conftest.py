@@ -27,7 +27,7 @@ def card_aether_gust() -> DecklistCard:
 
 
 @pytest.fixture
-def card_boeseiju_who_endures() -> DecklistCard:
+def card_boseiju_who_endures() -> DecklistCard:
     return DecklistCard(
         name="Boseiju, Who Endures",
         cmc=0,
@@ -315,6 +315,7 @@ def card_supreme_verdict() -> DecklistCard:
         type_line="Sorcery",
     )
 
+
 @pytest.fixture
 def card_teferi_time_raveler() -> DecklistCard:
     return DecklistCard(
@@ -323,6 +324,7 @@ def card_teferi_time_raveler() -> DecklistCard:
         colors=[Color.WHITE, Color.BLUE],
         type_line="Legendary Planeswalker - Teferi",
     )
+
 
 @pytest.fixture
 def card_temple_garden() -> DecklistCard:
@@ -333,6 +335,7 @@ def card_temple_garden() -> DecklistCard:
         type_line="Land - Forest Plains",
     )
 
+
 @pytest.fixture
 def card_the_one_ring() -> DecklistCard:
     return DecklistCard(
@@ -341,6 +344,7 @@ def card_the_one_ring() -> DecklistCard:
         colors=[],
         type_line="Legendary Artifact",
     )
+
 
 @pytest.fixture
 def card_veil_of_summer() -> DecklistCard:
@@ -351,6 +355,7 @@ def card_veil_of_summer() -> DecklistCard:
         type_line="Instant",
     )
 
+
 @pytest.fixture
 def card_wear_tear() -> DecklistCard:
     return DecklistCard(
@@ -359,6 +364,7 @@ def card_wear_tear() -> DecklistCard:
         colors=[Color.WHITE, Color.RED],
         type_line="Instant",  # TODO: what is Wear//Tear's type line?
     )
+
 
 @pytest.fixture
 def card_windswept_heath() -> DecklistCard:
@@ -369,6 +375,7 @@ def card_windswept_heath() -> DecklistCard:
         type_line="Land",
     )
 
+
 @pytest.fixture
 def card_wrenn_and_six() -> DecklistCard:
     return DecklistCard(
@@ -377,6 +384,7 @@ def card_wrenn_and_six() -> DecklistCard:
         colors=[Color.RED, Color.GREEN],
         type_line="Legendary Planeswalker - Wrenn",
     )
+
 
 @pytest.fixture
 def card_zagoth_triome() -> DecklistCard:
@@ -405,7 +413,7 @@ def format_modern() -> Format:
 
 @pytest.fixture
 def main_modern_4c(
-    card_boeseiju_who_endures,
+    card_boseiju_who_endures,
     card_breeding_pool,
     card_counterspell,
     card_dress_down,
@@ -415,7 +423,7 @@ def main_modern_4c(
     card_hallowed_fountain,
     card_island,
     card_leyline_binding,
-    card_minamo_at_waters_edge,
+    card_minamo_school_at_waters_edge,
     card_misty_rainforest,
     card_omnath_locus_of_creation,
     card_otawara_soaring_city,
@@ -457,13 +465,13 @@ def main_modern_4c(
             card_dress_down: 1,
             card_leyline_binding: 4,
             # Land
-            card_boeseiju_who_endures: 1,
+            card_boseiju_who_endures: 1,
             card_breeding_pool: 1,
             card_flooded_strand: 4,
             card_forest: 1,
             card_hallowed_fountain: 1,
             card_island: 2,
-            card_minamo_at_waters_edge: 1,
+            card_minamo_school_at_waters_edge: 1,
             card_misty_rainforest: 4,
             card_otawara_soaring_city: 1,
             card_plains: 1,
@@ -481,7 +489,7 @@ def main_modern_4c(
 
 @pytest.fixture
 def main_modern_4c_str(
-    card_boeseiju_who_endures,
+    card_boseiju_who_endures,
     card_breeding_pool,
     card_counterspell,
     card_dress_down,
@@ -491,7 +499,7 @@ def main_modern_4c_str(
     card_hallowed_fountain,
     card_island,
     card_leyline_binding,
-    card_minamo_at_waters_edge,
+    card_minamo_school_at_waters_edge,
     card_misty_rainforest,
     card_omnath_locus_of_creation,
     card_otawara_soaring_city,
@@ -511,8 +519,7 @@ def main_modern_4c_str(
     card_wrenn_and_six,
     card_zagoth_triome,
 ) -> str:
-    return
-    (
+    return (
         # Creature
         f"3 {card_omnath_locus_of_creation.name}\n"
         f"1 {card_subtlety.name}\n"
@@ -533,13 +540,13 @@ def main_modern_4c_str(
         f"1 {card_dress_down.name}\n"
         f"4 {card_leyline_binding.name}\n"
         # Land
-        f"1 {card_boeseiju_who_endures.name}\n"
+        f"1 {card_boseiju_who_endures.name}\n"
         f"1 {card_breeding_pool.name}\n"
         f"4 {card_flooded_strand.name}\n"
         f"1 {card_forest.name}\n"
         f"1 {card_hallowed_fountain.name}\n"
         f"2 {card_island.name}\n"
-        f"1 {card_minamo_at_waters_edge.name}\n"
+        f"1 {card_minamo_school_at_waters_edge.name}\n"
         f"4 {card_misty_rainforest.name}\n"
         f"1 {card_otawara_soaring_city.name}\n"
         f"1 {card_plains.name}\n"
@@ -599,8 +606,7 @@ def side_modern_4c_str(
     card_veil_of_summer,
     card_wear_tear,
 ) -> str:
-    return
-    (
+    return (
         f"1 {card_aether_gust.name}\n"
         f"1 {card_boseiju_who_endures.name}\n"
         f"2 {card_chalice_of_the_void.name}\n"

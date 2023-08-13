@@ -1,40 +1,22 @@
 from collections import Counter
+from sys import maxsize
 
 import pytest
 from scooze.data.card import DecklistCard
 from scooze.data.deck import DeckPart
 from scooze.enums import Color
 
-"""
-init
- - cards
-eq
-ne
-str
-total
-diff
-add_card
-add_cards
-remove_card
-remove_cards
-"""
-
 
 @pytest.fixture
-def some_cards(card_forest, card_solitude, card_wrenn_and_six) -> Counter[DecklistCard]:
+def some_cards(card_chalice_of_the_void, card_hallowed_moonlight, card_veil_of_summer) -> Counter[DecklistCard]:
     cards = Counter(
         {
-            card_forest: 10,
-            card_solitude: 4,
-            card_wrenn_and_six: 4,
+            card_chalice_of_the_void: 4,
+            card_hallowed_moonlight: 2,
+            card_veil_of_summer: 1,
         }
     )
     return cards
-
-
-@pytest.fixture
-def some_cards_str(card_forest, card_solitude, card_wrenn_and_six) -> str:
-    return f"10 {card_forest.name}\n" f"4 {card_solitude.name}\n" f"4 {card_wrenn_and_six.name}\n"
 
 
 def test_cards(some_cards):
@@ -54,216 +36,102 @@ def test_ne(some_cards):
     assert partA != partB
 
 
-def test_str(some_cards, some_cards_str):
+def test_str(main_modern_4c, main_modern_4c_str):
+    assert str(main_modern_4c) == main_modern_4c_str
+
+
+def test_total(main_modern_4c):
+    assert main_modern_4c.total() == 60
+
+
+@pytest.mark.deck_diff
+def test_diff(
+    side_modern_4c,
+    some_cards,
+    card_aether_gust,
+    card_boseiju_who_endures,
+    card_chalice_of_the_void,
+    card_dovins_veto,
+    card_dress_down,
+    card_flusterstorm,
+    card_hallowed_moonlight,
+    card_prismatic_ending,
+    card_supreme_verdict,
+    card_veil_of_summer,
+    card_wear_tear,
+):
     part = DeckPart(cards=some_cards)
-    assert str(part) == some_cards_str
+    diff = side_modern_4c.diff(part)
+    assert diff == {
+        card_aether_gust: (1, 0),
+        card_boseiju_who_endures: (1, 0),
+        card_chalice_of_the_void: (2, 4),
+        card_dovins_veto: (1, 0),
+        card_dress_down: (1, 0),
+        card_flusterstorm: (1, 0),
+        card_prismatic_ending: (1, 0),
+        card_supreme_verdict: (1, 0),
+        card_veil_of_summer: (2, 1),
+        card_wear_tear: (1, 0),
+    }
 
 
-# def test_archetype(archetype_modern_4c):
-#     deck = Deck(archetype=archetype_modern_4c)
-#     assert deck.archetype == archetype_modern_4c
+@pytest.mark.deck_add_cards
+def test_add_card_one(some_cards, card_veil_of_summer):
+    part = DeckPart(cards=some_cards)
+    part.add_card(card=card_veil_of_summer)
+    some_cards.update({card_veil_of_summer: 1})
+    assert part.cards == some_cards
 
 
-# def test_format(format, main_cards):
-#     deck = DeckModel.model_construct(format=format, main=main_cards)
-#     assert deck.format == format
+@pytest.mark.deck_add_cards
+def test_add_card_many(some_cards, card_veil_of_summer):
+    part = DeckPart(cards=some_cards)
+    part.add_card(card=card_veil_of_summer, quantity=3)
+    some_cards.update({card_veil_of_summer: 3})
+    assert part.cards == some_cards
 
 
-# @pytest.mark.deck_validation
-# def test_format_validation():
-#     with pytest.raises(ValueError) as e:
-#         DeckModel.model_validate({"archetype": "test_format_validation", "format": "not a real format"})
+@pytest.mark.deck_add_cards
+def test_add_cards(some_cards):
+    part = DeckPart(cards=some_cards)
+    part.add_cards(some_cards)
+    some_cards.update(some_cards)
+    assert part.cards == some_cards
 
 
-# def test_date_played(today):
-#     deck = DeckModel.model_construct(date_played=today)
-#     assert deck.date_played == today
+# card_chalice_of_the_void: 4,
+# card_hallowed_moonlight: 2,
+# card_veil_of_summer: 1,
 
 
-# def test_str(archetype, format, today, main_cards, side_cards):
-#     deck = DeckModel.model_construct(
-#         archetype=archetype,
-#         format=format,
-#         date_played=today,
-#         main=main_cards,
-#         side=side_cards,
-#     )
-#     decklist = deck.to_decklist()
-#     deck_str = (
-#         f"""Archetype: {archetype}\n"""
-#         f"""Format: {format}\n"""
-#         f"""Date Played: {today}\n"""
-#         f"""Decklist:\n{decklist}\n"""
-#     )
-#     assert str(deck) == deck_str
+@pytest.mark.deck_remove_cards
+def test_remove_card_one(some_cards, card_chalice_of_the_void):
+    part = DeckPart(cards=some_cards)
+    part.remove_card(card=card_chalice_of_the_void, quantity=1)
+    some_cards = some_cards - Counter({card_chalice_of_the_void: 1})
+    assert part.cards == some_cards
 
 
-# def test_eq(archetype, format, today, main_cards, side_cards):
-#     deckA = DeckModel.model_construct(
-#         archetype=archetype,
-#         format=format,
-#         date_played=today,
-#         main=main_cards,
-#         side=side_cards,
-#     )
-#     deckB = DeckModel.model_construct(
-#         archetype=archetype,
-#         format=format,
-#         date_played=today,
-#         main=main_cards,
-#         side=side_cards,
-#     )
-#     assert deckA == deckB
+@pytest.mark.deck_remove_cards
+def test_remove_card_many(some_cards, card_chalice_of_the_void):
+    part = DeckPart(cards=some_cards)
+    part.remove_card(card=card_chalice_of_the_void, quantity=3)
+    some_cards = some_cards - Counter({card_chalice_of_the_void: 3})
+    assert part.cards == some_cards
 
 
-# @pytest.mark.deck_add_cards
-# def test_add_card_new(new_card, main_cards):
-#     deck = DeckModel.model_construct(archetype="test_add_card_new", main=main_cards)
-#     deck.add_card(card=new_card)
-#     main_cards.update({new_card: 1})
-#     assert deck.main == main_cards
+@pytest.mark.deck_remove_cards
+def test_remove_card_all(some_cards, card_chalice_of_the_void):
+    part = DeckPart(cards=some_cards)
+    part.remove_card(card=card_chalice_of_the_void)
+    some_cards = some_cards - Counter({card_chalice_of_the_void: maxsize})
+    assert part.cards == some_cards
 
 
-# @pytest.mark.deck_add_cards
-# def test_add_card_side(existing_card, side_cards):
-#     deck = DeckModel.model_construct(archetype="test_add_card_side", side=side_cards)
-#     deck.add_card(card=existing_card, in_the=InThe.SIDE)
-#     side_cards.update({existing_card: 1})
-#     assert deck.side == side_cards
-
-
-# @pytest.mark.deck_add_cards
-# def test_add_card_multi(new_card, main_cards):
-#     quantity = 4
-#     deck = DeckModel.model_construct(archetype="test_add_card_multi", main=main_cards)
-#     deck.add_card(card=new_card, quantity=quantity)
-#     main_cards.update({new_card: quantity})
-#     assert deck.main == main_cards
-
-
-# @pytest.mark.deck_add_cards
-# def test_add_cards_main(main_cards):
-#     deck = DeckModel.model_construct(archetype="test_add_cards_main", main=main_cards)
-#     deck.add_cards(cards=main_cards, in_the=InThe.MAIN)
-#     main_cards.update(main_cards)
-#     assert deck.main == main_cards
-
-
-# @pytest.mark.deck_add_cards
-# def test_add_cards_side(side_cards):
-#     deck = DeckModel.model_construct(archetype="test_add_cards_side", main=main_cards)
-#     deck.add_cards(cards=side_cards, in_the=InThe.SIDE)
-#     assert deck.side == side_cards
-
-
-# @pytest.mark.deck_add_cards
-# def test_add_cards_main_and_side(main_cards, side_cards):
-#     deck = DeckModel.model_construct(archetype="test_add_cards_main_and_side")
-#     deck.add_cards(cards=main_cards, in_the=InThe.MAIN)
-#     deck.add_cards(cards=side_cards, in_the=InThe.SIDE)
-#     assert deck.main == main_cards and deck.side == side_cards
-
-
-# @pytest.mark.deck_add_cards
-# @pytest.mark.deck_validation
-# def test_add_cards_side_validation(format, main_cards, side_cards):
-#     deck = DeckModel.model_validate(
-#         {
-#             "archetype": "test_add_cards_validation",
-#             "format": format,
-#             "main": main_cards,
-#             "side": side_cards,
-#         }
-#     )
-#     with pytest.raises(ValueError) as e:
-#         deck.add_cards(cards=side_cards, in_the=InThe.SIDE, revalidate_after=True)  # more than 15 in the sideboard
-
-
-# @pytest.mark.deck_add_cards
-# @pytest.mark.deck_validation
-# def test_remove_card_main_validation(format, main_cards, existing_card):
-#     deck = DeckModel.model_validate(
-#         {
-#             "archetype": "test_remove_card_main_validation",
-#             "format": format,
-#             "main": main_cards,
-#         }
-#     )
-#     with pytest.raises(ValueError) as e:
-#         deck.remove_card(
-#             card=existing_card, quantity=1, in_the=InThe.MAIN, revalidate_after=True
-#         )  # fewer than 60 in the main
-
-
-# @pytest.mark.deck_remove_cards
-# def test_remove_card(main_cards, existing_card):
-#     deck = DeckModel.model_construct(archetype="test_remove_card", main=main_cards)
-#     deck.remove_card(card=existing_card, quantity=1)
-#     main_cards = main_cards - Counter({existing_card: 1})
-#     assert deck.main == main_cards
-
-
-# @pytest.mark.deck_remove_cards
-# def test_remove_card_all(main_cards, existing_card):
-#     deck = DeckModel.model_construct(archetype="test_remove_card_all", main=main_cards)
-#     deck.remove_card(card=existing_card)
-#     main_cards = main_cards - Counter({existing_card: maxsize})
-#     assert deck.main == main_cards
-
-
-# @pytest.mark.deck_remove_cards
-# def test_remove_card_side(side_cards, existing_card):
-#     deck = DeckModel.model_construct(archetype="test_remove_card_side", side=side_cards)
-#     deck.remove_card(card=existing_card, quantity=1, in_the=InThe.SIDE)
-#     side_cards = side_cards - Counter({existing_card: 1})
-#     assert deck.side == side_cards
-
-
-# @pytest.mark.deck_remove_cards
-# def test_remove_cards(main_cards):
-#     double_main = main_cards + main_cards
-#     deck = DeckModel.model_construct(archetype="test_remove_cards", main=double_main)
-#     deck.remove_cards(main_cards)
-#     assert deck.main == main_cards
-
-
-# @pytest.mark.deck_count
-# def test_count(main_cards, side_cards):
-#     deck = DeckModel.model_construct(archetype="test_count", main=main_cards, side=side_cards)
-#     assert deck.count() == main_cards.total() + side_cards.total()
-
-
-# @pytest.mark.deck_export
-# def test_to_decklist_default(main_cards, side_cards, main_string, side_string):
-#     deck = DeckModel.model_construct(archetype="test_to_decklist_default", main=main_cards, side=side_cards)
-#     assert deck.to_decklist() == f"{main_string}\n\n{side_string}"
-
-
-# @pytest.mark.deck_export
-# def test_to_decklist_no_side(main_cards, main_string):
-#     deck = DeckModel.model_construct(archetype="test_to_decklist_no_side", main=main_cards)
-#     assert deck.to_decklist() == f"{main_string}"
-
-
-# @pytest.mark.deck_export
-# def test_to_decklist_arena(main_cards, side_cards, main_string, side_string):
-#     deck = DeckModel.model_construct(archetype="test_to_decklist_arena", main=main_cards, side=side_cards)
-#     assert deck.to_decklist(DecklistFormatter.ARENA) == f"{main_string}\n\nSideboard\n{side_string}"
-
-
-# @pytest.mark.deck_export
-# def test_to_decklist_arena_no_side(main_cards, main_string):
-#     deck = DeckModel.model_construct(archetype="test_to_decklist_arena_no_side", main=main_cards)
-#     assert deck.to_decklist(DecklistFormatter.ARENA) == f"{main_string}"
-
-
-# @pytest.mark.deck_export
-# def test_to_decklist_mtgo(main_cards, side_cards, main_string, side_string):
-#     deck = DeckModel.model_construct(archetype="test_to_decklist_mtgo", main=main_cards, side=side_cards)
-#     assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_string}\n\nSIDEBOARD:\n{side_string}"
-
-
-# @pytest.mark.deck_export
-# def test_to_decklist_mtgo_no_side(main_cards, main_string):
-#     deck = DeckModel.model_construct(archetype="test_to_decklist_mtgo_no_side", main=main_cards)
-#     assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_string}"
+@pytest.mark.deck_remove_cards
+def test_remove_cards(some_cards):
+    part = DeckPart(cards=some_cards)
+    part.remove_cards(some_cards)
+    some_cards = some_cards - some_cards
+    assert part.cards == some_cards
