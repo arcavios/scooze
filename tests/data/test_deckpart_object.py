@@ -1,5 +1,8 @@
 import pytest
 from scooze.data.card import DecklistCard
+from scooze.enums import Color
+from scooze.data.deck import DeckPart
+
 
 # TODO: write tests
 
@@ -21,39 +24,75 @@ remove_cards
 
 
 @pytest.fixture
-def existing_card() -> str:
+def card_boeseiju() -> DecklistCard:
+    return DecklistCard(
+        name="Boseiju, Who Endures",
+        cmc=0,
+        colors=[],
+        type_line="Legendary Land",
+    )
+
+@pytest.fixture
+def card_expedition_map() -> DecklistCard:
     return DecklistCard(
         name="Expedition Map",
-        cmc="1",
+        cmc=0,
         colors=[],
         type_line="Artifact",
     )
 
+@pytest.fixture
+def card_forest() -> DecklistCard():
+    return Decklistcard(
+        name="Forest",
+        cmc=0,
+        colors=[],
+        type_line="Basic Land - Forest",
+    )
 
 @pytest.fixture
-def new_card() -> str:
-    return DecklistCardModel.model_construct(
+def card_pithing_needle() -> DecklistCard():
+    return DecklistCard(
+        name="Pithing Needle",
+        cmc=1,
+        colors=[],
+        type_line="Artifact",
+    )
+
+@pytest.fixture
+def card_primeval_titan() -> DecklistCard:
+    return DecklistCard(
         name="Primeval Titan",
-        mana_value=6,
-        colors=["G"],
+        cmc=6,
+        colors=[Color.GREEN],
+        type_line="Creature - Beast",
+    )
+
+@pytest.fixture
+def card_trail_of_crumbs() -> DecklistCard:
+    return DecklistCard(
+        name="Trail of Crumbs",
+        cmc=2,
+        colors=[Color.Green],
+        type_line="Enchantment",
     )
 
 
 @pytest.fixture
 def main_string() -> str:
-    return "2 Expedition Map\n2 Boseiju, Who Endures\n56 Forest"
+    return "2 Boseiju, Who Endures\n2 Expedition Map\n6 Forest"
 
 
 @pytest.fixture
-def main_cards() -> Counter:
+def main(card_boseiju, card_forest, card_expedition_map) -> DeckPart:
     main_cards = Counter(
         {
-            DecklistCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
-            DecklistCardModel.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
-            DecklistCardModel.model_construct(name="Forest", mana_value=0): 56,
+            card_boseiju: 1,
+            card_expedition_map: 2,
+            card_forest: 6,
         }
     )
-    return main_cards
+    return DeckPart(cards=main_cards)
 
 
 @pytest.fixture
@@ -62,16 +101,16 @@ def side_string() -> str:
 
 
 @pytest.fixture
-def side_cards() -> Counter:
+def side(card_boeseiju, card_forest, card_pithing_needle, card_trail_of_crumbs) -> DeckPart:
     side_cards = Counter(
         {
-            DecklistCardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
-            DecklistCardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
-            DecklistCardModel.model_construct(name="Forest", mana_value=0): 9,
-            DecklistCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
+            card_boseiju: 2,
+            card_forest: 1,
+            card_pithing_needle: 1,
+            card_trail_of_crumbs: 2,
         }
     )
-    return side_cards
+    return DeckPart(side_cards)
 
 
 # endregion
