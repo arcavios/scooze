@@ -1,6 +1,5 @@
 from collections import Counter
 from datetime import datetime, timezone
-from sys import maxsize
 
 import pytest
 from pydantic_core import ValidationError

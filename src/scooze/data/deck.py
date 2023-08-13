@@ -3,7 +3,7 @@ from sys import maxsize
 
 from scooze.data.card import DecklistCard
 from scooze.enums import DecklistFormatter, Format, InThe
-import scooze.utils as utils
+from scooze.data.deckpart import DeckPart
 
 class Deck:
     """
@@ -15,11 +15,11 @@ class Deck:
         The archetype of this Deck.
     format : Format
         The format legality of the cards in this Deck.
-    main : Counter[DecklistCard]
+    main : DeckPart
         The main deck. Typically 60 cards minimum.
-    side : Counter[DecklistCard]
+    side : DeckPart
         The sideboard. Typically 15 cards maximum.
-    cmdr : Counter[DecklistCard]
+    cmdr : DeckPart
         The command zone. Typically 1 card in Commander formats.
 
     Methods
@@ -42,9 +42,9 @@ class Deck:
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: Counter[DecklistCard] = Counter(),
-        side: Counter[DecklistCard] = Counter(),
-        cmdr: Counter[DecklistCard] = Counter(),
+        main: DeckPart = DeckPart(),
+        side: DeckPart = DeckPart(),
+        cmdr: DeckPart = DeckPart(),
     ):
         self.archetype = archetype
         self.format = format
@@ -74,7 +74,6 @@ class Deck:
         )
 
     def diff(self, other) -> dict[str, dict[DecklistCard, tuple(int, int)]]:
-        # TODO: should this use an object instead of a dict[str, dict]?
         """
         Generates a diff between this Deck and another.
 
@@ -87,9 +86,9 @@ class Deck:
         """
 
         return {
-            "main_diff": utils.dict_diff(self.main, other.main),
-            "side_diff": utils.dict_diff(self.side, other.side),
-            "cmdr_diff": utils.dict_diff(self.cmdr, other.cmdr),
+            "main_diff": self.main.diff(other.main),
+            "side_diff": self.side.diff(other.side),
+            "cmdr_diff": self.cmdr.diff(other.cmdr),
         }
 
     def same_list(self, other):
@@ -122,9 +121,11 @@ class Deck:
 
         match in_the:
             case InThe.MAIN:
-                self.main.update({card: quantity})
+                self.main.add_card(card=card, quantity=quantity)
             case InThe.SIDE:
-                self.side.update({card: quantity})
+                self.side.add_card(card=card, quantity=quantity)
+            case InThe.CMDR:
+                self.cmdr.add_card(card=card, quantity=quantity)
             case _:
                 pass # 'in' must be one of InThe.list()
 
@@ -139,9 +140,11 @@ class Deck:
 
         match in_the:
             case InThe.MAIN:
-                self.main.update(cards)
+                self.main.add_cards(cards)
             case InThe.SIDE:
-                self.side.update(cards)
+                self.side.add_cards(cards)
+            case InThe.CMDR:
+                self.cmdr.add_cards(cards)
 
     def remove_card(self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
@@ -156,37 +159,37 @@ class Deck:
         # using counterA - counterB results in a new counter with only positive results
         match in_the:
             case InThe.MAIN:
-                self.main = self.main - Counter({card: quantity})
+                self.main.remove_card(card=card, quantity=quantity)
             case InThe.SIDE:
-                self.side = self.side - Counter({card: quantity})
+                self.side.remove_card(card=card, quantity=quantity)
+            case InThe.CMDR:
+                self.cmdr.remove_card(card=card, quantity=quantity)
             case _:
                 pass # failed to remove card
 
     def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
         """
-        Removes a given quantity of a given card from this Deck.
+        Removes the given cards from this Deck.
 
         Parameters:
             cards (Counter[DecklistCard]): The cards to remove.
             in_the (InThe): Where to remove the cards from (main, side, etc)
-            revalidate_after (bool): Check this Deck to maintain a valid state after this function is finished.
         """
 
         # using counterA - counterB results in a new counter with only positive results
         match in_the:
             case InThe.MAIN:
-                main_pretotal = self.main.total()
-                self.main = self.main - cards
+                self.main.remove_cards(cards=cards)
             case InThe.SIDE:
-                side_pretotal = self.side.total()
-                self.side = self.side - cards
+                self.side.remove_cards(cards=cards)
+            case InThe.CMDR:
+                self.cmdr.remove_cards(cards=cards)
             case _:
                 pass # failed to remove cards
 
     def count(self) -> int:
         """
-        Returns:
-            count (int): The number of cards in this Deck.
+        The number of cards in this Deck.
         """
 
         return self.main.total() + self.side.total() + self.cmdr.total()
@@ -213,9 +216,13 @@ class Deck:
                 sb_prefix = ""  # Default
         sb_prefix = "\n\n" + sb_prefix
 
+         # TODO(#64): may differ between MTGO, Arena, plain text
+        cmdr_prefix = "Commander\n"
+        cmdr_suffix = "\n\n"
+
         # Build the decklist string
-        main = "\n".join([f"{quantity} {card.name}" for card, quantity in self.main.items()])
-        side = sb_prefix + "\n".join([f"{quantity} {card.name}" for card, quantity in self.side.items()])
-        cmdr = "Commander\n" + "\n".join([f"{quantity} {card.name}" for card, quantity in self.cmdr.items()])
-        decklist = f"{cmdr if len(self.cmdr) > 0 else ''}{main}{side if len(self.side) > 0 else ''}"
+        main = str(self.main) if len(self.main) > 0 else ''
+        side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ''
+        cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ''
+        decklist = f"{cmdr}{main}{side}"
         return decklist

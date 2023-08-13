@@ -48,7 +48,7 @@ def get_logger(
     return logger
 
 # Source:  https://code.activestate.com/recipes/576644-diff-two-dictionaries/#c9
-def dict_diff(d1: dict, d2: dict, NO_KEY=0) -> dict[Any, tuple(Any, Any)]:
+def dict_diff(d1: dict, d2: dict, NO_KEY=0) -> dict[Any, tuple]:
     """
     Helper function to generate a diff between two dicts.
 

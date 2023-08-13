@@ -152,6 +152,7 @@ class InThe(ExtendedEnum, StrEnum):
 
     MAIN = auto()
     SIDE = auto()
+    CMDR = auto()
 
 
 class DecklistFormatter(ExtendedEnum, StrEnum):
