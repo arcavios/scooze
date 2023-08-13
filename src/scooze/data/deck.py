@@ -17,7 +17,7 @@ class DeckPart:
         return not self == other
 
     def __str__(self):
-        return "\n".join([f"{quantity} {card.name}" for card, quantity in self.cards.items()])
+        return "\n".join([f"{quantity} {card.name}" for card, quantity in self.cards.items()]) + "\n"
 
     def total(self):
         """
@@ -152,7 +152,7 @@ class Deck:
             f"""Decklist:\n{decklist}\n"""
         )
 
-    def diff(self, other) -> dict[str, dict[DecklistCard, tuple(int, int)]]:
+    def diff(self, other):
         """
         Generates a diff between this Deck and another.
 

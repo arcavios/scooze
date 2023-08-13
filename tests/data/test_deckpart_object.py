@@ -1,14 +1,13 @@
+from collections import Counter
+
 import pytest
 from scooze.data.card import DecklistCard
-from scooze.enums import Color
 from scooze.data.deck import DeckPart
-
-
-# TODO: write tests
-
+from scooze.enums import Color
 
 """
 init
+ - cards
 eq
 ne
 str
@@ -20,111 +19,48 @@ remove_card
 remove_cards
 """
 
-# region Fixtures
-
 
 @pytest.fixture
-def card_boeseiju() -> DecklistCard:
-    return DecklistCard(
-        name="Boseiju, Who Endures",
-        cmc=0,
-        colors=[],
-        type_line="Legendary Land",
-    )
-
-@pytest.fixture
-def card_expedition_map() -> DecklistCard:
-    return DecklistCard(
-        name="Expedition Map",
-        cmc=0,
-        colors=[],
-        type_line="Artifact",
-    )
-
-@pytest.fixture
-def card_forest() -> DecklistCard():
-    return Decklistcard(
-        name="Forest",
-        cmc=0,
-        colors=[],
-        type_line="Basic Land - Forest",
-    )
-
-@pytest.fixture
-def card_pithing_needle() -> DecklistCard():
-    return DecklistCard(
-        name="Pithing Needle",
-        cmc=1,
-        colors=[],
-        type_line="Artifact",
-    )
-
-@pytest.fixture
-def card_primeval_titan() -> DecklistCard:
-    return DecklistCard(
-        name="Primeval Titan",
-        cmc=6,
-        colors=[Color.GREEN],
-        type_line="Creature - Beast",
-    )
-
-@pytest.fixture
-def card_trail_of_crumbs() -> DecklistCard:
-    return DecklistCard(
-        name="Trail of Crumbs",
-        cmc=2,
-        colors=[Color.Green],
-        type_line="Enchantment",
-    )
-
-
-@pytest.fixture
-def main_string() -> str:
-    return "2 Boseiju, Who Endures\n2 Expedition Map\n6 Forest"
-
-
-@pytest.fixture
-def main(card_boseiju, card_forest, card_expedition_map) -> DeckPart:
-    main_cards = Counter(
+def some_cards(card_forest, card_solitude, card_wrenn_and_six) -> Counter[DecklistCard]:
+    cards = Counter(
         {
-            card_boseiju: 1,
-            card_expedition_map: 2,
-            card_forest: 6,
+            card_forest: 10,
+            card_solitude: 4,
+            card_wrenn_and_six: 4,
         }
     )
-    return DeckPart(cards=main_cards)
 
 
 @pytest.fixture
-def side_string() -> str:
-    return "1 Pithing Needle\n2 Trail of Crumbs\n9 Forest\n2 Expedition Map"
+def some_cards_str(card_forest, card_solitude, card_wrenn_and_six) -> str:
+    return f"10 {card_forest.name}\n" f"4 {card_solitude.name}\n" f"4 {card_wrenn_and_six.name}\n"
 
 
-@pytest.fixture
-def side(card_boeseiju, card_forest, card_pithing_needle, card_trail_of_crumbs) -> DeckPart:
-    side_cards = Counter(
-        {
-            card_boseiju: 2,
-            card_forest: 1,
-            card_pithing_needle: 1,
-            card_trail_of_crumbs: 2,
-        }
-    )
-    return DeckPart(side_cards)
+def test_cards(some_cards):
+    part = DeckPart(cards=some_cards)
+    assert part.cards == some_cards
 
 
-# endregion
+def test_eq(some_cards):
+    partA = DeckPart(cards=some_cards)
+    partB = DeckPart(cards=some_cards)
+    assert partA == partB
 
 
-# # region Fixtures
+def test_ne(some_cards):
+    partA = DeckPart(cards=some_cards)
+    partB = DeckPart()
+    assert partA != partB
 
 
-# # endregion
+def test_str(some_cards):
+    part = DeckPart(cards=some_cards)
+    assert str(part) == some_cards_str
 
 
-# def test_archetype(archetype):
-#     deck = DeckModel.model_construct(archetype=archetype)
-#     assert deck.archetype == archetype
+# def test_archetype(archetype_modern_4c):
+#     deck = Deck(archetype=archetype_modern_4c)
+#     assert deck.archetype == archetype_modern_4c
 
 
 # def test_format(format, main_cards):
