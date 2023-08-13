@@ -79,9 +79,6 @@ def side_size(fmt: Format) -> tuple[int, int]:
         case Format.LIMITED:
             return 0, maxsize
 
-        case Format.OATHBREAKER:
-            return 2, 2  # TODO(#51): commander support?
-
         case (
             Format.ALCHEMY
             | Format.EXPLORER
@@ -100,12 +97,53 @@ def side_size(fmt: Format) -> tuple[int, int]:
             return 0, 15
 
         case (
+            Format.BRAWL
+            | Format.COMMANDER
+            | Format.DUEL
+            | Format.GLADIATOR
+            | Format.HISTORICBRAWL
+            | Format.OATHBREAKER
+            | Format.PAUPERCOMMANDER
+            | Format.PREDH
+        ):
+            return 0, 0
+
+        case _:
+            return 0, maxsize
+
+
+def cmdr_size(fmt: Format) -> tuple[int, int]:
+    """
+    Given a Format, what are the min and max size for a command zone?
+    """
+
+    match fmt.value:
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.GLADIATOR
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.LIMITED
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 0, 0
+
+        case (
             Format.BRAWL | Format.COMMANDER | Format.DUEL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH
         ):
-            return 1, 1  # TODO(#51): commander support?
+            return 1, 1
 
-        case Format.GLADIATOR:
-            return 0, 0
+        case Format.OATHBREAKER:
+            return 2, 2
 
         case _:
             return 0, maxsize

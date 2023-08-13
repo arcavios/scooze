@@ -398,17 +398,135 @@ def card_zagoth_triome() -> DecklistCard:
 
 # endregion
 
+# region Formats
+
+
+@pytest.fixture
+def format_alchemy() -> Format:
+    return Format.ALCHEMY
+
+
+@pytest.fixture
+def format_brawl() -> Format:
+    return Format.BRAWL
+
+
+@pytest.fixture
+def format_commander() -> Format:
+    return Format.COMMANDER
+
+
+@pytest.fixture
+def format_duel() -> Format:
+    return Format.DUEL
+
+
+@pytest.fixture
+def format_explorer() -> Format:
+    return Format.EXPLORER
+
+
+@pytest.fixture
+def format_future() -> Format:
+    return Format.FUTURE
+
+
+@pytest.fixture
+def format_gladiator() -> Format:
+    return Format.GLADIATOR
+
+
+@pytest.fixture
+def format_historic() -> Format:
+    return Format.HISTORIC
+
+
+@pytest.fixture
+def format_historicbrawl() -> Format:
+    return Format.HISTORICBRAWL
+
+
+@pytest.fixture
+def format_legacy() -> Format:
+    return Format.LEGACY
+
+
+@pytest.fixture
+def format_modern() -> Format:
+    return Format.MODERN
+
+
+@pytest.fixture
+def format_oathbreaker() -> Format:
+    return Format.OATHBREAKER
+
+
+@pytest.fixture
+def format_oldschool() -> Format:
+    return Format.OLDSCHOOL
+
+
+@pytest.fixture
+def format_pauper() -> Format:
+    return Format.PAUPER
+
+
+@pytest.fixture
+def format_paupercommander() -> Format:
+    return Format.PAUPERCOMMANDER
+
+
+@pytest.fixture
+def format_penny() -> Format:
+    return Format.PENNY
+
+
+@pytest.fixture
+def format_pioneer() -> Format:
+    return Format.PIONEER
+
+
+@pytest.fixture
+def format_predh() -> Format:
+    return Format.PREDH
+
+
+@pytest.fixture
+def format_premodern() -> Format:
+    return Format.PREMODERN
+
+
+@pytest.fixture
+def format_standard() -> Format:
+    return Format.STANDARD
+
+
+@pytest.fixture
+def format_vintage() -> Format:
+    return Format.VINTAGE
+
+
+# non-Scryfall formats
+
+
+@pytest.fixture
+def format_limited() -> Format:
+    return Format.LIMITED
+
+
+@pytest.fixture
+def format_none() -> Format:
+    return Format.NONE
+
+
+# endregion
+
 # region DeckParts
 
 
 @pytest.fixture
 def archetype_modern_4c() -> str:
     return "Four-color Control"
-
-
-@pytest.fixture
-def format_modern() -> Format:
-    return Format.MODERN
 
 
 @pytest.fixture

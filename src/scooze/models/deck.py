@@ -103,7 +103,14 @@ class DeckModel(BaseModel, validate_assignment=True):
             raise ValueError(f"Too many cards in sideboard. Provided sideboards has {self.side.total()} cards.")
         return self
 
-    # TODO: add validate_cmdr
+    @model_validator(mode="after")
+    def validate_cmdr(self):
+        c_min, c_max = model_utils.cmdr_size(self.format)
+        if self.cmdr.total() < c_min:
+            raise ValueError(f"Not enough cards in command zone. Provided command zone has {self.cmdr.total()} cards.")
+        elif self.cmdr.total() > c_max:
+            raise ValueError(f"Too many cards in command zone. Provided command zone has {self.cmdr.total()} cards.")
+        return self
 
     # endregion
 
