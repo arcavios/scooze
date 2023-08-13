@@ -36,6 +36,11 @@ def test_ne(some_cards):
     assert partA != partB
 
 
+def test_str_empty():
+    part = DeckPart()
+    assert str(part) == ""
+
+
 def test_str(main_modern_4c, main_modern_4c_str):
     assert str(main_modern_4c) == main_modern_4c_str
 

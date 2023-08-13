@@ -31,7 +31,10 @@ class DeckPart:
     """
 
     def __init__(self, cards: Counter[DecklistCard] = Counter()):
-        self.cards = cards
+        # Deep copy of
+        # TODO(#66): Add __copy__ and __deepcopy__ to Deck and DeckPart
+        self.cards = Counter()
+        self.cards.update(cards)
 
     def __eq__(self, other):
         return self.cards == other.cards
@@ -39,8 +42,14 @@ class DeckPart:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __len__(self):
+        return len(self.cards)
+
     def __str__(self):
-        return "\n".join([f"{quantity} {card.name}" for card, quantity in self.cards.items()]) + "\n"
+        if len(self.cards) > 0:
+            return "\n".join([f"{quantity} {card.name}" for card, quantity in self.cards.items()]) + "\n"
+        else:
+            return ""
 
     def total(self):
         """
@@ -152,9 +161,12 @@ class Deck:
     ):
         self.archetype = archetype
         self.format = format
-        self.main = main
-        self.side = side
-        self.cmdr = cmdr
+
+        # Deep copy of DeckPart
+        # TODO(#66): Add __copy__ and __deepcopy__ to Deck and DeckPart
+        self.main = DeckPart(cards=main.cards)
+        self.side = DeckPart(cards=side.cards)
+        self.cmdr = DeckPart(cards=cmdr.cards)
 
     def __eq__(self, other):
         return (
@@ -170,12 +182,7 @@ class Deck:
 
     def __str__(self):
         decklist = self.to_decklist()
-        return (
-            f"""Archetype: {self.archetype}\n"""
-            f"""Format: {self.format}\n"""
-            f"""Date Played: {self.date_played}\n"""
-            f"""Decklist:\n{decklist}\n"""
-        )
+        return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
     def total(self) -> int:
         """
