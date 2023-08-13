@@ -19,6 +19,7 @@ remove_cards
 
 # region Fixtures
 
+
 @pytest.fixture
 def existing_card() -> str:
     return DecklistCard(
@@ -72,17 +73,11 @@ def side_cards() -> Counter:
     )
     return side_cards
 
+
 # endregion
 
 
-
-
 # # region Fixtures
-
-
-
-
-
 
 
 # # endregion

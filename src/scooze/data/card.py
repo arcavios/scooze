@@ -167,7 +167,7 @@ class FullCard(DecklistCard):
         self,
         arena_id: int | None = None,
         scryfall_id: str = "",
-        lang: str = "en", # TODO(#36): convert to enum?
+        lang: str = "en",  # TODO(#36): convert to enum?
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
         multiverse_ids: list[int] | None = None,
@@ -189,7 +189,7 @@ class FullCard(DecklistCard):
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
         keywords: list[str] = [],
-        layout: str = "normal", # TODO(#36): convert to enum?
+        layout: str = "normal",  # TODO(#36): convert to enum?
         legalities: dict[enums.Format, enums.Legality] | None = None,
         life_modifier: str | None = None,
         loyalty: str | None = None,
@@ -214,13 +214,13 @@ class FullCard(DecklistCard):
         finishes: list[enums.Finish] | None = None,
         flavor_name: str | None = None,
         flavor_text: str | None = None,
-        frame_effects: list[str] | None = None, # TODO(#36): convert to enum?
+        frame_effects: list[str] | None = None,  # TODO(#36): convert to enum?
         frame: str | None = None,
         full_art: bool | None = None,
         games: list[enums.Game] | None = None,
         highres_image: bool | None = None,
         illustration_id: str | None = None,
-        image_status: str | None = None, # TODO(#36): convert to enum?
+        image_status: str | None = None,  # TODO(#36): convert to enum?
         image_uris: ImageUris | None = None,
         preview: Preview | None = None,
         prices: Prices | None = None,
@@ -229,13 +229,13 @@ class FullCard(DecklistCard):
         printed_type_line: str | None = None,
         promo: bool = False,
         promo_types: list[str] | None = None,
-        purchase_uris: dict[str, str] = {}, # TODO(#47): convert to object?
+        purchase_uris: dict[str, str] = {},  # TODO(#47): convert to object?
         rarity: enums.Rarity | None = None,  # TODO(#48): better default?
-        related_uris: dict[str, str] = {}, # TODO(#47): convert to object?
-        released_at: datetime | None = None, # TODO(#48): better default?
+        related_uris: dict[str, str] = {},  # TODO(#47): convert to object?
+        released_at: datetime | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
-        security_stamp: str | None = None, # TODO(#36): convert to enum?
+        security_stamp: str | None = None,  # TODO(#36): convert to enum?
         set_name: str = "",
         set_search_uri: str = "",
         set_type: str = "",
@@ -344,7 +344,6 @@ class FullCard(DecklistCard):
         self.watermark = watermark
 
         # endregion
-
 
 
 # TODO: what to do with the MongoDB id?
