@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 import scooze.enums as enums
 from pydantic import BaseModel, Field
@@ -48,11 +47,11 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     Attributes:
         artist: str | None
         cmc: float | None
-        color_indicator: List[Color] | None
-        colors: List[Color] | None
+        color_indicator: list[Color] | None
+        colors: list[Color] | None
         flavor_text: str | None
         illustration_id: int | None
-        image_uris: List[str] | None
+        image_uris: list[str] | None
         layout: str | None
         loyalty: int | None
         mana_cost: str
@@ -75,10 +74,10 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     cmc: float | None = Field(
         description="Mana value of this face.",
     )
-    color_indicator: List[enums.Color] | None = Field(
+    color_indicator: list[enums.Color] | None = Field(
         description="Color indicator on this face, if any.",
     )
-    colors: List[enums.Color] | None = Field(
+    colors: list[enums.Color] | None = Field(
         description="Colors of this face.",
     )
     flavor_text: str | None = Field(
