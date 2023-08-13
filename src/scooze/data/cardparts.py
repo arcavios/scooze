@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 import scooze.enums as enums
 
@@ -44,11 +43,11 @@ class CardFace:
     Attributes:
         artist: str | None
         cmc: float | None
-        color_indicator: List[Color] | None
-        colors: List[Color] | None
+        color_indicator: list[Color] | None
+        colors: list[Color] | None
         flavor_text: str | None
         illustration_id: int | None
-        image_uris: List[str] | None
+        image_uris: list[str] | None
         layout: str | None
         loyalty: int | None
         mana_cost: str | None
@@ -69,8 +68,8 @@ class CardFace:
         self,
         artist: str | None = None,
         cmc: float | None = None,
-        color_indicator: List[enums.Color] | None = None,
-        colors: List[enums.Color] | None = None,
+        color_indicator: list[enums.Color] | None = None,
+        colors: list[enums.Color] | None = None,
         flavor_text: str | None = None,
         illustration_id: int | None = None,
         image_uris: ImageUris | None = None,
