@@ -4,7 +4,7 @@ from typing import Annotated
 import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field
-from scooze.enums import Color, Format, Legality
+from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 from scooze.models.cardparts import (
     CardFaceModel,
     ImageUrisModel,
