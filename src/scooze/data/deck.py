@@ -7,6 +7,29 @@ from scooze.enums import DecklistFormatter, Format, InThe
 
 
 class DeckPart:
+    """
+    A class to represent a part of a deck.
+
+    Attributes
+    ----------
+        cards (Counter[DecklistCard]): The cards in this DeckPart.
+
+    Methods
+    -------
+    total():
+        The number of cards in this Deck.
+    diff(other: DeckPart):
+        Generates a diff between this DeckPart and another.
+    add_card(card: DecklistCard, quantity: int):
+        Adds a given quantity of a given card to this DeckPart.
+    add_cards(cards: Counter[DecklistCard]):
+        Adds the given cards to this DeckPart.
+    remove_card(card: DecklistCard, quantity: int):
+        Removes a given quantity of a given card from this DeckPart.
+    remove_cards(cards: Counter[DecklistCard]):
+        Removes the given cards from this DeckPart.
+    """
+
     def __init__(self, cards: Counter[DecklistCard] = Counter()):
         self.cards = cards
 
@@ -31,10 +54,10 @@ class DeckPart:
         Generates a diff between this DeckPart and another.
 
         Parameters:
-            other (Deck): The other DeckPart.
+            other (DeckPart): The other DeckPart.
 
         Returns:
-            diff (dict[DecklistCard, tuple(int, int)]): Returns a dict with every card in both decks and their counts.
+            diff (dict[DecklistCard, tuple(int, int)]): Returns a dict with every card in both DeckParts and their counts.
         """
 
         return utils.dict_diff(self.cards, other.cards, NO_KEY=0)
@@ -69,7 +92,7 @@ class DeckPart:
             quantity (int): The number of copies of the card to be removed.
         """
 
-        # using counterA - counterB results in a new counter with only positive results
+        # using counterA - counterB results in a new Counter with only positive results
         self.cards = self.cards - Counter({card: quantity})
 
     def remove_cards(self, cards: Counter[DecklistCard]) -> None:
@@ -80,7 +103,7 @@ class DeckPart:
             cards (Counter[DecklistCard]): The cards to remove.
         """
 
-        # using counterA - counterB results in a new counter with only positive results
+        # using counterA - counterB results in a new Counter with only positive results
         self.cards = self.cards - cards
 
 
@@ -103,6 +126,10 @@ class Deck:
 
     Methods
     -------
+    total():
+        The number of cards in this Deck.
+    diff(other: Deck):
+        Generates a diff between this Deck and another.
     add_card(card: DecklistCard, quantity: int, in_the: InThe):
         Adds a given quantity of a given card to this Deck.
     add_cards(cards: Counter[DecklistCard], in_the: InThe):
@@ -111,8 +138,6 @@ class Deck:
         Removes a given quantity of a given card from this Deck.
     remove_cards(cards: Counter[DecklistCard], in_the: InThe):
         Removes the given cards from this Deck.
-    count():
-        Counts all of the cards in this Deck.
     to_decklist(DecklistFormat):
         Exports the Deck as a str with the given DecklistFormat.
     """
@@ -151,6 +176,13 @@ class Deck:
             f"""Date Played: {self.date_played}\n"""
             f"""Decklist:\n{decklist}\n"""
         )
+
+    def total(self) -> int:
+        """
+        The number of cards in this Deck.
+        """
+
+        return self.main.total() + self.side.total() + self.cmdr.total()
 
     def diff(self, other):
         """
@@ -266,13 +298,6 @@ class Deck:
                 self.cmdr.remove_cards(cards=cards)
             case _:
                 pass  # failed to remove cards
-
-    def count(self) -> int:
-        """
-        The number of cards in this Deck.
-        """
-
-        return self.main.total() + self.side.total() + self.cmdr.total()
 
     def to_decklist(self, decklist_formatter: DecklistFormatter = None) -> str:
         """
