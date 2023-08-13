@@ -103,6 +103,8 @@ class DeckModel(BaseModel, validate_assignment=True):
             raise ValueError(f"Too many cards in sideboard. Provided sideboards has {self.side.total()} cards.")
         return self
 
+    # TODO: add validate_cmdr
+
     # endregion
 
     def __eq__(self, other):

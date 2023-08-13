@@ -1,7 +1,7 @@
 import logging
 import os.path
-from typing import Any
 from sys import stdout
+from typing import Any
 
 
 def get_logger(
@@ -47,6 +47,7 @@ def get_logger(
 
     return logger
 
+
 # Source:  https://code.activestate.com/recipes/576644-diff-two-dictionaries/#c9
 def dict_diff(d1: dict, d2: dict, NO_KEY=0) -> dict[Any, tuple]:
     """
@@ -62,7 +63,7 @@ def dict_diff(d1: dict, d2: dict, NO_KEY=0) -> dict[Any, tuple]:
     """
 
     both = d1.keys() & d2.keys()
-    diff = {k:(d1[k], d2[k]) for k in both if d1[k] != d2[k]}
-    diff.update({k:(d1[k], NO_KEY) for k in d1.keys() - both})
-    diff.update({k:(NO_KEY, d2[k]) for k in d2.keys() - both})
+    diff = {k: (d1[k], d2[k]) for k in both if d1[k] != d2[k]}
+    diff.update({k: (d1[k], NO_KEY) for k in d1.keys() - both})
+    diff.update({k: (NO_KEY, d2[k]) for k in d2.keys() - both})
     return diff

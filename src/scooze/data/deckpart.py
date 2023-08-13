@@ -1,10 +1,11 @@
-from scooze.data.card import DecklistCard
 from collections import Counter
-import scooze.utils as utils
 from sys import maxsize
 
-class DeckPart:
+import scooze.utils as utils
+from scooze.data.card import DecklistCard
 
+
+class DeckPart:
     def __init__(self, cards: Counter[DecklistCard] = Counter()):
         self.cards = cards
 

@@ -2,8 +2,9 @@ from collections import Counter
 from sys import maxsize
 
 from scooze.data.card import DecklistCard
-from scooze.enums import DecklistFormatter, Format, InThe
 from scooze.data.deckpart import DeckPart
+from scooze.enums import DecklistFormatter, Format, InThe
+
 
 class Deck:
     """
@@ -85,6 +86,7 @@ class Deck:
                 Each contains a dict of every card in both decks and their counts.
         """
 
+        # TODO: should this be a NamedTuple or something?
         return {
             "main_diff": self.main.diff(other.main),
             "side_diff": self.side.diff(other.side),
@@ -127,7 +129,7 @@ class Deck:
             case InThe.CMDR:
                 self.cmdr.add_card(card=card, quantity=quantity)
             case _:
-                pass # 'in' must be one of InThe.list()
+                pass  # 'in' must be one of InThe.list()
 
     def add_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -165,7 +167,7 @@ class Deck:
             case InThe.CMDR:
                 self.cmdr.remove_card(card=card, quantity=quantity)
             case _:
-                pass # failed to remove card
+                pass  # failed to remove card
 
     def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -185,7 +187,7 @@ class Deck:
             case InThe.CMDR:
                 self.cmdr.remove_cards(cards=cards)
             case _:
-                pass # failed to remove cards
+                pass  # failed to remove cards
 
     def count(self) -> int:
         """
@@ -216,13 +218,13 @@ class Deck:
                 sb_prefix = ""  # Default
         sb_prefix = "\n\n" + sb_prefix
 
-         # TODO(#64): may differ between MTGO, Arena, plain text
+        # TODO(#64): may differ between MTGO, Arena, plain text
         cmdr_prefix = "Commander\n"
         cmdr_suffix = "\n\n"
 
         # Build the decklist string
-        main = str(self.main) if len(self.main) > 0 else ''
-        side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ''
-        cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ''
+        main = str(self.main) if len(self.main) > 0 else ""
+        side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ""
+        cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ""
         decklist = f"{cmdr}{main}{side}"
         return decklist
