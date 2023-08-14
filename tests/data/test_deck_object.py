@@ -125,9 +125,6 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
     }
 
 
-# TODO: UPDATE THESE TESTS
-
-
 @pytest.mark.deck_add_cards
 def test_add_card_main_one(main_modern_4c, card_boseiju_who_endures):
     deck = Deck(archetype="test_add_card_main_one", main=main_modern_4c)
