@@ -326,11 +326,11 @@ class Deck:
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
             case _:
                 sb_prefix = ""  # Default
-        sb_prefix = "\n\n" + sb_prefix
+        sb_prefix = "\n" + sb_prefix
 
         # TODO(#64): may differ between MTGO, Arena, plain text
         cmdr_prefix = "Commander\n"
-        cmdr_suffix = "\n\n"
+        cmdr_suffix = "\n"
 
         # Build the decklist string
         main = str(self.main) if len(self.main) > 0 else ""
