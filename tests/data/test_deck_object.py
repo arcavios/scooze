@@ -2,7 +2,8 @@ from collections import Counter
 
 import pytest
 from scooze.data.card import DecklistCard
-from scooze.data.deck import Deck, DeckPart
+from scooze.data.deck import Deck
+from scooze.data.deckpart import DeckPart
 from scooze.enums import DecklistFormatter, InThe
 
 

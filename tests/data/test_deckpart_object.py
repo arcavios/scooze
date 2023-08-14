@@ -3,7 +3,7 @@ from sys import maxsize
 
 import pytest
 from scooze.data.card import DecklistCard
-from scooze.data.deck import DeckPart
+from scooze.data.deckpart import DeckPart
 from scooze.enums import Color
 
 
