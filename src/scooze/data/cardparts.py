@@ -213,7 +213,7 @@ class RelatedCard:
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
-        id: str | None
+        scryfall_id: str | None
         object: str | None
         component: str | None
         name: str | None
@@ -230,7 +230,7 @@ class RelatedCard:
         type_line: str | None = None,
         uri: str | None = None,
     ):
-        self.id = scryfall_id
+        self.scryfall_id = scryfall_id
         self.object = _object
         self.component = component  # TODO(#36): convert to enum?
         self.name = name
