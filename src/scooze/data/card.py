@@ -143,7 +143,7 @@ class FullCard(OracleCard):
     Attributes:
         ### Core fields
         arena_id: int | None
-        id: str
+        scryfall_id: str
         lang: str
         mtgo_id: int | None
         mtgo_foil_id: int | None
@@ -318,7 +318,7 @@ class FullCard(OracleCard):
         # region Core Fields
 
         self.arena_id = arena_id
-        self.id = scryfall_id
+        self.scryfall_id = scryfall_id
         self.lang = lang
         self.mtgo_id = mtgo_id
         self.mtgo_foil_id = mtgo_foil_id
