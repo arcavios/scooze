@@ -19,15 +19,15 @@ class CardModel(BaseModel, validate_assignment=True):
     Model for a basic Card object with minimal fields. Contains all information you might use to sort a decklist.
 
     Attributes:
-        cmc: float | None
-        color_identity: list[Color] | None
+        cmc: float
+        color_identity: list[Color]
         colors: list[Color] | None
-        legalities: dict[Format, Legality] | None
+        legalities: dict[Format, Legality]
         mana_cost: str | None
-        name: str | None
+        name: str
         power: str | None
         toughness: str | None
-        type_line: str | None
+        type_line: str
     """
 
     model_config = model_utils.get_base_model_config()
