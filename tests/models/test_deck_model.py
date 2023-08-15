@@ -4,8 +4,8 @@ from datetime import datetime, timezone
 import pytest
 from pydantic_core import ValidationError
 from scooze.enums import Format, InThe
-from scooze.models.card import DecklistCardModel
-from scooze.models.deck import DecklistFormatter, DeckModel
+from scooze.models.card import CardModel
+from scooze.models.deck import DeckModel
 
 # region Fixtures
 
@@ -24,9 +24,9 @@ def today() -> datetime:
 def main_cards() -> Counter:
     main_cards = Counter(
         {
-            DecklistCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
-            DecklistCardModel.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
-            DecklistCardModel.model_construct(name="Forest", mana_value=0): 6,
+            CardModel.model_construct(name="Expedition Map", mana_value=1): 2,
+            CardModel.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
+            CardModel.model_construct(name="Forest", mana_value=0): 6,
         }
     )
     return main_cards
@@ -36,10 +36,10 @@ def main_cards() -> Counter:
 def side_cards() -> Counter:
     side_cards = Counter(
         {
-            OracleCardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
-            OracleCardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
-            OracleCardModel.model_construct(name="Forest", mana_value=0): 9,
-            OracleCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
+            CardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
+            CardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
+            CardModel.model_construct(name="Forest", mana_value=0): 9,
+            CardModel.model_construct(name="Expedition Map", mana_value=1): 2,
         }
     )
     return side_cards
@@ -49,7 +49,7 @@ def side_cards() -> Counter:
 def cmdr_cards() -> Counter:
     cmdr_cards = Counter(
         {
-            DecklistCardModel.model_construct(name="Mayael the Anima", mana_value=3): 1,
+            CardModel.model_construct(name="Mayael the Anima", mana_value=3): 1,
         }
     )
     return cmdr_cards

@@ -1,7 +1,7 @@
 from collections import Counter
 from sys import maxsize
 
-from scooze.data.card import DecklistCard
+from scooze.data.card import Card
 from scooze.data.deckpart import DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe
 
@@ -29,15 +29,15 @@ class Deck:
         The number of cards in this Deck.
     diff(other: Deck):
         Generates a diff between this Deck and another.
-    add_card(card: DecklistCard, quantity: int, in_the: InThe):
+    add_card(card: Card, quantity: int, in_the: InThe):
         Adds a given quantity of a given card to this Deck.
-    add_cards(cards: Counter[DecklistCard], in_the: InThe):
+    add_cards(cards: Counter[Card], in_the: InThe):
         Adds the given cards to this Deck.
-    remove_card(card: DecklistCard, quantity: int, in_the: InThe):
+    remove_card(card: Card, quantity: int, in_the: InThe):
         Removes a given quantity of a given card from this Deck.
-    remove_cards(cards: Counter[DecklistCard], in_the: InThe):
+    remove_cards(cards: Counter[Card], in_the: InThe):
         Removes the given cards from this Deck.
-    to_decklist(DecklistFormat):
+    export(DecklistFormat):
         Exports the Deck as a str with the given DecklistFormat.
     """
 
@@ -71,7 +71,7 @@ class Deck:
         return not self.__eq__(other)
 
     def __str__(self):
-        decklist = self.to_decklist()
+        decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
     def total(self) -> int:
@@ -89,7 +89,7 @@ class Deck:
             other (Deck): The other Deck.
 
         Returns:
-            diff (dict[str, dict[DecklistCard, tuple(int, int)]]): Returns a dict with keys for each deck part.
+            diff (dict[str, dict[Card, tuple(int, int)]]): Returns a dict with keys for each deck part.
                 Each contains a dict of every card in both decks and their counts.
         """
 
@@ -118,12 +118,12 @@ class Deck:
         same_cmdr = bool(diff["cmdr_diff"])
         return same_main and same_side and same_cmdr
 
-    def add_card(self, card: DecklistCard, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
+    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
         Adds a given quantity of a given card to this Deck.
 
         Parameters:
-            card (DecklistCard): The card to add.
+            card (Card): The card to add.
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
         """
@@ -138,12 +138,12 @@ class Deck:
             case _:
                 pass  # 'in' must be one of InThe.list()
 
-    def add_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
+    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
         """
         Adds the given cards to this Deck.
 
         Parameters:
-            cards (Counter[DecklistCard]): The cards to add.
+            cards (Counter[Card]): The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
         """
 
@@ -155,12 +155,12 @@ class Deck:
             case InThe.CMDR:
                 self.cmdr.add_cards(cards)
 
-    def remove_card(self, card: DecklistCard, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
+    def remove_card(self, card: Card, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
 
         Parameters:
-            card (DecklistCard): The card to remove.
+            card (Card): The card to remove.
             quantity (int): The number of copies of the card to be removed.
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
@@ -176,12 +176,12 @@ class Deck:
             case _:
                 pass  # failed to remove card
 
-    def remove_cards(self, cards: Counter[DecklistCard], in_the: InThe = InThe.MAIN) -> None:
+    def remove_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
         """
         Removes the given cards from this Deck.
 
         Parameters:
-            cards (Counter[DecklistCard]): The cards to remove.
+            cards (Counter[Card]): The cards to remove.
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
 
@@ -196,7 +196,7 @@ class Deck:
             case _:
                 pass  # failed to remove cards
 
-    def to_decklist(self, decklist_formatter: DecklistFormatter = None) -> str:
+    def export(self, export_format: DecklistFormatter = None) -> str:
         """
         Exports this Deck as a str with the given DecklistFormatter.
 
@@ -207,7 +207,7 @@ class Deck:
             decklist (str): A string containing the names and quantities of the cards in this Deck.
         """
 
-        match decklist_formatter:
+        match export_format:
             case DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
                 # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.

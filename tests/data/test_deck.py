@@ -1,7 +1,7 @@
 from collections import Counter
 
 import pytest
-from scooze.data.card import DecklistCard
+from scooze.data.card import Card
 from scooze.data.deck import Deck
 from scooze.data.deckpart import DeckPart
 from scooze.enums import DecklistFormatter, InThe
@@ -12,7 +12,7 @@ def cards(
     card_boseiju_who_endures,
     card_omnath_locus_of_creation,
     card_prismatic_ending,
-) -> Counter[DecklistCard]:
+) -> Counter[Card]:
     return Counter(
         {
             card_boseiju_who_endures: 1,
@@ -23,7 +23,7 @@ def cards(
 
 
 @pytest.fixture
-def cmdr_cards(card_omnath_locus_of_creation, card_supreme_verdict) -> Counter[DecklistCard]:
+def cmdr_cards(card_omnath_locus_of_creation, card_supreme_verdict) -> Counter[Card]:
     return Counter(
         {
             card_omnath_locus_of_creation: 1,
@@ -278,25 +278,25 @@ def test_remove_cards_cmdr(cmdr_part, cmdr_cards):
     assert deck.cmdr == cmdr_part
 
 
-def test_to_decklist_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    assert deck_modern_4c.to_decklist() == f"{main_modern_4c_str}\n{side_modern_4c_str}"
+def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
+    assert deck_modern_4c.export() == f"{main_modern_4c_str}\n{side_modern_4c_str}"
 
 
-def test_to_decklist_default_no_side(main_modern_4c, main_modern_4c_str):
-    deck = Deck(archetype="test_to_decklist_default_no_side", main=main_modern_4c)
-    assert deck.to_decklist() == f"{main_modern_4c_str}"
+def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
+    deck = Deck(archetype="test_export_default_no_side", main=main_modern_4c)
+    assert deck.export() == f"{main_modern_4c_str}"
 
 
-def test_to_decklist_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
-    deck = Deck(archetype="test_to_decklist_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
-    assert deck.to_decklist() == f"Commander\n{cmdr_part}\n{main_modern_4c_str}"
+def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
+    deck = Deck(archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
+    assert deck.export() == f"Commander\n{cmdr_part}\n{main_modern_4c_str}"
 
 
-def test_to_decklist_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    deck = Deck(archetype="test_to_decklist_arena", main=main_modern_4c, side=side_modern_4c)
-    assert deck.to_decklist(DecklistFormatter.ARENA) == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
+    deck = Deck(archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
+    assert deck.export(DecklistFormatter.ARENA) == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
 
-def test_to_decklist_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    deck = Deck(archetype="test_to_decklist_mtgo", main=main_modern_4c, side=side_modern_4c)
-    assert deck.to_decklist(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"
+def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
+    deck = Deck(archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
+    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"

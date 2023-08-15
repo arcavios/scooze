@@ -2,13 +2,13 @@ from collections import Counter
 from sys import maxsize
 
 import pytest
-from scooze.data.card import DecklistCard
+from scooze.data.card import Card
 from scooze.data.deckpart import DeckPart
 from scooze.enums import Color
 
 
 @pytest.fixture
-def some_cards(card_chalice_of_the_void, card_hallowed_moonlight, card_veil_of_summer) -> Counter[DecklistCard]:
+def some_cards(card_chalice_of_the_void, card_hallowed_moonlight, card_veil_of_summer) -> Counter[Card]:
     cards = Counter(
         {
             card_chalice_of_the_void: 4,

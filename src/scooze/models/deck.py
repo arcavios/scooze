@@ -6,7 +6,7 @@ import scooze.models.utils as model_utils
 from bson import ObjectId
 from pydantic import BaseModel, Field, model_validator
 from scooze.enums import ExtendedEnum, Format
-from scooze.models.card import OracleCardModel
+from scooze.models.card import CardModel
 from scooze.models.matchdata import MatchData
 from scooze.utils import get_logger
 
@@ -25,19 +25,12 @@ class DeckModel(BaseModel, validate_assignment=True):
         The date this DeckModel was played.
     matches : MatchData
         Match data for this DeckModel.
-    main : Counter[DecklistCardModel]
+    main : Counter[CardModel]
         The main deck. Typically 60 cards minimum.
-    side : Counter[DecklistCardModel]
+    side : Counter[CardModel]
         The sideboard. Typically 15 cards maximum.
-    cmdr : Counter[DecklistCardModel]
+    cmdr : Counter[CardModel]
         The command zone. Typically 1 card in Commander formats.
-
-    Methods
-    -------
-    count():
-        Counts all of the cards in this DeckModel.
-    to_decklist(DecklistFormat):
-        Exports the Deck as a str with the given DecklistFormat.
     """
 
     ## Class Attributes
@@ -64,15 +57,15 @@ class DeckModel(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[OracleCardModel] = Field(
+    main: Counter[CardModel] = Field(
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[OracleCardModel] = Field(
+    side: Counter[CardModel] = Field(
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
-    cmdr: Counter[DecklistCardModel] = Field(
+    cmdr: Counter[CardModel] = Field(
         default=Counter(),
         description="The command zone. Typically 1 card in Commander formats.",
     )
