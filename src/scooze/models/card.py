@@ -22,9 +22,9 @@ class CardModel(BaseModel, validate_assignment=True):
         cmc: float
         color_identity: list[Color]
         colors: list[Color] | None
-        legalities: dict[Format, Legality]
-        mana_cost: str | None
-        name: str
+        legalities: dict[Format, Legality] | None
+        mana_cost: str
+        name: str |
         power: str | None
         toughness: str | None
         type_line: str
@@ -45,9 +45,11 @@ class CardModel(BaseModel, validate_assignment=True):
         description="Color",
     )
     legalities: dict[Format, Legality] | None = Field(
+        default={},
         description="Formats and the legality status of that card in them.",
     )
     mana_cost: str = Field(
+        default="",
         description="Mana cost, as string of mana symbols",
     )
     name: str = Field(
@@ -55,12 +57,15 @@ class CardModel(BaseModel, validate_assignment=True):
         description="Name",
     )
     power: str | None = Field(
+        default=None,
         description="Power of this card, if applicable.",
     )
     toughness: str | None = Field(
+        default=None,
         description="Toughness of this card, if applicable.",
     )
     type_line: str = Field(
+        default="",
         description="Type line",
     )
 
@@ -104,7 +109,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         hand_modifier: str | None
         keywords: list[str]
         layout: str
-        legalities: dict[Format, Legality]
+        legalities: dict[Format, Legality] | None
         life_modifier: str | None
         loyalty: str | None
         mana_cost: str | None
@@ -203,7 +208,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     )
     oracle_id: str | None = Field(
         default="",
-        description="The oracle_id from Scryfall",
+        description="A UUID for this card's oracle identity; shared across prints of the same card but not same-named objects with different gameplay properties.",
     )
     prints_search_uri: str = Field(
         default="",
