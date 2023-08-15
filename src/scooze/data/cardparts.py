@@ -36,7 +36,7 @@ class ImageUris:
 
 class CardFace:
     """
-    Object for a single side of a double-faced OracleCard.
+    Object for a single side of a double-faced OracleCard. Contains only fields that are consistent between card prints.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
