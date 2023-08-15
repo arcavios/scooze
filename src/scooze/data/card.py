@@ -22,7 +22,6 @@ class Card:
         legalities: dict[Format, Legality] | None
         mana_cost: str | None
         name: str | None
-        oracle_id: str | None
         power: str | None
         toughness: str | None
         type_line: str | None
@@ -36,7 +35,6 @@ class Card:
         legalities: dict[Format, Legality] | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
-        oracle_id: str | None = None,
         power: str | None = None,
         toughness: str | None = None,
         type_line: str | None = None,
@@ -47,7 +45,6 @@ class Card:
         self.legalities = legalities
         self.mana_cost = mana_cost
         self.name = name
-        self.oracle_id = oracle_id
         self.power = power
         self.toughnes = toughness
         self.type_line = type_line
