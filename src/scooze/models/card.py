@@ -257,8 +257,12 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
     )  # TODO(#36): convert to enum?
     # legalities defined by base model
-    # life_modifier defined by base model
-    # loyalty defined by base model
+    life_modifier: str | None = Field(
+        description="This card's Vanguard life modifier value, if applicable.",
+    )
+    loyalty: str | None = Field(
+        description="This card's starting planeswalker loyalty, if applicable.",
+    )
     # mana_cost defined by base model
     # name defined by base model
     oracle_text: str | None = Field(
