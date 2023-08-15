@@ -70,96 +70,7 @@ class CardModel(BaseModel, validate_assignment=True):
         return self.name.__hash__()
 
 
-class OracleCardModel(CardModel, validate_assignment=True):
-    """
-    Card subclass containing all information about a unique card in Magic.
-    All information in this class is print-agnostic.
-
-    Attributes:
-        card_faces: list[CardFace] | None
-        cmc: float | None
-        color_identity: list[Color] | None
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
-        edhrec_rank: int | None
-        hand_modifier: str | None
-        keywords: list[str]
-        legalities: dict[Format, Legality]
-        life_modifier: str | None
-        loyalty: str | None
-        mana_cost: str | None
-        name: str | None
-        oracle_id: str | None
-        oracle_text: str | None
-        prints_search_uri: str
-        penny_rank: int | None
-        power: str | None
-        produced_mana: list[Color] | None
-        reserved: bool
-        rulings_uri: str
-        toughness: str | None
-        type_line: str | None
-    """
-
-    card_faces: list[CardFaceModel] | None = Field(
-        description="All component CardFace objects of this card, for multifaced cards.",
-    )
-    # cmc defined by base model
-    # color_identity defined by base model
-    color_indicator: list[Color] | None = Field(
-        description="The colors in this card's color indicator, if it has one.",
-    )
-    # colors defined by base model\
-    edhrec_rank: int | None = Field(
-        description="This card's rank/popularity on EDHREC, if applicable.",
-    )
-    hand_modifier: str | None = Field(
-        description="This card's Vanguard hand size modifier, if applicable.",
-    )
-    keywords: list[str] = Field(
-        default=[],
-        description="Keywords and keyword actions this card uses.",
-    )
-    # legalities defined by base model
-    life_modifier: str | None = Field(
-        description="This card's Vanguard life modifier value, if applicable.",
-    )
-    loyalty: str | None = Field(
-        description="This card's starting planeswalker loyalty, if applicable.",
-    )
-    # mana_cost defined by base model
-    # name defined by base model
-    oracle_id: str | None = Field(
-        default="",
-        description="The oracle_id from Scryfall",
-    )
-    oracle_text: str | None = Field(
-        description="This card's oracle text, if any.",
-    )
-    penny_rank: int | None = Field(
-        description="This card's rank/popularity on Penny Dreadful.",
-    )
-    # power defined by base model
-    prints_search_uri: str = Field(
-        default="",
-        description="A link to begin paginating through all prints of this card in Scryfall's API.",
-    )
-    produced_mana: list[Color] | None = Field(
-        description="Which colors of mana this card can produce.",
-    )
-    reserved: bool = Field(
-        default=False,
-        description="Whether this card is on the Reserved List.",
-    )
-    rulings_uri: str = Field(
-        default="",
-        description="A link to rulings for this card in Scryfall's API.",
-    )
-    # toughness defined by base model
-    # type_line defined by base model
-
-
-class FullCardModel(OracleCardModel, validate_assignment=True):
+class FullCardModel(CardModel, validate_assignment=True):
     """
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
@@ -263,12 +174,11 @@ class FullCardModel(OracleCardModel, validate_assignment=True):
         default="",
         description="Scryfall's unique ID for this card.",
     )
-    # TODO(#36): convert to enum?
     lang: str = Field(
         # TODO(#48): better default?
         default="en",
         description="The language code for this print; see https://scryfall.com/docs/api/languages",
-    )
+    )  # TODO(#36): convert to enum?
     mtgo_id: int | None = Field(
         description="This card's MTGO Catalog ID, if applicable.",
     )
@@ -291,9 +201,18 @@ class FullCardModel(OracleCardModel, validate_assignment=True):
         default="card",
         description="Always `card` for Card objects.",
     )
-    # oracle_id defined by base model
-    # prints_search_uri defined by base model
-    # rulings_uri defined by base model
+    oracle_id: str | None = Field(
+        default="",
+        description="The oracle_id from Scryfall",
+    )
+    prints_search_uri: str = Field(
+        default="",
+        description="A link to begin paginating through all prints of this card in Scryfall's API.",
+    )
+    rulings_uri: str = Field(
+        default="",
+        description="A link to rulings for this card in Scryfall's API.",
+    )
     scryfall_uri: str = Field(
         default="",
         description="A link to the Scryfall page for this card.",
@@ -310,33 +229,55 @@ class FullCardModel(OracleCardModel, validate_assignment=True):
     all_parts: list[RelatedCardModel] | None = Field(
         description="RelatedCard objects for tokens/meld pairs/other associated parts to this card, if applicable.",
     )
-    # card_faces defined by base model
-    # cmc defined by base model
+    card_faces: list[CardFaceModel] | None = Field(
+        description="All component CardFace objects of this card, for multifaced cards.",
+    )  # cmc defined by base model
     # color_identity defined by base model
-    # color_indicator defined by base model
+    color_indicator: list[Color] | None = Field(
+        description="The colors in this card's color indicator, if it has one.",
+    )
     # colors defined by base model
-    # edhrec_rank defined by base model
-    # hand_modifier defined by base model
-    # keywords defined by base model
-    # TODO(#36): convert to enum?
+    edhrec_rank: int | None = Field(
+        description="This card's rank/popularity on EDHREC, if applicable.",
+    )
+    hand_modifier: str | None = Field(
+        description="This card's Vanguard hand size modifier, if applicable.",
+    )
+    keywords: list[str] = Field(
+        default=[],
+        description="Keywords and keyword actions this card uses.",
+    )
     layout: str = Field(
         default="normal",
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
-    )
+    )  # TODO(#36): convert to enum?
     # legalities defined by base model
-    # life_modifier defined by base model
-    # loyalty defined by base model
+    life_modifier: str | None = Field(
+        description="This card's Vanguard life modifier value, if applicable.",
+    )
+    loyalty: str | None = Field(
+        description="This card's starting planeswalker loyalty, if applicable.",
+    )
     # mana_cost defined by base model
     # name defined by base model
-    # oracle_text defined by base model
+    oracle_text: str | None = Field(
+        description="This card's oracle text, if any.",
+    )
     oversized: bool = Field(
         default=False,
         description="Whether this card is oversized.",
     )
-    # penny_rank defined by base model
+    penny_rank: int | None = Field(
+        description="This card's rank/popularity on Penny Dreadful.",
+    )
     # power defined by base model
-    # produced_mana defined by base model
-    # reserved defined by base model
+    produced_mana: list[Color] | None = Field(
+        description="Which colors of mana this card can produce.",
+    )
+    reserved: bool = Field(
+        default=False,
+        description="Whether this card is on the Reserved List.",
+    )
     # toughness defined by base model
     # type_line defined by base model
 
@@ -377,10 +318,9 @@ class FullCardModel(OracleCardModel, validate_assignment=True):
     flavor_text: str | None = Field(
         description="Flavor text on this card, if any.",
     )
-    # TODO(#36): convert to enum?
     frame_effects: list[str] | None = Field(
         description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
-    )
+    )  # TODO(#36): convert to enum?
     frame: str = Field(
         description="This card's frame layout; see https://scryfall.com/docs/api/frames",
     )
@@ -396,10 +336,9 @@ class FullCardModel(OracleCardModel, validate_assignment=True):
     illustation_id: str | None = Field(
         description="A UUID for the particlar artwork on this print, consistent across art reprints.",
     )
-    # TODO(#36): convert to enum?
     image_status: str = Field(
         description="The quality/status of images available for this card. Either missing, placeholder, lowres, or highres_scan.",
-    )
+    )  # TODO(#36): convert to enum?
     image_uris: ImageUrisModel | None = Field(
         description="Links to images of this card in various qualities.",
     )
@@ -425,20 +364,18 @@ class FullCardModel(OracleCardModel, validate_assignment=True):
     promo_types: list[str] | None = Field(
         description="Which promo categories this print falls into, if any.",
     )
-    # TODO(#47): convert to object?
     purchase_uris: dict[str, str] = Field(
         default={},
         description="Links to purchase this print from marketplaces.",
-    )
+    )  # TODO(#47): convert to object?
     rarity: Rarity = Field(
         # TODO(#48): better default?
         description="The rarity of this print.",
     )
-    # TODO(#47): convert to object?
     related_uris: dict[str, str] = Field(
         default={},
         description="Links to this print's listing on other online resources.",
-    )
+    )  # TODO(#47): convert to object?
     released_at: datetime = Field(
         # TODO(#48): better default?
         description="The date this card was first released.",
@@ -451,10 +388,9 @@ class FullCardModel(OracleCardModel, validate_assignment=True):
         default="",
         description="Link to the Scryfall set page for the set of this print.",
     )
-    # TODO(#36): convert to enum?
     security_stamp: str | None = Field(
         description="Security stamp on this card, if any.",
-    )
+    )  # TODO(#36): convert to enum?
     set_name: str = Field(
         default="",
         description="Full name of the set this print belongs to.",
