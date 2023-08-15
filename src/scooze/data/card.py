@@ -1,6 +1,13 @@
 from datetime import datetime
 
-from scooze.data.cardparts import CardFace, ImageUris, Preview, Prices, RelatedCard
+from scooze.data.cardparts import (
+    CardFace,
+    FullCardFace,
+    ImageUris,
+    Preview,
+    Prices,
+    RelatedCard,
+)
 from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 
 
@@ -9,66 +16,129 @@ class Card:
     Object for a basic Card with minimal fields.
 
     Attributes:
-       oracle_id: str | None
-       cmc: float | None
-       colors: list[Color] | None
-       name: str | None
-    """
-
-    def __init__(
-        self,
-        oracle_id: str | None = None,
-        name: str | None = None,
-        cmc: float | None = None,
-        colors: list[Color] | None = None,
-    ):
-        self.oracle_id = oracle_id
-        self.name = name
-        self.cmc = cmc
-        self.colors = colors
-
-    def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
-        return self.name.__hash__()
-
-
-class DecklistCard(Card):
-    """
-    Card subclass intended for using card data in a decklist-informed setting or similar.
-    All information in this class is print-agnostic.
-
-    Attributes:
-        oracle_id: str | None
-        name: str | None
         cmc: float | None
+        color_identity: list[Color] | None
         colors: list[Color] | None
         legalities: dict[Format, Legality] | None
         mana_cost: str | None
-        oracle_text: str | None
+        name: str | None
+        oracle_id: str | None
+        power: str | None
+        toughness: str | None
         type_line: str | None
     """
 
     def __init__(
         self,
-        oracle_id: str | None = None,
-        name: str | None = None,
         cmc: float | None = None,
+        color_identity: list[Color] | None = None,
         colors: list[Color] | None = None,
         legalities: dict[Format, Legality] | None = None,
         mana_cost: str | None = None,
-        oracle_text: str | None = None,
+        name: str | None = None,
+        oracle_id: str | None = None,
+        power: str | None = None,
+        toughness: str | None = None,
         type_line: str | None = None,
     ):
-        self.oracle_id = oracle_id
-        self.name = name
         self.cmc = cmc
+        self.color_identity = color_identity
         self.colors = colors
         self.legalities = legalities
         self.mana_cost = mana_cost
+        self.name = name
+        self.oracle_id = oracle_id
+        self.power = power
+        self.toughnes = toughness
+        self.type_line = type_line
+
+    def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
+        return self.name.__hash__()
+
+
+class OracleCard(Card):
+    """
+    Card subclass intended for using card data in a decklist-informed setting or similar.
+    All information in this class is print-agnostic.
+
+    Attributes:
+        card_faces: list[CardFace] | None
+        cmc: float | None
+        color_identity: list[Color] | None
+        color_indicator: list[Color] | None
+        colors: list[Color] | None
+        edhrec_rank: int | None
+        hand_modifier: str | None
+        keywords: list[str]
+        legalities: dict[Format, Legality]
+        life_modifier: str | None
+        loyalty: str | None
+        mana_cost: str | None
+        name: str | None
+        oracle_id: str | None
+        oracle_text: str | None
+        prints_search_uri: str
+        penny_rank: int | None
+        power: str | None
+        produced_mana: list[Color] | None
+        reserved: bool
+        rulings_uri: str
+        toughness: str | None
+        type_line: str | None
+    """
+
+    def __init__(
+        self,
+        card_faces: list[CardFace] | None = None,
+        cmc: float | None = None,
+        color_identity: list[Color] | None = None,
+        color_indicator: list[Color] | None = None,
+        colors: list[Color] | None = None,
+        edhrec_rank: int | None = None,
+        hand_modifier: str | None = None,
+        keywords: list[str] = None,
+        legalities: dict[Format, Legality] = None,
+        life_modifier: str | None = None,
+        loyalty: str | None = None,
+        mana_cost: str | None = None,
+        name: str | None = None,
+        oracle_id: str | None = None,
+        oracle_text: str | None = None,
+        prints_search_uri: str = "",
+        penny_rank: int | None = None,
+        power: str | None = None,
+        produced_mana: list[Color] | None = None,
+        reserved: bool = False,
+        rulings_uri: str = "",
+        toughness: str | None = None,
+        type_line: str | None = None,
+    ):
+        self.card_faces = card_faces
+        self.cmc = cmc
+        self.color_identity = color_identity
+        self.color_indicator = color_indicator
+        self.colors = colors
+        self.edhrec_rank = edhrec_rank
+        self.hand_modifier = hand_modifier
+        self.keywords = keywords
+        self.legalities = legalities
+        self.life_modifier = life_modifier
+        self.loyalty = loyalty
+        self.mana_cost = mana_cost
+        self.name = name
+        self.oracle_id = oracle_id
         self.oracle_text = oracle_text
+        self.prints_search_uri = prints_search_uri
+        self.penny_rank = penny_rank
+        self.power = power
+        self.produced_mana = produced_mana
+        self.reserved = reserved
+        self.rulings_uri = rulings_uri
+        self.toughness = toughness
         self.type_line = type_line
 
 
-class FullCard(DecklistCard):
+class FullCard(OracleCard):
     """
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
@@ -93,7 +163,7 @@ class FullCard(DecklistCard):
 
         ### Gameplay fields
         all_parts: list[RelatedCard] | None
-        card_faces: list[CardFace] | None
+        card_faces: list[FullCardFace] | None
         cmc: float
         color_identity: list[Color]
         color_indicator: list[Color] | None
@@ -181,9 +251,9 @@ class FullCard(DecklistCard):
         scryfall_uri: str = "",
         uri: str = "",
         all_parts: list[RelatedCard] | None = None,
-        card_faces: list[CardFace] | None = None,
+        card_faces: list[FullCardFace] | None = None,
         cmc: float | None = None,
-        color_identity: list[Color] = [],
+        color_identity: list[Color] | None = None,
         color_indicator: list[Color] | None = None,
         colors: list[Color] | None = None,
         edhrec_rank: int | None = None,

@@ -36,7 +36,71 @@ class ImageUris:
 
 class CardFace:
     """
-    Object for a single side of a double-faced Card object.
+    TODO: Updated OracleCard fields
+    within card face:
+    cmc
+    color_indicator
+    colors
+    (potentially layout)
+    loyalty
+    mana_cost
+    name
+    oracle_id
+    oracle_text
+    power
+    toughness
+    type_line
+    """
+
+    """
+    Object for a single side of a double-faced OracleCard.
+
+    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
+
+    Attributes:
+        cmc: float | None
+        color_indicator: list[Color] | None
+        colors: list[Color] | None
+        loyalty: int | None
+        mana_cost: str | None
+        name: str | None
+        oracle_id: str | None
+        oracle_text: str | None
+        power: str | None
+        toughness: str | None
+        type_line: str | None
+    """
+
+    def __init__(
+        self,
+        cmc: float | None = None,
+        color_indicator: list[enums.Color] | None = None,
+        colors: list[enums.Color] | None = None,
+        loyalty: int | None = None,
+        mana_cost: str | None = None,
+        name: str | None = None,
+        oracle_id: str | None = None,
+        oracle_text: str | None = None,
+        power: str | None = None,
+        toughness: str | None = None,
+        type_line: str | None = None,
+    ):
+        self.cmc = cmc
+        self.color_indicator = color_indicator
+        self.colors = colors
+        self.loyalty = loyalty
+        self.mana_cost = mana_cost
+        self.name = name
+        self.oracle_id = oracle_id
+        self.oracle_text = oracle_text
+        self.power = power
+        self.toughness = toughness
+        self.type_line = type_line
+
+
+class FullCardFace(CardFace):
+    """
+    Object for a single side of a double-faced FullCard object.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
