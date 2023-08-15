@@ -5,7 +5,7 @@ from sys import maxsize
 import pytest
 from pydantic_core import ValidationError
 from scooze.enums import Format
-from scooze.models.card import DecklistCardModel
+from scooze.models.card import OracleCardModel
 from scooze.models.deck import Deck, DecklistFormatter, InThe
 
 # region Fixtures
@@ -28,7 +28,7 @@ def today() -> datetime:
 
 @pytest.fixture
 def existing_card() -> str:
-    return DecklistCardModel.model_construct(
+    return OracleCardModel.model_construct(
         name="Expedition Map",
         mana_value=1,
     )
@@ -36,7 +36,7 @@ def existing_card() -> str:
 
 @pytest.fixture
 def new_card() -> str:
-    return DecklistCardModel.model_construct(
+    return OracleCardModel.model_construct(
         name="Primeval Titan",
         mana_value=6,
         colors=["G"],
@@ -52,9 +52,9 @@ def main_string() -> str:
 def main_cards() -> Counter:
     main_cards = Counter(
         {
-            DecklistCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
-            DecklistCardModel.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
-            DecklistCardModel.model_construct(name="Forest", mana_value=0): 56,
+            OracleCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
+            OracleCardModel.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
+            OracleCardModel.model_construct(name="Forest", mana_value=0): 56,
         }
     )
     return main_cards
@@ -69,10 +69,10 @@ def side_string() -> str:
 def side_cards() -> Counter:
     side_cards = Counter(
         {
-            DecklistCardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
-            DecklistCardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
-            DecklistCardModel.model_construct(name="Forest", mana_value=0): 9,
-            DecklistCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
+            OracleCardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
+            OracleCardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
+            OracleCardModel.model_construct(name="Forest", mana_value=0): 9,
+            OracleCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
         }
     )
     return side_cards

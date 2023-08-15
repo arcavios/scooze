@@ -13,7 +13,7 @@ from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rar
 
 class Card:
     """
-    Object for a basic Card with minimal fields.
+    A basic Card object with minimal fields. Contains all information you might use to sort a decklist.
 
     Attributes:
         cmc: float | None
@@ -55,7 +55,7 @@ class Card:
 
 class OracleCard(Card):
     """
-    Card subclass intended for using card data in a decklist-informed setting or similar.
+    Card subclass containing all information about a unique card in Magic.
     All information in this class is print-agnostic.
 
     Attributes:

@@ -14,34 +14,54 @@ from scooze.models.cardparts import (
 )
 
 
-class BaseCardModel(BaseModel, validate_assignment=True):
+class CardModel(BaseModel, validate_assignment=True):
     """
-    Model for a basic Card object with minimal fields.
+    Model for a basic Card object with minimal fields. Contains all information you might use to sort a decklist.
 
     Attributes:
-       oracle_id: str
-       cmc: float
-       colors: list[Color]
-       name: str
+        cmc: float | None
+        color_identity: list[Color] | None
+        colors: list[Color] | None
+        legalities: dict[Format, Legality] | None
+        mana_cost: str | None
+        name: str | None
+        power: str | None
+        toughness: str | None
+        type_line: str | None
     """
 
     model_config = model_utils.get_base_model_config()
 
-    oracle_id: str | None = Field(
-        default="",
-        description="The oracle_id from Scryfall",
-    )
     cmc: float | None = Field(
         default=0.0,
         description="Mana Value/Converted Mana Cost",
+    )
+    color_identity: list[Color] = Field(
+        default=[],
+        description="This card's color identity, for Commander variant deckbuilding.",
     )
     colors: list[Color] | None = Field(
         default=[],
         description="Color",
     )
+    legalities: dict[Format, Legality] | None = Field(
+        description="Formats and the legality status of that card in them.",
+    )
+    mana_cost: str = Field(
+        description="Mana cost, as string of mana symbols",
+    )
     name: str = Field(
         default="",
         description="Name",
+    )
+    power: str | None = Field(
+        description="Power of this card, if applicable.",
+    )
+    toughness: str | None = Field(
+        description="Toughness of this card, if applicable.",
+    )
+    type_line: str = Field(
+        description="Type line",
     )
 
     # TODO(#46): add Card field validators
@@ -50,39 +70,96 @@ class BaseCardModel(BaseModel, validate_assignment=True):
         return self.name.__hash__()
 
 
-class DecklistCardModel(BaseCardModel, validate_assignment=True):
+class OracleCardModel(CardModel, validate_assignment=True):
     """
-    Card subclass intended for using card data in a decklist-informed setting or similar.
+    Card subclass containing all information about a unique card in Magic.
     All information in this class is print-agnostic.
 
     Attributes:
+        card_faces: list[CardFace] | None
         cmc: float | None
+        color_identity: list[Color] | None
+        color_indicator: list[Color] | None
         colors: list[Color] | None
-        legalities: dict[Format, Legality] | None
-        mana_cost: str
-        name: str
+        edhrec_rank: int | None
+        hand_modifier: str | None
+        keywords: list[str]
+        legalities: dict[Format, Legality]
+        life_modifier: str | None
+        loyalty: str | None
+        mana_cost: str | None
+        name: str | None
+        oracle_id: str | None
         oracle_text: str | None
-        type_line: str
+        prints_search_uri: str
+        penny_rank: int | None
+        power: str | None
+        produced_mana: list[Color] | None
+        reserved: bool
+        rulings_uri: str
+        toughness: str | None
+        type_line: str | None
     """
 
+    card_faces: list[CardFaceModel] | None = Field(
+        description="All component CardFace objects of this card, for multifaced cards.",
+    )
     # cmc defined by base model
-    # colors defined by base model
-    legalities: dict[Format, Legality] | None = Field(
-        description="Formats and the legality status of that card in them.",
+    # color_identity defined by base model
+    color_indicator: list[Color] | None = Field(
+        description="The colors in this card's color indicator, if it has one.",
     )
-    mana_cost: str = Field(
-        description="Mana cost, as string of mana symbols",
+    # colors defined by base model\
+    edhrec_rank: int | None = Field(
+        description="This card's rank/popularity on EDHREC, if applicable.",
     )
+    hand_modifier: str | None = Field(
+        description="This card's Vanguard hand size modifier, if applicable.",
+    )
+    keywords: list[str] = Field(
+        default=[],
+        description="Keywords and keyword actions this card uses.",
+    )
+    # legalities defined by base model
+    life_modifier: str | None = Field(
+        description="This card's Vanguard life modifier value, if applicable.",
+    )
+    loyalty: str | None = Field(
+        description="This card's starting planeswalker loyalty, if applicable.",
+    )
+    # mana_cost defined by base model
     # name defined by base model
+    oracle_id: str | None = Field(
+        default="",
+        description="The oracle_id from Scryfall",
+    )
     oracle_text: str | None = Field(
         description="This card's oracle text, if any.",
     )
-    type_line: str = Field(
-        description="Type line",
+    penny_rank: int | None = Field(
+        description="This card's rank/popularity on Penny Dreadful.",
     )
+    # power defined by base model
+    prints_search_uri: str = Field(
+        default="",
+        description="A link to begin paginating through all prints of this card in Scryfall's API.",
+    )
+    produced_mana: list[Color] | None = Field(
+        description="Which colors of mana this card can produce.",
+    )
+    reserved: bool = Field(
+        default=False,
+        description="Whether this card is on the Reserved List.",
+    )
+    rulings_uri: str = Field(
+        default="",
+        description="A link to rulings for this card in Scryfall's API.",
+    )
+    # toughness defined by base model
+    # type_line defined by base model
 
 
-class FullCardModel(DecklistCardModel, validate_assignment=True):
+class FullCardModel(OracleCardModel, validate_assignment=True):
     """
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
@@ -215,14 +292,8 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         description="Always `card` for Card objects.",
     )
     # oracle_id defined by base model
-    prints_search_uri: str = Field(
-        default="",
-        description="A link to begin paginating through all prints of this card in Scryfall's API.",
-    )
-    rulings_uri: str = Field(
-        default="",
-        description="A link to rulings for this card in Scryfall's API.",
-    )
+    # prints_search_uri defined by base model
+    # rulings_uri defined by base model
     scryfall_uri: str = Field(
         default="",
         description="A link to the Scryfall page for this card.",
@@ -239,40 +310,22 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     all_parts: list[RelatedCardModel] | None = Field(
         description="RelatedCard objects for tokens/meld pairs/other associated parts to this card, if applicable.",
     )
-    card_faces: list[CardFaceModel] | None = Field(
-        description="All component CardFace objects of this card, for multifaced cards.",
-    )
+    # card_faces defined by base model
     # cmc defined by base model
-    color_identity: list[Color] = Field(
-        default=[],
-        description="This card's color identity, for Commander variant deckbuilding.",
-    )
-    color_indicator: list[Color] | None = Field(
-        description="The colors in this card's color indicator, if it has one.",
-    )
+    # color_identity defined by base model
+    # color_indicator defined by base model
     # colors defined by base model
-    edhrec_rank: int | None = Field(
-        description="This card's rank/popularity on EDHREC, if applicable.",
-    )
-    hand_modifier: str | None = Field(
-        description="This card's Vanguard hand size modifier, if applicable.",
-    )
-    keywords: list[str] = Field(
-        default=[],
-        description="Keywords and keyword actions this card uses.",
-    )
+    # edhrec_rank defined by base model
+    # hand_modifier defined by base model
+    # keywords defined by base model
     # TODO(#36): convert to enum?
     layout: str = Field(
         default="normal",
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
     )
     # legalities defined by base model
-    life_modifier: str | None = Field(
-        description="This card's Vanguard life modifier value, if applicable.",
-    )
-    loyalty: str | None = Field(
-        description="This card's starting planeswalker loyalty, if applicable.",
-    )
+    # life_modifier defined by base model
+    # loyalty defined by base model
     # mana_cost defined by base model
     # name defined by base model
     # oracle_text defined by base model
@@ -280,22 +333,11 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
         default=False,
         description="Whether this card is oversized.",
     )
-    penny_rank: int | None = Field(
-        description="This card's rank/popularity on Penny Dreadful.",
-    )
-    power: str | None = Field(
-        description="Power of this card, if applicable.",
-    )
-    produced_mana: list[Color] | None = Field(
-        description="Which colors of mana this card can produce.",
-    )
-    reserved: bool = Field(
-        default=False,
-        description="Whether this card is on the Reserved List.",
-    )
-    toughness: str | None = Field(
-        description="Toughness of this card, if applicable.",
-    )
+    # penny_rank defined by base model
+    # power defined by base model
+    # produced_mana defined by base model
+    # reserved defined by base model
+    # toughness defined by base model
     # type_line defined by base model
 
     # endregion
@@ -459,11 +501,11 @@ class FullCardModel(DecklistCardModel, validate_assignment=True):
     # endregion
 
 
-class CardModelIn(BaseCardModel):
+class CardModelIn(CardModel):
     pass
 
 
-class CardModelOut(BaseCardModel):
+class CardModelOut(CardModel):
     id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
         default=None,
         alias="_id",
