@@ -1,12 +1,9 @@
 from collections import Counter
 from datetime import date
-from typing import Annotated
 
 import scooze.models.utils as model_utils
-from bson import ObjectId
 from pydantic import BaseModel, Field, model_validator
-from scooze.enums import ExtendedEnum, Format
-from scooze.models.card import CardModel
+from scooze.enums import Format
 from scooze.models.matchdata import MatchData
 from scooze.utils import get_logger
 
@@ -57,15 +54,15 @@ class DeckModel(BaseModel, validate_assignment=True):
         default=None,
         description="Match data for this Deck.",
     )
-    main: Counter[CardModel] = Field(
+    main: Counter[model_utils.ObjectId] = Field(
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[CardModel] = Field(
+    side: Counter[model_utils.ObjectId] = Field(
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
-    cmdr: Counter[CardModel] = Field(
+    cmdr: Counter[model_utils.ObjectId] = Field(
         default=Counter(),
         description="The command zone. Typically 1 card in Commander formats.",
     )
@@ -293,7 +290,7 @@ class DeckModelIn(DeckModel):
 
 
 class DeckModelOut(DeckModel):
-    id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
+    id: model_utils.ObjectId = Field(
         default=None,
         alias="_id",
     )

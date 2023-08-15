@@ -1,8 +1,8 @@
 from enum import auto
 from sys import maxsize
-from typing import Any
+from typing import Annotated, Any
 
-from bson import ObjectId
+from bson import ObjectId as BsonObjectId
 from pydantic import ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
@@ -159,7 +159,7 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
 class ObjectIdPydanticAnnotation:
     @classmethod
     def validate_object_id(cls, v: Any, handler) -> ObjectId:
-        if isinstance(v, ObjectId):
+        if isinstance(v, BsonObjectId):
             return v
 
         s = handler(v)
@@ -180,6 +180,10 @@ class ObjectIdPydanticAnnotation:
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, handler: GetJsonSchemaHandler) -> JsonSchemaValue:
         return handler(core_schema.str_schema())
+
+
+class ObjectId(Annotated[BsonObjectId, ObjectIdPydanticAnnotation]):
+    pass
 
 
 # endregion

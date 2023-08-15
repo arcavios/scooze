@@ -1,7 +1,8 @@
 from collections import Counter
-from scooze.data.card import Card
 from sys import maxsize
+
 import scooze.utils as utils
+from scooze.data.card import Card
 
 
 class DeckPart:
