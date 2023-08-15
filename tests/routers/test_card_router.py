@@ -17,7 +17,6 @@ def client() -> TestClient:
 def request_body_card() -> CardModelIn:
     return CardModelIn.model_validate(
         {
-            "oracleId": "1",
             "name": "Snapcaster Mage",
             "colors": ["U"],
             "cmc": 2.0,

@@ -44,15 +44,6 @@ async def get_card_by_id(card_id: str):
         return JSONResponse({"message": f"Card with id {card_id} not found."}, status_code=404)
 
 
-@router.get("/oracle_id/{oracle_id}")
-async def get_card_by_oracle_id(oracle_id: str):
-    card = await db.get_card_by_property(property_name="oracleId", value=oracle_id)
-    if card:
-        return JSONResponse(card.model_dump(mode="json"), status_code=200)
-    else:
-        return JSONResponse({"message": f"Card with oracle_id {oracle_id} not found."}, status_code=404)
-
-
 @router.get("/name/{card_name}")
 async def get_card_by_name(card_name: str):
     card = await db.get_card_by_property(property_name="name", value=card_name)
