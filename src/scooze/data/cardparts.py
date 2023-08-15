@@ -36,23 +36,6 @@ class ImageUris:
 
 class CardFace:
     """
-    TODO: Updated OracleCard fields
-    within card face:
-    cmc
-    color_indicator
-    colors
-    (potentially layout)
-    loyalty
-    mana_cost
-    name
-    oracle_id
-    oracle_text
-    power
-    toughness
-    type_line
-    """
-
-    """
     Object for a single side of a double-faced OracleCard.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
