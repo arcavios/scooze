@@ -57,11 +57,11 @@ class CardModel(BaseModel, validate_assignment=True):
         description="Name",
     )
     power: str | None = Field(
-        default=None,
+        default="",
         description="Power of this card, if applicable.",
     )
     toughness: str | None = Field(
-        default=None,
+        default="",
         description="Toughness of this card, if applicable.",
     )
     type_line: str = Field(
