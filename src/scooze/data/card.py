@@ -46,7 +46,7 @@ class Card:
         self.mana_cost = mana_cost
         self.name = name
         self.power = power
-        self.toughnes = toughness
+        self.toughness = toughness
         self.type_line = type_line
 
     def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
