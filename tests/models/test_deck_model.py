@@ -36,10 +36,10 @@ def main_cards() -> Counter:
 def side_cards() -> Counter:
     side_cards = Counter(
         {
-            DecklistCardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
-            DecklistCardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
-            DecklistCardModel.model_construct(name="Forest", mana_value=0): 9,
-            DecklistCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
+            OracleCardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
+            OracleCardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
+            OracleCardModel.model_construct(name="Forest", mana_value=0): 9,
+            OracleCardModel.model_construct(name="Expedition Map", mana_value=1): 2,
         }
     )
     return side_cards

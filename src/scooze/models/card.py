@@ -14,7 +14,7 @@ from scooze.models.cardparts import (
 )
 
 
-class BaseCardModel(BaseModel, validate_assignment=True):
+class CardModel(BaseModel, validate_assignment=True):
     """
     Model for a basic Card object with minimal fields. Contains all information you might use to sort a decklist.
 
@@ -257,12 +257,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
     )  # TODO(#36): convert to enum?
     # legalities defined by base model
-    life_modifier: str | None = Field(
-        description="This card's Vanguard life modifier value, if applicable.",
-    )
-    loyalty: str | None = Field(
-        description="This card's starting planeswalker loyalty, if applicable.",
-    )
+    # life_modifier defined by base model
+    # loyalty defined by base model
     # mana_cost defined by base model
     # name defined by base model
     oracle_text: str | None = Field(
@@ -442,11 +438,11 @@ class FullCardModel(CardModel, validate_assignment=True):
     # endregion
 
 
-class CardModelIn(BaseCardModel):
+class CardModelIn(CardModel):
     pass
 
 
-class CardModelOut(BaseCardModel):
+class CardModelOut(CardModel):
     id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
         default=None,
         alias="_id",
