@@ -1,8 +1,9 @@
 from collections import Counter
 
 import pytest
-from scooze.data.card import OracleCard
-from scooze.data.deck import Deck, DeckPart
+from scooze.card import OracleCard
+from scooze.deck import Deck
+from scooze.deckpart import DeckPart
 from scooze.enums import Color, Format
 
 # NOTE: These fixtures can be used in any tests in this directory.

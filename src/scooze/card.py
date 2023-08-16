@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from scooze.data.cardparts import (
+from scooze.cardparts import (
     CardFace,
     FullCardFace,
     ImageUris,

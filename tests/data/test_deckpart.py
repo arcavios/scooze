@@ -2,8 +2,8 @@ from collections import Counter
 from sys import maxsize
 
 import pytest
-from scooze.data.card import Card
-from scooze.data.deckpart import DeckPart
+from scooze.card import Card
+from scooze.deckpart import DeckPart
 from scooze.enums import Color
 
 

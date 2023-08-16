@@ -1,8 +1,8 @@
 from collections import Counter
 from sys import maxsize
 
-from scooze.data.card import Card
-from scooze.data.deckpart import DeckPart
+from scooze.card import Card
+from scooze.deckpart import DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe
 
 
@@ -214,10 +214,11 @@ class Deck:
                 # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
             case DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
-                cmdr_prefix = "\n"
+                cmdr_prefix = ""
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
             case _:
                 sb_prefix = ""  # Default
+                cmdr_prefix = "Commander\n" # Default
         sb_prefix = "\n" + sb_prefix
         cmdr_suffix = "\n"
 
