@@ -210,16 +210,15 @@ class Deck:
         match export_format:
             case DecklistFormatter.ARENA:
                 sb_prefix = "Sideboard\n"
+                cmdr_prefix = "Commander\n"
                 # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
             case DecklistFormatter.MTGO:
                 sb_prefix = "SIDEBOARD:\n"
+                cmdr_prefix = "\n"
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
             case _:
                 sb_prefix = ""  # Default
         sb_prefix = "\n" + sb_prefix
-
-        # TODO(#64): may differ between MTGO, Arena, plain text
-        cmdr_prefix = "Commander\n"
         cmdr_suffix = "\n"
 
         # Build the decklist string
