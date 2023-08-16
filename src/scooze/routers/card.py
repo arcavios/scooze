@@ -1,7 +1,7 @@
 import scooze.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from scooze.models.card import CardIn
+from scooze.models.card import CardModelIn
 
 router = APIRouter(
     prefix="/card",
@@ -24,7 +24,7 @@ async def card_root():
 
 
 @router.post("/add")
-async def add_card(card: CardIn):
+async def add_card(card: CardModelIn):
     new_card = await db.add_card(card=card)
     if new_card:
         return JSONResponse(new_card.model_dump(mode="json"), status_code=200)
@@ -44,15 +44,6 @@ async def get_card_by_id(card_id: str):
         return JSONResponse({"message": f"Card with id {card_id} not found."}, status_code=404)
 
 
-@router.get("/oracle_id/{oracle_id}")
-async def get_card_by_oracle_id(oracle_id: str):
-    card = await db.get_card_by_property(property_name="oracleId", value=oracle_id)
-    if card:
-        return JSONResponse(card.model_dump(mode="json"), status_code=200)
-    else:
-        return JSONResponse({"message": f"Card with oracle_id {oracle_id} not found."}, status_code=404)
-
-
 @router.get("/name/{card_name}")
 async def get_card_by_name(card_name: str):
     card = await db.get_card_by_property(property_name="name", value=card_name)
@@ -66,7 +57,7 @@ async def get_card_by_name(card_name: str):
 
 
 @router.patch("/update/{card_id}")
-async def update_card(card_id: str, card: CardIn):
+async def update_card(card_id: str, card: CardModelIn):
     updated_card = await db.update_card(id=card_id, card=card)
 
     if updated_card:
