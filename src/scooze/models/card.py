@@ -83,7 +83,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     Attributes:
         ### Core fields
         arena_id: int | None
-        id: str
+        scryfall_id: str
         lang: str
         mtgo_id: int | None
         mtgo_foil_id: int | None
@@ -175,9 +175,10 @@ class FullCardModel(CardModel, validate_assignment=True):
     arena_id: int | None = Field(
         description="This card's Arena ID, if applicable.",
     )
-    id: str = Field(
+    scryfall_id: str = Field(
         default="",
         description="Scryfall's unique ID for this card.",
+        alias="id",
     )
     lang: str = Field(
         # TODO(#48): better default?

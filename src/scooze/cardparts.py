@@ -213,7 +213,7 @@ class RelatedCard:
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
-        scryfall_id: str | None
+        scryfall_id: str
         object: str | None
         component: str | None
         name: str | None
@@ -223,15 +223,16 @@ class RelatedCard:
 
     def __init__(
         self,
-        scryfall_id: str | None = None,
-        _object: str | None = None,
+        scryfall_id: str = "",
+        id: str = "",
+        object: str | None = None,
         component: str | None = None,
         name: str | None = None,
         type_line: str | None = None,
         uri: str | None = None,
     ):
-        self.scryfall_id = scryfall_id
-        self.object = _object
+        self.scryfall_id = scryfall_id if scryfall_id else id
+        self.object = object
         self.component = component  # TODO(#36): convert to enum?
         self.name = name
         self.type_line = type_line

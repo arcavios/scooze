@@ -190,7 +190,7 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
-        id: str
+        scryfall_id: str
         object: str
         component: str
         name: str
@@ -198,8 +198,9 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
         uri: str
     """
 
-    id: str = Field(
+    scryfall_id: str = Field(
         description="ID of linked component.",
+        alias="id",
     ) # NOTE: Scryfall ID
     object: str = Field(
         description="Always `related_card` for this object.",

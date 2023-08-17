@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from scooze.data.cardparts import (
+from scooze.cardparts import (
     CardFace,
     FullCardFace,
     ImageUris,
@@ -232,8 +232,14 @@ class FullCard(OracleCard):
 
     def __init__(
         self,
+        # Deprecated/Unsupported Fields
+        artist_ids: list[str] = None,
+        foil: bool = None,
+        nonfoil: bool = None,
+        # Core Fields
         arena_id: int | None = None,
         scryfall_id: str = "",
+        id: str = "",
         lang: str = "en",  # TODO(#36): convert to enum?
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
@@ -241,12 +247,13 @@ class FullCard(OracleCard):
         tcgplayer_id: int | None = None,
         tcgplayer_etched_id: int | None = None,
         cardmarket_id: int | None = None,
-        _object: str = "card",
+        object: str = "card",
         oracle_id: str | None = None,
         prints_search_uri: str = "",
         rulings_uri: str = "",
         scryfall_uri: str = "",
         uri: str = "",
+        # Gaeplay Fields
         all_parts: list[RelatedCard] | None = None,
         card_faces: list[FullCardFace] | None = None,
         cmc: float | None = None,
@@ -270,6 +277,7 @@ class FullCard(OracleCard):
         reserved: bool = False,
         toughness: str | None = None,
         type_line: str | None = None,
+        # Print Fields
         artist: str | None = None,
         attraction_lights: list[int] | None = None,
         booster: bool | None = None,
@@ -307,7 +315,7 @@ class FullCard(OracleCard):
         set_search_uri: str = "",
         set_type: str = "",
         set_uri: str = "",
-        _set: str = "",
+        set: str = "",
         set_id: str = "",
         story_spotlight: bool = False,
         textless: bool = False,
@@ -318,7 +326,7 @@ class FullCard(OracleCard):
         # region Core Fields
 
         self.arena_id = arena_id
-        self.scryfall_id = scryfall_id
+        self.scryfall_id = scryfall_id if scryfall_id else id
         self.lang = lang
         self.mtgo_id = mtgo_id
         self.mtgo_foil_id = mtgo_foil_id
@@ -326,7 +334,7 @@ class FullCard(OracleCard):
         self.tcgplayer_id = tcgplayer_id
         self.tcgplayer_etched_id = tcgplayer_etched_id
         self.cardmarket_id = cardmarket_id
-        self.object = _object
+        self.object = object
         self.oracle_id = oracle_id
         self.prints_search_uri = prints_search_uri
         self.rulings_uri = rulings_uri
@@ -402,7 +410,7 @@ class FullCard(OracleCard):
         self.set_search_uri = set_search_uri
         self.set_type = set_type
         self.set_uri = set_uri
-        self.set = _set
+        self.set = set
         self.set_id = set_id
         self.story_spotlight = story_spotlight
         self.textless = textless
