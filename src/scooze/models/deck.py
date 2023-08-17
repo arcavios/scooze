@@ -4,8 +4,6 @@ from datetime import date
 import scooze.models.utils as model_utils
 from pydantic import BaseModel, Field, model_validator
 from scooze.enums import Format
-from scooze.models.matchdata import MatchData
-from scooze.utils import get_logger
 
 
 class DeckModel(BaseModel, validate_assignment=True):
@@ -20,8 +18,6 @@ class DeckModel(BaseModel, validate_assignment=True):
         The format legality of the cards in this DeckModel.
     date_played : date
         The date this DeckModel was played.
-    matches : MatchData
-        Match data for this DeckModel.
     main : Counter[ObjectId]
         The main deck. Typically 60 cards minimum.
     side : Counter[ObjectId]
@@ -43,10 +39,6 @@ class DeckModel(BaseModel, validate_assignment=True):
     date_played: date = Field(
         default=None,
         description="The date this Deck was played.",
-    )
-    matches: MatchData = Field(  # TODO(#22): replace with List[MatchData] with opposing deck info not just (w,l,d)
-        default=None,
-        description="Match data for this Deck.",
     )
     main: Counter[model_utils.ObjectId] = Field(
         default=Counter(),
@@ -103,7 +95,6 @@ class DeckModel(BaseModel, validate_assignment=True):
             self.archetype == other.archetype
             and self.format == other.format
             and self.date_played == other.date_played
-            and self.matches == other.matches
             and self.main == other.main
             and self.side == other.side
             and self.cmdr == other.cmdr

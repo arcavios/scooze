@@ -279,7 +279,7 @@ def test_remove_cards_cmdr(cmdr_part, cmdr_cards):
 
 
 def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    assert deck_modern_4c.export() == f"{main_modern_4c_str}\n{side_modern_4c_str}"
+    assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
 
 def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
