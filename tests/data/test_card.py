@@ -27,11 +27,19 @@ def pearl(power9) -> dict:
 
 
 def test_full_card_model_from_json(pearl):
-    fullcard = FullCardModel.model_construct(**pearl)
-    pprint(fullcard)
+    fullcardmodel = FullCardModel.model_construct(**pearl)
+    pprint(fullcardmodel)
+    pprint(fullcardmodel.scryfall_id)
     assert False
 
 def test_full_card_obj_from_json(pearl):
     fullcard = FullCard(**pearl)
     pprint(fullcard.__dict__)
+    assert False
+
+def test_model_from_obj(pearl):
+    fullcardobj = FullCard(**pearl)
+    fullcardmodel = FullCardModel.model_construct(**fullcardobj.__dict__)
+    pprint(fullcardmodel)
+    pprint(fullcardmodel.scryfall_id)
     assert False
