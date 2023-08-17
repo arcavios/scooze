@@ -38,7 +38,7 @@ class Deck:
     remove_cards(cards: Counter[Card], in_the: InThe):
         Removes the given cards from this Deck.
     export(DecklistFormat):
-        Exports the Deck as a str with the given DecklistFormat.
+        Exports the Deck as a string with the given DecklistFormat.
     """
 
     def __init__(
@@ -198,7 +198,7 @@ class Deck:
 
     def export(self, export_format: DecklistFormatter = None) -> str:
         """
-        Exports this Deck as a str with the given DecklistFormatter.
+        Exports this Deck as a string with the given DecklistFormatter.
 
         Parameters:
             export_format (DecklistFormatter): The format of the exported Deck.
@@ -217,8 +217,8 @@ class Deck:
                 cmdr_prefix = ""
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
             case _:
-                sb_prefix = ""  # Default
-                cmdr_prefix = "Commander\n" # Default
+                sb_prefix = "Sideboard\n"  # Default
+                cmdr_prefix = "Commander\n"  # Default
         sb_prefix = "\n" + sb_prefix
         cmdr_suffix = "\n"
 

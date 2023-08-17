@@ -30,7 +30,7 @@ class DeckPart:
     """
 
     def __init__(self, cards: Counter[Card] = Counter()):
-        # Deep copy of
+        # Deep copy of Counter
         # TODO(#66): Add __copy__ and __deepcopy__ to Deck and DeckPart
         self.cards = Counter()
         self.cards.update(cards)
