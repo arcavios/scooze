@@ -1,58 +1,59 @@
 import os
 
 import requests
-import scooze.enums as enums
-import scooze.utils as utils
+from scooze.enums import ScryfallBulkFile
 
 SCRYFALL_BULK_INFO_ENDPOINT = "https://api.scryfall.com/bulk-data"
 
 
 def download_bulk_data_file(
     uri: str,
-    save_to_file: bool = True,
-    file_path: str | None = None,
-    save_to_db: bool = False,
+    bulk_file_type: ScryfallBulkFile | None = None,
+    file_path: str = "data/bulk/",
 ) -> None:
-    if not save_to_file and not save_to_db:
-        # TODO: log error, nothing to do
-        return
-    if save_to_file:
-        # TODO: get default file name if None
-        with requests.get(uri, stream=True) as r:
-            r.raise_for_status()
-            os.makedirs(os.path.dirname(file_path), exist_ok=True)
-            with open(file_path, "wb") as f:
-                for chunk in r.iter_content(chunk_size=None):
-                    f.write(chunk)
+    """
+    Download a single bulk data file from Scryfall.
+    Parameters:
+        uri (str): Location of bulk data file (generally found from bulk info endpoint).
+        bulk_file_type (ScryfallBulkFile): Type of bulk file, used to set filename.
+        file_path (str): Directory to save bulk files. Defaults to `data/bulk/` if not specified.
+    """
+    # TODO: flag for check vs existing file; don't overwrite with same file or older version
+    with requests.get(uri, stream=True) as r:
+        r.raise_for_status()
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        file_name = f"{file_path}{bulk_file_type}.json"
+        with open(file_name, "wb") as f:
+            for chunk in r.iter_content(chunk_size=None):
+                f.write(chunk)
 
 
 def download_all_bulk_data_files(
-    save_to_file: bool = True,
-    save_to_db: bool = False,
+    file_path: str = "data/bulk/",
 ) -> None:
-    if not save_to_file and not save_to_db:
-        # TODO: log error; nothing to do
-        return
-
-    bulk_metadata = requests.get(SCRYFALL_BULK_INFO_ENDPOINT).json()["data"]
+    """
+    Download all supported Scryfall bulk data files to local filesystem.
+    Parameters:
+        file_path (str): Directory to save bulk files. Defaults to `data/bulk/` if not specified.
+    """
+    with requests.get(SCRYFALL_BULK_INFO_ENDPOINT) as bulk_metadata_request:
+        bulk_metadata_request.raise_for_status()
+        bulk_metadata = bulk_metadata_request.json()["data"]
     bulk_files = {t["type"]: t["download_uri"] for t in bulk_metadata}
 
     # for bulk_type in enums.ScryfallBulkFile.list():
     for bulk_type in [
-        "all_cards",
+        ScryfallBulkFile.ORACLE,
+        # TODO: re-add all supported types
     ]:
-        # TODO: check vs existing file, don't overwrite
-        if save_to_file:
-            bulk_filename = bulk_files[bulk_type]
-            local_filename = f"{utils.DEFAULT_BULK_FILE_DIR}/{bulk_type}.json"
-            print(f"downloading and writing {bulk_type} file...")
-            download_bulk_data_file(
-                uri=bulk_filename,
-                save_to_file=save_to_file,
-                file_path=local_filename,
-                save_to_db=save_to_db,
-            )
+        bulk_filename = bulk_files[bulk_type]
+        print(f"downloading and writing {bulk_type} file...")
+        download_bulk_data_file(
+            uri=bulk_filename,
+            bulk_file_type=bulk_type,
+            file_path=file_path,
+        )
 
 
 if __name__ == "__main__":
-    download_all_bulk_data_files()
+    download_all_bulk_data_files("../../data/bulk/")
