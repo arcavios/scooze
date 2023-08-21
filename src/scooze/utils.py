@@ -4,7 +4,7 @@ from sys import stdout
 
 # region Bulk data file default locations
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk"
+DEFAULT_BULK_FILE_DIR = "./data/bulk/"
 
 
 # endregion
