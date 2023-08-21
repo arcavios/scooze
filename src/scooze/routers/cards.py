@@ -1,9 +1,9 @@
-from typing import Any, List
+from typing import Any
 
 import scooze.database as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from scooze.models.card import CardIn
+from scooze.models.card import CardModelIn
 
 router = APIRouter(
     prefix="/cards",
@@ -25,7 +25,7 @@ async def cards_root(limit: int = 3):
 
 
 @router.post("/add")
-async def add_cards(cards: List[CardIn]):
+async def add_cards(cards: list[CardModelIn]):
     insert_many_result = await db.add_cards(cards=cards)
     if insert_many_result:
         return JSONResponse({"message": f"Created {len(insert_many_result.inserted_ids)} cards."}, status_code=200)
@@ -35,7 +35,7 @@ async def add_cards(cards: List[CardIn]):
 
 @router.post("/by")
 async def get_cards_by(
-    property_name: str, items: List[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ):
     cards = await db.get_cards_by_property(
         property_name=property_name, items=items, paginated=paginated, page=page, page_size=page_size

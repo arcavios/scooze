@@ -4,7 +4,7 @@ from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
 from pymongo.results import DeleteResult, InsertManyResult
-from scooze.models.card import CardIn, CardOut
+from scooze.models.card import CardModelIn, CardModelOut
 
 # region Motor and Mongo Setup
 
@@ -20,7 +20,7 @@ cards_collection = database.get_collection("cards")
 # region Card
 
 
-async def add_card(card: CardIn) -> CardOut:
+async def add_card(card: CardModelIn) -> CardModelOut:
     # TODO(#45): router docstrings
     insert_result = await cards_collection.insert_one(
         card.model_dump(
@@ -30,19 +30,19 @@ async def add_card(card: CardIn) -> CardOut:
     )
     new_card = await cards_collection.find_one({"_id": insert_result.inserted_id})
     if new_card:
-        return CardOut(**new_card)
+        return CardModelOut(**new_card)
 
 
-async def get_card_by_property(property_name: str, value) -> CardOut:
+async def get_card_by_property(property_name: str, value) -> CardModelOut:
     # TODO(#45): router docstrings
     if property_name == "_id":
         value = ObjectId(value)
     card = await cards_collection.find_one({property_name: value})
     if card:
-        return CardOut(**card)
+        return CardModelOut(**card)
 
 
-async def update_card(id: str, card: CardIn) -> CardOut:
+async def update_card(id: str, card: CardModelIn) -> CardModelOut:
     # TODO(#45): router docstrings
     # Return false if an empty request body is sent.
     if not card.model_fields_set:
@@ -59,15 +59,15 @@ async def update_card(id: str, card: CardIn) -> CardOut:
         return_document=ReturnDocument.AFTER,
     )
     if updated_card:
-        return CardOut(**updated_card)
+        return CardModelOut(**updated_card)
 
 
-async def delete_card(id: str) -> CardOut:
+async def delete_card(id: str) -> CardModelOut:
     # TODO(#45): router docstrings
     deleted_card = await cards_collection.find_one_and_delete({"_id": ObjectId(id)})
 
     if deleted_card:
-        return CardOut(**deleted_card)
+        return CardModelOut(**deleted_card)
 
 
 # endregion
@@ -75,7 +75,7 @@ async def delete_card(id: str) -> CardOut:
 # region Cards
 
 
-async def add_cards(cards: List[CardIn]) -> InsertManyResult:
+async def add_cards(cards: List[CardModelIn]) -> InsertManyResult:
     # TODO(#45): router docstrings
     insert_many_result = await cards_collection.insert_many(
         [
@@ -90,17 +90,17 @@ async def add_cards(cards: List[CardIn]) -> InsertManyResult:
         return insert_many_result
 
 
-async def get_cards_random(limit: int) -> List[CardOut]:
+async def get_cards_random(limit: int) -> List[CardModelOut]:
     # TODO(#45): router docstrings
     pipeline = [{"$sample": {"size": limit}}]
     cards = await cards_collection.aggregate(pipeline).to_list(limit)
     if len(cards) > 0:
-        return [CardOut(**card) for card in cards]
+        return [CardModelOut(**card) for card in cards]
 
 
 async def get_cards_by_property(
     property_name: str, items: List[Any], paginated: bool = True, page: int = 1, page_size: int = 10
-) -> List[CardOut]:
+) -> List[CardModelOut]:
     # TODO(#45): router docstrings
     match property_name:
         case "_id":
@@ -115,7 +115,7 @@ async def get_cards_by_property(
     )
 
     if len(cards) > 0:
-        return [CardOut(**card) for card in cards]
+        return [CardModelOut(**card) for card in cards]
 
 
 async def delete_cards_all() -> DeleteResult:

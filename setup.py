@@ -4,7 +4,7 @@ import json
 from argparse import ArgumentParser
 
 from src.scooze import database as db
-from src.scooze.models.card import CardIn
+from src.scooze.models.card import CardModelIn
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
@@ -83,7 +83,7 @@ async def main():
                 with open("./data/test/test_cards.json") as cards_file:
                     print("Inserting test cards into the database...")
                     cards_json = json.load(cards_file)
-                    cards = [CardIn(**card) for card in cards_json["p9"]]
+                    cards = [CardModelIn(**card) for card in cards_json["p9"]]
                     await db.add_cards(cards)  # TODO(#7): this need async for now, replace with Python API
             except OSError as e:
                 print_error(e, "test cards")
