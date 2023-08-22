@@ -99,8 +99,7 @@ class Deck:
             cmdr=self.cmdr.diff(other.cmdr),
         )
 
-    def same_list(self, other):
-        # TODO: needs a new name
+    def decklist_equals(self, other):
         """
         Determines if this Deck contains exactly the same cards as another.
 
@@ -112,9 +111,9 @@ class Deck:
         """
 
         diff = self.diff(other)
-        same_main = bool(diff["main_diff"])
-        same_side = bool(diff["side_diff"])
-        same_cmdr = bool(diff["cmdr_diff"])
+        same_main = bool(diff.main)
+        same_side = bool(diff.side)
+        same_cmdr = bool(diff.cmdr)
         return same_main and same_side and same_cmdr
 
     def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
