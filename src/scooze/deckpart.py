@@ -160,7 +160,7 @@ class DeckPart:
         Removes the given cards from this DeckPart.
 
         Parameters:
-            cards (Counter[DecklistCard]): The cards to remove.
+            cards (Counter[Card]): The cards to remove.
         """
 
         # using counterA - counterB results in a new Counter with only positive results
