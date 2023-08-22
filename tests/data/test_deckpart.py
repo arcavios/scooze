@@ -5,6 +5,7 @@ import pytest
 from scooze.card import Card
 from scooze.deckpart import DeckPart
 from scooze.enums import Color
+from scooze.utils import DictDiff
 
 
 @pytest.fixture
@@ -68,19 +69,21 @@ def test_diff(
 ):
     part = DeckPart(cards=some_cards)
     diff = side_modern_4c.diff(part)
-    assert diff == {
-        card_aether_gust: (1, 0),
-        card_boseiju_who_endures: (1, 0),
-        card_chalice_of_the_void: (2, 4),
-        card_dovins_veto: (1, 0),
-        card_dress_down: (1, 0),
-        card_flusterstorm: (1, 0),
-        card_kaheera_the_orphanguard: (1, 0),
-        card_prismatic_ending: (1, 0),
-        card_supreme_verdict: (1, 0),
-        card_veil_of_summer: (2, 1),
-        card_wear_tear: (1, 0),
-    }
+    assert diff == DictDiff(
+        {
+            card_aether_gust: (1, 0),
+            card_boseiju_who_endures: (1, 0),
+            card_chalice_of_the_void: (2, 4),
+            card_dovins_veto: (1, 0),
+            card_dress_down: (1, 0),
+            card_flusterstorm: (1, 0),
+            card_kaheera_the_orphanguard: (1, 0),
+            card_prismatic_ending: (1, 0),
+            card_supreme_verdict: (1, 0),
+            card_veil_of_summer: (2, 1),
+            card_wear_tear: (1, 0),
+        }
+    )
 
 
 @pytest.mark.deck_add_cards

@@ -3,8 +3,9 @@ from collections import Counter
 import pytest
 from scooze.card import Card
 from scooze.deck import Deck
-from scooze.deckpart import DeckPart
+from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, InThe
+from scooze.utils import DictDiff
 
 
 @pytest.fixture
@@ -37,6 +38,11 @@ def cmdr_part(cmdr_cards) -> DeckPart:
     return DeckPart(cards=cmdr_cards)
 
 
+@pytest.fixture
+def dictdiff_empty() -> DictDiff:
+    return DictDiff(contents={})
+
+
 def test_archetype(archetype_modern_4c):
     deck = Deck(archetype=archetype_modern_4c)
     assert deck.archetype == archetype_modern_4c
@@ -67,12 +73,14 @@ def test_total(deck_modern_4c):
 
 
 @pytest.mark.deck_diff
-def test_diff_none(deck_modern_4c):
-    assert deck_modern_4c.diff(deck_modern_4c) == {"main_diff": {}, "side_diff": {}, "cmdr_diff": {}}
+def test_diff_none(deck_modern_4c, dictdiff_empty):
+    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(
+        main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty
+    )
 
 
 @pytest.mark.deck_diff
-def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard):
+def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
     other = Deck(
         archetype=deck_modern_4c.archetype,
         format=deck_modern_4c.format,
@@ -80,17 +88,15 @@ def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard):
         side=deck_modern_4c.side,
     )  # TODO(#66): replace with __copy__ or __deepcopy__
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.MAIN)
-    assert deck_modern_4c.diff(other) == {
-        "main_diff": {
-            card_kaheera_the_orphanguard: (0, 1),
-        },
-        "side_diff": {},
-        "cmdr_diff": {},
-    }
+    assert deck_modern_4c.diff(other) == DeckDiff(
+        main=DictDiff({card_kaheera_the_orphanguard: (0, 1)}),
+        side=dictdiff_empty,
+        cmdr=dictdiff_empty,
+    )
 
 
 @pytest.mark.deck_diff
-def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard):
+def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
     other = Deck(
         archetype=deck_modern_4c.archetype,
         format=deck_modern_4c.format,
@@ -98,17 +104,15 @@ def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard):
         side=deck_modern_4c.side,
     )  # TODO(#66): replace with __copy__ or __deepcopy__
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.SIDE)
-    assert deck_modern_4c.diff(other) == {
-        "main_diff": {},
-        "side_diff": {
-            card_kaheera_the_orphanguard: (1, 2),
-        },
-        "cmdr_diff": {},
-    }
+    assert deck_modern_4c.diff(other) == DeckDiff(
+        main=dictdiff_empty,
+        side=DictDiff({card_kaheera_the_orphanguard: (1, 2)}),
+        cmdr=dictdiff_empty,
+    )
 
 
 @pytest.mark.deck_diff
-def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, card_supreme_verdict):
+def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, card_supreme_verdict, dictdiff_empty):
     other = Deck(
         archetype=deck_modern_4c.archetype,
         format=deck_modern_4c.format,
@@ -116,14 +120,13 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
         side=deck_modern_4c.side,
         cmdr=cmdr_part,
     )  # TODO(#66): replace with __copy__ or __deepcopy__
-    assert deck_modern_4c.diff(other) == {
-        "main_diff": {},
-        "side_diff": {},
-        "cmdr_diff": {
+    assert deck_modern_4c.diff(other) == DeckDiff(main=dictdiff_empty,
+        side=dictdiff_empty,
+        cmdr=DictDiff({
             card_omnath_locus_of_creation: (0, 1),
             card_supreme_verdict: (0, 1),
-        },
-    }
+        }),
+    )
 
 
 @pytest.mark.deck_add_cards

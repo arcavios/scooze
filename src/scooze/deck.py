@@ -2,7 +2,7 @@ from collections import Counter
 from sys import maxsize
 
 from scooze.card import Card
-from scooze.deckpart import DeckPart
+from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe
 
 
@@ -81,7 +81,7 @@ class Deck:
 
         return self.main.total() + self.side.total() + self.cmdr.total()
 
-    def diff(self, other):
+    def diff(self, other) -> DeckDiff:
         """
         Generates a diff between this Deck and another.
 
@@ -89,16 +89,15 @@ class Deck:
             other (Deck): The other Deck.
 
         Returns:
-            diff (dict[str, dict[Card, tuple(int, int)]]): Returns a dict with keys for each deck part.
+            diff (DeckDiff): Returns a DeckDiff with keys for each deck part.
                 Each contains a dict of every card in both decks and their counts.
         """
 
-        # TODO: should this be a NamedTuple or something?
-        return {
-            "main_diff": self.main.diff(other.main),
-            "side_diff": self.side.diff(other.side),
-            "cmdr_diff": self.cmdr.diff(other.cmdr),
-        }
+        return DeckDiff(
+            main=self.main.diff(other.main),
+            side=self.side.diff(other.side),
+            cmdr=self.cmdr.diff(other.cmdr),
+        )
 
     def same_list(self, other):
         # TODO: needs a new name

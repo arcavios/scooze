@@ -48,22 +48,57 @@ def get_logger(
     return logger
 
 
-# Source:  https://code.activestate.com/recipes/576644-diff-two-dictionaries/#c9
-def dict_diff(d1: dict, d2: dict, NO_KEY=0) -> dict[Any, tuple]:
+# region Dict Diff
+
+
+class DictDiff:
     """
-    Helper function to generate a diff between two dicts.
+    Represents a diff between two dicts.
 
-    Parameters:
-        d1 (dict): The first dict.
-        d2 (dict): The second dict.
-        NO_KEY: Default value to use when a key is in one dict, but not the other.
+    Attributes
+    ----------
+        contents (dict[Any, tuple[int, int]]): The contents of this diff.
 
-    Returns:
-        diff (dict{k: tuple(value, value)}): returns a dict with all keys from both dicts. The values are tuple(v, v) for the values in each dict.
+    Methods
+    -------
+    get_diff(d1: dict, d2: dict, NO_KEY: Any)
+        Generate a diff between two dicts.
     """
 
-    both = d1.keys() & d2.keys()
-    diff = {k: (d1[k], d2[k]) for k in both if d1[k] != d2[k]}
-    diff.update({k: (d1[k], NO_KEY) for k in d1.keys() - both})
-    diff.update({k: (NO_KEY, d2[k]) for k in d2.keys() - both})
-    return diff
+    def __init__(self, contents: dict[Any, tuple[int, int]]):
+        self.contents = contents
+
+    def __eq__(self, other):
+        return self.contents == other.contents
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __len__(self):
+        return len(self.contents)
+
+    def __str__(self):
+        return "\n".join([f"{key}: {counts}" for key, counts in self.contents.items()]) + "\n"
+
+    # Source:  https://code.activestate.com/recipes/576644-diff-two-dictionaries/#c9
+    @classmethod
+    def get_diff(cls, d1: dict, d2: dict, NO_KEY=0) -> "DictDiff":
+        """
+        Generate a diff between two dicts.
+
+        Parameters:
+            d1 (dict): The first dict.
+            d2 (dict): The second dict.
+            NO_KEY: Default value to use when a key is in one dict, but not the other.
+
+        Returns:
+            diff (DictDiff): returns a dict with all keys from both dicts. The values are tuple(v, v) for the values in each dict.
+        """
+
+        both = d1.keys() & d2.keys()
+        diff = {k: (d1[k], d2[k]) for k in both if d1[k] != d2[k]}
+        diff.update({k: (d1[k], NO_KEY) for k in d1.keys() - both})
+        diff.update({k: (NO_KEY, d2[k]) for k in d2.keys() - both})
+        return DictDiff(diff)
+
+    # endregion

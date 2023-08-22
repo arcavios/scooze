@@ -4,6 +4,7 @@ import pytest
 import scooze.models.utils as model_utils
 import scooze.utils as utils
 from scooze.enums import Format
+from scooze.utils import DictDiff
 
 # region Utils
 
@@ -28,20 +29,46 @@ def dictB() -> dict[str, int]:
     }
 
 
-# endregion
-
-# region Tests
-
-
-@pytest.mark.utils
-def test_dict_diff(dictA, dictB):
-    diff = {
+@pytest.fixture
+def diffAB() -> dict[str, tuple[int, int]]:
+    return {
         "Annihilating Glare": (0, 1),
         "Blackcleave Cliffs": (4, 2),
         "Unlucky Witness": (3, 4),
         "Urborg, Tomb of Yawgmoth": (0, 1),
     }
-    assert utils.dict_diff(dictA, dictB, NO_KEY=0) == diff
+
+
+@pytest.fixture
+def diffAB_str() -> str:
+    return (
+        """Annihilating Glare: (0, 1)\n"""
+        """Blackcleave Cliffs: (4, 2)\n"""
+        """Unlucky Witness: (3, 4)\n"""
+        """Urborg, Tomb of Yawgmoth: (0, 1)\n"""
+    )
+
+
+# endregion
+
+# region Tests
+
+
+@pytest.mark.dictdiff
+def test_get_diff(dictA, dictB, diffAB):
+    assert DictDiff.get_diff(dictA, dictB, NO_KEY=0).contents == diffAB
+
+
+@pytest.mark.dictdiff
+def test_dictdiff_eq(dictA, dictB, diffAB):
+    dict_diff = DictDiff.get_diff(dictA, dictB, NO_KEY=0)
+    assert dict_diff == DictDiff(diffAB)
+
+
+@pytest.mark.dictdiff
+def test_dictdiff_str(diffAB, diffAB_str):
+    dict_diff = DictDiff(diffAB)
+    assert str(dict_diff) == diffAB_str
 
 
 # endregion

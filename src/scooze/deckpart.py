@@ -1,8 +1,58 @@
 from collections import Counter
 from sys import maxsize
+from typing import Any
 
 import scooze.utils as utils
 from scooze.card import Card
+from scooze.utils import DictDiff
+
+
+class DeckDiff:
+    """
+    A class to reprsent a diff between two decks.
+
+    Attributes
+    ----------
+        main (DictDiff): The diff between the main decks of two Decks.
+        side (DictDiff): The diff between the sideboards of two Decks.
+        cmdr (DictDiff): The diff between the command zones of two Decks.
+
+    Methods
+    -------
+        total():
+            The number of Cards in this DeckDiff.
+    """
+
+    def __init__(self, main: DictDiff, side: DictDiff, cmdr: DictDiff):
+        self.main = main
+        self.side = side
+        self.cmdr = cmdr
+
+    def __eq__(self, other):
+        return (
+            self.main == other.main
+            and self.side == other.side
+            and self.cmdr == other.cmdr
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __str__(self):
+        if self.total() > 0:
+            main_diff = str(self.main)
+            side_diff = str(self.side)
+            cmdr_diff = str(self.cmdr)
+            return f"Main Diff:\n{main_diff}\nSide Diff:\n{side_diff}\nCmdr Diff:\n{cmdr_diff}"
+        else:
+            return ""
+
+    def total(self) -> int:
+        """
+        The number of Cards in this DeckDiff.
+        """
+
+        return len(self.main) + len(self.side) + len(self.cmdr)
 
 
 class DeckPart:
@@ -41,6 +91,12 @@ class DeckPart:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __getitem__(self, key):
+        return self.cards[key]
+
+    def __setitem__(self, key, value):
+        self.cards[key] = value
+
     def __len__(self):
         return len(self.cards)
 
@@ -50,14 +106,14 @@ class DeckPart:
         else:
             return ""
 
-    def total(self):
+    def total(self) -> int:
         """
         The number of cards in this DeckPart.
         """
 
         return self.cards.total()
 
-    def diff(self, other):
+    def diff(self, other) -> DictDiff:
         """
         Generates a diff between this DeckPart and another.
 
@@ -65,10 +121,10 @@ class DeckPart:
             other (DeckPart): The other DeckPart.
 
         Returns:
-            diff (dict[Card, tuple(int, int)]): Returns a dict with every card in both DeckParts and their counts.
+            diff (DictDiff): Returns a DictDiff with every card in both DeckParts and their counts.
         """
 
-        return utils.dict_diff(self.cards, other.cards, NO_KEY=0)
+        return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
 
     def add_card(self, card: Card, quantity: int = 1) -> None:
         """
