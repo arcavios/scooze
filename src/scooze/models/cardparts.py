@@ -91,7 +91,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     )
     layout: str | None = Field(
         description="Layout of this face, if any.",
-    ) # TODO(#36): convert to enum?
+    )  # TODO(#36): convert to enum?
     loyalty: int | None = Field(
         description="Starting planeswalker loyalty of this face, if any.",
     )
@@ -200,13 +200,13 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
 
     id: str = Field(
         description="ID of linked component.",
-    ) # NOTE: Scryfall ID
+    )  # NOTE: Scryfall ID
     object: str = Field(
         description="Always `related_card` for this object.",
     )
     component: str = Field(
         description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.",
-    ) # TODO(#36): convert to enum?
+    )  # TODO(#36): convert to enum?
     name: str = Field(
         description="Name of linked component.",
     )
