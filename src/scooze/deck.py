@@ -134,7 +134,7 @@ class Deck:
             case InThe.CMDR:
                 self.cmdr.add_card(card=card, quantity=quantity)
             case _:
-                pass  # 'in' must be one of InThe.list()
+                pass  # TODO(#75): 'in' must be one of InThe.list()
 
     def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -172,7 +172,7 @@ class Deck:
             case InThe.CMDR:
                 self.cmdr.remove_card(card=card, quantity=quantity)
             case _:
-                pass  # failed to remove card
+                pass  # TODO(#75): failed to remove card
 
     def remove_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -192,7 +192,7 @@ class Deck:
             case InThe.CMDR:
                 self.cmdr.remove_cards(cards=cards)
             case _:
-                pass  # failed to remove cards
+                pass  # TODO(#75): failed to remove cards
 
     def export(self, export_format: DecklistFormatter = None) -> str:
         """
