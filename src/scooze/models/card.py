@@ -1,8 +1,6 @@
 from datetime import datetime
-from typing import Annotated
 
 import scooze.models.utils as model_utils
-from bson import ObjectId
 from pydantic import BaseModel, Field
 from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 from scooze.models.cardparts import (
@@ -448,7 +446,7 @@ class CardModelIn(CardModel):
 
 
 class CardModelOut(CardModel):
-    id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
+    id: model_utils.ObjectId = Field(
         default=None,
         alias="_id",
     )

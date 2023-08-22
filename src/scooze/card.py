@@ -52,6 +52,9 @@ class Card:
     def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
         return self.name.__hash__()
 
+    def __str__(self):
+        return self.name
+
 
 class OracleCard(Card):
     """

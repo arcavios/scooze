@@ -27,6 +27,7 @@ fastapi = "^0.100.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
 strenum = "^0.4.15"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
@@ -43,7 +44,10 @@ priority = "explicit"
 # addopts = "-m 'not slow'"
 markers = [
     "slow: expected to be slow",
-    "format_size: related to format deck size",
+    "utils: related to utils helpers",
+    "dictdiff: related to DictDiff in utils",
+    "model_utils: related to model_utils helpers",
+    "deck_diff: related to  Deck.diff()",
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
     "deck_remove_cards: related to Deck.remove_card() and Deck.remove_cards()",
     "deck_count: related to Deck.count()",

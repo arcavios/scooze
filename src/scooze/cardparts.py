@@ -36,7 +36,8 @@ class ImageUris:
 
 class CardFace:
     """
-    Object for a single side of a double-faced OracleCard. Contains only fields that are consistent between card prints.
+    Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
@@ -83,7 +84,8 @@ class CardFace:
 
 class FullCardFace(CardFace):
     """
-    Object for a single side of a double-faced FullCard object.
+    Object for a single face of a multi-faced FullCard.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 

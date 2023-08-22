@@ -40,7 +40,8 @@ class ImageUrisModel(BaseModel, validate_assignment=True):
 
 class CardFaceModel(BaseModel, validate_assignment=True):
     """
-    Model for a single side of a double-faced CardModel.
+    Model for a single face of a multi-faced CardModel.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
@@ -91,7 +92,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     )
     layout: str | None = Field(
         description="Layout of this face, if any.",
-    ) # TODO(#36): convert to enum?
+    )  # TODO(#36): convert to enum?
     loyalty: int | None = Field(
         description="Starting planeswalker loyalty of this face, if any.",
     )
@@ -207,7 +208,7 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
     )
     component: str = Field(
         description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.",
-    ) # TODO(#36): convert to enum?
+    )  # TODO(#36): convert to enum?
     name: str = Field(
         description="Name of linked component.",
     )
