@@ -4,13 +4,16 @@ from sys import stdout
 from typing import Any
 
 
+DEFAULT_BULK_FILE_DIR = "./data/bulk/"
+
+
 def get_logger(
     filename: str,
     logger_name: str,
     file_logging_level: int = logging.DEBUG,
     console_logging_level: int = logging.WARNING,
     formatter: logging.Formatter = logging.Formatter("%(asctime)s - %(name)s:%(levelname)s - %(message)s"),
-):
+) -> logging.Logger:
     """
     Helper function to get a new logger.
 
