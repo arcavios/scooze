@@ -23,7 +23,7 @@ class DeckModel(BaseModel, validate_assignment=True):
     side : Counter[ObjectId]
         The sideboard. Typically 15 cards maximum.
     cmdr : Counter[ObjectId]
-        The command zone. Typically 1 card in Commander formats.
+        The command zone. Typically 1 or 2 cards in Commander formats.
     """
 
     model_config = model_utils.get_base_model_config()
@@ -50,7 +50,7 @@ class DeckModel(BaseModel, validate_assignment=True):
     )
     cmdr: Counter[model_utils.ObjectId] = Field(
         default=Counter(),
-        description="The command zone. Typically 1 card in Commander formats.",
+        description="The command zone. Typically 1 or 2 cards in Commander formats.",
     )
 
     # region Validators

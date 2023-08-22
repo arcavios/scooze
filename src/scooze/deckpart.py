@@ -29,11 +29,7 @@ class DeckDiff:
         self.cmdr = cmdr
 
     def __eq__(self, other):
-        return (
-            self.main == other.main
-            and self.side == other.side
-            and self.cmdr == other.cmdr
-        )
+        return self.main == other.main and self.side == other.side and self.cmdr == other.cmdr
 
     def __ne__(self, other):
         return not self.__eq__(other)

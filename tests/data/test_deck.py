@@ -120,12 +120,15 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
         side=deck_modern_4c.side,
         cmdr=cmdr_part,
     )  # TODO(#66): replace with __copy__ or __deepcopy__
-    assert deck_modern_4c.diff(other) == DeckDiff(main=dictdiff_empty,
+    assert deck_modern_4c.diff(other) == DeckDiff(
+        main=dictdiff_empty,
         side=dictdiff_empty,
-        cmdr=DictDiff({
-            card_omnath_locus_of_creation: (0, 1),
-            card_supreme_verdict: (0, 1),
-        }),
+        cmdr=DictDiff(
+            {
+                card_omnath_locus_of_creation: (0, 1),
+                card_supreme_verdict: (0, 1),
+            }
+        ),
     )
 
 

@@ -56,10 +56,11 @@ def main_size(fmt: Format) -> tuple[int, int]:
         ):
             return 60, maxsize
 
-        case (
-            Format.BRAWL | Format.COMMANDER | Format.DUEL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH
-        ):
+        case (Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH):
             return 99, 99
+
+        case Format.COMMANDER | Format.DUEL:
+            return 98, 99  # NOTE: Accounting for Partner
 
         case Format.GLADIATOR:
             return 100, 100
@@ -135,10 +136,11 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
         ):
             return 0, 0
 
-        case (
-            Format.BRAWL | Format.COMMANDER | Format.DUEL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH
-        ):
+        case (Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH):
             return 1, 1
+
+        case Format.COMMANDER | Format.DUEL:
+            return 1, 2  # NOTE: Accounting for Partner
 
         case Format.OATHBREAKER:
             return 2, 2

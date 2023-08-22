@@ -21,7 +21,7 @@ class Deck:
     side : DeckPart
         The sideboard. Typically 15 cards maximum.
     cmdr : DeckPart
-        The command zone. Typically 1 card in Commander formats.
+        The command zone. Typically 1 or 2 cards in Commander formats.
 
     Methods
     -------

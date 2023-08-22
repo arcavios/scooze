@@ -100,6 +100,11 @@ def main_size_60() -> tuple[int, int]:
 
 
 @pytest.fixture
+def main_size_98() -> tuple[int, int]:
+    return (98, 99)
+
+
+@pytest.fixture
 def main_size_99() -> tuple[int, int]:
     return (99, 99)
 
@@ -150,6 +155,11 @@ def cmdr_size_1() -> tuple[int, int]:
 
 
 @pytest.fixture
+def cmdr_size_1_or_2() -> tuple[int, int]:
+    return (1, 2)
+
+
+@pytest.fixture
 def cmdr_size_2() -> tuple[int, int]:
     return (2, 2)
 
@@ -181,13 +191,13 @@ def test_fmt_brawl_main_size(format_brawl, main_size_99):
 
 
 @pytest.mark.model_utils
-def test_fmt_commander_main_size(format_commander, main_size_99):
-    assert model_utils.main_size(format_commander) == main_size_99
+def test_fmt_commander_main_size(format_commander, main_size_98):
+    assert model_utils.main_size(format_commander) == main_size_98
 
 
 @pytest.mark.model_utils
-def test_fmt_duel_main_size(format_duel, main_size_99):
-    assert model_utils.main_size(format_duel) == main_size_99
+def test_fmt_duel_main_size(format_duel, main_size_98):
+    assert model_utils.main_size(format_duel) == main_size_98
 
 
 @pytest.mark.model_utils
@@ -421,13 +431,13 @@ def test_fmt_brawl_cmdr_size(format_brawl, cmdr_size_1):
 
 
 @pytest.mark.model_utils
-def test_fmt_commander_cmdr_size(format_commander, cmdr_size_1):
-    assert model_utils.cmdr_size(format_commander) == cmdr_size_1
+def test_fmt_commander_cmdr_size(format_commander, cmdr_size_1_or_2):
+    assert model_utils.cmdr_size(format_commander) == cmdr_size_1_or_2
 
 
 @pytest.mark.model_utils
-def test_fmt_duel_cmdr_size(format_duel, cmdr_size_1):
-    assert model_utils.cmdr_size(format_duel) == cmdr_size_1
+def test_fmt_duel_cmdr_size(format_duel, cmdr_size_1_or_2):
+    assert model_utils.cmdr_size(format_duel) == cmdr_size_1_or_2
 
 
 @pytest.mark.model_utils
