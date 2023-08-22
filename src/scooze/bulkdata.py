@@ -18,7 +18,7 @@ def download_bulk_data_file(
         bulk_file_type (ScryfallBulkFile): Type of bulk file, used to set filename.
         file_path (str): Directory to save bulk files. Defaults to `data/bulk/` if not specified.
     """
-    # TODO: flag for check vs existing file; don't overwrite with same file or older version
+    # TODO(#74): flag for check vs existing file; don't overwrite with same file or older version
     with requests.get(uri, stream=True) as r:
         r.raise_for_status()
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -41,13 +41,8 @@ def download_all_bulk_data_files(
         bulk_metadata = bulk_metadata_request.json()["data"]
     bulk_files = {t["type"]: t["download_uri"] for t in bulk_metadata}
 
-    # for bulk_type in enums.ScryfallBulkFile.list():
-    for bulk_type in [
-        ScryfallBulkFile.ORACLE,
-        # TODO: re-add all supported types
-    ]:
+    for bulk_type in ScryfallBulkFile.list():
         bulk_filename = bulk_files[bulk_type]
-        print(f"downloading and writing {bulk_type} file...")
         download_bulk_data_file(
             uri=bulk_filename,
             bulk_file_type=bulk_type,

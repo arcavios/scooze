@@ -2,12 +2,10 @@ import logging
 import os.path
 from sys import stdout
 
-# region Bulk data file default locations
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk/"
 
 
-# endregion
 def get_logger(
     filename: str,
     logger_name: str,
