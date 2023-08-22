@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any
 
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -75,7 +75,7 @@ async def delete_card(id: str) -> CardModelOut:
 # region Cards
 
 
-async def add_cards(cards: List[CardModelIn]) -> InsertManyResult:
+async def add_cards(cards: list[CardModelIn]) -> InsertManyResult:
     # TODO(#45): router docstrings
     insert_many_result = await cards_collection.insert_many(
         [
@@ -90,7 +90,7 @@ async def add_cards(cards: List[CardModelIn]) -> InsertManyResult:
         return insert_many_result
 
 
-async def get_cards_random(limit: int) -> List[CardModelOut]:
+async def get_cards_random(limit: int) -> list[CardModelOut]:
     # TODO(#45): router docstrings
     pipeline = [{"$sample": {"size": limit}}]
     cards = await cards_collection.aggregate(pipeline).to_list(limit)
@@ -99,8 +99,8 @@ async def get_cards_random(limit: int) -> List[CardModelOut]:
 
 
 async def get_cards_by_property(
-    property_name: str, items: List[Any], paginated: bool = True, page: int = 1, page_size: int = 10
-) -> List[CardModelOut]:
+    property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+) -> list[CardModelOut]:
     # TODO(#45): router docstrings
     match property_name:
         case "_id":

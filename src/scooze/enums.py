@@ -153,3 +153,27 @@ class ScryfallBulkFile(ExtendedEnum, StrEnum):
 
 
 # endregion
+
+# region Deck Enums
+
+
+class InThe(ExtendedEnum, StrEnum):
+    """
+    The location of a Card in a Deck.
+    """
+
+    MAIN = auto()
+    SIDE = auto()
+    CMDR = auto()
+
+
+class DecklistFormatter(ExtendedEnum, StrEnum):
+    """
+    A method of formatting a decklist for external systems.
+    """
+
+    ARENA = auto()
+    MTGO = auto()
+
+
+# endregion

@@ -40,7 +40,8 @@ class ImageUrisModel(BaseModel, validate_assignment=True):
 
 class CardFaceModel(BaseModel, validate_assignment=True):
     """
-    Model for a single side of a double-faced CardModel.
+    Model for a single face of a multi-faced CardModel.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc.
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
