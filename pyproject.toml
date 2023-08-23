@@ -26,7 +26,6 @@ python = ">=3.10, <3.12"
 fastapi = "^0.100.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
-strenum = "^0.4.15"
 requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]

@@ -1,6 +1,4 @@
-from enum import Enum, EnumMeta, auto
-
-from strenum import StrEnum
+from enum import Enum, EnumMeta, auto, StrEnum
 
 # region Enum Extensions
 
@@ -12,7 +10,7 @@ class CaseInsensitiveEnumMeta(EnumMeta):
 
     def __getitem__(self, item):
         if isinstance(item, str):
-            item = item.upper()
+            item = item.lower()
         return super().__getitem__(item)
 
 
@@ -94,7 +92,7 @@ class Format(ExtendedEnum, StrEnum):
     PIONEER = auto()
     PREDH = auto()
     PREMODERN = auto()
-    STANDARD = auto()
+    STANDARD = "standard"
     VINTAGE = auto()
     # non-Scryfall formats
     LIMITED = auto()
