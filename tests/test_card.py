@@ -18,15 +18,36 @@ def test_temp(temp_fixture):
 # TODO(#65): WRITE TESTS FOR CARD OBJECT HERE
 
 
-@pytest.fixture
-def power9() -> dict:
-    with open("./data/test/test_cards.json") as file:
-        return json.load(file)
+import json
 
 
 @pytest.fixture
-def pearl(power9) -> dict:
-    return power9["p9"][0]
+def fullcards_json() -> list[str]:
+    with open("./data/test/test_cards.jsonl", "r") as json_file:
+        json_list = list(json_file)
+
+    return json_list
+
+
+@pytest.fixture
+def fullcards(fullcards_json) -> list[FullCard]:
+    cards = []
+    for json_str in fullcards_json:
+        card_json = json.loads(json_str)
+        card = FullCard.from_json(card_json)
+        pprint(f"CARD: {card}")
+        cards.append(card)
+
+    return cards
+
+
+@pytest.fixture
+def pearl(fullcards) -> FullCard:
+    for card in fullcards:
+        if card.scryfall_id == "8ebe4be7-e12a-4596-a899-fbd5b152e879":
+            return card
+
+    return None
 
 
 # def test_full_card_model_from_json(pearl):
@@ -36,16 +57,15 @@ def pearl(power9) -> dict:
 #     assert False
 
 
-# def test_full_card_obj_from_json(pearl):
-#     fullcard = FullCard(**pearl)
-#     pprint(fullcard.__dict__)
-#     assert False
-
-
-def test_oracle_card_obj_from_json(pearl):
-    oraclecard = OracleCard(**pearl)
-    pprint(oraclecard.__dict__)
+def test_full_card_obj_from_json(pearl):
+    pprint(pearl.__dict__)
     assert False
+
+
+# def test_oracle_card_obj_from_json(pearl):
+#     oraclecard = OracleCard(**pearl)
+#     pprint(oraclecard.__dict__)
+#     assert False
 
 
 # def test_simple_card_obj_from_json(pearl):
