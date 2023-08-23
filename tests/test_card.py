@@ -28,6 +28,13 @@ def fullcards_json() -> list[str]:
 
     return json_list
 
+@pytest.fixture
+def fable_json(fullcards_json) -> dict:
+    for json_str in fullcards_json:
+        card_json = json.loads(json_str)
+        if card_json["id"] == "24c0d87b-0049-4beb-b9cb-6f813b7aa7dc":
+            return card_json
+
 
 @pytest.fixture
 def fullcards(fullcards_json) -> list[FullCard]:
@@ -71,9 +78,9 @@ def fable(fullcards) -> FullCard:
 #     assert False
 
 
-def test_fable(fable):
-    pprint(fable.__dict__)
-    assert False
+# def test_fable(fable):
+#     pprint(fable.__dict__)
+#     assert False
 
 
 # def test_oracle_card_obj_from_json(pearl):
@@ -96,10 +103,13 @@ def test_fable(fable):
 #     assert False
 
 
-def test_obj_from_model(fable):
-    fullcardmodel = FullCardModel.model_construct(**fable.__dict__)
+def test_obj_from_model(fable, fable_json):
+    pprint(fable_json)
+    fullcardmodel = FullCardModel.model_validate(fable_json)
+    pprint(fullcardmodel.all_parts)
+    # pprint(dict(fullcardmodel))
     fullcardobj = FullCard.from_model(fullcardmodel)
-    pprint(fullcardobj.__dict__)
+    # pprint(fullcardobj.__dict__)
     # print("ALL PARTS:")
     # for part in fullcardobj.all_parts:
     #     pprint(part.__dict__)
