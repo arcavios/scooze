@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from scooze.cardparts import (
@@ -54,17 +55,64 @@ class Card:
     def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
         return self.name.__hash__()
 
+    # def __repr__(self):
+    #     return f"<{self.__class__.__name__}({self.x}, {self.y}, {self.z})>"
+
     def __str__(self):
         return self.name
 
+    # region Validators
+
     def _validate_cmc(self, cmc: float | int | None) -> float:
-        # Validate incoming data for cmc
-        if isinstance(cmc, float):
+        # TODO: docstring
+
+        if isinstance(cmc, float) or cmc is None:
             return cmc
         elif isinstance(cmc, int):
             return float(cmc)
         else:
-            raise ValueError("cmc must be one of (float, int)")
+            raise ValueError("cmc must be one of (float, int, None)")
+
+    def _validate_image_uris(self, image_uris: ImageUris | dict | None):
+        # TODO: docstring
+
+        if isinstance(image_uris, ImageUris) or image_uris is None:
+            return image_uris
+        elif isinstance(image_uris, dict):
+            return ImageUris(**image_uris)
+        else:
+            raise ValueError("image_uris must be one of (ImageUris, dict, None)")
+
+    def _validate_prices(self, prices: Prices | dict | None):
+        # TODO: docstring
+
+        if isinstance(prices, Prices) or prices is None:
+            return prices
+        elif isinstance(prices, dict):
+            return Prices(**prices)
+        else:
+            raise ValueError("prices must be one of (Prices, dict, None)")
+
+    def _validate_released_at(self, released_at: datetime | str | None):
+        # TODO: docstring
+
+        if isinstance(released_at, datetime) or released_at is None:
+            return released_at
+        if isinstance(released_at, str):
+            return datetime.strptime(released_at, "%Y-%m-%d")  # NOTE: maybe store date format in utils if needed
+        else:
+            raise ValueError("prices must be one of (datetime, str, None)")
+
+    # endregion
+
+    @classmethod
+    def from_json(cls, data: dict | str):
+        if isinstance(data, dict):
+            return cls(**data)
+        elif isinstance(data, str):
+            return cls(**json.loads(data))
+        else:
+            raise ValueError("json must be one of (dict, str)")
 
 
 class OracleCard(Card):
@@ -407,15 +455,9 @@ class FullCard(OracleCard):
         self.highres_image = highres_image
         self.illustration_id = illustration_id
         self.image_status = image_status
-
-        # Validate incoming data for image_uris
-        self.image_uris = image_uris if isinstance(image_uris, ImageUris) else ImageUris(**image_uris)
-
+        self.image_uris = self._validate_image_uris(image_uris)
         self.preview = preview
-
-        # Validate incoming data for prices
-        self.prices = prices if isinstance(prices, Prices) else Prices(**prices)
-
+        self.prices = self._validate_prices(prices)
         self.printed_name = printed_name
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line
@@ -424,15 +466,7 @@ class FullCard(OracleCard):
         self.purchase_uris = purchase_uris
         self.rarity = rarity
         self.related_uris = related_uris
-
-        # Validate incoming data for released_at
-        if isinstance(released_at, datetime):
-            self.released_at = released_at
-        elif isinstance(released_at, str):
-            self.released_at = datetime.strptime(released_at, "%Y-%m-%d")  # NOTE: maybe store this in utils if needed
-        else:
-            raise ValueError("released_at must be one of (datetime, str)")
-
+        self.released_at = self._validate_released_at(released_at)
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri
         self.security_stamp = security_stamp
