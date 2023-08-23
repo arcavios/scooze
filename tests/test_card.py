@@ -100,18 +100,18 @@ def test_obj_from_model(fable):
     fullcardmodel = FullCardModel.model_construct(**fable.__dict__)
     fullcardobj = FullCard.from_model(fullcardmodel)
     pprint(fullcardobj.__dict__)
-    print("ALL PARTS:")
-    for part in fullcardobj.all_parts:
-        pprint(part.__dict__)
-    print("CARD FACES:")
-    for face in fullcardobj.card_faces:
-        pprint(face.__dict__)
-    print("CMC")
-    pprint(fullcardobj.cmc)
-    print("PREVIEW")
-    pprint(fullcardobj.preview.__dict__)
-    print("PRICES")
-    pprint(fullcardobj.prices.__dict__)
-    print("RELEASED AT")
-    pprint(fullcardobj.released_at)
+    # print("ALL PARTS:")
+    # for part in fullcardobj.all_parts:
+    #     pprint(part.__dict__)
+    # print("CARD FACES:")
+    # for face in fullcardobj.card_faces:
+    #     pprint(face.__dict__)
+    # print("CMC")
+    # pprint(fullcardobj.cmc)
+    # print("PREVIEW")
+    # pprint(fullcardobj.preview.__dict__)
+    # print("PRICES")
+    # pprint(fullcardobj.prices.__dict__)
+    # print("RELEASED AT")
+    # pprint(fullcardobj.released_at)
     assert False

@@ -149,7 +149,7 @@ class OracleCard(Card):
         # kwargs
         **kwargs,  # TODO: log information about kwargs
     ):
-        self.card_faces = self._validate_card_faces(card_faces)
+        self.card_faces = self._validate_card_faces(card_faces, card_face_class=CardFace)
         self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator
@@ -175,13 +175,17 @@ class OracleCard(Card):
 
     # region Validators
 
-    def _validate_card_faces(self, card_faces: list[CardFace] | list[dict] | None) -> list[CardFace]:
-        if card_faces is None or all(isinstance(card_face, CardFace) for card_face in card_faces):
+    def _validate_card_faces(
+        self,
+        card_faces: list[CardFace] | list[dict] | None,
+        card_face_class: CardFace | FullCardFace = FullCardFace,
+    ) -> list[CardFace]:
+        if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
-            return [CardFace.from_json(card_face) for card_face in card_faces]
+            return [card_face_class.from_json(card_face) for card_face in card_faces]
         else:
-            raise ValueError("card_faces must be one of (list[CardFace], list[Dict], None)")
+            raise ValueError(f"card_faces must be one of (list[{card_face_class.__name__}], list[Dict], None)")
 
     # endregion
 
@@ -397,7 +401,7 @@ class FullCard(OracleCard):
         # region Gameplay Fields
 
         self.all_parts = self._validate_all_parts(all_parts)
-        self.card_faces = self._validate_card_faces(card_faces)
+        self.card_faces = self._validate_card_faces(card_faces, card_face_class=FullCardFace)
         self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator

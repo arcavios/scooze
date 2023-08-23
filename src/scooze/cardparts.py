@@ -59,6 +59,7 @@ class CardFace:
 
     def __init__(
         self,
+        cmc: float | None = None,
         color_indicator: list[enums.Color] | None = None,
         colors: list[enums.Color] | None = None,
         loyalty: int | None = None,
@@ -72,6 +73,7 @@ class CardFace:
         # kwargs
         **kwargs,  # TODO: log information about kwargs
     ):
+        self.cmc = self._validate_cmc(cmc)
         self.color_indicator = color_indicator
         self.colors = colors
         self.loyalty = loyalty
@@ -82,6 +84,20 @@ class CardFace:
         self.power = power
         self.toughness = toughness
         self.type_line = type_line
+
+    # region Validators
+
+    def _validate_cmc(self, cmc: float | int | None) -> float:
+        # TODO: docstring
+
+        if cmc is None or isinstance(cmc, float):
+            return cmc
+        elif isinstance(cmc, int):
+            return float(cmc)
+        else:
+            raise ValueError("cmc must be one of (float, int, None)")
+
+    # endregion
 
     @classmethod
     def from_json(cls, data: dict | str) -> "CardFace":
@@ -102,6 +118,7 @@ class FullCardFace(CardFace):
 
     Attributes:
         artist: str | None
+        cmc: float | None
         color_indicator: list[Color] | None
         colors: list[Color] | None
         flavor_text: str | None
@@ -126,6 +143,7 @@ class FullCardFace(CardFace):
     def __init__(
         self,
         artist: str | None = None,
+        cmc: float | None = None,
         color_indicator: list[enums.Color] | None = None,
         colors: list[enums.Color] | None = None,
         flavor_text: str | None = None,
@@ -149,6 +167,7 @@ class FullCardFace(CardFace):
         **kwargs,  # TODO: log information about kwargs
     ):
         self.artist = artist
+        self.cmc = self._validate_cmc(cmc)
         self.color_indicator = color_indicator
         self.colors = colors
         self.flavor_text = flavor_text
