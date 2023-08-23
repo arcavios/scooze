@@ -298,7 +298,7 @@ class FullCard(OracleCard):
         image_status: str | None = None,  # TODO(#36): convert to enum?
         image_uris: ImageUris | None = None,
         preview: Preview | None = None,
-        prices: Prices | None = None,
+        prices: Prices | dict | None = None,
         printed_name: str | None = None,
         printed_text: str | None = None,
         printed_type_line: str | None = None,
@@ -395,7 +395,10 @@ class FullCard(OracleCard):
         self.image_status = image_status
         self.image_uris = image_uris
         self.preview = preview
-        self.prices = prices
+
+        # If prices come in as a dict (i.e. from a model_dump), create a Prices object
+        self.prices = prices if isinstance(prices, Prices) else Prices(**prices)
+
         self.printed_name = printed_name
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line

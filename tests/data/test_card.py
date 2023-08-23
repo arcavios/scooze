@@ -1,8 +1,9 @@
-import pytest
 import json
 from pprint import pprint
-from scooze.models.card import FullCardModel
+
+import pytest
 from scooze.card import FullCard
+from scooze.models.card import FullCardModel
 
 
 @pytest.fixture
@@ -16,10 +17,12 @@ def test_temp(temp_fixture):
 
 # TODO(#65): WRITE TESTS FOR CARD OBJECT HERE
 
+
 @pytest.fixture
 def power9() -> dict:
-    with open('./data/test/test_cards.json') as file:
+    with open("./data/test/test_cards.json") as file:
         return json.load(file)
+
 
 @pytest.fixture
 def pearl(power9) -> dict:
@@ -32,10 +35,12 @@ def test_full_card_model_from_json(pearl):
     pprint(fullcardmodel.scryfall_id)
     assert False
 
+
 def test_full_card_obj_from_json(pearl):
     fullcard = FullCard(**pearl)
     pprint(fullcard.__dict__)
     assert False
+
 
 def test_model_from_obj(pearl):
     fullcardobj = FullCard(**pearl)
@@ -43,6 +48,7 @@ def test_model_from_obj(pearl):
     pprint(fullcardmodel)
     pprint(fullcardmodel.scryfall_id)
     assert False
+
 
 def test_obj_from_model(pearl):
     fullcardmodel = FullCardModel.model_construct(**pearl)

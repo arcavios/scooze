@@ -178,12 +178,14 @@ class Prices:
         usd_foil: float | None = None,
         usd_etched: float | None = None,
         eur: float | None = None,
+        eur_foil: float | None = None,
         tix: float | None = None,
     ):
         self.usd = usd
         self.usd_foil = usd_foil
         self.usd_etched = usd_etched
         self.eur = eur
+        self.eur_foil = eur_foil
         self.tix = tix
 
 
