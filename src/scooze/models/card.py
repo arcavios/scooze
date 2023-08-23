@@ -89,7 +89,6 @@ class FullCardModel(CardModel, validate_assignment=True):
         tcgplayer_id: int | None
         tcgplayer_etched_id: int | None
         cardmarket_id: int | None
-        object: str
         oracle_id: str
         prints_search_uri: str
         rulings_uri: str
@@ -199,10 +198,6 @@ class FullCardModel(CardModel, validate_assignment=True):
     )
     cardmarket_id: int | None = Field(
         description="This card's ID on Cardmarket, or `idProduct` in their system.",
-    )
-    object: str = Field(
-        default="card",
-        description="Always `card` for Card objects.",
     )
     oracle_id: str | None = Field(
         default="",
