@@ -28,6 +28,7 @@ def fullcards_json() -> list[str]:
 
     return json_list
 
+
 @pytest.fixture
 def fable_json(fullcards_json) -> dict:
     for json_str in fullcards_json:

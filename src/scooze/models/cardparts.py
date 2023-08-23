@@ -27,8 +27,7 @@ class ImageUrisModel(BaseModel, validate_assignment=True):
         description="Full card image with corners and majority of border cropped out.",
     )
     art_crop: str | None = Field(
-        default=None,
-        description="Rectangular crop to just art box; may not be perfect for cards with strange layouts."
+        default=None, description="Rectangular crop to just art box; may not be perfect for cards with strange layouts."
     )
     large: str | None = Field(
         default=None,

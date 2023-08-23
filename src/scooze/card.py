@@ -300,8 +300,7 @@ class FullCard(OracleCard):
         uri: str = "",
         # Gameplay Fields
         all_parts: list[RelatedCard] | None = None,
-        card_faces: list[FullCardFace]
-        | None = None,
+        card_faces: list[FullCardFace] | None = None,
         cmc: float | int | None = None,
         color_identity: list[Color] | None = None,
         color_indicator: list[Color] | None = None,

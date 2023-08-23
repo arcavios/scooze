@@ -422,7 +422,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     )  # TODO(#47): convert to object?
     released_at: datetime = Field(
         # TODO(#48): better default?
-        default=datetime(1993, 8, 5), # LEA release date
+        default=datetime(1993, 8, 5),  # LEA release date
         description="The date this card was first released.",
     )
     reprint: bool = Field(

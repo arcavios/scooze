@@ -1,4 +1,4 @@
-from enum import Enum, EnumMeta, auto, StrEnum
+from enum import Enum, EnumMeta, StrEnum, auto
 
 # region Enum Extensions
 
