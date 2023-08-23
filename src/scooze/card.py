@@ -40,7 +40,7 @@ class Card:
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,
+        **kwargs,  # TODO: log information about kwargs
     ):
         self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
@@ -66,53 +66,23 @@ class Card:
     def _validate_cmc(self, cmc: float | int | None) -> float:
         # TODO: docstring
 
-        if isinstance(cmc, float) or cmc is None:
+        if cmc is None or isinstance(cmc, float):
             return cmc
         elif isinstance(cmc, int):
             return float(cmc)
         else:
             raise ValueError("cmc must be one of (float, int, None)")
 
-    def _validate_image_uris(self, image_uris: ImageUris | dict | None):
-        # TODO: docstring
-
-        if isinstance(image_uris, ImageUris) or image_uris is None:
-            return image_uris
-        elif isinstance(image_uris, dict):
-            return ImageUris(**image_uris)
-        else:
-            raise ValueError("image_uris must be one of (ImageUris, dict, None)")
-
-    def _validate_prices(self, prices: Prices | dict | None):
-        # TODO: docstring
-
-        if isinstance(prices, Prices) or prices is None:
-            return prices
-        elif isinstance(prices, dict):
-            return Prices(**prices)
-        else:
-            raise ValueError("prices must be one of (Prices, dict, None)")
-
-    def _validate_released_at(self, released_at: datetime | str | None):
-        # TODO: docstring
-
-        if isinstance(released_at, datetime) or released_at is None:
-            return released_at
-        if isinstance(released_at, str):
-            return datetime.strptime(released_at, "%Y-%m-%d")  # NOTE: maybe store date format in utils if needed
-        else:
-            raise ValueError("prices must be one of (datetime, str, None)")
-
     # endregion
 
     @classmethod
-    def from_json(cls, data: dict | str):
+    def from_json(cls, data: dict | str) -> "Card":
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
             return cls(**json.loads(data))
         else:
-            raise ValueError("json must be one of (dict, str)")
+            raise ValueError(f"{cls.__name__} json must be one of (dict, str)")
 
 
 class OracleCard(Card):
@@ -172,9 +142,9 @@ class OracleCard(Card):
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,
+        **kwargs,  # TODO: log information about kwargs
     ):
-        self.card_faces = card_faces  # TODO: Add MDFC to the test data to make sure this is working correctly
+        self.card_faces = self._validate_card_faces(card_faces)
         self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator
@@ -197,6 +167,18 @@ class OracleCard(Card):
         self.rulings_uri = rulings_uri
         self.toughness = toughness
         self.type_line = type_line
+
+    # region Validators
+
+    def _validate_card_faces(self, card_faces: list[CardFace] | list[dict] | None) -> list[CardFace]:
+        if card_faces is None or all(isinstance(card_face, CardFace) for card_face in card_faces):
+            return card_faces
+        elif all(isinstance(card_face, dict) for card_face in card_faces):
+            return [CardFace.from_json(card_face) for card_face in card_faces]
+        else:
+            raise ValueError("card_faces must be one of (list[CardFace], list[Dict], None)")
+
+    # endregion
 
 
 class FullCard(OracleCard):
@@ -385,7 +367,7 @@ class FullCard(OracleCard):
         variation_of: str | None = None,
         watermark: str | None = None,
         # kwargs
-        **kwargs,
+        **kwargs,  # TODO: log information about kwargs
     ):
         # region Core Fields
 
@@ -409,8 +391,8 @@ class FullCard(OracleCard):
 
         # region Gameplay Fields
 
-        self.all_parts = all_parts
-        self.card_faces = card_faces
+        self.all_parts = self._validate_all_parts(all_parts)
+        self.card_faces = self._validate_card_faces(card_faces)
         self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator
@@ -456,7 +438,7 @@ class FullCard(OracleCard):
         self.illustration_id = illustration_id
         self.image_status = image_status
         self.image_uris = self._validate_image_uris(image_uris)
-        self.preview = preview
+        self.preview = self._validate_preview(preview)
         self.prices = self._validate_prices(prices)
         self.printed_name = printed_name
         self.printed_text = printed_text
@@ -484,14 +466,56 @@ class FullCard(OracleCard):
 
         # endregion
 
+    # region Validators
 
-# TODO: what to do with the MongoDB id?
-# class CardModelIn(BaseCardModel):
-#     pass
+    def _validate_all_parts(self, all_parts: list[RelatedCard] | list[dict] | None) -> list[RelatedCard]:
+        # TODO: docstring
 
+        if all_parts is None or all(isinstance(part, RelatedCard) for part in all_parts):
+            return all_parts
+        elif all(isinstance(part, dict) for part in all_parts):
+            return [RelatedCard(**part) for part in all_parts]
+        else:
+            raise ValueError("all_parts must be one of (list[RelatedCard], list[Dict], None)")
 
-# class CardModelOut(BaseCardModel):
-#     id: Annotated[ObjectId, model_utils.ObjectIdPydanticAnnotation] = Field(
-#         default=None,
-#         alias="_id",
-#     )
+    def _validate_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
+        # TODO: docstring
+
+        if image_uris is None or isinstance(image_uris, ImageUris):
+            return image_uris
+        elif isinstance(image_uris, dict):
+            return ImageUris(**image_uris)
+        else:
+            raise ValueError("image_uris must be one of (ImageUris, dict, None)")
+
+    def _validate_preview(self, preview: Preview | dict | None) -> Preview:
+        # TODO: docstring
+
+        if preview is None or isinstance(preview, Preview):
+            return preview
+        elif isinstance(preview, dict):
+            return Preview(**preview)
+        else:
+            raise ValueError("preview must be one of (Preview, dict, None)")
+
+    def _validate_prices(self, prices: Prices | dict | None) -> Prices:
+        # TODO: docstring
+
+        if prices is None or isinstance(prices, Prices):
+            return prices
+        elif isinstance(prices, dict):
+            return Prices(**prices)
+        else:
+            raise ValueError("prices must be one of (Prices, dict, None)")
+
+    def _validate_released_at(self, released_at: datetime | str | None) -> datetime:
+        # TODO: docstring
+
+        if released_at is None or isinstance(released_at, datetime):
+            return released_at
+        if isinstance(released_at, str):
+            return datetime.strptime(released_at, "%Y-%m-%d")  # NOTE: maybe store date format in utils if needed
+        else:
+            raise ValueError("prices must be one of (datetime, str, None)")
+
+    # endregion

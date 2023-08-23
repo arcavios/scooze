@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 import scooze.enums as enums
@@ -68,6 +69,8 @@ class CardFace:
         power: str | None = None,
         toughness: str | None = None,
         type_line: str | None = None,
+        # kwargs
+        **kwargs,  # TODO: log information about kwargs
     ):
         self.cmc = cmc
         self.color_indicator = color_indicator
@@ -80,6 +83,15 @@ class CardFace:
         self.power = power
         self.toughness = toughness
         self.type_line = type_line
+
+    @classmethod
+    def from_json(cls, data: dict | str) -> "CardFace":
+        if isinstance(data, dict):
+            return cls(**data)
+        elif isinstance(data, str):
+            return cls(**json.loads(data))
+        else:
+            raise ValueError(f"{cls.__class__} json must be one of (dict, str)")
 
 
 class FullCardFace(CardFace):
@@ -136,6 +148,8 @@ class FullCardFace(CardFace):
         toughness: str | None = None,
         type_line: str | None = None,
         watermark: str | None = None,
+        # kwargs
+        **kwargs,  # TODO: log information about kwargs
     ):
         self.artist = artist
         self.cmc = cmc
@@ -180,6 +194,8 @@ class Prices:
         eur: float | None = None,
         eur_foil: float | None = None,
         tix: float | None = None,
+        # kwargs
+        **kwargs,  # TODO: log information about kwargs
     ):
         self.usd = usd
         self.usd_foil = usd_foil
@@ -204,6 +220,8 @@ class Preview:
         previewed_at: datetime | None = None,
         source: str | None = None,
         source_uri: str | None = None,
+        # kwargs
+        **kwargs,  # TODO: log information about kwargs
     ):
         self.previewed_at = previewed_at
         self.source = source
@@ -234,6 +252,8 @@ class RelatedCard:
         name: str | None = None,
         type_line: str | None = None,
         uri: str | None = None,
+        # kwargs
+        **kwargs,  # TODO: log information about kwargs
     ):
         self.scryfall_id = scryfall_id if scryfall_id else id
         self.object = object

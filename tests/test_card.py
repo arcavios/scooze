@@ -49,6 +49,7 @@ def pearl(fullcards) -> FullCard:
 
     return None
 
+
 @pytest.fixture
 def fable(fullcards) -> FullCard:
     for card in fullcards:
@@ -68,6 +69,7 @@ def fable(fullcards) -> FullCard:
 # def test_pearl(pearl):
 #     pprint(pearl.__dict__)
 #     assert False
+
 
 def test_fable(fable):
     pprint(fable.__dict__)
