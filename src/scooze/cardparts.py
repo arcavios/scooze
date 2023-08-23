@@ -27,7 +27,7 @@ class ImageUris:
         normal: str | None = None,
         small: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.png = png
         self.border_crop = border_crop
@@ -71,7 +71,7 @@ class CardFace:
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.cmc = self._validate_cmc(cmc)
         self.color_indicator = color_indicator
@@ -164,7 +164,7 @@ class FullCardFace(CardFace):
         type_line: str | None = None,
         watermark: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.artist = artist
         self.cmc = self._validate_cmc(cmc)
@@ -220,7 +220,7 @@ class Prices:
         eur_foil: float | None = None,
         tix: float | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.usd = usd
         self.usd_foil = usd_foil
@@ -246,7 +246,7 @@ class Preview:
         source: str | None = None,
         source_uri: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.previewed_at = previewed_at
         self.source = source
@@ -278,7 +278,7 @@ class RelatedCard:
         type_line: str | None = None,
         uri: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.scryfall_id = scryfall_id if scryfall_id else id
         self.object = object

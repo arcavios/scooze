@@ -362,7 +362,7 @@ def card_wear_tear() -> OracleCard:
         name="Wear // Tear",
         cmc=3,
         colors=[Color.WHITE, Color.RED],
-        type_line="Instant",  # TODO: what is Wear//Tear's type line?
+        type_line="Instant // Instant",
     )
 
 

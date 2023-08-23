@@ -41,7 +41,7 @@ class Card:
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
@@ -147,7 +147,7 @@ class OracleCard(Card):
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.card_faces = self._validate_card_faces(card_faces, card_face_class=CardFace)
         self.cmc = self._validate_cmc(cmc)
@@ -306,9 +306,9 @@ class FullCard(OracleCard):
         scryfall_uri: str = "",
         uri: str = "",
         # Gameplay Fields
-        all_parts: list[RelatedCard] | None = None,  # TODO: Test RelatedCard data
+        all_parts: list[RelatedCard] | None = None,
         card_faces: list[FullCardFace]
-        | None = None,  # TODO: Add MDFC to the test data to make sure this is working correctly
+        | None = None,
         cmc: float | int | None = None,
         color_identity: list[Color] | None = None,
         color_indicator: list[Color] | None = None,
@@ -350,7 +350,7 @@ class FullCard(OracleCard):
         illustration_id: str | None = None,
         image_status: str | None = None,  # TODO(#36): convert to enum?
         image_uris: ImageUris | dict | None = None,
-        preview: Preview | None = None,  # TODO: Test preview data
+        preview: Preview | None = None,
         prices: Prices | dict | None = None,
         printed_name: str | None = None,
         printed_text: str | None = None,
@@ -376,7 +376,7 @@ class FullCard(OracleCard):
         variation_of: str | None = None,
         watermark: str | None = None,
         # kwargs
-        **kwargs,  # TODO: log information about kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         # region Core Fields
 
