@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 import scooze.models.utils as model_utils
 from pydantic import BaseModel, Field
@@ -151,7 +151,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         purchase_uris: dict[str, str]
         rarity: Rarity
         related_uris: dict[str, str]
-        released_at: datetime
+        released_at: date
         reprint: bool
         scryfall_set_uri: str
         security_stamp: str | None
@@ -420,9 +420,9 @@ class FullCardModel(CardModel, validate_assignment=True):
         default={},
         description="Links to this print's listing on other online resources.",
     )  # TODO(#47): convert to object?
-    released_at: datetime = Field(
+    released_at: date = Field(
         # TODO(#48): better default?
-        default=datetime(1993, 8, 5),  # LEA release date
+        default=date(year=1993, month=8, day=5),  # LEA release date
         description="The date this card was first released.",
     )
     reprint: bool = Field(

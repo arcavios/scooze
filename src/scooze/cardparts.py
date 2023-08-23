@@ -103,8 +103,6 @@ class CardFace:
             return cls(**data)
         elif isinstance(data, str):
             return cls(**json.loads(data))
-        else:
-            raise ValueError(f"{cls.__class__} json must be one of (dict, str)")
 
 
 class FullCardFace(CardFace):

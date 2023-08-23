@@ -77,12 +77,10 @@ class Card:
             return cls(**data)
         elif isinstance(data, str):
             return cls(**json.loads(data))
-        else:
-            raise ValueError(f"{cls.__name__} json must be one of (dict, str)")
 
     @classmethod
     def from_model(cls, model: CardModel) -> "Card":
-        return cls(**dict(model))
+        return cls(**dict(model))  # TODO: should this be dict(model) or model.model_dump()
 
 
 class OracleCard(Card):

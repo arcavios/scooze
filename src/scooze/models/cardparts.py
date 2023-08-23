@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 import scooze.enums as enums
 from pydantic import BaseModel, Field
@@ -199,7 +199,7 @@ class PreviewModel(BaseModel, validate_assignment=True):
         source_uri: str | None
     """
 
-    previewed_at: datetime | None = Field(
+    previewed_at: date | None = Field(
         default=None,
         description="Date/time of preview being shown or added to Scryfall.",
     )
