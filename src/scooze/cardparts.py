@@ -172,7 +172,7 @@ class Prices:
         tix: float | None
     """
 
-    def __init(
+    def __init__(
         self,
         usd: float | None = None,
         usd_foil: float | None = None,
