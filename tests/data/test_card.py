@@ -56,4 +56,5 @@ def test_obj_from_model(pearl):
     pprint(fullcardobj.__dict__)
     pprint(f"PRICES: {fullcardobj.prices.__dict__}")
     pprint(f"IMAGEURIS: {fullcardobj.image_uris.__dict__}")
+    pprint(f"RELEASED_AT: {fullcardobj.released_at}")
     assert False

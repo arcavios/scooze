@@ -202,7 +202,7 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
     scryfall_id: str = Field(
         description="ID of linked component.",
         alias="id",
-    )  # NOTE: Scryfall ID
+    )  # Scryfall ID
     object: str = Field(
         description="Always `related_card` for this object.",
     )

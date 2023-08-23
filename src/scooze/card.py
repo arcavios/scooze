@@ -236,7 +236,7 @@ class FullCard(OracleCard):
     def __init__(
         self,
         # Aliases
-        id: str = "",  # NOTE: scryfall_id
+        id: str = "",  # Alias for scryfall_id
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str = "",
@@ -307,7 +307,7 @@ class FullCard(OracleCard):
         purchase_uris: dict[str, str] = {},  # TODO(#47): convert to object?
         rarity: Rarity | None = None,  # TODO(#48): better default?
         related_uris: dict[str, str] = {},  # TODO(#47): convert to object?
-        released_at: datetime | None = None,  # TODO(#48): better default?
+        released_at: datetime | str | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
         security_stamp: str | None = None,  # TODO(#36): convert to enum?
@@ -418,7 +418,15 @@ class FullCard(OracleCard):
         self.purchase_uris = purchase_uris
         self.rarity = rarity
         self.related_uris = related_uris
-        self.released_at = released_at
+
+        # Validate incoming data for released_at
+        if isinstance(released_at, datetime):
+            self.released_at = released_at
+        elif isinstance(released_at, str):
+            self.released_at = datetime.strptime(released_at, "%Y-%m-%d") # NOTE: maybe store this in utils if needed
+        else:
+            raise ValueError("released_at must be one of (datetime, str)")
+
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri
         self.security_stamp = security_stamp
