@@ -256,7 +256,7 @@ class FullCard(OracleCard):
         # Gameplay Fields
         all_parts: list[RelatedCard] | None = None,
         card_faces: list[FullCardFace] | None = None,
-        cmc: float | None = None,
+        cmc: float | int | None = None,
         color_identity: list[Color] | None = None,
         color_indicator: list[Color] | None = None,
         colors: list[Color] | None = None,
@@ -349,7 +349,16 @@ class FullCard(OracleCard):
 
         self.all_parts = all_parts
         self.card_faces = card_faces
-        self.cmc = cmc
+
+        # Validate incoming data for cmc
+        if isinstance(cmc, float):
+            self.cmc = cmc
+        elif isinstance(cmc, int):
+            self.cmc = float(cmc)
+        else:
+            raise ValueError("cmc must be one of (float, int)")
+
+
         self.color_identity = color_identity
         self.color_indicator = color_indicator
         self.colors = colors
@@ -395,10 +404,7 @@ class FullCard(OracleCard):
         self.image_status = image_status
         self.image_uris = image_uris
         self.preview = preview
-
-        # If prices come in as a dict (i.e. from a model_dump), create a Prices object
-        self.prices = prices if isinstance(prices, Prices) else Prices(**prices)
-
+        self.prices = prices if isinstance(prices, Prices) else Prices(**prices) # Validate incoming data for prices
         self.printed_name = printed_name
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line
