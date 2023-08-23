@@ -236,7 +236,7 @@ class FullCard(OracleCard):
     def __init__(
         self,
         # Aliases
-        id: str = "", # NOTE: scryfall_id
+        id: str = "",  # NOTE: scryfall_id
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str = "",
@@ -296,7 +296,7 @@ class FullCard(OracleCard):
         highres_image: bool | None = None,
         illustration_id: str | None = None,
         image_status: str | None = None,  # TODO(#36): convert to enum?
-        image_uris: ImageUris | None = None,
+        image_uris: ImageUris | dict | None = None,
         preview: Preview | None = None,
         prices: Prices | dict | None = None,
         printed_name: str | None = None,
@@ -358,7 +358,6 @@ class FullCard(OracleCard):
         else:
             raise ValueError("cmc must be one of (float, int)")
 
-
         self.color_identity = color_identity
         self.color_indicator = color_indicator
         self.colors = colors
@@ -402,9 +401,15 @@ class FullCard(OracleCard):
         self.highres_image = highres_image
         self.illustration_id = illustration_id
         self.image_status = image_status
-        self.image_uris = image_uris
+
+        # Validate incoming data for image_uris
+        self.image_uris = image_uris if isinstance(image_uris, ImageUris) else ImageUris(**image_uris)
+
         self.preview = preview
-        self.prices = prices if isinstance(prices, Prices) else Prices(**prices) # Validate incoming data for prices
+
+        # Validate incoming data for prices
+        self.prices = prices if isinstance(prices, Prices) else Prices(**prices)
+
         self.printed_name = printed_name
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line

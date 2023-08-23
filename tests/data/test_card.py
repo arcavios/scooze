@@ -54,4 +54,6 @@ def test_obj_from_model(pearl):
     fullcardmodel = FullCardModel.model_construct(**pearl)
     fullcardobj = FullCard(**fullcardmodel.model_dump())
     pprint(fullcardobj.__dict__)
+    pprint(f"PRICES: {fullcardobj.prices.__dict__}")
+    pprint(f"IMAGEURIS: {fullcardobj.image_uris.__dict__}")
     assert False
