@@ -107,7 +107,7 @@ def fable(fullcards) -> FullCard:
 def test_obj_from_model(fable, fable_json):
     pprint(fable_json)
     fullcardmodel = FullCardModel.model_validate(fable_json)
-    pprint(fullcardmodel.all_parts)
+    pprint(fullcardmodel)
     # pprint(dict(fullcardmodel))
     fullcardobj = FullCard.from_model(fullcardmodel)
     # pprint(fullcardobj.__dict__)
