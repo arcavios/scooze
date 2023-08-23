@@ -29,7 +29,7 @@ class Card:
 
     def __init__(
         self,
-        cmc: float | None = None,
+        cmc: float | int | None = None,
         color_identity: list[Color] | None = None,
         colors: list[Color] | None = None,
         legalities: dict[Format, Legality] | None = None,
@@ -38,8 +38,10 @@ class Card:
         power: str | None = None,
         toughness: str | None = None,
         type_line: str | None = None,
+        # kwargs
+        **kwargs,
     ):
-        self.cmc = cmc
+        self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
         self.colors = colors
         self.legalities = legalities
@@ -54,6 +56,15 @@ class Card:
 
     def __str__(self):
         return self.name
+
+    def _validate_cmc(self, cmc: float | int | None) -> float:
+        # Validate incoming data for cmc
+        if isinstance(cmc, float):
+            return cmc
+        elif isinstance(cmc, int):
+            return float(cmc)
+        else:
+            raise ValueError("cmc must be one of (float, int)")
 
 
 class OracleCard(Card):
@@ -90,7 +101,7 @@ class OracleCard(Card):
     def __init__(
         self,
         card_faces: list[CardFace] | None = None,
-        cmc: float | None = None,
+        cmc: float | int | None = None,
         color_identity: list[Color] | None = None,
         color_indicator: list[Color] | None = None,
         colors: list[Color] | None = None,
@@ -112,9 +123,11 @@ class OracleCard(Card):
         rulings_uri: str = "",
         toughness: str | None = None,
         type_line: str | None = None,
+        # kwargs
+        **kwargs,
     ):
-        self.card_faces = card_faces
-        self.cmc = cmc
+        self.card_faces = card_faces  # TODO: Add MDFC to the test data to make sure this is working correctly
+        self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator
         self.colors = colors
@@ -254,8 +267,9 @@ class FullCard(OracleCard):
         scryfall_uri: str = "",
         uri: str = "",
         # Gameplay Fields
-        all_parts: list[RelatedCard] | None = None,
-        card_faces: list[FullCardFace] | None = None,
+        all_parts: list[RelatedCard] | None = None,  # TODO: Test RelatedCard data
+        card_faces: list[FullCardFace]
+        | None = None,  # TODO: Add MDFC to the test data to make sure this is working correctly
         cmc: float | int | None = None,
         color_identity: list[Color] | None = None,
         color_indicator: list[Color] | None = None,
@@ -297,7 +311,7 @@ class FullCard(OracleCard):
         illustration_id: str | None = None,
         image_status: str | None = None,  # TODO(#36): convert to enum?
         image_uris: ImageUris | dict | None = None,
-        preview: Preview | None = None,
+        preview: Preview | None = None,  # TODO: Test preview data
         prices: Prices | dict | None = None,
         printed_name: str | None = None,
         printed_text: str | None = None,
@@ -349,15 +363,7 @@ class FullCard(OracleCard):
 
         self.all_parts = all_parts
         self.card_faces = card_faces
-
-        # Validate incoming data for cmc
-        if isinstance(cmc, float):
-            self.cmc = cmc
-        elif isinstance(cmc, int):
-            self.cmc = float(cmc)
-        else:
-            raise ValueError("cmc must be one of (float, int)")
-
+        self.cmc = self._validate_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator
         self.colors = colors
@@ -423,7 +429,7 @@ class FullCard(OracleCard):
         if isinstance(released_at, datetime):
             self.released_at = released_at
         elif isinstance(released_at, str):
-            self.released_at = datetime.strptime(released_at, "%Y-%m-%d") # NOTE: maybe store this in utils if needed
+            self.released_at = datetime.strptime(released_at, "%Y-%m-%d")  # NOTE: maybe store this in utils if needed
         else:
             raise ValueError("released_at must be one of (datetime, str)")
 
