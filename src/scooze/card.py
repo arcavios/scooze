@@ -235,14 +235,11 @@ class FullCard(OracleCard):
 
     def __init__(
         self,
-        # Deprecated/Unsupported Fields
-        artist_ids: list[str] = None,
-        foil: bool = None,
-        nonfoil: bool = None,
+        # Aliases
+        id: str = "", # NOTE: scryfall_id
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str = "",
-        id: str = "",
         lang: str = "en",  # TODO(#36): convert to enum?
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
@@ -256,7 +253,7 @@ class FullCard(OracleCard):
         rulings_uri: str = "",
         scryfall_uri: str = "",
         uri: str = "",
-        # Gaeplay Fields
+        # Gameplay Fields
         all_parts: list[RelatedCard] | None = None,
         card_faces: list[FullCardFace] | None = None,
         cmc: float | None = None,
@@ -325,6 +322,8 @@ class FullCard(OracleCard):
         variation: bool = False,
         variation_of: str | None = None,
         watermark: str | None = None,
+        # kwargs
+        **kwargs,
     ):
         # region Core Fields
 

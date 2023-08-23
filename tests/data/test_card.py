@@ -43,3 +43,9 @@ def test_model_from_obj(pearl):
     pprint(fullcardmodel)
     pprint(fullcardmodel.scryfall_id)
     assert False
+
+def test_obj_from_model(pearl):
+    fullcardmodel = FullCardModel.model_construct(**pearl)
+    fullcardobj = FullCard(**fullcardmodel.model_dump())
+    pprint(fullcardobj.__dict__)
+    assert False
