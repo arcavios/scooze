@@ -3,7 +3,6 @@ import os.path
 from sys import stdout
 from typing import Any
 
-
 DEFAULT_BULK_FILE_DIR = "./data/bulk/"
 
 
