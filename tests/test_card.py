@@ -35,16 +35,24 @@ def fullcards(fullcards_json) -> list[FullCard]:
     for json_str in fullcards_json:
         card_json = json.loads(json_str)
         card = FullCard.from_json(card_json)
-        pprint(f"CARD: {card}")
         cards.append(card)
 
     return cards
 
 
+# TODO: Scope this so that it only runs once at the beginning because we don't want to check every card every time
 @pytest.fixture
 def pearl(fullcards) -> FullCard:
     for card in fullcards:
         if card.scryfall_id == "8ebe4be7-e12a-4596-a899-fbd5b152e879":
+            return card
+
+    return None
+
+@pytest.fixture
+def fable(fullcards) -> FullCard:
+    for card in fullcards:
+        if card.scryfall_id == "24c0d87b-0049-4beb-b9cb-6f813b7aa7dc":
             return card
 
     return None
@@ -57,8 +65,12 @@ def pearl(fullcards) -> FullCard:
 #     assert False
 
 
-def test_full_card_obj_from_json(pearl):
-    pprint(pearl.__dict__)
+# def test_pearl(pearl):
+#     pprint(pearl.__dict__)
+#     assert False
+
+def test_fable(fable):
+    pprint(fable.__dict__)
     assert False
 
 
