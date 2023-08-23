@@ -10,6 +10,7 @@ from scooze.cardparts import (
     RelatedCard,
 )
 from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
+from scooze.models.card import CardModel
 
 
 class Card:
@@ -83,6 +84,10 @@ class Card:
             return cls(**json.loads(data))
         else:
             raise ValueError(f"{cls.__name__} json must be one of (dict, str)")
+
+    @classmethod
+    def from_model(cls, model: CardModel) -> "Card":
+        return cls(**model.model_dump())
 
 
 class OracleCard(Card):

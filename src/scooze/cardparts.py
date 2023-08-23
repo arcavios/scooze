@@ -26,6 +26,8 @@ class ImageUris:
         large: str | None = None,
         normal: str | None = None,
         small: str | None = None,
+        # kwargs
+        **kwargs,  # TODO: log information about kwargs
     ):
         self.png = png
         self.border_crop = border_crop
@@ -43,7 +45,6 @@ class CardFace:
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
     Attributes:
-        cmc: float | None
         color_indicator: list[Color] | None
         colors: list[Color] | None
         loyalty: int | None
@@ -58,7 +59,6 @@ class CardFace:
 
     def __init__(
         self,
-        cmc: float | None = None,
         color_indicator: list[enums.Color] | None = None,
         colors: list[enums.Color] | None = None,
         loyalty: int | None = None,
@@ -72,7 +72,6 @@ class CardFace:
         # kwargs
         **kwargs,  # TODO: log information about kwargs
     ):
-        self.cmc = cmc
         self.color_indicator = color_indicator
         self.colors = colors
         self.loyalty = loyalty
@@ -103,7 +102,6 @@ class FullCardFace(CardFace):
 
     Attributes:
         artist: str | None
-        cmc: float | None
         color_indicator: list[Color] | None
         colors: list[Color] | None
         flavor_text: str | None
@@ -128,7 +126,6 @@ class FullCardFace(CardFace):
     def __init__(
         self,
         artist: str | None = None,
-        cmc: float | None = None,
         color_indicator: list[enums.Color] | None = None,
         colors: list[enums.Color] | None = None,
         flavor_text: str | None = None,
@@ -152,12 +149,11 @@ class FullCardFace(CardFace):
         **kwargs,  # TODO: log information about kwargs
     ):
         self.artist = artist
-        self.cmc = cmc
         self.color_indicator = color_indicator
         self.colors = colors
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
-        self.image_uris = image_uris
+        self.image_uris = self._validate_image_uris(image_uris)
         self.layout = layout  # TODO(#36): convert to enum?
         self.loyalty = loyalty
         self.mana_cost = mana_cost
@@ -172,6 +168,16 @@ class FullCardFace(CardFace):
         self.toughness = toughness
         self.type_line = type_line
         self.watermark = watermark
+
+    def _validate_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
+        # TODO: docstring
+
+        if image_uris is None or isinstance(image_uris, ImageUris):
+            return image_uris
+        elif isinstance(image_uris, dict):
+            return ImageUris(**image_uris)
+        else:
+            raise ValueError("image_uris must be one of (ImageUris, dict, None)")
 
 
 class Prices:
