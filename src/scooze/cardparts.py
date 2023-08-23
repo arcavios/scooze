@@ -73,7 +73,7 @@ class CardFace:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = self._validate_cmc(cmc)
+        self.cmc = self._normalize_cmc(cmc)
         self.color_indicator = color_indicator
         self.colors = colors
         self.loyalty = loyalty
@@ -85,17 +85,15 @@ class CardFace:
         self.toughness = toughness
         self.type_line = type_line
 
-    # region Validators
+    # region Normalizers
 
-    def _validate_cmc(self, cmc: float | int | None) -> float:
+    def _normalize_cmc(self, cmc: float | int | None) -> float:
         # TODO: docstring
 
         if cmc is None or isinstance(cmc, float):
             return cmc
         elif isinstance(cmc, int):
             return float(cmc)
-        else:
-            raise ValueError("cmc must be one of (float, int, None)")
 
     # endregion
 
@@ -153,7 +151,7 @@ class FullCardFace(CardFace):
         loyalty: int | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
-        _object: str | None = None,
+        object: str | None = None,
         oracle_id: str | None = None,
         oracle_text: str | None = None,
         power: str | None = None,
@@ -167,17 +165,17 @@ class FullCardFace(CardFace):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.artist = artist
-        self.cmc = self._validate_cmc(cmc)
+        self.cmc = self._normalize_cmc(cmc)
         self.color_indicator = color_indicator
         self.colors = colors
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
-        self.image_uris = self._validate_image_uris(image_uris)
+        self.image_uris = self._normalize_image_uris(image_uris)
         self.layout = layout  # TODO(#36): convert to enum?
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
-        self.object = _object
+        self.object = object
         self.oracle_id = oracle_id
         self.oracle_text = oracle_text
         self.power = power
@@ -188,15 +186,13 @@ class FullCardFace(CardFace):
         self.type_line = type_line
         self.watermark = watermark
 
-    def _validate_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
+    def _normalize_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
         # TODO: docstring
 
         if image_uris is None or isinstance(image_uris, ImageUris):
             return image_uris
         elif isinstance(image_uris, dict):
             return ImageUris(**image_uris)
-        else:
-            raise ValueError("image_uris must be one of (ImageUris, dict, None)")
 
 
 class Prices:

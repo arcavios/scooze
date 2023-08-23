@@ -43,7 +43,7 @@ class Card:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = self._validate_cmc(cmc)
+        self.cmc = self._normalize_cmc(cmc)
         self.color_identity = color_identity
         self.colors = colors
         self.legalities = legalities
@@ -56,23 +56,18 @@ class Card:
     def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
         return self.name.__hash__()
 
-    # def __repr__(self):
-    #     return f"<{self.__class__.__name__}({self.x}, {self.y}, {self.z})>"
-
     def __str__(self):
         return self.name
 
-    # region Validators
+    # region Normalizers
 
-    def _validate_cmc(self, cmc: float | int | None) -> float:
+    def _normalize_cmc(self, cmc: float | int | None) -> float:
         # TODO: docstring
 
         if cmc is None or isinstance(cmc, float):
             return cmc
         elif isinstance(cmc, int):
             return float(cmc)
-        else:
-            raise ValueError("cmc must be one of (float, int, None)")
 
     # endregion
 
@@ -87,7 +82,7 @@ class Card:
 
     @classmethod
     def from_model(cls, model: CardModel) -> "Card":
-        return cls(**model.model_dump())
+        return cls(**dict(model))
 
 
 class OracleCard(Card):
@@ -149,8 +144,8 @@ class OracleCard(Card):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.card_faces = self._validate_card_faces(card_faces, card_face_class=CardFace)
-        self.cmc = self._validate_cmc(cmc)
+        self.card_faces = self._normalize_card_faces(card_faces, card_face_class=CardFace)
+        self.cmc = self._normalize_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator
         self.colors = colors
@@ -173,9 +168,9 @@ class OracleCard(Card):
         self.toughness = toughness
         self.type_line = type_line
 
-    # region Validators
+    # region Normalizers
 
-    def _validate_card_faces(
+    def _normalize_card_faces(
         self,
         card_faces: list[CardFace] | list[dict] | None,
         card_face_class: CardFace | FullCardFace = FullCardFace,
@@ -184,8 +179,6 @@ class OracleCard(Card):
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
             return [card_face_class.from_json(card_face) for card_face in card_faces]
-        else:
-            raise ValueError(f"card_faces must be one of (list[{card_face_class.__name__}], list[Dict], None)")
 
     # endregion
 
@@ -400,9 +393,9 @@ class FullCard(OracleCard):
 
         # region Gameplay Fields
 
-        self.all_parts = self._validate_all_parts(all_parts)
-        self.card_faces = self._validate_card_faces(card_faces, card_face_class=FullCardFace)
-        self.cmc = self._validate_cmc(cmc)
+        self.all_parts = self._normalize_all_parts(all_parts)
+        self.card_faces = self._normalize_card_faces(card_faces, card_face_class=FullCardFace)
+        self.cmc = self._normalize_cmc(cmc)
         self.color_identity = color_identity
         self.color_indicator = color_indicator
         self.colors = colors
@@ -446,9 +439,9 @@ class FullCard(OracleCard):
         self.highres_image = highres_image
         self.illustration_id = illustration_id
         self.image_status = image_status
-        self.image_uris = self._validate_image_uris(image_uris)
-        self.preview = self._validate_preview(preview)
-        self.prices = self._validate_prices(prices)
+        self.image_uris = self._normalize_image_uris(image_uris)
+        self.preview = self._normalize_preview(preview)
+        self.prices = self._normalize_prices(prices)
         self.printed_name = printed_name
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line
@@ -457,7 +450,7 @@ class FullCard(OracleCard):
         self.purchase_uris = purchase_uris
         self.rarity = rarity
         self.related_uris = related_uris
-        self.released_at = self._validate_released_at(released_at)
+        self.released_at = self._normalize_released_at(released_at)
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri
         self.security_stamp = security_stamp
@@ -475,56 +468,46 @@ class FullCard(OracleCard):
 
         # endregion
 
-    # region Validators
+    # region Normalizers
 
-    def _validate_all_parts(self, all_parts: list[RelatedCard] | list[dict] | None) -> list[RelatedCard]:
+    def _normalize_all_parts(self, all_parts: list[RelatedCard] | list[dict] | None) -> list[RelatedCard]:
         # TODO: docstring
 
         if all_parts is None or all(isinstance(part, RelatedCard) for part in all_parts):
             return all_parts
         elif all(isinstance(part, dict) for part in all_parts):
             return [RelatedCard(**part) for part in all_parts]
-        else:
-            raise ValueError("all_parts must be one of (list[RelatedCard], list[Dict], None)")
 
-    def _validate_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
+    def _normalize_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
         # TODO: docstring
 
         if image_uris is None or isinstance(image_uris, ImageUris):
             return image_uris
         elif isinstance(image_uris, dict):
             return ImageUris(**image_uris)
-        else:
-            raise ValueError("image_uris must be one of (ImageUris, dict, None)")
 
-    def _validate_preview(self, preview: Preview | dict | None) -> Preview:
+    def _normalize_preview(self, preview: Preview | dict | None) -> Preview:
         # TODO: docstring
 
         if preview is None or isinstance(preview, Preview):
             return preview
         elif isinstance(preview, dict):
             return Preview(**preview)
-        else:
-            raise ValueError("preview must be one of (Preview, dict, None)")
 
-    def _validate_prices(self, prices: Prices | dict | None) -> Prices:
+    def _normalize_prices(self, prices: Prices | dict | None) -> Prices:
         # TODO: docstring
 
         if prices is None or isinstance(prices, Prices):
             return prices
         elif isinstance(prices, dict):
             return Prices(**prices)
-        else:
-            raise ValueError("prices must be one of (Prices, dict, None)")
 
-    def _validate_released_at(self, released_at: datetime | str | None) -> datetime:
+    def _normalize_released_at(self, released_at: datetime | str | None) -> datetime:
         # TODO: docstring
 
         if released_at is None or isinstance(released_at, datetime):
             return released_at
         if isinstance(released_at, str):
             return datetime.strptime(released_at, "%Y-%m-%d")  # NOTE: maybe store date format in utils if needed
-        else:
-            raise ValueError("prices must be one of (datetime, str, None)")
 
     # endregion
