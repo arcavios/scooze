@@ -80,7 +80,7 @@ class Card:
 
     @classmethod
     def from_model(cls, model: CardModel) -> "Card":
-        return cls(**dict(model))  # TODO: should this be dict(model) or model.model_dump()
+        return cls(**model.model_dump())  # TODO: should this be dict(model) or model.model_dump()
 
 
 class OracleCard(Card):
