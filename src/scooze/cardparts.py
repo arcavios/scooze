@@ -91,6 +91,7 @@ class FullCardFace(CardFace):
 
     Attributes:
         artist: str | None
+        artist_id: list[str] | None
         cmc: float | None
         color_indicator: list[Color] | None
         colors: list[Color] | None
@@ -115,6 +116,7 @@ class FullCardFace(CardFace):
     def __init__(
         self,
         artist: str | None = None,
+        artist_id: list[str] | None = None,
         cmc: float | None = None,
         color_indicator: list[enums.Color] | None = None,
         colors: list[enums.Color] | None = None,
@@ -136,6 +138,7 @@ class FullCardFace(CardFace):
         watermark: str | None = None,
     ):
         self.artist = artist
+        self.artist_id = artist_id,
         self.cmc = cmc
         self.color_indicator = color_indicator
         self.colors = colors
