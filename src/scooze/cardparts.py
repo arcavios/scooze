@@ -101,7 +101,6 @@ class FullCardFace(CardFace):
         loyalty: int | None
         mana_cost: str | None
         name: str | None
-        object: str | None
         oracle_id: str | None
         oracle_text: str | None
         power: str | None
@@ -126,7 +125,6 @@ class FullCardFace(CardFace):
         loyalty: int | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
-        _object: str | None = None,
         oracle_id: str | None = None,
         oracle_text: str | None = None,
         power: str | None = None,
@@ -148,7 +146,6 @@ class FullCardFace(CardFace):
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
-        self.object = _object
         self.oracle_id = oracle_id
         self.oracle_text = oracle_text
         self.power = power
@@ -216,7 +213,6 @@ class RelatedCard:
 
     Attributes:
         scryfall_id: str | None
-        object: str | None
         component: str | None
         name: str | None
         type_line: str | None
@@ -226,14 +222,12 @@ class RelatedCard:
     def __init__(
         self,
         scryfall_id: str | None = None,
-        _object: str | None = None,
         component: str | None = None,
         name: str | None = None,
         type_line: str | None = None,
         uri: str | None = None,
     ):
         self.scryfall_id = scryfall_id
-        self.object = _object
         self.component = component  # TODO(#36): convert to enum?
         self.name = name
         self.type_line = type_line

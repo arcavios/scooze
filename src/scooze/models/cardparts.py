@@ -57,7 +57,6 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         loyalty: int | None
         mana_cost: str
         name: str
-        object: str
         oracle_id: str | None
         oracle_text: str | None
         power: str | None
@@ -101,9 +100,6 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     )
     name: str = Field(
         description="Name of this face.",
-    )
-    object: str = Field(
-        description="Always `card_face`, for a card face object.",
     )
     oracle_id: str | None = Field(
         description="Oracle ID of this face, for reversible cards.",
@@ -192,7 +188,6 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
 
     Attributes:
         id: str
-        object: str
         component: str
         name: str
         type_line: str
@@ -202,9 +197,6 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
     id: str = Field(
         description="ID of linked component.",
     )  # NOTE: Scryfall ID
-    object: str = Field(
-        description="Always `related_card` for this object.",
-    )
     component: str = Field(
         description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.",
     )  # TODO(#36): convert to enum?

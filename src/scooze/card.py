@@ -154,7 +154,6 @@ class FullCard(OracleCard):
         tcgplayer_id: int | None
         tcgplayer_etched_id: int | None
         cardmarket_id: int | None
-        object: str
         oracle_id: str | None
         prints_search_uri: str
         rulings_uri: str
@@ -244,7 +243,6 @@ class FullCard(OracleCard):
         tcgplayer_id: int | None = None,
         tcgplayer_etched_id: int | None = None,
         cardmarket_id: int | None = None,
-        _object: str = "card",
         oracle_id: str | None = None,
         prints_search_uri: str = "",
         rulings_uri: str = "",
@@ -329,7 +327,6 @@ class FullCard(OracleCard):
         self.tcgplayer_id = tcgplayer_id
         self.tcgplayer_etched_id = tcgplayer_etched_id
         self.cardmarket_id = cardmarket_id
-        self.object = _object
         self.oracle_id = oracle_id
         self.prints_search_uri = prints_search_uri
         self.rulings_uri = rulings_uri
