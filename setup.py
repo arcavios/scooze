@@ -18,7 +18,7 @@ class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatte
 def parse_args():
     # Construct the argument parser and parse the arguments
     arg_desc = (
-        f"""R|Welcome to the scooze setup tool!\n"""
+        f"""Welcome to the scooze setup tool!\n"""
         f"""---------------------------------\n"""
         f"""This tool is meant to setup a local MongoDB of Magic card and deck data to test with.\n"""
         f"""Use -h, --help for more information."""
