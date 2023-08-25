@@ -29,8 +29,6 @@ from scooze.models.card import CardModel, FullCardModel
 # 8. Figure out if Card.from_model() should use model_dump() or dict(). Investigate the key differences.
 
 
-
-
 @pytest.fixture
 def cards_json() -> list[str]:
     with open("./data/test/test_cards.jsonl", "r") as json_file:
