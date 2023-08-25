@@ -89,7 +89,6 @@ class FullCardModel(CardModel, validate_assignment=True):
         tcgplayer_id: int | None
         tcgplayer_etched_id: int | None
         cardmarket_id: int | None
-        object: str
         oracle_id: str
         prints_search_uri: str
         rulings_uri: str
