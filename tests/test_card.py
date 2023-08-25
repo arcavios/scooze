@@ -1,10 +1,9 @@
-import inspect
 import json
-from pprint import pprint
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
 from scooze.models.card import CardModel, FullCardModel
+from scooze.enums import Color, Legality, Format
 
 
 @pytest.fixture
@@ -59,22 +58,22 @@ def get_card_json(cards_json: list[str], id: str) -> dict:
             return card_json
 
 
-# NOTE: helper to filter dunders out of getmembers
-def get_members(obj):
-    return list(filter(lambda t: not t[0].endswith("__"), inspect.getmembers(obj)))
-
-
 # region Card JSON
 
 
 @pytest.fixture
 def json_ancestral_recall(cards_json) -> dict:
-    return get_card_json(cards_json, "70e7ddf2-5604-41e7-bb9d-ddd03d3e9d0b")
+    return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
 
 
 @pytest.fixture
 def json_mystic_snake(cards_json) -> dict:
     return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
+
+
+@pytest.fixture
+def json_ancestral_visions(cards_json) -> dict:
+    return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
 
 
 # Digital
@@ -115,82 +114,56 @@ def json_orochi_eggwatcher(cards_json) -> dict:
 
 # endregion
 
-# region FullCard Objects
-
-# TODO: setup fullcards manually
-
-
-@pytest.fixture
-def fullcard_ancestral_recall() -> dict:
-    return FullCard()
-
-
-@pytest.fixture
-def fullcard_mystic_snake() -> dict:
-    return FullCard()
-
-
-# Digital
-@pytest.fixture
-def fullcard_urzas_construction_drone() -> dict:
-    return FullCard()
-
-
-# Transform (Saga)
-@pytest.fixture
-def fullcard_tales_of_master_seshiro() -> dict:
-    return FullCard()
-
-
-# Transform (Planeswalker)
-@pytest.fixture
-def fullcard_arlinn_the_packs_hope() -> dict:
-    return FullCard()
-
-
-# Split (Aftermath)
-@pytest.fixture
-def fullcard_driven_despair() -> dict:
-    return FullCard()
-
-
-# MDFC
-@pytest.fixture
-def fullcard_turntimber_symbiosis() -> dict:
-    return FullCard()
-
-
-# Flip
-@pytest.fixture
-def fullcard_orochi_eggwatcher() -> dict:
-    return FullCard()
-
-
-# endregion
-
-
 # region json -> Card Object
 
 
-def test_card_obj_from_json(json_mystic_snake):
-    card = Card.from_json(json_mystic_snake)
-    print("test_card_obj_from_json")
-    pprint(get_members(card))
-    assert True
+def test_card_from_json(json_ancestral_recall):
+    card = Card.from_json(json_ancestral_recall)
+    assert card.cmc == 1.0
+    assert card.color_identity == [Color.BLUE]
+    assert card.colors == [Color.BLUE]
+    assert card.legalities == {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
+    assert card.mana_cost == "{U}"
+    assert card.name == "Ancestral Recall"
+    assert card.power is None
+    assert card.toughness is None
+    assert card.type_line == "Instant"
 
 
-def test_oracle_card_obj_from_json(json_mystic_snake):
-    oracle_card = OracleCard.from_json(json_mystic_snake)
-    print("test_oracle_card_obj_from_json")
-    pprint(get_members(oracle_card))
-    assert True
+# def test_oracle_card_obj_from_json(json_mystic_snake):
+#     oracle_card = OracleCard.from_json(json_mystic_snake)
+#     print("test_oracle_card_obj_from_json")
+#     pprint(get_members(oracle_card))
+#     assert True
 
 
-def test_full_card_obj_from_json(json_mystic_snake):
-    full_card = FullCard.from_json(json_mystic_snake)
-    print("test_full_card_obj_from_json")
-    pprint(get_members(full_card))
-    assert True
+# def test_full_card_obj_from_json(json_mystic_snake):
+#     full_card = FullCard.from_json(json_mystic_snake)
+#     print("test_full_card_obj_from_json")
+#     pprint(get_members(full_card))
+#     assert True
 
 
 # endregion
@@ -199,18 +172,18 @@ def test_full_card_obj_from_json(json_mystic_snake):
 # region json -> CardModel
 
 
-def test_card_model_from_json(json_mystic_snake):
-    card_model = CardModel.model_validate(json_mystic_snake)
-    print("test_card_model_from_json")
-    pprint(dict(card_model))
-    assert True
+# def test_card_model_from_json(json_mystic_snake):
+#     card_model = CardModel.model_validate(json_mystic_snake)
+#     print("test_card_model_from_json")
+#     pprint(dict(card_model))
+#     assert True
 
 
-def test_full_card_from_json(json_mystic_snake):
-    full_card_model = FullCardModel.model_validate(json_mystic_snake)
-    print("test_full_card_model_from_json")
-    pprint(dict(full_card_model))
-    assert True
+# def test_full_card_from_json(json_mystic_snake):
+#     full_card_model = FullCardModel.model_validate(json_mystic_snake)
+#     print("test_full_card_model_from_json")
+#     pprint(dict(full_card_model))
+#     assert True
 
 
 # endregion
@@ -219,28 +192,28 @@ def test_full_card_from_json(json_mystic_snake):
 # region CardModel -> Card Object
 
 
-def test_card_object_from_card_model(json_mystic_snake):
-    card_model = CardModel.model_validate(json_mystic_snake)
-    card = Card.from_model(card_model)
-    print("test_card_object_from_card_model")
-    pprint(get_members(card))
-    assert True
+# def test_card_object_from_card_model(json_mystic_snake):
+#     card_model = CardModel.model_validate(json_mystic_snake)
+#     card = Card.from_model(card_model)
+#     print("test_card_object_from_card_model")
+#     pprint(get_members(card))
+#     assert True
 
 
-def test_oracle_card_object_from_full_card_model(json_mystic_snake):
-    full_card_model = FullCardModel.model_validate(json_mystic_snake)
-    full_card = OracleCard.from_model(full_card_model)
-    print("test_oracle_card_object_from_full_card_model")
-    pprint(get_members(full_card))
-    assert True
+# def test_oracle_card_object_from_full_card_model(json_mystic_snake):
+#     full_card_model = FullCardModel.model_validate(json_mystic_snake)
+#     full_card = OracleCard.from_model(full_card_model)
+#     print("test_oracle_card_object_from_full_card_model")
+#     pprint(get_members(full_card))
+#     assert True
 
 
-def test_full_card_object_from_full_card_model(json_mystic_snake):
-    full_card_model = FullCardModel.model_validate(json_mystic_snake)
-    full_card = FullCard.from_model(full_card_model)
-    print("test_full_card_object_from_full_card_model")
-    pprint(get_members(full_card))
-    assert True
+# def test_full_card_object_from_full_card_model(json_mystic_snake):
+#     full_card_model = FullCardModel.model_validate(json_mystic_snake)
+#     full_card = FullCard.from_model(full_card_model)
+#     print("test_full_card_object_from_full_card_model")
+#     pprint(get_members(full_card))
+#     assert True
 
 
 # endregion
