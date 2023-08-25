@@ -1,7 +1,10 @@
 import json
 from datetime import datetime
+from typing import TypeVar
 
-import scooze.enums as enums
+from scooze.enums import Color
+
+F = TypeVar("F")
 
 
 class ImageUris:
@@ -35,162 +38,6 @@ class ImageUris:
         self.large = large
         self.normal = normal
         self.small = small
-
-
-class CardFace:
-    """
-    Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
-    Multi-faced cards include MDFCs, split cards, aftermath, etc.
-
-    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
-
-    Attributes:
-        color_indicator: set[Color] | None
-        colors: set[Color] | None
-        loyalty: int | None
-        mana_cost: str | None
-        name: str | None
-        oracle_id: str | None
-        oracle_text: str | None
-        power: str | None
-        toughness: str | None
-        type_line: str | None
-    """
-
-    def __init__(
-        self,
-        cmc: float | None = None,
-        color_indicator: set[enums.Color] | None = None,
-        colors: set[enums.Color] | None = None,
-        loyalty: int | None = None,
-        mana_cost: str | None = None,
-        name: str | None = None,
-        oracle_id: str | None = None,
-        oracle_text: str | None = None,
-        power: str | None = None,
-        toughness: str | None = None,
-        type_line: str | None = None,
-        # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
-    ):
-        self.cmc = self._normalize_cmc(cmc)
-        self.color_indicator = color_indicator
-        self.colors = colors
-        self.loyalty = loyalty
-        self.mana_cost = mana_cost
-        self.name = name
-        self.oracle_id = oracle_id
-        self.oracle_text = oracle_text
-        self.power = power
-        self.toughness = toughness
-        self.type_line = type_line
-
-    # region Normalizers
-
-    def _normalize_cmc(self, cmc: float | int | None) -> float:
-        # TODO: docstring
-
-        if cmc is None or isinstance(cmc, float):
-            return cmc
-        elif isinstance(cmc, int):
-            return float(cmc)
-
-    # endregion
-
-    @classmethod
-    def from_json(cls, data: dict | str) -> "CardFace":
-        if isinstance(data, dict):
-            return cls(**data)
-        elif isinstance(data, str):
-            return cls(**json.loads(data))
-
-
-class FullCardFace(CardFace):
-    """
-    Object for a single face of a multi-faced FullCard.
-    Multi-faced cards include MDFCs, split cards, aftermath, etc.
-
-    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
-
-    Attributes:
-        artist: str | None
-        cmc: float | None
-        color_indicator: set[Color] | None
-        colors: set[Color] | None
-        flavor_text: str | None
-        illustration_id: int | None
-        image_uris: list[str] | None
-        layout: str | None
-        loyalty: int | None
-        mana_cost: str | None
-        name: str | None
-        object: str | None
-        oracle_id: str | None
-        oracle_text: str | None
-        power: str | None
-        printed_name: str | None
-        printed_text: str | None
-        printed_type_line: str | None
-        toughness: str | None
-        type_line: str | None
-        watermark: str | None
-    """
-
-    def __init__(
-        self,
-        artist: str | None = None,
-        cmc: float | None = None,
-        color_indicator: set[enums.Color] | None = None,
-        colors: set[enums.Color] | None = None,
-        flavor_text: str | None = None,
-        illustration_id: int | None = None,
-        image_uris: ImageUris | None = None,
-        layout: str | None = None,
-        loyalty: int | None = None,
-        mana_cost: str | None = None,
-        name: str | None = None,
-        object: str | None = None,
-        oracle_id: str | None = None,
-        oracle_text: str | None = None,
-        power: str | None = None,
-        printed_name: str | None = None,
-        printed_text: str | None = None,
-        printed_type_line: str | None = None,
-        toughness: str | None = None,
-        type_line: str | None = None,
-        watermark: str | None = None,
-        # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
-    ):
-        self.artist = artist
-        self.cmc = self._normalize_cmc(cmc)
-        self.color_indicator = color_indicator
-        self.colors = colors
-        self.flavor_text = flavor_text
-        self.illustration_id = illustration_id
-        self.image_uris = self._normalize_image_uris(image_uris)
-        self.layout = layout  # TODO(#36): convert to enum?
-        self.loyalty = loyalty
-        self.mana_cost = mana_cost
-        self.name = name
-        self.object = object
-        self.oracle_id = oracle_id
-        self.oracle_text = oracle_text
-        self.power = power
-        self.printed_name = printed_name
-        self.printed_text = printed_text
-        self.printed_type_line = printed_type_line
-        self.toughness = toughness
-        self.type_line = type_line
-        self.watermark = watermark
-
-    def _normalize_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
-        # TODO: docstring
-
-        if image_uris is None or isinstance(image_uris, ImageUris):
-            return image_uris
-        elif isinstance(image_uris, dict):
-            return ImageUris(**image_uris)
 
 
 class Prices:
@@ -280,3 +127,172 @@ class RelatedCard:
         self.name = name
         self.type_line = type_line
         self.uri = uri
+
+
+class CardFace:
+    """
+    Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc.
+
+    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
+
+    Attributes:
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
+        loyalty: str | None
+        mana_cost: str | None
+        name: str | None
+        oracle_id: str | None
+        oracle_text: str | None
+        power: str | None
+        toughness: str | None
+        type_line: str | None
+    """
+
+    def __init__(
+        self,
+        cmc: float | None = None,
+        color_indicator: set[Color] | None = None,
+        colors: set[Color] | None = None,
+        loyalty: str | None = None,
+        mana_cost: str | None = None,
+        name: str | None = None,
+        oracle_id: str | None = None,
+        oracle_text: str | None = None,
+        power: str | None = None,
+        toughness: str | None = None,
+        type_line: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
+    ):
+        self.cmc = self._normalize_cmc(cmc)
+        self.color_indicator = self._normalize_color_indicator(color_indicator)
+        self.colors = self._normalize_colors(colors)
+        self.loyalty = loyalty
+        self.mana_cost = mana_cost
+        self.name = name
+        self.oracle_id = oracle_id
+        self.oracle_text = oracle_text
+        self.power = power
+        self.toughness = toughness
+        self.type_line = type_line
+
+    # region Normalizers
+
+    def _normalize_cmc(self, cmc: float | int | None) -> float:
+        # TODO: docstring
+
+        if cmc is None or isinstance(cmc, float):
+            return cmc
+        elif isinstance(cmc, int):
+            return float(cmc)
+
+    def _normalize_color_indicator(self, color_indicator: set[Color] | list[Color] | None) -> set[Color]:
+        # TODO: docstring
+
+        if color_indicator is None or isinstance(color_indicator, set):
+            return color_indicator
+        elif isinstance(color_indicator, list):
+            return set(color_indicator)
+
+    def _normalize_colors(self, colors: set[Color] | list[Color] | None) -> set[Color]:
+        # TODO: docstring
+
+        if colors is None or isinstance(colors, set):
+            return colors
+        elif isinstance(colors, list):
+            return set(colors)
+
+    # endregion
+
+    @classmethod
+    def from_json(cls: type[F], data: dict | str) -> F:
+        if isinstance(data, dict):
+            return cls(**data)
+        elif isinstance(data, str):
+            return cls(**json.loads(data))
+
+
+class FullCardFace(CardFace):
+    """
+    Object for a single face of a multi-faced FullCard.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc.
+
+    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
+
+    Attributes:
+        artist: str | None
+        cmc: float | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
+        flavor_text: str | None
+        illustration_id: int | None
+        image_uris: list[str] | None
+        layout: str | None
+        loyalty: str | None
+        mana_cost: str | None
+        name: str | None
+        oracle_id: str | None
+        oracle_text: str | None
+        power: str | None
+        printed_name: str | None
+        printed_text: str | None
+        printed_type_line: str | None
+        toughness: str | None
+        type_line: str | None
+        watermark: str | None
+    """
+
+    def __init__(
+        self,
+        artist: str | None = None,
+        cmc: float | None = None,
+        color_indicator: set[Color] | None = None,
+        colors: set[Color] | None = None,
+        flavor_text: str | None = None,
+        illustration_id: int | None = None,
+        image_uris: ImageUris | None = None,
+        layout: str | None = None,
+        loyalty: str | None = None,
+        mana_cost: str | None = None,
+        name: str | None = None,
+        oracle_id: str | None = None,
+        oracle_text: str | None = None,
+        power: str | None = None,
+        printed_name: str | None = None,
+        printed_text: str | None = None,
+        printed_type_line: str | None = None,
+        toughness: str | None = None,
+        type_line: str | None = None,
+        watermark: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
+    ):
+        self.artist = artist
+        self.cmc = self._normalize_cmc(cmc)
+        self.color_indicator = self._normalize_color_indicator(color_indicator)
+        self.colors = self._normalize_colors(colors)
+        self.flavor_text = flavor_text
+        self.illustration_id = illustration_id
+        self.image_uris = self._normalize_image_uris(image_uris)
+        self.layout = layout  # TODO(#36): convert to enum?
+        self.loyalty = loyalty
+        self.mana_cost = mana_cost
+        self.name = name
+        self.oracle_id = oracle_id
+        self.oracle_text = oracle_text
+        self.power = power
+        self.printed_name = printed_name
+        self.printed_text = printed_text
+        self.printed_type_line = printed_type_line
+        self.toughness = toughness
+        self.type_line = type_line
+        self.watermark = watermark
+
+    def _normalize_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
+        # TODO: docstring
+
+        if image_uris is None or isinstance(image_uris, ImageUris):
+            return image_uris
+        elif isinstance(image_uris, dict):
+            return ImageUris(**image_uris)

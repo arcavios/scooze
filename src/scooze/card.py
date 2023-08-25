@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from typing import TypeVar
 
 from scooze.cardparts import (
     CardFace,
@@ -11,6 +12,10 @@ from scooze.cardparts import (
 )
 from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 from scooze.models.card import CardModel
+
+# NOTE: Generic type used to ensure factory methods generate proper subclass types
+C = TypeVar("C")
+F = TypeVar("F", CardFace, FullCardFace)
 
 
 class Card:
@@ -88,14 +93,14 @@ class Card:
     # endregion
 
     @classmethod
-    def from_json(cls, data: dict | str) -> "Card":
+    def from_json(cls: type[C], data: dict | str) -> C:
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
             return cls(**json.loads(data))
 
     @classmethod
-    def from_model(cls, model: CardModel) -> "Card":
+    def from_model(cls: type[C], model: CardModel) -> C:
         return cls(**model.model_dump())
 
 
@@ -186,9 +191,9 @@ class OracleCard(Card):
 
     def _normalize_card_faces(
         self,
-        card_faces: list[CardFace] | list[dict] | None,
-        card_face_class: CardFace | FullCardFace = FullCardFace,
-    ) -> list[CardFace]:
+        card_faces: list[F] | list[dict] | None,
+        card_face_class: type[F] = CardFace,
+    ) -> list[F]:
         # TODO: docstring
         if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
             return card_faces
