@@ -236,6 +236,7 @@ class FullCardFace(CardFace):
     def __init__(
         self,
         artist: str | None = None,
+        artist_id: list[str] | None = None,
         cmc: float | None = None,
         color_indicator: set[Color] | None = None,
         colors: set[Color] | None = None,
@@ -259,6 +260,7 @@ class FullCardFace(CardFace):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.artist = artist
+        self.artist_id = artist_id
         self.cmc = self._normalize_float(cmc)
         self.color_indicator = self._normalize_set(color_indicator)
         self.colors = self._normalize_set(colors)

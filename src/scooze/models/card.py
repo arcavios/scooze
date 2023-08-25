@@ -122,6 +122,7 @@ class FullCardModel(CardModel, validate_assignment=True):
 
         ### Print fields
         artist: str | None
+        artist_id: list[str] | None
         attraction_lights: set[int] | None
         booster: bool
         border_color: BorderColor
@@ -306,6 +307,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Artist for this card.",
     )
+    artist_id: list[str] | None = Field(
+        default=None,
+        description="List of Scryfall IDs for artists of this card."
+    ),
     attraction_lights: set[int] | None = Field(
         default=None,
         description="Attraction lights lit on this card, if applicable.",

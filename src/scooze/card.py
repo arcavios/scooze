@@ -244,6 +244,7 @@ class FullCard(OracleCard):
 
     Print fields
         artist: str | None
+        artist_id: list[str] | None
         attraction_lights: set[int] | None
         booster: bool | None
         border_color: BorderColor | None
@@ -334,6 +335,7 @@ class FullCard(OracleCard):
         type_line: str | None = None,
         # Print Fields
         artist: str | None = None,
+        artist_id: list[str] | None = None,
         attraction_lights: set[int] | None = None,
         booster: bool | None = None,
         border_color: BorderColor | None = None,
@@ -430,6 +432,7 @@ class FullCard(OracleCard):
         # region Print fields
 
         self.artist = artist
+        self.artist_id = artist_id
         self.attraction_lights = self._normalize_set(attraction_lights)
         self.booster = booster
         self.border_color = border_color
