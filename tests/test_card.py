@@ -2,18 +2,8 @@ import json
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
+from scooze.enums import Color, Format, Legality
 from scooze.models.card import CardModel, FullCardModel
-from scooze.enums import Color, Legality, Format
-
-
-@pytest.fixture
-def temp_fixture() -> str:
-    return "some stuff"
-
-
-def test_temp(temp_fixture):
-    assert temp_fixture == "some stuff"
-
 
 # TODO(#65): WRITE TESTS FOR CARD OBJECT HERE
 
@@ -39,7 +29,6 @@ def test_temp(temp_fixture):
 # 8. Figure out if Card.from_model() should use model_dump() or dict(). Investigate the key differences.
 
 
-import json
 
 
 @pytest.fixture
@@ -117,11 +106,11 @@ def json_orochi_eggwatcher(cards_json) -> dict:
 # region json -> Card Object
 
 
-def test_card_from_json(json_ancestral_recall):
+def test_card_from_json_instant(json_ancestral_recall):
     card = Card.from_json(json_ancestral_recall)
     assert card.cmc == 1.0
-    assert card.color_identity == [Color.BLUE]
-    assert card.colors == [Color.BLUE]
+    assert card.color_identity == {Color.BLUE}
+    assert card.colors == {Color.BLUE}
     assert card.legalities == {
         Format.ALCHEMY: Legality.NOT_LEGAL,
         Format.BRAWL: Legality.NOT_LEGAL,
@@ -152,11 +141,13 @@ def test_card_from_json(json_ancestral_recall):
     assert card.type_line == "Instant"
 
 
-# def test_oracle_card_obj_from_json(json_mystic_snake):
-#     oracle_card = OracleCard.from_json(json_mystic_snake)
-#     print("test_oracle_card_obj_from_json")
-#     pprint(get_members(oracle_card))
-#     assert True
+def test_card_from_json_creature(json_mystic_snake):
+    card = Card.from_json(json_mystic_snake)
+    assert card.color_identity == {Color.GREEN, Color.BLUE}
+    assert card.colors == {Color.GREEN, Color.BLUE}
+    assert card.power == "2"
+    assert card.toughness == "2"
+    assert card.type_line == "Creature — Snake"
 
 
 # def test_full_card_obj_from_json(json_mystic_snake):
