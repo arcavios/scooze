@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
-import scooze.enums as enums
 from pydantic import BaseModel, Field
+from scooze.enums import Color
 
 
 class ImageUrisModel(BaseModel, validate_assignment=True):
@@ -59,7 +59,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         colors: set[Color] | None
         flavor_text: str | None
         illustration_id: int | None
-        image_uris: list[str] | None
+        image_uris: ImageUrisModel | None
         layout: str | None
         loyalty: int | None
         mana_cost: str
@@ -83,11 +83,11 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         default=None,
         description="Mana value of this face.",
     )
-    color_indicator: set[enums.Color] | None = Field(
+    color_indicator: set[Color] | None = Field(
         default=None,
         description="Color indicator on this face, if any.",
     )
-    colors: set[enums.Color] | None = Field(
+    colors: set[Color] | None = Field(
         default=None,
         description="Colors of this face.",
     )

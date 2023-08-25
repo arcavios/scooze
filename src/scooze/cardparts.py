@@ -4,7 +4,8 @@ from typing import TypeVar
 
 from scooze.enums import Color
 
-F = TypeVar("F")
+T = TypeVar("T")  # generic type
+F = TypeVar("F")  # generic CardFace type
 
 
 class ImageUris:
@@ -165,9 +166,9 @@ class CardFace:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = self._normalize_cmc(cmc)
-        self.color_indicator = self._normalize_color_indicator(color_indicator)
-        self.colors = self._normalize_colors(colors)
+        self.cmc = self._normalize_float(cmc)
+        self.color_indicator = self._normalize_set(color_indicator)
+        self.colors = self._normalize_set(colors)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
@@ -179,29 +180,21 @@ class CardFace:
 
     # region Normalizers
 
-    def _normalize_cmc(self, cmc: float | int | None) -> float:
+    def _normalize_float(self, f: float | int | None) -> float:
         # TODO: docstring
 
-        if cmc is None or isinstance(cmc, float):
-            return cmc
-        elif isinstance(cmc, int):
-            return float(cmc)
+        if f is None or isinstance(f, float):
+            return f
+        elif isinstance(f, int):
+            return float(f)
 
-    def _normalize_color_indicator(self, color_indicator: set[Color] | list[Color] | None) -> set[Color]:
+    def _normalize_set(self, s: set[T] | list[T] | None) -> set[T]:
         # TODO: docstring
 
-        if color_indicator is None or isinstance(color_indicator, set):
-            return color_indicator
-        elif isinstance(color_indicator, list):
-            return set(color_indicator)
-
-    def _normalize_colors(self, colors: set[Color] | list[Color] | None) -> set[Color]:
-        # TODO: docstring
-
-        if colors is None or isinstance(colors, set):
-            return colors
-        elif isinstance(colors, list):
-            return set(colors)
+        if s is None or isinstance(s, set):
+            return s
+        elif isinstance(s, list):
+            return set(s)
 
     # endregion
 
@@ -227,7 +220,7 @@ class FullCardFace(CardFace):
         colors: set[Color] | None
         flavor_text: str | None
         illustration_id: int | None
-        image_uris: list[str] | None
+        image_uris: ImageUris | None
         layout: str | None
         loyalty: str | None
         mana_cost: str | None
@@ -269,9 +262,9 @@ class FullCardFace(CardFace):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.artist = artist
-        self.cmc = self._normalize_cmc(cmc)
-        self.color_indicator = self._normalize_color_indicator(color_indicator)
-        self.colors = self._normalize_colors(colors)
+        self.cmc = self._normalize_float(cmc)
+        self.color_indicator = self._normalize_set(color_indicator)
+        self.colors = self._normalize_set(colors)
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
         self.image_uris = self._normalize_image_uris(image_uris)

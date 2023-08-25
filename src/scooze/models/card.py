@@ -104,7 +104,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         colors: set[Color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
-        keywords: list[str]
+        keywords: set[str]
         layout: str
         legalities: dict[Format, Legality] | None
         life_modifier: str | None
@@ -122,20 +122,20 @@ class FullCardModel(CardModel, validate_assignment=True):
 
         ### Print fields
         artist: str | None
-        attraction_lights: list[int] | None
+        attraction_lights: set[int] | None
         booster: bool
         border_color: BorderColor
         card_back_id: str
         collector_number: str
         content_warning: bool
         digital: bool
-        finishes: list[Finish]
+        finishes: set[Finish]
         flavor_name: str | None
         flavor_text: str | None
-        frame_effects: list[str] | None
+        frame_effects: set[str] | None
         frame: str
         full_art: bool
-        games: list[Game]
+        games: set[Game]
         highres_image: bool
         illustation_id: str | None
         image_status: str
@@ -146,7 +146,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         printed_text: str | None
         printed_type_line: str | None
         promo: bool
-        promo_types: list[str] | None
+        promo_types: set[str] | None
         purchase_uris: dict[str, str]
         rarity: Rarity
         related_uris: dict[str, str]
@@ -255,8 +255,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="This card's Vanguard hand size modifier, if applicable.",
     )
-    keywords: list[str] = Field(
-        default=[],
+    keywords: set[str] = Field(
+        default=set(),
         description="Keywords and keyword actions this card uses.",
     )
     layout: str = Field(
@@ -306,7 +306,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Artist for this card.",
     )
-    attraction_lights: list[int] | None = Field(
+    attraction_lights: set[int] | None = Field(
         default=None,
         description="Attraction lights lit on this card, if applicable.",
     )
@@ -334,8 +334,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=False,
         description="True if this card was only released in a video game.",
     )
-    finishes: list[Finish] = Field(
-        default=[],
+    finishes: set[Finish] = Field(
+        default=set(),
         description="Finishes this card is available in, from among foil, nonfoil, and etched.",
     )
     flavor_name: str | None = Field(
@@ -346,7 +346,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Flavor text on this card, if any.",
     )
-    frame_effects: list[str] | None = Field(
+    frame_effects: set[str] | None = Field(
         default=None,
         description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
     )  # TODO(#36): convert to enum?
@@ -358,8 +358,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=False,
         description="Whether this print is full-art.",
     )
-    games: list[Game] = Field(
-        default=[],
+    games: set[Game] = Field(
+        default=set(),
         description="Which games this print is available on, from among paper, mtgo, and arena.",
     )
     highres_image: bool = Field(
@@ -402,7 +402,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=False,
         description="Whether this print is a promo.",
     )
-    promo_types: list[str] | None = Field(
+    promo_types: set[str] | None = Field(
         default=None,
         description="Which promo categories this print falls into, if any.",
     )

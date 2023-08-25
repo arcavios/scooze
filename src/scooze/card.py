@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import date, datetime
 from typing import TypeVar
 
 from scooze.cardparts import (
@@ -13,9 +13,9 @@ from scooze.cardparts import (
 from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 from scooze.models.card import CardModel
 
-# NOTE: Generic type used to ensure factory methods generate proper subclass types
-C = TypeVar("C")
-F = TypeVar("F", CardFace, FullCardFace)
+C = TypeVar("C")  # generic Card type
+F = TypeVar("F", CardFace, FullCardFace)  # generic CardFace type
+T = TypeVar("T")  # generic type
 
 
 class Card:
@@ -24,8 +24,8 @@ class Card:
 
     Attributes:
         cmc: float | None
-        color_identity: list[Color] | None
-        colors: list[Color] | None
+        color_identity: set[Color] | None
+        colors: set[Color] | None
         legalities: dict[Format, Legality] | None
         mana_cost: str | None
         name: str | None
@@ -37,8 +37,8 @@ class Card:
     def __init__(
         self,
         cmc: float | int | None = None,
-        color_identity: list[Color] | None = None,
-        colors: list[Color] | None = None,
+        color_identity: set[Color] | None = None,
+        colors: set[Color] | None = None,
         legalities: dict[Format, Legality] | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
@@ -48,9 +48,9 @@ class Card:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = self._normalize_cmc(cmc)
-        self.color_identity = self._normalize_color_identity(color_identity)
-        self.colors = self._normalize_colors(colors)
+        self.cmc = self._normalize_float(cmc)
+        self.color_identity = self._normalize_set(color_identity)
+        self.colors = self._normalize_set(colors)
         self.legalities = legalities
         self.mana_cost = mana_cost
         self.name = name
@@ -66,29 +66,21 @@ class Card:
 
     # region Normalizers
 
-    def _normalize_cmc(self, cmc: float | int | None) -> float:
+    def _normalize_float(self, f: float | int | None) -> float:
         # TODO: docstring
 
-        if cmc is None or isinstance(cmc, float):
-            return cmc
-        elif isinstance(cmc, int):
-            return float(cmc)
+        if f is None or isinstance(f, float):
+            return f
+        elif isinstance(f, int):
+            return float(f)
 
-    def _normalize_color_identity(self, color_identity: set[Color] | list[Color] | None) -> set[Color]:
+    def _normalize_set(self, s: set[T] | list[T] | None) -> set[T]:
         # TODO: docstring
 
-        if color_identity is None or isinstance(color_identity, set):
-            return color_identity
-        elif isinstance(color_identity, list):
-            return set(color_identity)
-
-    def _normalize_colors(self, colors: set[Color] | list[Color] | None) -> set[Color]:
-        # TODO: docstring
-
-        if colors is None or isinstance(colors, set):
-            return colors
-        elif isinstance(colors, list):
-            return set(colors)
+        if s is None or isinstance(s, set):
+            return s
+        elif isinstance(s, list):
+            return set(s)
 
     # endregion
 
@@ -117,7 +109,7 @@ class OracleCard(Card):
         colors: set[Color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
-        keywords: list[str]
+        keywords: set[str]
         legalities: dict[Format, Legality]
         life_modifier: str | None
         loyalty: str | None
@@ -144,7 +136,7 @@ class OracleCard(Card):
         colors: set[Color] | None = None,
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
-        keywords: list[str] = None,
+        keywords: set[str] = None,
         legalities: dict[Format, Legality] = None,
         life_modifier: str | None = None,
         loyalty: str | None = None,
@@ -164,13 +156,13 @@ class OracleCard(Card):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.card_faces = self._normalize_card_faces(card_faces, card_face_class=CardFace)
-        self.cmc = self._normalize_cmc(cmc)
-        self.color_identity = self._normalize_color_identity(color_identity)
-        self.color_indicator = self._normalize_color_indicator(color_indicator)
-        self.colors = self._normalize_colors(colors)
+        self.cmc = self._normalize_float(cmc)
+        self.color_identity = self._normalize_set(color_identity)
+        self.color_indicator = self._normalize_set(color_indicator)
+        self.colors = self._normalize_set(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
-        self.keywords = keywords
+        self.keywords = self._normalize_set(keywords)
         self.legalities = legalities
         self.life_modifier = life_modifier
         self.loyalty = loyalty
@@ -181,7 +173,7 @@ class OracleCard(Card):
         self.prints_search_uri = prints_search_uri
         self.penny_rank = penny_rank
         self.power = power
-        self.produced_mana = self._normalize_produced_mana(produced_mana)
+        self.produced_mana = self._normalize_set(produced_mana)
         self.reserved = reserved
         self.rulings_uri = rulings_uri
         self.toughness = toughness
@@ -200,22 +192,6 @@ class OracleCard(Card):
         elif all(isinstance(card_face, dict) for card_face in card_faces):
             return [card_face_class.from_json(card_face) for card_face in card_faces]
 
-    def _normalize_color_indicator(self, color_indicator: set[Color] | list[Color] | None) -> set[Color]:
-        # TODO: docstring
-
-        if color_indicator is None or isinstance(color_indicator, set):
-            return color_indicator
-        elif isinstance(color_indicator, list):
-            return set(color_indicator)
-
-    def _normalize_produced_mana(self, produced_mana: set[Color] | list[Color] | None) -> set[Color]:
-        # TODO: docstring
-
-        if produced_mana is None or isinstance(produced_mana, set):
-            return produced_mana
-        elif isinstance(produced_mana, list):
-            return set(produced_mana)
-
     # endregion
 
 
@@ -224,8 +200,7 @@ class FullCard(OracleCard):
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
 
-    Attributes
-    ----------
+    Attributes:
     Core fields
         arena_id: int | None
         scryfall_id: str
@@ -236,7 +211,6 @@ class FullCard(OracleCard):
         tcgplayer_id: int | None
         tcgplayer_etched_id: int | None
         cardmarket_id: int | None
-        object: str
         oracle_id: str | None
         prints_search_uri: str
         rulings_uri: str
@@ -252,7 +226,7 @@ class FullCard(OracleCard):
         colors: set[Color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
-        keywords: list[str]
+        keywords: set[str]
         layout: str
         legalities: dict[Format, Legality]
         life_modifier: str | None
@@ -270,20 +244,20 @@ class FullCard(OracleCard):
 
     Print fields
         artist: str | None
-        attraction_lights: list[int] | None
+        attraction_lights: set[int] | None
         booster: bool | None
         border_color: BorderColor | None
         card_back_id: str | None
         collector_number: str | None
         content_warning: bool | None
         digital: bool | None
-        finishes: list[Finish] | None
+        finishes: set[Finish] | None
         flavor_name: str | None
         flavor_text: str | None
-        frame_effects: list[str] | None
+        frame_effects: set[str] | None
         frame: str | None
         full_art: bool | None
-        games: list[Game] | None
+        games: set[Game] | None
         highres_image: bool | None
         illustation_id: str | None
         image_status: str | None
@@ -294,11 +268,11 @@ class FullCard(OracleCard):
         printed_text: str | None
         printed_type_line: str | None
         promo: bool
-        promo_types: list[str] | None
+        promo_types: set[str] | None
         purchase_uris: dict[str, str] | None
         rarity: Rarity | None
         related_uris: dict[str, str] | None
-        released_at: datetime | None
+        released_at: date | None
         reprint: bool
         scryfall_set_uri: str
         security_stamp: str | None
@@ -329,7 +303,6 @@ class FullCard(OracleCard):
         tcgplayer_id: int | None = None,
         tcgplayer_etched_id: int | None = None,
         cardmarket_id: int | None = None,
-        object: str = "card",
         oracle_id: str | None = None,
         prints_search_uri: str = "",
         rulings_uri: str = "",
@@ -344,7 +317,7 @@ class FullCard(OracleCard):
         colors: set[Color] | None = None,
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
-        keywords: list[str] = [],
+        keywords: set[str] = set(),
         layout: str = "normal",  # TODO(#36): convert to enum?
         legalities: dict[Format, Legality] | None = None,
         life_modifier: str | None = None,
@@ -361,20 +334,20 @@ class FullCard(OracleCard):
         type_line: str | None = None,
         # Print Fields
         artist: str | None = None,
-        attraction_lights: list[int] | None = None,
+        attraction_lights: set[int] | None = None,
         booster: bool | None = None,
         border_color: BorderColor | None = None,
         card_back_id: str | None = None,
         collector_number: str | None = None,
         content_warning: bool | None = None,
         digital: bool | None = None,
-        finishes: list[Finish] | None = None,
+        finishes: set[Finish] | None = None,
         flavor_name: str | None = None,
         flavor_text: str | None = None,
-        frame_effects: list[str] | None = None,  # TODO(#36): convert to enum?
+        frame_effects: set[str] | None = None,  # TODO(#36): convert to enum?
         frame: str | None = None,
         full_art: bool | None = None,
-        games: list[Game] | None = None,
+        games: set[Game] | None = None,
         highres_image: bool | None = None,
         illustration_id: str | None = None,
         image_status: str | None = None,  # TODO(#36): convert to enum?
@@ -385,11 +358,11 @@ class FullCard(OracleCard):
         printed_text: str | None = None,
         printed_type_line: str | None = None,
         promo: bool = False,
-        promo_types: list[str] | None = None,
+        promo_types: set[str] | None = None,
         purchase_uris: dict[str, str] = {},  # TODO(#47): convert to object?
         rarity: Rarity | None = None,  # TODO(#48): better default?
         related_uris: dict[str, str] = {},  # TODO(#47): convert to object?
-        released_at: datetime | str | None = None,  # TODO(#48): better default?
+        released_at: date | str | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
         security_stamp: str | None = None,  # TODO(#36): convert to enum?
@@ -414,11 +387,10 @@ class FullCard(OracleCard):
         self.lang = lang
         self.mtgo_id = mtgo_id
         self.mtgo_foil_id = mtgo_foil_id
-        self.multiverse_ids = multiverse_ids
+        self.multiverse_ids = self._normalize_set(multiverse_ids)
         self.tcgplayer_id = tcgplayer_id
         self.tcgplayer_etched_id = tcgplayer_etched_id
         self.cardmarket_id = cardmarket_id
-        self.object = object
         self.oracle_id = oracle_id
         self.prints_search_uri = prints_search_uri
         self.rulings_uri = rulings_uri
@@ -431,13 +403,13 @@ class FullCard(OracleCard):
 
         self.all_parts = self._normalize_all_parts(all_parts)
         self.card_faces = self._normalize_card_faces(card_faces, card_face_class=FullCardFace)
-        self.cmc = self._normalize_cmc(cmc)
-        self.color_identity = self._normalize_color_identity(color_identity)
-        self.color_indicator = self._normalize_color_indicator(color_indicator)
-        self.colors = self._normalize_colors(colors)
+        self.cmc = self._normalize_float(cmc)
+        self.color_identity = self._normalize_set(color_identity)
+        self.color_indicator = self._normalize_set(color_indicator)
+        self.colors = self._normalize_set(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
-        self.keywords = keywords
+        self.keywords = self._normalize_set(keywords)
         self.layout = layout
         self.legalities = legalities
         self.life_modifier = life_modifier
@@ -448,7 +420,7 @@ class FullCard(OracleCard):
         self.oversized = oversized
         self.penny_rank = penny_rank
         self.power = power
-        self.produced_mana = self._normalize_produced_mana(produced_mana)
+        self.produced_mana = self._normalize_set(produced_mana)
         self.reserved = reserved
         self.toughness = toughness
         self.type_line = type_line
@@ -458,20 +430,20 @@ class FullCard(OracleCard):
         # region Print fields
 
         self.artist = artist
-        self.attraction_lights = attraction_lights
+        self.attraction_lights = self._normalize_set(attraction_lights)
         self.booster = booster
         self.border_color = border_color
         self.card_back_id = card_back_id
         self.collector_number = collector_number
         self.content_warning = content_warning
         self.digital = digital
-        self.finishes = finishes
+        self.finishes = self._normalize_set(finishes)
         self.flavor_name = flavor_name
         self.flavor_text = flavor_text
-        self.frame_effects = frame_effects
+        self.frame_effects = self._normalize_set(frame_effects)
         self.frame = frame
         self.full_art = full_art
-        self.games = games
+        self.games = self._normalize_set(games)
         self.highres_image = highres_image
         self.illustration_id = illustration_id
         self.image_status = image_status
@@ -482,11 +454,11 @@ class FullCard(OracleCard):
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line
         self.promo = promo
-        self.promo_types = promo_types
+        self.promo_types = self._normalize_set(promo_types)
         self.purchase_uris = purchase_uris
         self.rarity = rarity
         self.related_uris = related_uris
-        self.released_at = self._normalize_released_at(released_at)
+        self.released_at = self._normalize_date(released_at)
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri
         self.security_stamp = security_stamp
@@ -514,6 +486,14 @@ class FullCard(OracleCard):
         elif all(isinstance(part, dict) for part in all_parts):
             return [RelatedCard(**part) for part in all_parts]
 
+    def _normalize_date(self, d: date | str | None) -> date:
+        # TODO: docstring
+
+        if d is None or isinstance(d, date):
+            return d
+        if isinstance(d, str):
+            return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format in utils if needed
+
     def _normalize_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
         # TODO: docstring
 
@@ -537,13 +517,5 @@ class FullCard(OracleCard):
             return prices
         elif isinstance(prices, dict):
             return Prices(**prices)
-
-    def _normalize_released_at(self, released_at: datetime | str | None) -> datetime:
-        # TODO: docstring
-
-        if released_at is None or isinstance(released_at, datetime):
-            return released_at
-        if isinstance(released_at, str):
-            return datetime.strptime(released_at, "%Y-%m-%d")  # NOTE: maybe store date format in utils if needed
 
     # endregion
