@@ -372,7 +372,6 @@ def test_cardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral
 
 def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
     model = FullCardModel.model_validate(json_ancestral_recall)
-    pprint(model.model_dump())
     assert model.all_parts is None
     assert model.arena_id is None
     assert model.artist == "Ryan Pancoast"
@@ -495,7 +494,10 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
 
 
 def test_card_from_cardmodel_instant(json_ancestral_recall):
-    pass
+    model = CardModel.model_validate(json_ancestral_recall)
+    card = Card.from_model(model)
+    print_obj(card)
+    # TODO: tests go here
 
 
 # TODO: add tests for the other cards
