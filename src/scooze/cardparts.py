@@ -45,8 +45,8 @@ class CardFace:
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
     Attributes:
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         loyalty: int | None
         mana_cost: str | None
         name: str | None
@@ -60,8 +60,8 @@ class CardFace:
     def __init__(
         self,
         cmc: float | None = None,
-        color_indicator: list[enums.Color] | None = None,
-        colors: list[enums.Color] | None = None,
+        color_indicator: set[enums.Color] | None = None,
+        colors: set[enums.Color] | None = None,
         loyalty: int | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
@@ -115,8 +115,8 @@ class FullCardFace(CardFace):
     Attributes:
         artist: str | None
         cmc: float | None
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         flavor_text: str | None
         illustration_id: int | None
         image_uris: list[str] | None
@@ -140,8 +140,8 @@ class FullCardFace(CardFace):
         self,
         artist: str | None = None,
         cmc: float | None = None,
-        color_indicator: list[enums.Color] | None = None,
-        colors: list[enums.Color] | None = None,
+        color_indicator: set[enums.Color] | None = None,
+        colors: set[enums.Color] | None = None,
         flavor_text: str | None = None,
         illustration_id: int | None = None,
         image_uris: ImageUris | None = None,

@@ -55,8 +55,8 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     ----------
         artist: str | None
         cmc: float | None
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         flavor_text: str | None
         illustration_id: int | None
         image_uris: list[str] | None
@@ -84,11 +84,11 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         default=None,
         description="Mana value of this face.",
     )
-    color_indicator: list[enums.Color] | None = Field(
+    color_indicator: set[enums.Color] | None = Field(
         default=None,
         description="Color indicator on this face, if any.",
     )
-    colors: list[enums.Color] | None = Field(
+    colors: set[enums.Color] | None = Field(
         default=None,
         description="Colors of this face.",
     )

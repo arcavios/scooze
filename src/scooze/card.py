@@ -17,8 +17,7 @@ class Card:
     """
     A basic Card object with minimal fields. Contains all information you might use to sort a decklist.
 
-    Attributes
-    ----------
+    Attributes:
         cmc: float | None
         color_identity: list[Color] | None
         colors: list[Color] | None
@@ -45,8 +44,8 @@ class Card:
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.cmc = self._normalize_cmc(cmc)
-        self.color_identity = color_identity
-        self.colors = colors
+        self.color_identity = self._normalize_color_identity(color_identity)
+        self.colors = self._normalize_colors(colors)
         self.legalities = legalities
         self.mana_cost = mana_cost
         self.name = name
@@ -70,6 +69,22 @@ class Card:
         elif isinstance(cmc, int):
             return float(cmc)
 
+    def _normalize_color_identity(self, color_identity: set[Color] | list[Color] | None) -> set[Color]:
+        # TODO: docstring
+
+        if color_identity is None or isinstance(color_identity, set):
+            return color_identity
+        elif isinstance(color_identity, list):
+            return set(color_identity)
+
+    def _normalize_colors(self, colors: set[Color] | list[Color] | None) -> set[Color]:
+        # TODO: docstring
+
+        if colors is None or isinstance(colors, set):
+            return colors
+        elif isinstance(colors, list):
+            return set(colors)
+
     # endregion
 
     @classmethod
@@ -92,9 +107,9 @@ class OracleCard(Card):
     Attributes:
         card_faces: list[CardFace] | None
         cmc: float | None
-        color_identity: list[Color] | None
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
+        color_identity: set[Color] | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: list[str]
@@ -108,7 +123,7 @@ class OracleCard(Card):
         prints_search_uri: str
         penny_rank: int | None
         power: str | None
-        produced_mana: list[Color] | None
+        produced_mana: set[Color] | None
         reserved: bool
         rulings_uri: str
         toughness: str | None
@@ -119,9 +134,9 @@ class OracleCard(Card):
         self,
         card_faces: list[CardFace] | None = None,
         cmc: float | int | None = None,
-        color_identity: list[Color] | None = None,
-        color_indicator: list[Color] | None = None,
-        colors: list[Color] | None = None,
+        color_identity: set[Color] | None = None,
+        color_indicator: set[Color] | None = None,
+        colors: set[Color] | None = None,
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
         keywords: list[str] = None,
@@ -135,7 +150,7 @@ class OracleCard(Card):
         prints_search_uri: str = "",
         penny_rank: int | None = None,
         power: str | None = None,
-        produced_mana: list[Color] | None = None,
+        produced_mana: set[Color] | None = None,
         reserved: bool = False,
         rulings_uri: str = "",
         toughness: str | None = None,
@@ -145,9 +160,9 @@ class OracleCard(Card):
     ):
         self.card_faces = self._normalize_card_faces(card_faces, card_face_class=CardFace)
         self.cmc = self._normalize_cmc(cmc)
-        self.color_identity = color_identity
-        self.color_indicator = color_indicator
-        self.colors = colors
+        self.color_identity = self._normalize_color_identity(color_identity)
+        self.color_indicator = self._normalize_color_indicator(color_indicator)
+        self.colors = self._normalize_colors(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
         self.keywords = keywords
@@ -161,7 +176,7 @@ class OracleCard(Card):
         self.prints_search_uri = prints_search_uri
         self.penny_rank = penny_rank
         self.power = power
-        self.produced_mana = produced_mana
+        self.produced_mana = self._normalize_produced_mana(produced_mana)
         self.reserved = reserved
         self.rulings_uri = rulings_uri
         self.toughness = toughness
@@ -179,6 +194,22 @@ class OracleCard(Card):
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
             return [card_face_class.from_json(card_face) for card_face in card_faces]
+
+    def _normalize_color_indicator(self, color_indicator: set[Color] | list[Color] | None) -> set[Color]:
+        # TODO: docstring
+
+        if color_indicator is None or isinstance(color_indicator, set):
+            return color_indicator
+        elif isinstance(color_indicator, list):
+            return set(color_indicator)
+
+    def _normalize_produced_mana(self, produced_mana: set[Color] | list[Color] | None) -> set[Color]:
+        # TODO: docstring
+
+        if produced_mana is None or isinstance(produced_mana, set):
+            return produced_mana
+        elif isinstance(produced_mana, list):
+            return set(produced_mana)
 
     # endregion
 
@@ -211,9 +242,9 @@ class FullCard(OracleCard):
         all_parts: list[RelatedCard] | None
         card_faces: list[FullCardFace] | None
         cmc: float
-        color_identity: list[Color]
-        color_indicator: list[Color] | None
-        colors: list[color] | None
+        color_identity: set[Color]
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: list[str]
@@ -227,7 +258,7 @@ class FullCard(OracleCard):
         oversized: bool
         penny_rank: int | None
         power: str | None
-        produced_mana: list[Color] | None
+        produced_mana: set[Color] | None
         reserved: bool
         toughness: str | None
         type_line: str | None
@@ -303,9 +334,9 @@ class FullCard(OracleCard):
         all_parts: list[RelatedCard] | None = None,
         card_faces: list[FullCardFace] | None = None,
         cmc: float | int | None = None,
-        color_identity: list[Color] | None = None,
-        color_indicator: list[Color] | None = None,
-        colors: list[Color] | None = None,
+        color_identity: set[Color] | None = None,
+        color_indicator: set[Color] | None = None,
+        colors: set[Color] | None = None,
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
         keywords: list[str] = [],
@@ -319,7 +350,7 @@ class FullCard(OracleCard):
         oversized: bool = False,
         penny_rank: int | None = None,
         power: str | None = None,
-        produced_mana: list[Color] | None = None,
+        produced_mana: set[Color] | None = None,
         reserved: bool = False,
         toughness: str | None = None,
         type_line: str | None = None,
@@ -396,9 +427,9 @@ class FullCard(OracleCard):
         self.all_parts = self._normalize_all_parts(all_parts)
         self.card_faces = self._normalize_card_faces(card_faces, card_face_class=FullCardFace)
         self.cmc = self._normalize_cmc(cmc)
-        self.color_identity = color_identity
-        self.color_indicator = color_indicator
-        self.colors = colors
+        self.color_identity = self._normalize_color_identity(color_identity)
+        self.color_indicator = self._normalize_color_indicator(color_indicator)
+        self.colors = self._normalize_colors(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
         self.keywords = keywords
@@ -412,7 +443,7 @@ class FullCard(OracleCard):
         self.oversized = oversized
         self.penny_rank = penny_rank
         self.power = power
-        self.produced_mana = produced_mana
+        self.produced_mana = self._normalize_produced_mana(produced_mana)
         self.reserved = reserved
         self.toughness = toughness
         self.type_line = type_line

@@ -18,8 +18,8 @@ class CardModel(BaseModel, validate_assignment=True):
 
     Attributes:
         cmc: float
-        color_identity: list[Color]
-        colors: list[Color] | None
+        color_identity: set[Color]
+        colors: set[Color] | None
         legalities: dict[Format, Legality] | None
         mana_cost: str
         name: str |
@@ -34,12 +34,12 @@ class CardModel(BaseModel, validate_assignment=True):
         default=0.0,
         description="Mana Value/Converted Mana Cost",
     )
-    color_identity: list[Color] = Field(
-        default=[],
+    color_identity: set[Color] = Field(
+        default=set(),
         description="This card's color identity, for Commander variant deckbuilding.",
     )
-    colors: list[Color] | None = Field(
-        default=[],
+    colors: set[Color] | None = Field(
+        default=set(),
         description="Color",
     )
     legalities: dict[Format, Legality] | None = Field(
@@ -100,9 +100,9 @@ class FullCardModel(CardModel, validate_assignment=True):
         all_parts: list[RelatedCard] | None
         card_faces: list[CardFace] | None
         cmc: float
-        color_identity: list[Color]
-        color_indicator: list[Color] | None
-        colors: list[color] | None
+        color_identity: set[Color]
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: list[str]
@@ -116,7 +116,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         oversized: bool
         penny_rank: int | None
         power: str | None
-        produced_mana: list[Color] | None
+        produced_mana: set[Color] | None
         reserved: bool
         toughness: str | None
         type_line: str
@@ -243,7 +243,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     )
     # cmc defined by base model
     # color_identity defined by base model
-    color_indicator: list[Color] | None = Field(
+    color_indicator: set[Color] | None = Field(
         default=None,
         description="The colors in this card's color indicator, if it has one.",
     )
@@ -288,7 +288,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="This card's rank/popularity on Penny Dreadful.",
     )
     # power defined by base model
-    produced_mana: list[Color] | None = Field(
+    produced_mana: set[Color] | None = Field(
         default=None,
         description="Which colors of mana this card can produce.",
     )
