@@ -1,10 +1,11 @@
+import inspect
 import json
 from pprint import pprint
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
-from scooze.models.card import FullCardModel, CardModel
-import inspect
+from scooze.models.card import CardModel, FullCardModel
+
 
 @pytest.fixture
 def temp_fixture() -> str:
@@ -22,6 +23,9 @@ def test_temp(temp_fixture):
 # Write tests for CardModel conversion. Write tests for normal CardModel behavior
 
 # NOTE: these tests can be run with pytest -s so you can see the print statements
+# NOTE: helpful little jq that can get you a card from one of the bulk files. You can get scryfall_id from
+# image address on scryfall.com
+# ╰─❯ cat data/bulk/oracle_cards.json | jq '.[] | select(.id == "371ceb58-f498-4616-a7f0-eb118fe2e4ff")' > ./data/bulk/card.json
 
 # STUFF TO WORK THROUGH:
 # 1. it seems like methods with underscores in the name aren't able to go from json -> Model -> Card object. Investigate.
@@ -40,159 +44,203 @@ import json
 
 
 @pytest.fixture
-def fullcards_json() -> list[str]:
+def cards_json() -> list[str]:
     with open("./data/test/test_cards.jsonl", "r") as json_file:
         json_list = list(json_file)
 
     return json_list
 
 
-@pytest.fixture
-def fable_json(fullcards_json) -> dict:
-    for json_str in fullcards_json:
+# NOTE: helper to get particular card_json
+def get_card_json(cards_json: list[str], id: str) -> dict:
+    for json_str in cards_json:
         card_json = json.loads(json_str)
-        if card_json["id"] == "24c0d87b-0049-4beb-b9cb-6f813b7aa7dc":
+        if card_json["id"] == id:
             return card_json
 
-@pytest.fixture
-def recall_json(fullcards_json) -> dict:
-    for json_str in fullcards_json:
-        card_json = json.loads(json_str)
-        if card_json["id"] == "70e7ddf2-5604-41e7-bb9d-ddd03d3e9d0b":
-            return card_json
-
-
-@pytest.fixture
-def fullcards(fullcards_json) -> list[FullCard]:
-    cards = []
-    for json_str in fullcards_json:
-        card_json = json.loads(json_str)
-        card = FullCard.from_json(card_json)
-        cards.append(card)
-
-    return cards
-
-
-# TODO: Scope this so that it only runs once at the beginning because we don't want to check every card every time
-@pytest.fixture
-def pearl(fullcards) -> FullCard:
-    for card in fullcards:
-        if card.scryfall_id == "8ebe4be7-e12a-4596-a899-fbd5b152e879":
-            return card
-
-    return None
-
-
-@pytest.fixture
-def fable(fullcards) -> FullCard:
-    for card in fullcards:
-        if card.scryfall_id == "24c0d87b-0049-4beb-b9cb-6f813b7aa7dc":
-            return card
-
-    return None
-
-
-# def test_pearl(pearl):
-#     pprint(pearl.__dict__)
-#     assert False
-
-
-# def test_fable(fable):
-#     pprint(fable.__dict__)
-#     assert False
 
 # NOTE: helper to filter dunders out of getmembers
 def get_members(obj):
     return list(filter(lambda t: not t[0].endswith("__"), inspect.getmembers(obj)))
 
-# NOTE: json -> Card Object
 
-def test_card_obj_from_json(recall_json):
-    card = Card.from_json(recall_json)
+# region Card JSON
+
+
+@pytest.fixture
+def json_ancestral_recall(cards_json) -> dict:
+    return get_card_json(cards_json, "70e7ddf2-5604-41e7-bb9d-ddd03d3e9d0b")
+
+
+@pytest.fixture
+def json_mystic_snake(cards_json) -> dict:
+    return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
+
+
+# Digital
+@pytest.fixture
+def json_urzas_construction_drone(cards_json) -> dict:
+    return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
+
+
+# Transform (Saga)
+@pytest.fixture
+def json_tales_of_master_seshiro(cards_json) -> dict:
+    return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
+
+
+# Transform (Planeswalker)
+@pytest.fixture
+def json_arlinn_the_packs_hope(cards_json) -> dict:
+    return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
+
+
+# Split (Aftermath)
+@pytest.fixture
+def json_driven_despair(cards_json) -> dict:
+    return get_card_json(cards_json, "7713ba59-dd4c-4b49-93a7-292728df86b8")
+
+
+# MDFC
+@pytest.fixture
+def json_turntimber_symbiosis(cards_json) -> dict:
+    return get_card_json(cards_json, "61bd69ea-1e9e-46b0-b1a1-ed7fdbe3deb6")
+
+
+# Flip
+@pytest.fixture
+def json_orochi_eggwatcher(cards_json) -> dict:
+    return get_card_json(cards_json, "a4f4aa3b-c64a-4430-b1a2-a7fca87d0a22")
+
+
+# endregion
+
+# region FullCard Objects
+
+# TODO: setup fullcards manually
+
+
+@pytest.fixture
+def fullcard_ancestral_recall() -> dict:
+    return FullCard()
+
+
+@pytest.fixture
+def fullcard_mystic_snake() -> dict:
+    return FullCard()
+
+
+# Digital
+@pytest.fixture
+def fullcard_urzas_construction_drone() -> dict:
+    return FullCard()
+
+
+# Transform (Saga)
+@pytest.fixture
+def fullcard_tales_of_master_seshiro() -> dict:
+    return FullCard()
+
+
+# Transform (Planeswalker)
+@pytest.fixture
+def fullcard_arlinn_the_packs_hope() -> dict:
+    return FullCard()
+
+
+# Split (Aftermath)
+@pytest.fixture
+def fullcard_driven_despair() -> dict:
+    return FullCard()
+
+
+# MDFC
+@pytest.fixture
+def fullcard_turntimber_symbiosis() -> dict:
+    return FullCard()
+
+
+# Flip
+@pytest.fixture
+def fullcard_orochi_eggwatcher() -> dict:
+    return FullCard()
+
+
+# endregion
+
+
+# region json -> Card Object
+
+
+def test_card_obj_from_json(json_mystic_snake):
+    card = Card.from_json(json_mystic_snake)
     print("test_card_obj_from_json")
     pprint(get_members(card))
     assert True
 
-def test_oracle_card_obj_from_json(recall_json):
-    oracle_card = OracleCard.from_json(recall_json)
+
+def test_oracle_card_obj_from_json(json_mystic_snake):
+    oracle_card = OracleCard.from_json(json_mystic_snake)
     print("test_oracle_card_obj_from_json")
     pprint(get_members(oracle_card))
     assert True
 
-def test_full_card_obj_from_json(recall_json):
-    full_card = FullCard.from_json(recall_json)
+
+def test_full_card_obj_from_json(json_mystic_snake):
+    full_card = FullCard.from_json(json_mystic_snake)
     print("test_full_card_obj_from_json")
     pprint(get_members(full_card))
     assert True
 
-#########
 
-# NOTE: json -> CardModel
+# endregion
 
-def test_card_model_from_json(recall_json):
-    card_model = CardModel.model_validate(recall_json)
+
+# region json -> CardModel
+
+
+def test_card_model_from_json(json_mystic_snake):
+    card_model = CardModel.model_validate(json_mystic_snake)
     print("test_card_model_from_json")
     pprint(dict(card_model))
     assert True
 
-def test_full_card_from_json(recall_json):
-    full_card_model = FullCardModel.model_validate(recall_json)
+
+def test_full_card_from_json(json_mystic_snake):
+    full_card_model = FullCardModel.model_validate(json_mystic_snake)
     print("test_full_card_model_from_json")
     pprint(dict(full_card_model))
     assert True
 
-#########
 
-# NOTE CardModel -> Card Object
+# endregion
 
-def test_card_object_from_card_model(recall_json):
-    card_model = CardModel.model_validate(recall_json)
+
+# region CardModel -> Card Object
+
+
+def test_card_object_from_card_model(json_mystic_snake):
+    card_model = CardModel.model_validate(json_mystic_snake)
     card = Card.from_model(card_model)
     print("test_card_object_from_card_model")
     pprint(get_members(card))
     assert True
 
-def test_oracle_card_object_from_full_card_model(recall_json):
-    full_card_model = FullCardModel.model_validate(recall_json)
+
+def test_oracle_card_object_from_full_card_model(json_mystic_snake):
+    full_card_model = FullCardModel.model_validate(json_mystic_snake)
     full_card = OracleCard.from_model(full_card_model)
     print("test_oracle_card_object_from_full_card_model")
     pprint(get_members(full_card))
     assert True
 
-def test_full_card_object_from_full_card_model(recall_json):
-    full_card_model = FullCardModel.model_validate(recall_json)
+
+def test_full_card_object_from_full_card_model(json_mystic_snake):
+    full_card_model = FullCardModel.model_validate(json_mystic_snake)
     full_card = FullCard.from_model(full_card_model)
     print("test_full_card_object_from_full_card_model")
     pprint(get_members(full_card))
     assert True
 
-# def test_model_from_obj(pearl):
-#     fullcardobj = FullCard(**pearl)
-#     fullcardmodel = FullCardModel.model_construct(**fullcardobj.__dict__)
-#     pprint(fullcardmodel)
-#     pprint(fullcardmodel.scryfall_id)
-#     assert False
 
-
-# def test_obj_from_model(fable, fable_json):
-    # pprint(fable_json)
-    # fullcardmodel = FullCardModel.model_validate(fable_json)
-    # pprint(fullcardmodel)
-    # pprint(dict(fullcardmodel))
-    # fullcardobj = FullCard.from_model(fullcardmodel)
-    # pprint(fullcardobj.__dict__)
-    # print("ALL PARTS:")
-    # for part in fullcardobj.all_parts:
-    #     pprint(part.__dict__)
-    # print("CARD FACES:")
-    # for face in fullcardobj.card_faces:
-    #     pprint(face.__dict__)
-    # print("CMC")
-    # pprint(fullcardobj.cmc)
-    # print("PREVIEW")
-    # pprint(fullcardobj.preview.__dict__)
-    # print("PRICES")
-    # pprint(fullcardobj.prices.__dict__)
-    # print("RELEASED AT")
-    # pprint(fullcardobj.released_at)
-    # assert False
+# endregion

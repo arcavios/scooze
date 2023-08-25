@@ -17,7 +17,8 @@ class Card:
     """
     A basic Card object with minimal fields. Contains all information you might use to sort a decklist.
 
-    Attributes:
+    Attributes
+    ----------
         cmc: float | None
         color_identity: list[Color] | None
         colors: list[Color] | None
@@ -80,7 +81,7 @@ class Card:
 
     @classmethod
     def from_model(cls, model: CardModel) -> "Card":
-        return cls(**model.model_dump())  # TODO: should this be dict(model) or model.model_dump()
+        return cls(**model.model_dump())
 
 
 class OracleCard(Card):
@@ -173,6 +174,7 @@ class OracleCard(Card):
         card_faces: list[CardFace] | list[dict] | None,
         card_face_class: CardFace | FullCardFace = FullCardFace,
     ) -> list[CardFace]:
+        # TODO: docstring
         if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
@@ -186,8 +188,9 @@ class FullCard(OracleCard):
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
 
-    Attributes:
-        ### Core fields
+    Attributes
+    ----------
+    Core fields
         arena_id: int | None
         scryfall_id: str
         lang: str
@@ -204,7 +207,7 @@ class FullCard(OracleCard):
         scryfall_uri: str
         uri: str
 
-        ### Gameplay fields
+    Gameplay fields
         all_parts: list[RelatedCard] | None
         card_faces: list[FullCardFace] | None
         cmc: float
@@ -229,7 +232,7 @@ class FullCard(OracleCard):
         toughness: str | None
         type_line: str | None
 
-        ### Print fields
+    Print fields
         artist: str | None
         attraction_lights: list[int] | None
         booster: bool | None

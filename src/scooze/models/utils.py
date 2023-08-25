@@ -24,6 +24,7 @@ def get_base_model_config() -> ConfigDict:
     return ConfigDict(
         alias_generator=_to_lower_camel,
         arbitrary_types_allowed=True,
+        populate_by_name=True,
     )
 
 
