@@ -1,10 +1,11 @@
 import json
+from datetime import date
 from inspect import getmembers
 from pprint import pprint
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
-from scooze.enums import Color, Format, Legality
+from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 from scooze.models.card import CardModel, FullCardModel
 
 # TODO(#65): WRITE TESTS FOR CARD OBJECT HERE
@@ -53,7 +54,71 @@ def print_obj(obj):
     pprint(list(filter(lambda x: not x[0].endswith("__"), getmembers(obj))))
 
 
-# region Card JSON
+# region Fixtures
+
+
+@pytest.fixture
+def legalities_ancestral_recall() -> dict:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
+
+
+@pytest.fixture
+def oracle_tales_of_master_seshiro() -> str:
+    return (
+        """(As this Saga enters and after your draw step, add a lore counter.)\n"""
+        """I, II — Put a +1/+1 counter on target creature or Vehicle you control. It """
+        """gains vigilance until end of turn.\n"""
+        """III — Exile this Saga, then return it to the battlefield transformed under """
+        """your control."""
+    )
+
+
+@pytest.fixture
+def oracle_arlinn_the_packs_hope() -> str:
+    return (
+        """Daybound (If a player casts no spells during their own turn, it becomes """
+        """night next turn.)\n"""
+        """+1: Until your next turn, you may cast creature spells as though they had """
+        """flash, and each creature you control enters the battlefield with an """
+        """additional +1/+1 counter on it.\n"""
+        """−3: Create two 2/2 green Wolf creature tokens."""
+    )
+
+
+@pytest.fixture
+def oracle_arlinn_the_moons_fury() -> str:
+    return (
+        """Nightbound (If a player casts at least two spells during their own turn, it """
+        """becomes day next turn.)\n"""
+        """+2: Add {R}{G}.\n"""
+        """0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf """
+        """creature with trample, indestructible, and haste."""
+    )
+
+
+# region Card JSON Fixtures
 
 
 @pytest.fixture
@@ -109,39 +174,20 @@ def json_orochi_eggwatcher(cards_json) -> dict:
 
 # endregion
 
+# endregion
+
+
 # region json -> Card Object
 
 # region Card
 
 
-def test_card_from_json_instant(json_ancestral_recall):
+def test_card_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
     card = Card.from_json(json_ancestral_recall)
     assert card.cmc == 1.0
     assert card.color_identity == {Color.BLUE}
     assert card.colors == {Color.BLUE}
-    assert card.legalities == {
-        Format.ALCHEMY: Legality.NOT_LEGAL,
-        Format.BRAWL: Legality.NOT_LEGAL,
-        Format.COMMANDER: Legality.BANNED,
-        Format.DUEL: Legality.BANNED,
-        Format.EXPLORER: Legality.NOT_LEGAL,
-        Format.FUTURE: Legality.NOT_LEGAL,
-        Format.GLADIATOR: Legality.NOT_LEGAL,
-        Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
-        Format.LEGACY: Legality.BANNED,
-        Format.MODERN: Legality.NOT_LEGAL,
-        Format.OATHBREAKER: Legality.BANNED,
-        Format.OLDSCHOOL: Legality.NOT_LEGAL,
-        Format.PAUPER: Legality.NOT_LEGAL,
-        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
-        Format.PENNY: Legality.NOT_LEGAL,
-        Format.PIONEER: Legality.NOT_LEGAL,
-        Format.PREDH: Legality.BANNED,
-        Format.PREMODERN: Legality.NOT_LEGAL,
-        Format.STANDARD: Legality.NOT_LEGAL,
-        Format.VINTAGE: Legality.RESTRICTED,
-    }
+    assert card.legalities == legalities_ancestral_recall
     assert card.mana_cost == "{U}"
     assert card.name == "Ancestral Recall"
     assert card.power is None
@@ -163,7 +209,7 @@ def test_card_from_json_creature(json_mystic_snake):
 # region OracleCard
 
 
-def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro):
+def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro, oracle_tales_of_master_seshiro):
     card = OracleCard.from_json(json_tales_of_master_seshiro)
     assert len(card.card_faces) == 2
     assert card.type_line == "Enchantment — Saga // Enchantment Creature — Snake Warrior"
@@ -177,13 +223,7 @@ def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro):
     assert front.mana_cost == "{4}{G}"
     assert front.name == "Tales of Master Seshiro"
     assert front.oracle_id is None
-    assert front.oracle_text == (
-        """(As this Saga enters and after your draw step, add a lore counter.)\n"""
-        """I, II — Put a +1/+1 counter on target creature or Vehicle you control. It """
-        """gains vigilance until end of turn.\n"""
-        """III — Exile this Saga, then return it to the battlefield transformed under """
-        """your control."""
-    )
+    assert front.oracle_text == oracle_tales_of_master_seshiro
     assert front.power is None
     assert front.toughness is None
     assert front.type_line == "Enchantment — Saga"
@@ -204,8 +244,6 @@ def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro):
 
 def test_oraclecard_from_json_split_aftermath(json_driven_despair):
     # TODO: fill test
-    card = OracleCard.from_json(json_driven_despair)
-    print_obj(card)
     pass
 
 
@@ -224,12 +262,14 @@ def test_oraclecard_from_json_flip(json_orochi_eggwatcher):
 # region FullCard
 
 
-def test_fullcard_from_json():  # TODO: full test of full card here
+def test_fullcard_from_json_instant(json_ancestral_recall):
     # TODO: fill test (all fields from top level and non-card face related stuff)
     pass
 
 
-def test_fullcard_from_json_transform_planeswalker(json_arlinn_the_packs_hope):
+def test_fullcard_from_json_transform_planeswalker(
+    json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury
+):
     card = FullCard.from_json(json_arlinn_the_packs_hope)
     assert len(card.card_faces) == 2
     front, back = card.card_faces
@@ -243,26 +283,19 @@ def test_fullcard_from_json_transform_planeswalker(json_arlinn_the_packs_hope):
     assert front.illustration_id == "810f9359-c82f-4962-9f42-0d0a79ee4cae"
 
     # Image URIs
-    assert front.image_uris.art_crop.startswith("https://")
-    assert front.image_uris.border_crop.startswith("https://")
-    assert front.image_uris.large.startswith("https://")
-    assert front.image_uris.normal.startswith("https://")
-    assert front.image_uris.png.startswith("https://")
-    assert front.image_uris.small.startswith("https://")
+    assert front.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert front.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert front.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert front.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert front.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert front.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
     assert front.layout is None
     assert front.loyalty == "4"
     assert front.mana_cost == "{2}{R}{G}"
     assert front.name == "Arlinn, the Pack's Hope"
     assert front.oracle_id is None
-    assert front.oracle_text == (
-        """Daybound (If a player casts no spells during their own turn, it becomes """
-        """night next turn.)\n"""
-        """+1: Until your next turn, you may cast creature spells as though they had """
-        """flash, and each creature you control enters the battlefield with an """
-        """additional +1/+1 counter on it.\n"""
-        """−3: Create two 2/2 green Wolf creature tokens."""
-    )
+    assert front.oracle_text == oracle_arlinn_the_packs_hope
     assert front.power is None
     assert front.printed_name is None
     assert front.printed_text is None
@@ -280,24 +313,18 @@ def test_fullcard_from_json_transform_planeswalker(json_arlinn_the_packs_hope):
     assert back.illustration_id == "9d3b73cb-6d91-48f1-ab96-89971207556d"
 
     # ImageURIs
-    assert back.image_uris.art_crop.startswith("https://")
-    assert back.image_uris.border_crop.startswith("https://")
-    assert back.image_uris.large.startswith("https://")
-    assert back.image_uris.normal.startswith("https://")
-    assert back.image_uris.png.startswith("https://")
-    assert back.image_uris.small.startswith("https://")
+    assert back.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert back.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert back.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert back.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert back.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert back.image_uris.small.startswith("https://cards.scryfall.io/small/")
     assert back.layout is None
     assert back.loyalty == "4"
     assert back.mana_cost == ""
     assert back.name == "Arlinn, the Moon's Fury"
     assert back.oracle_id is None
-    assert back.oracle_text == (
-        """Nightbound (If a player casts at least two spells during their own turn, it """
-        """becomes day next turn.)\n"""
-        """+2: Add {R}{G}.\n"""
-        """0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf """
-        """creature with trample, indestructible, and haste."""
-    )
+    assert back.oracle_text == oracle_arlinn_the_moons_fury
     assert back.power is None
     assert back.printed_name is None
     assert back.printed_text is None
@@ -310,61 +337,175 @@ def test_fullcard_from_json_transform_planeswalker(json_arlinn_the_packs_hope):
 def test_fullcard_from_json_digital(json_urzas_construction_drone):
     # TODO: fill test
     card = FullCard.from_json(json_urzas_construction_drone)
-    # print_card(card)
     pass
 
 
 # endregion
-
 
 # endregion
 
 
 # region json -> CardModel
 
-
-# def test_card_model_from_json(json_mystic_snake):
-#     card_model = CardModel.model_validate(json_mystic_snake)
-#     print("test_card_model_from_json")
-#     pprint(dict(card_model))
-#     assert True
+# region CardModel
 
 
-# def test_full_card_from_json(json_mystic_snake):
-#     full_card_model = FullCardModel.model_validate(json_mystic_snake)
-#     print("test_full_card_model_from_json")
-#     pprint(dict(full_card_model))
-#     assert True
+def test_cardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+    model = CardModel.model_validate(json_ancestral_recall)
+    assert model.cmc == 1.0
+    assert model.color_identity == {Color.BLUE}
+    assert model.colors == {Color.BLUE}
+    assert model.legalities == legalities_ancestral_recall
+    assert model.mana_cost == "{U}"
+    assert model.name == "Ancestral Recall"
+    assert model.power == ""
+    assert model.toughness == ""
+    assert model.type_line == "Instant"
 
+
+# TODO: add tests for the other cards
+
+# endregion
+
+# region FullCardModel
+
+
+def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+    model = FullCardModel.model_validate(json_ancestral_recall)
+    pprint(model.model_dump())
+    assert model.all_parts is None
+    assert model.arena_id is None
+    assert model.artist == "Ryan Pancoast"
+    assert model.attraction_lights is None
+    assert model.booster == True
+    assert model.border_color == BorderColor.BLACK
+    assert model.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
+    assert model.card_faces is None
+    assert model.cardmarket_id is None
+    assert model.cmc == 1.0
+    assert model.collector_number == "1"
+    assert model.color_identity == {Color.BLUE}
+    assert model.color_indicator is None
+    assert model.colors == {Color.BLUE}
+    assert model.content_warning == False
+    assert model.digital == True
+    assert model.edhrec_rank is None
+    assert model.finishes == {Finish.NONFOIL, Finish.FOIL}
+    assert model.flavor_name is None
+    assert model.flavor_text is None
+    assert model.frame == "2015"
+    assert model.frame_effects is None
+    assert model.full_art == False
+    assert model.games == {Game.MTGO}
+    assert model.hand_modifier is None
+    assert model.highres_image == True
+    assert model.illustation_id == ""
+    assert model.image_status == "highres_scan"
+
+    # ImageURIs
+    assert model.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert model.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert model.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert model.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert model.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert model.image_uris.small.startswith("https://cards.scryfall.io/small/")
+
+    assert model.keywords == set()
+    assert model.lang == "en"
+    assert model.layout == "normal"
+    assert model.legalities == legalities_ancestral_recall
+    assert model.life_modifier is None
+    assert model.loyalty is None
+    assert model.mana_cost == "{U}"
+    assert model.mtgo_foil_id == 53178
+    assert model.mtgo_id == 53177
+    assert model.multiverse_ids == [382841]
+    assert model.name == "Ancestral Recall"
+    assert model.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
+    assert model.oracle_text == "Target player draws three cards."
+    assert model.oversized == False
+    assert model.penny_rank is None
+    assert model.power == ""
+    assert model.preview is None
+    assert model.prices is not None  # TODO: is this the best way to do this?
+
+    #  'prices': {'eur': None,
+    #             'tix': 1.9,
+    #             'usd': None,
+    #             'usd_etched': None,
+    #             'usd_foil': None},
+
+    assert model.printed_name is None
+    assert model.printed_text is None
+    assert model.printed_type_line is None
+    assert model.prints_search_uri.startswith("https://api.scryfall.com/cards/")
+    assert model.produced_mana is None
+    assert model.promo == False
+    assert model.promo_types is None
+
+    # PurchaseURIs
+    assert model.purchase_uris["cardhoarder"].startswith("https://www.cardhoarder.com/")
+    assert model.purchase_uris["cardmarket"].startswith("https://www.cardmarket.com/")
+    assert model.purchase_uris["tcgplayer"].startswith("https://www.tcgplayer.com/")
+
+    assert model.rarity == Rarity.BONUS
+
+    # RelatedURIs
+    assert model.related_uris["edhrec"].startswith("https://edhrec.com/")
+    assert model.related_uris["gatherer"].startswith("https://gatherer.wizards.com/")
+    assert model.related_uris["tcgplayer_infinite_articles"].startswith("https://infinite.tcgplayer.com/")
+    assert model.related_uris["tcgplayer_infinite_decks"].startswith("https://infinite.tcgplayer.com/")
+
+    assert model.released_at == date(year=2014, month=6, day=16)
+    assert model.reprint == True
+    assert model.reserved == True
+    assert model.rulings_uri.startswith("https://api.scryfall.com/cards/")
+    assert model.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
+    assert model.scryfall_set_uri.startswith("https://scryfall.com/sets/")
+    assert model.scryfall_uri.startswith("https://scryfall.com/card/")
+    assert model.security_stamp == "oval"
+    assert model.set == "vma"
+    assert model.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
+    assert model.set_name == "Vintage Masters"
+    assert model.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert model.set_type == "masters"
+    assert model.set_uri.startswith("https://api.scryfall.com/sets/")
+    assert model.story_spotlight == False
+    assert model.tcgplayer_etched_id is None
+    assert model.tcgplayer_id is None
+    assert model.textless == False
+    assert model.toughness == ""
+    assert model.type_line == "Instant"
+    assert model.uri.startswith("https://api.scryfall.com/cards/")
+    assert model.variation == False
+    assert model.variation_of is None
+    assert model.watermark is None
+
+
+# TODO: add tests for the other cards
+
+# endregion
 
 # endregion
 
 
 # region CardModel -> Card Object
 
-
-# def test_card_object_from_card_model(json_mystic_snake):
-#     card_model = CardModel.model_validate(json_mystic_snake)
-#     card = Card.from_model(card_model)
-#     print("test_card_object_from_card_model")
-#     pprint(get_members(card))
-#     assert True
+# region CardModel -> Card
 
 
-# def test_oracle_card_object_from_full_card_model(json_mystic_snake):
-#     full_card_model = FullCardModel.model_validate(json_mystic_snake)
-#     full_card = OracleCard.from_model(full_card_model)
-#     print("test_oracle_card_object_from_full_card_model")
-#     pprint(get_members(full_card))
-#     assert True
+def test_card_from_cardmodel_instant(json_ancestral_recall):
+    pass
 
 
-# def test_full_card_object_from_full_card_model(json_mystic_snake):
-#     full_card_model = FullCardModel.model_validate(json_mystic_snake)
-#     full_card = FullCard.from_model(full_card_model)
-#     print("test_full_card_object_from_full_card_model")
-#     pprint(get_members(full_card))
-#     assert True
+# TODO: add tests for the other cards
 
+# endregion
+
+# region FullCardModel -> FullCard
+
+# TODO: add tests for the other cards
+
+# endregion
 
 # endregion
