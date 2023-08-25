@@ -1,4 +1,6 @@
 import json
+from inspect import getmembers
+from pprint import pprint
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
@@ -10,6 +12,7 @@ from scooze.models.card import CardModel, FullCardModel
 # TODO: remove NOTE s and TODO s from this file.
 # Write tests for Card conversion. Write tests for normal Card behavior
 # Write tests for CardModel conversion. Write tests for normal CardModel behavior
+# Add a token to the test suite
 
 # NOTE: these tests can be run with pytest -s so you can see the print statements
 # NOTE: helpful little jq that can get you a card from one of the bulk files. You can get scryfall_id from
@@ -43,6 +46,11 @@ def get_card_json(cards_json: list[str], id: str) -> dict:
         card_json = json.loads(json_str)
         if card_json["id"] == id:
             return card_json
+
+
+# TODO: helper to print a card
+def print_obj(obj):
+    pprint(list(filter(lambda x: not x[0].endswith("__"), getmembers(obj))))
 
 
 # region Card JSON
@@ -103,6 +111,8 @@ def json_orochi_eggwatcher(cards_json) -> dict:
 
 # region json -> Card Object
 
+# region Card
+
 
 def test_card_from_json_instant(json_ancestral_recall):
     card = Card.from_json(json_ancestral_recall)
@@ -141,18 +151,170 @@ def test_card_from_json_instant(json_ancestral_recall):
 
 def test_card_from_json_creature(json_mystic_snake):
     card = Card.from_json(json_mystic_snake)
-    assert card.color_identity == {Color.GREEN, Color.BLUE}
-    assert card.colors == {Color.GREEN, Color.BLUE}
+    assert card.color_identity == {Color.BLUE, Color.GREEN}
+    assert card.colors == {Color.BLUE, Color.GREEN}
     assert card.power == "2"
     assert card.toughness == "2"
     assert card.type_line == "Creature — Snake"
 
 
-# def test_full_card_obj_from_json(json_mystic_snake):
-#     full_card = FullCard.from_json(json_mystic_snake)
-#     print("test_full_card_obj_from_json")
-#     pprint(get_members(full_card))
-#     assert True
+# endregion
+
+# region OracleCard
+
+
+def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro):
+    card = OracleCard.from_json(json_tales_of_master_seshiro)
+    assert len(card.card_faces) == 2
+    assert card.type_line == "Enchantment — Saga // Enchantment Creature — Snake Warrior"
+    front, back = card.card_faces
+
+    ## Front
+    assert front.cmc is None
+    assert front.color_indicator is None
+    assert front.colors == {Color.GREEN}
+    assert front.loyalty is None
+    assert front.mana_cost == "{4}{G}"
+    assert front.name == "Tales of Master Seshiro"
+    assert front.oracle_id is None
+    assert front.oracle_text == (
+        """(As this Saga enters and after your draw step, add a lore counter.)\n"""
+        """I, II — Put a +1/+1 counter on target creature or Vehicle you control. It """
+        """gains vigilance until end of turn.\n"""
+        """III — Exile this Saga, then return it to the battlefield transformed under """
+        """your control."""
+    )
+    assert front.power is None
+    assert front.toughness is None
+    assert front.type_line == "Enchantment — Saga"
+
+    ## Back
+    assert back.cmc is None
+    assert back.color_indicator == {Color.GREEN}
+    assert back.colors == {Color.GREEN}
+    assert back.loyalty is None
+    assert back.mana_cost == ""
+    assert back.name == "Seshiro's Living Legacy"
+    assert back.oracle_id is None
+    assert back.oracle_text == "Vigilance, haste"
+    assert back.power == "5"
+    assert back.toughness == "5"
+    assert back.type_line == "Enchantment Creature — Snake Warrior"
+
+
+def test_oraclecard_from_json_split_aftermath(json_driven_despair):
+    # TODO: fill test
+    card = OracleCard.from_json(json_driven_despair)
+    print_obj(card)
+    pass
+
+
+def test_oraclecard_from_json_mdfc(json_turntimber_symbiosis):
+    # TODO: fill test
+    pass
+
+
+def test_oraclecard_from_json_flip(json_orochi_eggwatcher):
+    # TODO: fill test
+    pass
+
+
+# endregion
+
+# region FullCard
+
+
+def test_fullcard_from_json():  # TODO: full test of full card here
+    # TODO: fill test (all fields from top level and non-card face related stuff)
+    pass
+
+
+def test_fullcard_from_json_transform_planeswalker(json_arlinn_the_packs_hope):
+    card = FullCard.from_json(json_arlinn_the_packs_hope)
+    assert len(card.card_faces) == 2
+    front, back = card.card_faces
+
+    ## Front
+    assert front.artist
+    assert front.cmc is None
+    assert front.color_indicator is None
+    assert front.colors == {Color.RED, Color.GREEN}
+    assert front.flavor_text is None
+    assert front.illustration_id == "810f9359-c82f-4962-9f42-0d0a79ee4cae"
+
+    # Image URIs
+    assert front.image_uris.art_crop.startswith("https://")
+    assert front.image_uris.border_crop.startswith("https://")
+    assert front.image_uris.large.startswith("https://")
+    assert front.image_uris.normal.startswith("https://")
+    assert front.image_uris.png.startswith("https://")
+    assert front.image_uris.small.startswith("https://")
+
+    assert front.layout is None
+    assert front.loyalty == "4"
+    assert front.mana_cost == "{2}{R}{G}"
+    assert front.name == "Arlinn, the Pack's Hope"
+    assert front.oracle_id is None
+    assert front.oracle_text == (
+        """Daybound (If a player casts no spells during their own turn, it becomes """
+        """night next turn.)\n"""
+        """+1: Until your next turn, you may cast creature spells as though they had """
+        """flash, and each creature you control enters the battlefield with an """
+        """additional +1/+1 counter on it.\n"""
+        """−3: Create two 2/2 green Wolf creature tokens."""
+    )
+    assert front.power is None
+    assert front.printed_name is None
+    assert front.printed_text is None
+    assert front.printed_type_line is None
+    assert front.toughness is None
+    assert front.type_line == "Legendary Planeswalker — Arlinn"
+    assert front.watermark is None
+
+    ## Back
+    assert back.artist == "Anna Steinbauer"
+    assert back.cmc is None
+    assert back.color_indicator == {Color.RED, Color.GREEN}
+    assert back.colors == {Color.RED, Color.GREEN}
+    assert back.flavor_text is None
+    assert back.illustration_id == "9d3b73cb-6d91-48f1-ab96-89971207556d"
+
+    # ImageURIs
+    assert back.image_uris.art_crop.startswith("https://")
+    assert back.image_uris.border_crop.startswith("https://")
+    assert back.image_uris.large.startswith("https://")
+    assert back.image_uris.normal.startswith("https://")
+    assert back.image_uris.png.startswith("https://")
+    assert back.image_uris.small.startswith("https://")
+    assert back.layout is None
+    assert back.loyalty == "4"
+    assert back.mana_cost == ""
+    assert back.name == "Arlinn, the Moon's Fury"
+    assert back.oracle_id is None
+    assert back.oracle_text == (
+        """Nightbound (If a player casts at least two spells during their own turn, it """
+        """becomes day next turn.)\n"""
+        """+2: Add {R}{G}.\n"""
+        """0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf """
+        """creature with trample, indestructible, and haste."""
+    )
+    assert back.power is None
+    assert back.printed_name is None
+    assert back.printed_text is None
+    assert back.printed_type_line is None
+    assert back.toughness is None
+    assert back.type_line == "Legendary Planeswalker — Arlinn"
+    assert back.watermark is None
+
+
+def test_fullcard_from_json_digital(json_urzas_construction_drone):
+    # TODO: fill test
+    card = FullCard.from_json(json_urzas_construction_drone)
+    # print_card(card)
+    pass
+
+
+# endregion
 
 
 # endregion
