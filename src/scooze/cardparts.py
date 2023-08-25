@@ -102,8 +102,7 @@ class RelatedCard:
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
-        scryfall_id: str
-        object: str | None
+        scryfall_id: str | None
         component: str | None
         name: str | None
         type_line: str | None
@@ -114,7 +113,6 @@ class RelatedCard:
         self,
         scryfall_id: str = "",
         id: str = "",
-        object: str | None = None,
         component: str | None = None,
         name: str | None = None,
         type_line: str | None = None,
@@ -123,7 +121,6 @@ class RelatedCard:
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.scryfall_id = scryfall_id if scryfall_id else id
-        self.object = object
         self.component = component  # TODO(#36): convert to enum?
         self.name = name
         self.type_line = type_line
