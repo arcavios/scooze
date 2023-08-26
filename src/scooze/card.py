@@ -368,7 +368,7 @@ class FullCard(OracleCard):
         # region Print fields
 
         self.artist = artist
-        self.artist_id = artist_id
+        self.artist_ids = artist_ids
         self.attraction_lights = attraction_lights
         self.booster = booster
         self.border_color = border_color

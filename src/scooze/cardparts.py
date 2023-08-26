@@ -138,7 +138,7 @@ class FullCardFace(CardFace):
         watermark: str | None = None,
     ):
         self.artist = artist
-        self.artist_id = artist_id,
+        self.artist_ids = artist_ids
         self.cmc = cmc
         self.color_indicator = color_indicator
         self.colors = colors
