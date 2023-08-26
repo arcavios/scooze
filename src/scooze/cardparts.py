@@ -127,6 +127,7 @@ class FullCardFace(CardFace):
 
     Attributes:
         artist: str | None
+        artist_ids: list[str] | None
         cmc: float | None
         color_indicator: set[Color] | None
         colors: set[Color] | None
@@ -151,7 +152,7 @@ class FullCardFace(CardFace):
     def __init__(
         self,
         artist: str | None = None,
-        artist_id: list[str] | None = None,
+        artist_ids: list[str] | None = None,
         cmc: float | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
@@ -175,7 +176,7 @@ class FullCardFace(CardFace):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.artist = artist
-        self.artist_id = artist_id
+        self.artist_ids = artist_ids
         self.cmc = self._normalize_float(cmc)
         self.color_indicator = self._normalize_set(color_indicator)
         self.colors = self._normalize_set(colors)
@@ -254,9 +255,17 @@ class Preview:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.previewed_at = previewed_at  # TODO: normalize
+        self.previewed_at = self._normalize_date(previewed_at)  # TODO: normalize
         self.source = source
         self.source_uri = source_uri
+
+    def _normalize_date(self, d: date | str | None) -> date:
+        # TODO: docstring
+
+        if d is None or isinstance(d, date):
+            return d
+        if isinstance(d, str):
+            return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format in utils if needed
 
 
 class RelatedCard:
