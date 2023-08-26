@@ -72,7 +72,9 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     artist: str | None = Field(
         description="Artist for art on this face.",
     )
-    artist_ids: list[str] | None = Field(description="List of Scryfall IDs for artists of this face.",)
+    artist_ids: list[str] | None = Field(
+        description="List of Scryfall IDs for artists of this face.",
+    )
     cmc: float | None = Field(
         description="Mana value of this face.",
     )
