@@ -309,8 +309,8 @@ class FullCardModel(CardModel, validate_assignment=True):
     )
     artist_id: list[str] | None = Field(
         default=None,
-        description="List of Scryfall IDs for artists of this card."
-    ),
+        description="List of Scryfall IDs for artists of this card.",
+    )
     attraction_lights: set[int] | None = Field(
         default=None,
         description="Attraction lights lit on this card, if applicable.",

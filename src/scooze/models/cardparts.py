@@ -82,7 +82,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     )
     artist_id: list[str] | None = Field(
         default=None,
-        description="List of Scryfall IDs for artists of this face."
+        description="List of Scryfall IDs for artists of this face.",
     )
     cmc: float | None = Field(
         default=None,

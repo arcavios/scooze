@@ -276,6 +276,7 @@ def test_fullcard_from_json_transform_planeswalker(
 
     ## Front
     assert front.artist
+    # TODO: artist_id
     assert front.cmc is None
     assert front.color_indicator is None
     assert front.colors == {Color.RED, Color.GREEN}
@@ -306,6 +307,7 @@ def test_fullcard_from_json_transform_planeswalker(
 
     ## Back
     assert back.artist == "Anna Steinbauer"
+    # TODO: artist_id
     assert back.cmc is None
     assert back.color_indicator == {Color.RED, Color.GREEN}
     assert back.colors == {Color.RED, Color.GREEN}
@@ -375,6 +377,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.all_parts is None
     assert model.arena_id is None
     assert model.artist == "Ryan Pancoast"
+    # TODO: artist_id
     assert model.attraction_lights is None
     assert model.booster == True
     assert model.border_color == BorderColor.BLACK
@@ -496,7 +499,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
 def test_card_from_cardmodel_instant(json_ancestral_recall):
     model = CardModel.model_validate(json_ancestral_recall)
     card = Card.from_model(model)
-    print_obj(card)
+    # print_obj(card)
     # TODO: tests go here
 
 
