@@ -37,8 +37,8 @@ class Card:
     def __init__(
         self,
         cmc: float | int | None = None,
-        color_identity: set[Color] | None = None,
-        colors: set[Color] | None = None,
+        color_identity: set[Color] | list[Color] | None = None,
+        colors: set[Color] | list[Color] | None = None,
         legalities: dict[Format, Legality] | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
@@ -131,12 +131,12 @@ class OracleCard(Card):
         self,
         card_faces: list[CardFace] | None = None,
         cmc: float | int | None = None,
-        color_identity: set[Color] | None = None,
-        color_indicator: set[Color] | None = None,
-        colors: set[Color] | None = None,
+        color_identity: set[Color] | list[Color] | None = None,
+        color_indicator: set[Color] | list[Color] | None = None,
+        colors: set[Color] | list[Color] | None = None,
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
-        keywords: set[str] = None,
+        keywords: set[str] | list[str] = None,
         legalities: dict[Format, Legality] = None,
         life_modifier: str | None = None,
         loyalty: str | None = None,
@@ -147,7 +147,7 @@ class OracleCard(Card):
         prints_search_uri: str = "",
         penny_rank: int | None = None,
         power: str | None = None,
-        produced_mana: set[Color] | None = None,
+        produced_mana: set[Color] | list[Color] | None = None,
         reserved: bool = False,
         rulings_uri: str = "",
         toughness: str | None = None,
@@ -313,12 +313,12 @@ class FullCard(OracleCard):
         all_parts: list[RelatedCard] | None = None,
         card_faces: list[FullCardFace] | None = None,
         cmc: float | int | None = None,
-        color_identity: set[Color] | None = None,
-        color_indicator: set[Color] | None = None,
-        colors: set[Color] | None = None,
+        color_identity: set[Color] | list[Color] | None = None,
+        color_indicator: set[Color] | list[Color] | None = None,
+        colors: set[Color] | list[Color] | None = None,
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
-        keywords: set[str] = set(),
+        keywords: set[str] | list[str] = set(),
         layout: str = "normal",  # TODO(#36): convert to enum?
         legalities: dict[Format, Legality] | None = None,
         life_modifier: str | None = None,
@@ -329,27 +329,27 @@ class FullCard(OracleCard):
         oversized: bool = False,
         penny_rank: int | None = None,
         power: str | None = None,
-        produced_mana: set[Color] | None = None,
+        produced_mana: set[Color] | list[Color] | None = None,
         reserved: bool = False,
         toughness: str | None = None,
         type_line: str | None = None,
         # Print Fields
         artist: str | None = None,
         artist_id: list[str] | None = None,
-        attraction_lights: set[int] | None = None,
+        attraction_lights: set[int] | list[int] | None = None,
         booster: bool | None = None,
         border_color: BorderColor | None = None,
         card_back_id: str | None = None,
         collector_number: str | None = None,
         content_warning: bool | None = None,
         digital: bool | None = None,
-        finishes: set[Finish] | None = None,
+        finishes: set[Finish] | list[Finish] | None = None,
         flavor_name: str | None = None,
         flavor_text: str | None = None,
-        frame_effects: set[str] | None = None,  # TODO(#36): convert to enum?
+        frame_effects: set[str] | list[str] | None = None,  # TODO(#36): convert to enum?
         frame: str | None = None,
         full_art: bool | None = None,
-        games: set[Game] | None = None,
+        games: set[Game] | list[Game] | None = None,
         highres_image: bool | None = None,
         illustration_id: str | None = None,
         image_status: str | None = None,  # TODO(#36): convert to enum?
@@ -360,7 +360,7 @@ class FullCard(OracleCard):
         printed_text: str | None = None,
         printed_type_line: str | None = None,
         promo: bool = False,
-        promo_types: set[str] | None = None,
+        promo_types: set[str] | list[str] | None = None,
         purchase_uris: dict[str, str] = {},  # TODO(#47): convert to object?
         rarity: Rarity | None = None,  # TODO(#48): better default?
         related_uris: dict[str, str] = {},  # TODO(#47): convert to object?
@@ -389,7 +389,7 @@ class FullCard(OracleCard):
         self.lang = lang
         self.mtgo_id = mtgo_id
         self.mtgo_foil_id = mtgo_foil_id
-        self.multiverse_ids = self._normalize_set(multiverse_ids)
+        self.multiverse_ids = multiverse_ids
         self.tcgplayer_id = tcgplayer_id
         self.tcgplayer_etched_id = tcgplayer_etched_id
         self.cardmarket_id = cardmarket_id

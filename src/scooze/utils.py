@@ -57,12 +57,10 @@ class DictDiff:
     """
     Represents a diff between two dicts.
 
-    Attributes
-    ----------
+    Attributes:
         contents (dict[Any, tuple[int, int]]): The contents of this diff.
 
-    Methods
-    -------
+    Methods:
     get_diff(d1: dict, d2: dict, NO_KEY: Any)
         Generate a diff between two dicts.
     """

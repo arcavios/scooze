@@ -9,8 +9,7 @@ class ImageUrisModel(BaseModel, validate_assignment=True):
     URIs of images associated with this model on Scryfall.
     Scryfall documentation: https://scryfall.com/docs/api/images
 
-    Attributes
-    ----------
+    Attributes:
         png: str | None
         border_crop: str | None
         art_crop: str | None
@@ -51,8 +50,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
-    Attributes
-    ----------
+    Attributes:
         artist: str | None
         artist_id: list[str] | None
         cmc: float | None
@@ -165,8 +163,7 @@ class PricesModel(BaseModel, validate_assignment=True):
     """
     Model for all price data associated with a CardModel.
 
-    Attributes
-    ----------
+    Attributes:
         usd: float | None
         usd_foil: float | None
         usd_etched: float | None
@@ -227,8 +224,7 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
-    Attributes
-    ----------
+    Attributes:
         scryfall_id: str
         component: str
         name: str

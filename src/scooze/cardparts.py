@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import date, datetime
 from typing import TypeVar
 
 from scooze.enums import Color
@@ -41,92 +41,6 @@ class ImageUris:
         self.small = small
 
 
-class Prices:
-    """
-    Object for all price data associated with a Card object.
-
-    Attributes:
-        usd: float | None
-        usd_foil: float | None
-        usd_etched: float | None
-        eur: float | None
-        tix: float | None
-    """
-
-    def __init__(
-        self,
-        usd: float | None = None,
-        usd_foil: float | None = None,
-        usd_etched: float | None = None,
-        eur: float | None = None,
-        eur_foil: float | None = None,
-        tix: float | None = None,
-        # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
-    ):
-        self.usd = usd
-        self.usd_foil = usd_foil
-        self.usd_etched = usd_etched
-        self.eur = eur
-        self.eur_foil = eur_foil
-        self.tix = tix
-
-
-class Preview:
-    """
-    Object for information about where and when a card was previewed.
-
-    Attributes:
-        previewed_at: datetime | None
-        source: str | None
-        source_uri: str | None
-    """
-
-    def __init__(
-        self,
-        previewed_at: datetime | None = None,
-        source: str | None = None,
-        source_uri: str | None = None,
-        # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
-    ):
-        self.previewed_at = previewed_at
-        self.source = source
-        self.source_uri = source_uri
-
-
-class RelatedCard:
-    """
-    Data about Scryfall objects related to this card (tokens, cards referenced by name, meld pairs, etc.)
-
-    Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
-
-    Attributes:
-        scryfall_id: str | None
-        component: str | None
-        name: str | None
-        type_line: str | None
-        uri: str | None
-    """
-
-    def __init__(
-        self,
-        scryfall_id: str = "",
-        id: str = "",
-        component: str | None = None,
-        name: str | None = None,
-        type_line: str | None = None,
-        uri: str | None = None,
-        # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
-    ):
-        self.scryfall_id = scryfall_id if scryfall_id else id
-        self.component = component  # TODO(#36): convert to enum?
-        self.name = name
-        self.type_line = type_line
-        self.uri = uri
-
-
 class CardFace:
     """
     Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
@@ -135,6 +49,7 @@ class CardFace:
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
     Attributes:
+        cmc: float | None
         color_indicator: set[Color] | None
         colors: set[Color] | None
         loyalty: str | None
@@ -150,8 +65,8 @@ class CardFace:
     def __init__(
         self,
         cmc: float | None = None,
-        color_indicator: set[Color] | None = None,
-        colors: set[Color] | None = None,
+        color_indicator: set[Color] | list[Color] | None = None,
+        colors: set[Color] | list[Color] | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
@@ -238,8 +153,8 @@ class FullCardFace(CardFace):
         artist: str | None = None,
         artist_id: list[str] | None = None,
         cmc: float | None = None,
-        color_indicator: set[Color] | None = None,
-        colors: set[Color] | None = None,
+        color_indicator: set[Color] | list[Color] | None = None,
+        colors: set[Color] | list[Color] | None = None,
         flavor_text: str | None = None,
         illustration_id: int | None = None,
         image_uris: ImageUris | None = None,
@@ -288,3 +203,89 @@ class FullCardFace(CardFace):
             return image_uris
         elif isinstance(image_uris, dict):
             return ImageUris(**image_uris)
+
+
+class Prices:
+    """
+    Object for all price data associated with a Card object.
+
+    Attributes:
+        usd: float | None
+        usd_foil: float | None
+        usd_etched: float | None
+        eur: float | None
+        tix: float | None
+    """
+
+    def __init__(
+        self,
+        usd: float | None = None,
+        usd_foil: float | None = None,
+        usd_etched: float | None = None,
+        eur: float | None = None,
+        eur_foil: float | None = None,
+        tix: float | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
+    ):
+        self.usd = usd
+        self.usd_foil = usd_foil
+        self.usd_etched = usd_etched
+        self.eur = eur
+        self.eur_foil = eur_foil
+        self.tix = tix
+
+
+class Preview:
+    """
+    Object for information about where and when a card was previewed.
+
+    Attributes:
+        previewed_at: date | None
+        source: str | None
+        source_uri: str | None
+    """
+
+    def __init__(
+        self,
+        previewed_at: date | None = None,
+        source: str | None = None,
+        source_uri: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
+    ):
+        self.previewed_at = previewed_at  # TODO: normalize
+        self.source = source
+        self.source_uri = source_uri
+
+
+class RelatedCard:
+    """
+    Data about Scryfall objects related to this card (tokens, cards referenced by name, meld pairs, etc.)
+
+    Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
+
+    Attributes:
+        scryfall_id: str | None
+        component: str | None
+        name: str | None
+        type_line: str | None
+        uri: str | None
+    """
+
+    def __init__(
+        self,
+        scryfall_id: str = "",
+        id: str = "",
+        component: str | None = None,
+        name: str | None = None,
+        type_line: str | None = None,
+        uri: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
+    ):
+        self.scryfall_id = scryfall_id if scryfall_id else id
+        self.component = component  # TODO(#36): convert to enum?
+        self.name = name
+        self.type_line = type_line
+        self.uri = uri
