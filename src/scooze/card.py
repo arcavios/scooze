@@ -187,7 +187,7 @@ class FullCard(OracleCard):
 
         ### Print fields
         artist: str | None
-        artist_id: list[str] | None
+        artist_ids: list[str] | None
         attraction_lights: list[int] | None
         booster: bool | None
         border_color: BorderColor | None
@@ -273,7 +273,7 @@ class FullCard(OracleCard):
         toughness: str | None = None,
         type_line: str | None = None,
         artist: str | None = None,
-        artist_id: list[str] | None = None,
+        artist_ids: list[str] | None = None,
         attraction_lights: list[int] | None = None,
         booster: bool | None = None,
         border_color: BorderColor | None = None,
