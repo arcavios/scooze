@@ -1,10 +1,10 @@
 import logging
 import os.path
 from sys import stdout
-from typing import Any
+from typing import Any, TypeVar
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk/"
-
+T = TypeVar("T")
 
 def get_logger(
     filename: str,
@@ -49,6 +49,29 @@ def get_logger(
 
     return logger
 
+
+# region JSON Normalizer
+
+class JsonNormalizer:
+    # TODO: docstring
+    # TODO: make these classmethods and set them up to be used in all the right places
+    def _normalize_float(self, f: float | int | None) -> float:
+        # TODO: docstring
+
+        if f is None or isinstance(f, float):
+            return f
+        elif isinstance(f, int):
+            return float(f)
+
+    def _normalize_set(self, s: set[T] | list[T] | None) -> set[T]:
+        # TODO: docstring
+
+        if s is None or isinstance(s, set):
+            return s
+        elif isinstance(s, list):
+            return set(s)
+
+# endregion
 
 # region Dict Diff
 
