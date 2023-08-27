@@ -60,6 +60,9 @@ class Color(ExtendedEnum, StrEnum):
     GREEN = "G"
 
 
+# TODO: Component
+
+
 class Finish(ExtendedEnum, StrEnum):
     """
     A finish type that a Magic card can be printed with.
@@ -155,6 +158,11 @@ class Game(ExtendedEnum, StrEnum):
     MTGO = auto()
 
 
+# TODO: ImageStatus
+
+# TODO: Language
+
+
 class Layout(ExtendedEnum, StrEnum):
     """
     A layout that a Magic card can be printed with.
@@ -225,6 +233,8 @@ class ScryfallBulkFile(ExtendedEnum, StrEnum):
     ALL = "all_cards"
     # TODO(#26): support for Rulings file
 
+
+# TODO: SecurityStamp
 
 # endregion
 
