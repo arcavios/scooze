@@ -170,7 +170,31 @@ class ImageStatus(ExtendedEnum, StrEnum):
     HIGHRES_SCAN = auto()
 
 
-# TODO: Language
+class Language(ExtendedEnum, StrEnum):
+    """
+    A language that Magic cards have been printed in, using Scryfall's language codes.
+    See https://scryfall.com/docs/api/languages for documentation.
+    """
+
+    ENGLISH = "en"
+    SPANISH = "es"
+    FRENCH = "fr"
+    GERMAN = "de"
+    ITALIAN = "it"
+    PORTUGUESE = "pt"
+    JAPANESE = "ja"
+    KOREAN = "ko"
+    RUSSIAN = "ru"
+    CHINESE_SIMPLIFIED = "zhs"
+    CHINESE_TRADITIONAL = "zht"
+    PHYREXIAN = "ph"
+
+    # each used for a single promotional card
+    HEBREW = "he"
+    LATIN = "la"
+    ANCIENT_GREEK = "grc"
+    ARABIC = "ar"
+    SANSKRIT = "sa"
 
 
 class Layout(ExtendedEnum, StrEnum):
