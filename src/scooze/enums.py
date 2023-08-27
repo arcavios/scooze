@@ -158,7 +158,17 @@ class Game(ExtendedEnum, StrEnum):
     MTGO = auto()
 
 
-# TODO: ImageStatus
+class ImageStatus(ExtendedEnum, StrEnum):
+    """
+    An indicator for whether a card's image exists on Scryfall, and how high quality the sourced image is.
+    See https://scryfall.com/docs/api/images for documentation.
+    """
+
+    MISSING = auto()
+    PLACEHOLDER = auto()
+    LOWRES = auto()
+    HIGHRES_SCAN = auto()
+
 
 # TODO: Language
 
