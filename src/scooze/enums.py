@@ -234,7 +234,18 @@ class ScryfallBulkFile(ExtendedEnum, StrEnum):
     # TODO(#26): support for Rulings file
 
 
-# TODO: SecurityStamp
+class SecurityStamp(ExtendedEnum, StrEnum):
+    """
+    A holographic security stamp printed on the bottom of some Magic cards, generally rares and mythics.
+    """
+
+    OVAL = auto()  # default style
+    ACORN = auto()  # eternal-legal cards in Un-sets
+    ARENA = auto()
+    CIRCLE = auto()  # Signature Spellbook style
+    HEART = auto()  # My Little Pony
+    TRIANGLE = auto()  # Universes Beyond
+
 
 # endregion
 
