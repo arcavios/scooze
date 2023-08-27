@@ -60,7 +60,16 @@ class Color(ExtendedEnum, StrEnum):
     GREEN = "G"
 
 
-# TODO: Component
+class Component(ExtendedEnum, StrEnum):
+    """
+    A type of related object, used in Scryfall to link a card to other cards or tokens referenced by it.
+    See https://scryfall.com/docs/api/cards for documentation.
+    """
+
+    MELD_PART = auto()
+    MELD_RESULT = auto()
+    TOKEN = auto()
+    COMBO_PIECE = auto()  # Generally a card referenced directly in rules text, in either direction.
 
 
 class Finish(ExtendedEnum, StrEnum):
