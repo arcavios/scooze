@@ -92,7 +92,7 @@ class Format(ExtendedEnum, StrEnum):
     PIONEER = auto()
     PREDH = auto()
     PREMODERN = auto()
-    STANDARD = "standard"
+    STANDARD = auto()
     VINTAGE = auto()
     # non-Scryfall formats
     LIMITED = auto()
