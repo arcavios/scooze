@@ -101,6 +101,50 @@ class Format(ExtendedEnum, StrEnum):
     NONE = auto()
 
 
+class Frame(ExtendedEnum, StrEnum):
+    """
+    A frame style for a Magic card, corresponding to the year of its design.
+    """
+
+    _1993 = "1993"
+    _1997 = "1997"
+    _2003 = "2003"
+    _2015 = "2015"
+    FUTURE = auto()
+
+
+class FrameEffect(ExtendedEnum, StrEnum):
+    """
+    A frame effect on a Magic card that's different from the usual even border.
+    """
+
+    COLORSHIFTED = auto()
+    COMPANION = auto()
+    DEVOID = auto()
+    DRAFT = auto()
+    ETCHED = auto()
+    EXTENDEDART = auto()
+    INVERTED = auto()
+    LEGENDARY = auto()
+    LESSON = auto()
+    MIRACLE = auto()
+    NYXTOUCHED = auto()
+    SHATTEREDGLASS = auto()
+    SHOWCASE = auto()
+    SNOW = auto()
+    TOMBSTONE = auto()
+
+    # Double-faced card marks
+    COMPASSLANDDFC = auto()
+    CONVERTDFC = auto()
+    FANDFC = auto()
+    MOONELDRAZIDFC = auto()
+    ORIGINPWDFC = auto()
+    SUNMOONDFC = auto()
+    UPSIDEDOWNDFC = auto()
+    WAXINGANDWANINGMOONDFC = auto()
+
+
 class Game(ExtendedEnum, StrEnum):
     """
     An official Magic game a card print can be available in.
