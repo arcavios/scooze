@@ -111,6 +111,36 @@ class Game(ExtendedEnum, StrEnum):
     MTGO = auto()
 
 
+class Layout(ExtendedEnum, StrEnum):
+    """
+    A layout that a Magic card can be printed with.
+    """
+
+    NORMAL = auto()
+    ADVENTURE = auto()
+    ART_SERIES = auto()
+    AUGMENT = auto()
+    BATTLE = auto()
+    CLASS = auto()
+    DOUBLE_FACED_TOKEN = auto()
+    EMBLEM = auto()
+    FLIP = auto()
+    HOST = auto()
+    LEVELER = auto()
+    MELD = auto()
+    MODAL_DFC = auto()
+    MUTATE = auto()
+    PLANAR = auto()
+    PROTOTYPE = auto()
+    REVERSIBLE_CARD = auto()
+    SAGA = auto()
+    SCHEME = auto()
+    SPLIT = auto()
+    TOKEN = auto()
+    TRANSFORM = auto()
+    VANGUARD = auto()
+
+
 class Legality(ExtendedEnum, StrEnum):
     """
     String enum of different legalities that a card can have in a format.
