@@ -5,7 +5,8 @@ from enum import Enum, EnumMeta, StrEnum, auto
 
 class CaseInsensitiveEnumMeta(EnumMeta):
     """
-    An extension of the classic Python EnumMeta to support case insensitive fields.
+    An extension of the classic Python EnumMeta to support case insensitive
+    fields.
     """
 
     def __getitem__(self, item):
@@ -16,11 +17,8 @@ class CaseInsensitiveEnumMeta(EnumMeta):
 
 class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
     """
-    An extension of the classic Python Enum to support additional functionality.
-
-    Methods:
-        list():
-            Returns a list of the attributes of this Enum.
+    An extension of the classic Python Enum to support additional
+    functionality.
     """
 
     @classmethod

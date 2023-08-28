@@ -12,13 +12,9 @@ class DeckDiff:
     A class to reprsent a diff between two decks.
 
     Attributes:
-        main (DictDiff): The diff between the main decks of two Decks.
-        side (DictDiff): The diff between the sideboards of two Decks.
-        cmdr (DictDiff): The diff between the command zones of two Decks.
-
-    Methods:
-        total():
-            The number of Cards in this DeckDiff.
+        main: The diff between the main decks of two Decks.
+        side: The diff between the sideboards of two Decks.
+        cmdr: The diff between the command zones of two Decks.
     """
 
     def __init__(self, main: DictDiff, side: DictDiff, cmdr: DictDiff):
@@ -55,20 +51,6 @@ class DeckPart:
 
     Attributes:
         cards (Counter[Card]): The cards in this DeckPart.
-
-    Methods:
-        total():
-            The number of cards in this Deck.
-        diff(other: DeckPart):
-            Generates a diff between this DeckPart and another.
-        add_card(card: Card, quantity: int):
-            Adds a given quantity of a given card to this DeckPart.
-        add_cards(cards: Counter[Card]):
-            Adds the given cards to this DeckPart.
-        remove_card(card: Card, quantity: int):
-            Removes a given quantity of a given card from this DeckPart.
-        remove_cards(cards: Counter[Card]):
-            Removes the given cards from this DeckPart.
     """
 
     def __init__(self, cards: Counter[Card] = Counter()):
@@ -109,11 +91,12 @@ class DeckPart:
         """
         Generates a diff between this DeckPart and another.
 
-        Parameters:
+        Args:
             other (DeckPart): The other DeckPart.
 
         Returns:
-            diff (DictDiff): Returns a DictDiff with every card in both DeckParts and their counts.
+            diff (DictDiff): Returns a DictDiff with every card in both
+              DeckParts and their counts.
         """
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
@@ -122,7 +105,7 @@ class DeckPart:
         """
         Adds a given quantity of a given card to this DeckPart.
 
-        Parameters:
+        Args:
             card (Card): The card to add.
             quantity (int): The number of copies of the card to be added.
         """
@@ -133,7 +116,7 @@ class DeckPart:
         """
         Adds the given cards to this DeckPart.
 
-        Parameters:
+        Args:
             cards (Counter[Card]): The cards to add.
         """
 
@@ -141,9 +124,10 @@ class DeckPart:
 
     def remove_card(self, card: Card, quantity: int = maxsize) -> None:
         """
-        Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
+        Removes a given quantity of a given card from this Deck. If quantity is
+        not provided, removes all copies.
 
-        Parameters:
+        Args:
             card (Card): The card to remove.
             quantity (int): The number of copies of the card to be removed.
         """
@@ -155,7 +139,7 @@ class DeckPart:
         """
         Removes the given cards from this DeckPart.
 
-        Parameters:
+        Args:
             cards (Counter[Card]): The cards to remove.
         """
 
