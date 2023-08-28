@@ -16,6 +16,7 @@ from scooze.enums import (
     Legality,
     Rarity,
     SecurityStamp,
+    SetType,
 )
 from scooze.models.cardparts import (
     CardFaceModel,
@@ -171,7 +172,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         security_stamp: SecurityStamp | None
         set_name: str
         set_search_uri: str
-        set_type: str
+        set_type: SetType
         set_uri: str
         set: str
         set_id: str
@@ -463,7 +464,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         default="",
         description="Link to Scryfall API to start paginating through this print's full set.",
     )
-    set_type: str = Field(
+    set_type: SetType = Field(
         default="",
         description="",
     )

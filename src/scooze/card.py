@@ -25,6 +25,7 @@ from scooze.enums import (
     Legality,
     Rarity,
     SecurityStamp,
+    SetType,
 )
 from scooze.models.card import CardModel
 
@@ -347,7 +348,7 @@ class FullCard(OracleCard):
         security_stamp: SecurityStamp | None
         set_name: str
         set_search_uri: str
-        set_type: str
+        set_type: SetType
         set_uri: str
         set: str
         set_id: str
@@ -438,7 +439,7 @@ class FullCard(OracleCard):
         security_stamp: SecurityStamp | None = None,
         set_name: str = "",
         set_search_uri: str = "",
-        set_type: str = "",
+        set_type: SetType = "",
         set_uri: str = "",
         set: str = "",
         set_id: str = "",
