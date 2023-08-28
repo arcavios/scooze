@@ -1,7 +1,7 @@
 from collections import Counter
 
 import pytest
-from scooze.card import OracleCard
+from scooze.card import Card
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.enums import Color, Format
@@ -11,14 +11,14 @@ from scooze.enums import Color, Format
 # It was chosen because it has many colors of cards, lots of words, and many types.
 
 
-# region DecklistCards
+# region Simple Cards
 
 # Cards are sorted alphabetically
 
 
 @pytest.fixture
-def card_aether_gust() -> OracleCard:
-    return OracleCard(
+def card_aether_gust() -> Card:
+    return Card(
         name="Aether Gust",
         cmc=2,
         colors=[Color.BLUE],
@@ -27,8 +27,8 @@ def card_aether_gust() -> OracleCard:
 
 
 @pytest.fixture
-def card_boseiju_who_endures() -> OracleCard:
-    return OracleCard(
+def card_boseiju_who_endures() -> Card:
+    return Card(
         name="Boseiju, Who Endures",
         cmc=0,
         colors=[],
@@ -37,8 +37,8 @@ def card_boseiju_who_endures() -> OracleCard:
 
 
 @pytest.fixture
-def card_breeding_pool() -> OracleCard:
-    return OracleCard(
+def card_breeding_pool() -> Card:
+    return Card(
         name="Breeding Pool",
         cmc=0,
         colors=[],
@@ -47,8 +47,8 @@ def card_breeding_pool() -> OracleCard:
 
 
 @pytest.fixture
-def card_chalice_of_the_void() -> OracleCard:
-    return OracleCard(
+def card_chalice_of_the_void() -> Card:
+    return Card(
         name="Chalice of the Void",
         cmc=0,
         colors=[],
@@ -57,8 +57,8 @@ def card_chalice_of_the_void() -> OracleCard:
 
 
 @pytest.fixture
-def card_counterspell() -> OracleCard:
-    return OracleCard(
+def card_counterspell() -> Card:
+    return Card(
         name="Counterspell",
         cmc=2,
         colors=[Color.BLUE],
@@ -67,8 +67,8 @@ def card_counterspell() -> OracleCard:
 
 
 @pytest.fixture
-def card_dovins_veto() -> OracleCard:
-    return OracleCard(
+def card_dovins_veto() -> Card:
+    return Card(
         name="Dovin's Veto",
         cmc=2,
         colors=[Color.WHITE, Color.BLUE],
@@ -77,8 +77,8 @@ def card_dovins_veto() -> OracleCard:
 
 
 @pytest.fixture
-def card_dress_down() -> OracleCard:
-    return OracleCard(
+def card_dress_down() -> Card:
+    return Card(
         name="Dress Down",
         cmc=2,
         colors=[Color.BLUE],
@@ -87,8 +87,8 @@ def card_dress_down() -> OracleCard:
 
 
 @pytest.fixture
-def card_flooded_strand() -> OracleCard:
-    return OracleCard(
+def card_flooded_strand() -> Card:
+    return Card(
         name="Flooded Strand",
         cmc=0,
         colors=[],
@@ -97,8 +97,8 @@ def card_flooded_strand() -> OracleCard:
 
 
 @pytest.fixture
-def card_flusterstorm() -> OracleCard:
-    return OracleCard(
+def card_flusterstorm() -> Card:
+    return Card(
         name="Flusterstorm",
         cmc=1,
         colors=[Color.BLUE],
@@ -107,8 +107,8 @@ def card_flusterstorm() -> OracleCard:
 
 
 @pytest.fixture
-def card_force_of_negation() -> OracleCard:
-    return OracleCard(
+def card_force_of_negation() -> Card:
+    return Card(
         name="Force of Negation",
         cmc=3,
         colors=[Color.BLUE],
@@ -117,8 +117,8 @@ def card_force_of_negation() -> OracleCard:
 
 
 @pytest.fixture
-def card_forest() -> OracleCard:
-    return OracleCard(
+def card_forest() -> Card:
+    return Card(
         name="Forest",
         cmc=0,
         colors=[],
@@ -127,8 +127,8 @@ def card_forest() -> OracleCard:
 
 
 @pytest.fixture
-def card_hallowed_fountain() -> OracleCard:
-    return OracleCard(
+def card_hallowed_fountain() -> Card:
+    return Card(
         name="Hallowed Fountain",
         cmc=0,
         colors=[],
@@ -137,8 +137,8 @@ def card_hallowed_fountain() -> OracleCard:
 
 
 @pytest.fixture
-def card_hallowed_moonlight() -> OracleCard:
-    return OracleCard(
+def card_hallowed_moonlight() -> Card:
+    return Card(
         name="Hallowed Moonlight",
         cmc=2,
         colors=[Color.WHITE],
@@ -147,8 +147,8 @@ def card_hallowed_moonlight() -> OracleCard:
 
 
 @pytest.fixture
-def card_island() -> OracleCard:
-    return OracleCard(
+def card_island() -> Card:
+    return Card(
         name="Island",
         cmc=0,
         colors=[],
@@ -157,8 +157,8 @@ def card_island() -> OracleCard:
 
 
 @pytest.fixture
-def card_kaheera_the_orphanguard() -> OracleCard:
-    return OracleCard(
+def card_kaheera_the_orphanguard() -> Card:
+    return Card(
         name="Kaheera, the Orphanguard",
         cmc=3,
         colors=[Color.WHITE, Color.GREEN],
@@ -167,8 +167,8 @@ def card_kaheera_the_orphanguard() -> OracleCard:
 
 
 @pytest.fixture
-def card_leyline_binding() -> OracleCard:
-    return OracleCard(
+def card_leyline_binding() -> Card:
+    return Card(
         name="Leyline Binding",
         cmc=6,
         colors=[Color.WHITE],
@@ -177,8 +177,8 @@ def card_leyline_binding() -> OracleCard:
 
 
 @pytest.fixture
-def card_minamo_school_at_waters_edge() -> OracleCard:
-    return OracleCard(
+def card_minamo_school_at_waters_edge() -> Card:
+    return Card(
         name="Minamo, School at Water's Edge",
         cmc=0,
         colors=[],
@@ -187,8 +187,8 @@ def card_minamo_school_at_waters_edge() -> OracleCard:
 
 
 @pytest.fixture
-def card_misty_rainforest() -> OracleCard:
-    return OracleCard(
+def card_misty_rainforest() -> Card:
+    return Card(
         name="Misty Rainforest",
         cmc=0,
         colors=[],
@@ -197,8 +197,8 @@ def card_misty_rainforest() -> OracleCard:
 
 
 @pytest.fixture
-def card_omnath_locus_of_creation() -> OracleCard:
-    return OracleCard(
+def card_omnath_locus_of_creation() -> Card:
+    return Card(
         name="Omnath, Locus of Creation",
         cmc=4,
         colors=[Color.WHITE, Color.BLUE, Color.RED, Color.GREEN],
@@ -207,8 +207,8 @@ def card_omnath_locus_of_creation() -> OracleCard:
 
 
 @pytest.fixture
-def card_otawara_soaring_city() -> OracleCard:
-    return OracleCard(
+def card_otawara_soaring_city() -> Card:
+    return Card(
         name="Otawara, Soaring City",
         cmc=0,
         colors=[],
@@ -217,8 +217,8 @@ def card_otawara_soaring_city() -> OracleCard:
 
 
 @pytest.fixture
-def card_plains() -> OracleCard:
-    return OracleCard(
+def card_plains() -> Card:
+    return Card(
         name="Plains",
         cmc=0,
         colors=[],
@@ -227,8 +227,8 @@ def card_plains() -> OracleCard:
 
 
 @pytest.fixture
-def card_prismatic_ending() -> OracleCard:
-    return OracleCard(
+def card_prismatic_ending() -> Card:
+    return Card(
         name="Prismatic Ending",
         cmc=1,
         colors=[Color.WHITE],
@@ -237,8 +237,8 @@ def card_prismatic_ending() -> OracleCard:
 
 
 @pytest.fixture
-def card_raugrin_triome() -> OracleCard:
-    return OracleCard(
+def card_raugrin_triome() -> Card:
+    return Card(
         name="Raugrin Triome",
         cmc=0,
         colors=[],
@@ -247,8 +247,8 @@ def card_raugrin_triome() -> OracleCard:
 
 
 @pytest.fixture
-def card_sacred_foundry() -> OracleCard:
-    return OracleCard(
+def card_sacred_foundry() -> Card:
+    return Card(
         name="Sacred Foundry",
         cmc=0,
         colors=[],
@@ -257,8 +257,8 @@ def card_sacred_foundry() -> OracleCard:
 
 
 @pytest.fixture
-def card_solitude() -> OracleCard:
-    return OracleCard(
+def card_solitude() -> Card:
+    return Card(
         name="Solitude",
         cmc=5,
         colors=[Color.WHITE],
@@ -267,8 +267,8 @@ def card_solitude() -> OracleCard:
 
 
 @pytest.fixture
-def card_spell_pierce() -> OracleCard:
-    return OracleCard(
+def card_spell_pierce() -> Card:
+    return Card(
         name="Spell Pierce",
         cmc=1,
         colors=[Color.BLUE],
@@ -277,8 +277,8 @@ def card_spell_pierce() -> OracleCard:
 
 
 @pytest.fixture
-def card_steam_vents() -> OracleCard:
-    return OracleCard(
+def card_steam_vents() -> Card:
+    return Card(
         name="Steam Vents",
         cmc=0,
         colors=[],
@@ -287,8 +287,8 @@ def card_steam_vents() -> OracleCard:
 
 
 @pytest.fixture
-def card_stern_scolding() -> OracleCard:
-    return OracleCard(
+def card_stern_scolding() -> Card:
+    return Card(
         name="Stern Scolding",
         cmc=1,
         colors=[Color.BLUE],
@@ -297,8 +297,8 @@ def card_stern_scolding() -> OracleCard:
 
 
 @pytest.fixture
-def card_subtlety() -> OracleCard:
-    return OracleCard(
+def card_subtlety() -> Card:
+    return Card(
         name="Subtlety",
         cmc=4,
         colors=[Color.BLUE],
@@ -307,8 +307,8 @@ def card_subtlety() -> OracleCard:
 
 
 @pytest.fixture
-def card_supreme_verdict() -> OracleCard:
-    return OracleCard(
+def card_supreme_verdict() -> Card:
+    return Card(
         name="Supreme Verdict",
         cmc=4,
         colors=[Color.WHITE, Color.BLUE],
@@ -317,8 +317,8 @@ def card_supreme_verdict() -> OracleCard:
 
 
 @pytest.fixture
-def card_teferi_time_raveler() -> OracleCard:
-    return OracleCard(
+def card_teferi_time_raveler() -> Card:
+    return Card(
         name="Teferi, Time Raveler",
         cmc=3,
         colors=[Color.WHITE, Color.BLUE],
@@ -327,8 +327,8 @@ def card_teferi_time_raveler() -> OracleCard:
 
 
 @pytest.fixture
-def card_temple_garden() -> OracleCard:
-    return OracleCard(
+def card_temple_garden() -> Card:
+    return Card(
         name="Temple Garden",
         cmc=0,
         colors=[],
@@ -337,8 +337,8 @@ def card_temple_garden() -> OracleCard:
 
 
 @pytest.fixture
-def card_the_one_ring() -> OracleCard:
-    return OracleCard(
+def card_the_one_ring() -> Card:
+    return Card(
         name="The One Ring",
         cmc=4,
         colors=[],
@@ -347,8 +347,8 @@ def card_the_one_ring() -> OracleCard:
 
 
 @pytest.fixture
-def card_veil_of_summer() -> OracleCard:
-    return OracleCard(
+def card_veil_of_summer() -> Card:
+    return Card(
         name="Veil of Summer",
         cmc=1,
         colors=[Color.GREEN],
@@ -357,8 +357,8 @@ def card_veil_of_summer() -> OracleCard:
 
 
 @pytest.fixture
-def card_wear_tear() -> OracleCard:
-    return OracleCard(
+def card_wear_tear() -> Card:
+    return Card(
         name="Wear // Tear",
         cmc=3,
         colors=[Color.WHITE, Color.RED],
@@ -367,8 +367,8 @@ def card_wear_tear() -> OracleCard:
 
 
 @pytest.fixture
-def card_windswept_heath() -> OracleCard:
-    return OracleCard(
+def card_windswept_heath() -> Card:
+    return Card(
         name="Windswept Heath",
         cmc=0,
         colors=[],
@@ -377,8 +377,8 @@ def card_windswept_heath() -> OracleCard:
 
 
 @pytest.fixture
-def card_wrenn_and_six() -> OracleCard:
-    return OracleCard(
+def card_wrenn_and_six() -> Card:
+    return Card(
         name="Wrenn and Six",
         cmc=2,
         colors=[Color.RED, Color.GREEN],
@@ -387,8 +387,8 @@ def card_wrenn_and_six() -> OracleCard:
 
 
 @pytest.fixture
-def card_zagoth_triome() -> OracleCard:
-    return OracleCard(
+def card_zagoth_triome() -> Card:
+    return Card(
         name="Zagoth Triome",
         cmc=0,
         colors=[],
