@@ -57,7 +57,8 @@ class Color(ExtendedEnum, StrEnum):
 
 class Component(ExtendedEnum, StrEnum):
     """
-    A type of related object, used in Scryfall to link a card to other cards or tokens referenced by it.
+    A type of related object, used in Scryfall to link a card
+    to other cards or tokens referenced by it.
     See https://scryfall.com/docs/api/cards for documentation.
     """
 
@@ -164,7 +165,8 @@ class Game(ExtendedEnum, StrEnum):
 
 class ImageStatus(ExtendedEnum, StrEnum):
     """
-    An indicator for whether a card's image exists on Scryfall, and how high quality the sourced image is.
+    An indicator for whether a card's image exists on Scryfall,
+    and how high quality the sourced image is.
     See https://scryfall.com/docs/api/images for documentation.
     """
 
@@ -274,7 +276,8 @@ class ScryfallBulkFile(ExtendedEnum, StrEnum):
 
 class SecurityStamp(ExtendedEnum, StrEnum):
     """
-    A holographic security stamp printed on the bottom of some Magic cards, generally rares and mythics.
+    A holographic security stamp printed on the bottom of some
+    Magic cards, generally rares and mythics.
     """
 
     OVAL = auto()  # default style

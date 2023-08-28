@@ -495,8 +495,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         default="",
         description="Link to Scryfall API to start paginating through this print's full set.",
     )
-    set_type: SetType = Field(
-        default="",
+    set_type: SetType | None = Field(
+        default=None,
         description="An overall categorization for each set, provided by Scryfall.",
     )
     set_uri: str = Field(

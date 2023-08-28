@@ -195,7 +195,10 @@ class PricesModel(BaseModel, validate_assignment=True):
         default=None,
         description="Price in Euros, from Cardmarket.",
     )
-    eur_foil: float | None = Field(default=None, description="Foil price in Euros, from Cardmarket.")
+    eur_foil: float | None = Field(
+        default=None,
+        description="Foil price in Euros, from Cardmarket.",
+    )
     tix: float | None = Field(
         default=None,
         description="Price in MTGO tix, from Cardhoarder.",

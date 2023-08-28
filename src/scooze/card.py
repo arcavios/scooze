@@ -472,7 +472,7 @@ class FullCard(OracleCard):
         security_stamp: SecurityStamp | None = None,
         set_name: str = "",
         set_search_uri: str = "",
-        set_type: SetType = "",
+        set_type: SetType | None = None,
         set_uri: str = "",
         set: str = "",
         set_id: str = "",
