@@ -11,7 +11,22 @@ from scooze.cardparts import (
     Prices,
     RelatedCard,
 )
-from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
+from scooze.enums import (
+    BorderColor,
+    Color,
+    Finish,
+    Format,
+    Frame,
+    FrameEffect,
+    Game,
+    ImageStatus,
+    Language,
+    Layout,
+    Legality,
+    Rarity,
+    SecurityStamp,
+    SetType,
+)
 from scooze.models.card import CardModel
 
 ## Generic Types
@@ -384,7 +399,7 @@ class FullCard(OracleCard):
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str = "",
-        lang: str = "en",  # TODO(#36): convert to enum?
+        lang: Language = "en",  # TODO(#48): better default?
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
         multiverse_ids: list[int] | None = None,
@@ -432,15 +447,15 @@ class FullCard(OracleCard):
         finishes: set[Finish] | list[Finish] | None = None,
         flavor_name: str | None = None,
         flavor_text: str | None = None,
-        frame_effects: set[str] | list[str] | None = None,  # TODO(#36): convert to enum?
-        frame: str | None = None,
+        frame_effects: set[FrameEffect] | list[FrameEffect] | None = None,
+        frame: Frame | None = None,
         full_art: bool | None = None,
         games: set[Game] | list[Game] | None = None,
         highres_image: bool | None = None,
         illustration_id: str | None = None,
-        image_status: str | None = None,  # TODO(#36): convert to enum?
+        image_status: ImageStatus | None = None,
         image_uris: ImageUris | dict | None = None,
-        layout: str = "normal",  # TODO(#36): convert to enum?
+        layout: Layout = "normal",
         preview: Preview | None = None,
         prices: Prices | dict | None = None,
         printed_name: str | None = None,
@@ -454,10 +469,10 @@ class FullCard(OracleCard):
         released_at: date | str | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
-        security_stamp: str | None = None,  # TODO(#36): convert to enum?
+        security_stamp: SecurityStamp | None = None,
         set_name: str = "",
         set_search_uri: str = "",
-        set_type: str = "",
+        set_type: SetType | None = None,
         set_uri: str = "",
         set: str = "",
         set_id: str = "",
