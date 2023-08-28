@@ -228,18 +228,18 @@ class PreviewModel(BaseModel, validate_assignment=True):
 
 class RelatedCardModel(BaseModel, validate_assignment=True):
     """
-        Data about Scryfall objects related to this card
-        (tokens, cards referenced by name, meld pairs, etc.)
+    Data about Scryfall objects related to this card
+    (tokens, cards referenced by name, meld pairs, etc.)
 
-        Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
+    Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
-        Attributes:
-            scryfall_id: ID of linked component.
-            component: One of `token`, `meld_part`, `meld_result`, or
-              `combo_piece`.
-            name: Name of linked component.
-            type_line: Type line of linked component.
-            uri: URI of linked component.
+    Attributes:
+        scryfall_id: ID of linked component.
+        component: One of `token`, `meld_part`, `meld_result`, or
+          `combo_piece`.
+        name: Name of linked component.
+        type_line: Type line of linked component.
+        uri: URI of linked component.
     """
 
     scryfall_id: str = Field(
