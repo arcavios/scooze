@@ -399,7 +399,7 @@ class FullCard(OracleCard):
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str = "",
-        lang: Language = "en",
+        lang: Language = "en",  # TODO(#48): better default?
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
         multiverse_ids: list[int] | None = None,
