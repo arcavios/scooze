@@ -11,14 +11,12 @@ class DeckDiff:
     """
     A class to reprsent a diff between two decks.
 
-    Attributes
-    ----------
+    Attributes:
         main (DictDiff): The diff between the main decks of two Decks.
         side (DictDiff): The diff between the sideboards of two Decks.
         cmdr (DictDiff): The diff between the command zones of two Decks.
 
-    Methods
-    -------
+    Methods:
         total():
             The number of Cards in this DeckDiff.
     """
@@ -55,24 +53,22 @@ class DeckPart:
     """
     A class to represent a part of a deck.
 
-    Attributes
-    ----------
+    Attributes:
         cards (Counter[Card]): The cards in this DeckPart.
 
-    Methods
-    -------
-    total():
-        The number of cards in this Deck.
-    diff(other: DeckPart):
-        Generates a diff between this DeckPart and another.
-    add_card(card: Card, quantity: int):
-        Adds a given quantity of a given card to this DeckPart.
-    add_cards(cards: Counter[Card]):
-        Adds the given cards to this DeckPart.
-    remove_card(card: Card, quantity: int):
-        Removes a given quantity of a given card from this DeckPart.
-    remove_cards(cards: Counter[Card]):
-        Removes the given cards from this DeckPart.
+    Methods:
+        total():
+            The number of cards in this Deck.
+        diff(other: DeckPart):
+            Generates a diff between this DeckPart and another.
+        add_card(card: Card, quantity: int):
+            Adds a given quantity of a given card to this DeckPart.
+        add_cards(cards: Counter[Card]):
+            Adds the given cards to this DeckPart.
+        remove_card(card: Card, quantity: int):
+            Removes a given quantity of a given card from this DeckPart.
+        remove_cards(cards: Counter[Card]):
+            Removes the given cards from this DeckPart.
     """
 
     def __init__(self, cards: Counter[Card] = Counter()):

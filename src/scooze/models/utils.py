@@ -24,6 +24,7 @@ def get_base_model_config() -> ConfigDict:
     return ConfigDict(
         alias_generator=_to_lower_camel,
         arbitrary_types_allowed=True,
+        populate_by_name=True,
     )
 
 
@@ -60,7 +61,7 @@ def main_size(fmt: Format) -> tuple[int, int]:
             return 99, 99
 
         case Format.COMMANDER | Format.DUEL:
-            return 98, 99  # NOTE: Accounting for Partner
+            return 98, 99  # Accounting for Partner
 
         case Format.GLADIATOR:
             return 100, 100
@@ -140,7 +141,7 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
             return 1, 1
 
         case Format.COMMANDER | Format.DUEL:
-            return 1, 2  # NOTE: Accounting for Partner
+            return 1, 2  # Accounting for Partner
 
         case Format.OATHBREAKER:
             return 2, 2

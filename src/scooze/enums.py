@@ -1,6 +1,4 @@
-from enum import Enum, EnumMeta, auto
-
-from strenum import StrEnum
+from enum import Enum, EnumMeta, StrEnum, auto
 
 # region Enum Extensions
 
@@ -12,7 +10,7 @@ class CaseInsensitiveEnumMeta(EnumMeta):
 
     def __getitem__(self, item):
         if isinstance(item, str):
-            item = item.upper()
+            item = item.lower()
         return super().__getitem__(item)
 
 
@@ -20,10 +18,9 @@ class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
     """
     An extension of the classic Python Enum to support additional functionality.
 
-    Methods
-    -------
-    list():
-        Returns a list of the attributes of this Enum.
+    Methods:
+        list():
+            Returns a list of the attributes of this Enum.
     """
 
     @classmethod

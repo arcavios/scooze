@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import date, datetime
 
-import scooze.enums as enums
 from pydantic import BaseModel, Field
+from scooze.enums import Color
 
 
 class ImageUrisModel(BaseModel, validate_assignment=True):
@@ -19,21 +19,27 @@ class ImageUrisModel(BaseModel, validate_assignment=True):
     """
 
     png: str | None = Field(
+        default=None,
         description="Full card, high quality image with transparent background and rounded corners.",
     )
     border_crop: str | None = Field(
+        default=None,
         description="Full card image with corners and majority of border cropped out.",
     )
     art_crop: str | None = Field(
-        description="Rectangular crop to just art box; may not be perfect for cards with strange layouts."
+        default=None,
+        description="Rectangular crop to just art box; may not be perfect for cards with strange layouts.",
     )
     large: str | None = Field(
+        default=None,
         description="Large JPG image (672x936)",
     )
     normal: str | None = Field(
+        default=None,
         description="Medium JPG image (488x860)",
     )
     small: str | None = Field(
+        default=None,
         description="Small JPG image (146x204)",
     )
 
@@ -49,11 +55,11 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         artist: str | None
         artist_ids: list[str] | None
         cmc: float | None
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         flavor_text: str | None
         illustration_id: int | None
-        image_uris: list[str] | None
+        image_uris: ImageUrisModel | None
         layout: str | None
         loyalty: int | None
         mana_cost: str
@@ -70,66 +76,86 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     """
 
     artist: str | None = Field(
-        description="Artist for art on this face.",
+        default=None,
+        description="Illustrator for art on this face.",
     )
     artist_ids: list[str] | None = Field(
+        default=None,
         description="List of Scryfall IDs for artists of this face.",
     )
     cmc: float | None = Field(
+        default=None,
         description="Mana value of this face.",
     )
-    color_indicator: list[enums.Color] | None = Field(
+    color_indicator: set[Color] | None = Field(
+        default=None,
         description="Color indicator on this face, if any.",
     )
-    colors: list[enums.Color] | None = Field(
+    colors: set[Color] | None = Field(
+        default=None,
         description="Colors of this face.",
     )
     flavor_text: str | None = Field(
+        default=None,
         description="Flavor text of this face, if any.",
     )
     illustration_id: int | None = Field(
+        default=None,
         description="Scryfall illustration ID of this face, if any.",
     )
     image_uris: ImageUrisModel | None = Field(
+        default=None,
         description="URIs for images of this face on Scryfall.",
     )
     layout: str | None = Field(
+        default=None,
         description="Layout of this face, if any.",
     )  # TODO(#36): convert to enum?
     loyalty: int | None = Field(
+        default=None,
         description="Starting planeswalker loyalty of this face, if any.",
     )
     mana_cost: str = Field(
+        default="",
         description="Mana cost of this face.",
     )
     name: str = Field(
         description="Name of this face.",
     )
     oracle_id: str | None = Field(
+        default=None,
         description="Oracle ID of this face, for reversible cards.",
     )
     oracle_text: str | None = Field(
+        default=None,
         description="Oracle text of this face, if any.",
     )
     power: str | None = Field(
+        default=None,
         description="Power of this face, if any.",
     )
     printed_name: str | None = Field(
+        default=None,
         description="Printed name of this face, for localized non-English cards.",
     )
     printed_text: str | None = Field(
+        default=None,
         description="Printed text of this face, for localized non-English cards.",
     )
     printed_type_line: str | None = Field(
+        default=None,
         description="Printed type line of this face, for localized non-English cards.",
     )
     toughness: str | None = Field(
+        default=None,
         description="Toughness of this face, if any.",
     )
-    type_line: str = Field(
+    type_line: str | None = Field(
+        default=None,
         description="Type line of this face, if any.",
     )
     watermark: str | None = Field(
+        default=None,
         description="Watermark printed on this face, if any.",
     )
 
@@ -147,18 +173,23 @@ class PricesModel(BaseModel, validate_assignment=True):
     """
 
     usd: float | None = Field(
+        default=None,
         description="Price in US dollars, from TCGplayer.",
     )
     usd_foil: float | None = Field(
+        default=None,
         description="Foil price in US dollars, from TCGplayer.",
     )
     usd_etched: float | None = Field(
+        default=None,
         description="Etched foil price in US dollars, from TCGplayer.",
     )
     eur: float | None = Field(
+        default=None,
         description="Price in Euros, from Cardmarket.",
     )
     tix: float | None = Field(
+        default=None,
         description="Price in MTGO tix, from Cardhoarder.",
     )
 
@@ -173,13 +204,16 @@ class PreviewModel(BaseModel, validate_assignment=True):
         source_uri: str | None
     """
 
-    previewed_at: datetime | None = Field(
+    previewed_at: date | None = Field(
+        default=None,
         description="Date/time of preview being shown or added to Scryfall.",
     )
     source: str | None = Field(
+        default=None,
         description="Name of preview source",
     )
     source_uri: str | None = Field(
+        default=None,
         description="Location of preview source",
     )
 
@@ -191,16 +225,17 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
-        id: str
+        scryfall_id: str
         component: str
         name: str
         type_line: str
         uri: str
     """
 
-    id: str = Field(
+    scryfall_id: str = Field(
         description="ID of linked component.",
-    )  # NOTE: Scryfall ID
+        alias="id",
+    )  # Scryfall ID
     component: str = Field(
         description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.",
     )  # TODO(#36): convert to enum?

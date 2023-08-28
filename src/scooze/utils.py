@@ -1,9 +1,13 @@
 import logging
 import os.path
+from datetime import date, datetime
 from sys import stdout
-from typing import Any
+from typing import Any, TypeVar
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk/"
+
+## Generic Types
+T = TypeVar("T")  # generic type
 
 
 def get_logger(
@@ -50,6 +54,76 @@ def get_logger(
     return logger
 
 
+# region JSON Normalizer
+
+
+class JsonNormalizer:
+    """
+    A simple class to be used when normalizing non-serializable data from JSON.
+
+    Methods:
+        date(d):
+            Normalize a date.
+        float(f):
+            Normalize a float.
+        set(s):
+            Normalize a set.
+    """
+
+    @classmethod
+    def date(cls, d: date | str | None) -> date:
+        """
+        Normalize a date.
+
+        Parameters:
+            d: A date to normalize.
+
+        Returns:
+            A date.
+        """
+
+        if d is None or isinstance(d, date):
+            return d
+        if isinstance(d, str):
+            return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
+
+    @classmethod
+    def float(cls, f: float | int | None) -> float:
+        """
+        Normalize a float.
+
+        Parameters:
+            f: A float to normalize.
+
+        Returns:
+            A float.
+        """
+
+        if f is None or isinstance(f, float):
+            return f
+        elif isinstance(f, int):
+            return float(f)
+
+    @classmethod
+    def set(cls, s: set[T] | list[T] | None) -> set[T]:
+        """
+        Normalize a set.
+
+        Parameters:
+            d: A set to normalize.
+
+        Returns:
+            A set.
+        """
+
+        if s is None or isinstance(s, set):
+            return s
+        elif isinstance(s, list):
+            return set(s)
+
+
+# endregion
+
 # region Dict Diff
 
 
@@ -57,14 +131,12 @@ class DictDiff:
     """
     Represents a diff between two dicts.
 
-    Attributes
-    ----------
+    Attributes:
         contents (dict[Any, tuple[int, int]]): The contents of this diff.
 
-    Methods
-    -------
-    get_diff(d1: dict, d2: dict, NO_KEY: Any)
-        Generate a diff between two dicts.
+    Methods:
+        get_diff(d1: dict, d2: dict, NO_KEY: Any)
+            Generate a diff between two dicts.
     """
 
     def __init__(self, contents: dict[Any, tuple[int, int]]):

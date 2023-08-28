@@ -6,14 +6,14 @@ from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.enums import Color, Format
 
-# NOTE: These fixtures can be used in any tests in this directory.
+# These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
 # It was chosen because it has many colors of cards, lots of words, and many types.
 
 
 # region DecklistCards
 
-# NOTE: cards are sorted alphabetically
+# Cards are sorted alphabetically
 
 
 @pytest.fixture
@@ -362,7 +362,7 @@ def card_wear_tear() -> OracleCard:
         name="Wear // Tear",
         cmc=3,
         colors=[Color.WHITE, Color.RED],
-        type_line="Instant",  # TODO: what is Wear//Tear's type line?
+        type_line="Instant // Instant",
     )
 
 
