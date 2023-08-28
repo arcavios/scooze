@@ -1,6 +1,9 @@
-from datetime import datetime
+import json
+from datetime import date
+from typing import Self
 
-import scooze.enums as enums
+from scooze.enums import Color
+from scooze.utils import JsonNormalizer
 
 
 class ImageUris:
@@ -25,6 +28,8 @@ class ImageUris:
         large: str | None = None,
         normal: str | None = None,
         small: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.png = png
         self.border_crop = border_crop
@@ -32,6 +37,33 @@ class ImageUris:
         self.large = large
         self.normal = normal
         self.small = small
+
+
+class CardPartsNormalizer(JsonNormalizer):
+    """
+    A simple class to be used when normalizing non-serializable data from JSON.
+
+    Methods:
+        image_uris(image_uris):
+            Normalize ImageUris.
+    """
+
+    @classmethod
+    def image_uris(cls, image_uris: ImageUris | dict | None) -> ImageUris:
+        """
+        Normalize image_uris from JSON.
+
+        Parameters:
+            image_uris: An instance of ImageUris or some JSON to normalize.
+
+        Returns:
+            An instance of ImageUris.
+        """
+
+        if image_uris is None or isinstance(image_uris, ImageUris):
+            return image_uris
+        elif isinstance(image_uris, dict):
+            return ImageUris(**image_uris)
 
 
 class CardFace:
@@ -43,9 +75,9 @@ class CardFace:
 
     Attributes:
         cmc: float | None
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
-        loyalty: int | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
+        loyalty: str | None
         mana_cost: str | None
         name: str | None
         oracle_id: str | None
@@ -58,9 +90,9 @@ class CardFace:
     def __init__(
         self,
         cmc: float | None = None,
-        color_indicator: list[enums.Color] | None = None,
-        colors: list[enums.Color] | None = None,
-        loyalty: int | None = None,
+        color_indicator: set[Color] | list[Color] | None = None,
+        colors: set[Color] | list[Color] | None = None,
+        loyalty: str | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
         oracle_id: str | None = None,
@@ -68,10 +100,12 @@ class CardFace:
         power: str | None = None,
         toughness: str | None = None,
         type_line: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = cmc
-        self.color_indicator = color_indicator
-        self.colors = colors
+        self.cmc = CardPartsNormalizer.float(cmc)
+        self.color_indicator = CardPartsNormalizer.set(color_indicator)
+        self.colors = CardPartsNormalizer.set(colors)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
@@ -80,6 +114,13 @@ class CardFace:
         self.power = power
         self.toughness = toughness
         self.type_line = type_line
+
+    @classmethod
+    def from_json(cls, data: dict | str) -> Self:
+        if isinstance(data, dict):
+            return cls(**data)
+        elif isinstance(data, str):
+            return cls(**json.loads(data))
 
 
 class FullCardFace(CardFace):
@@ -93,13 +134,13 @@ class FullCardFace(CardFace):
         artist: str | None
         artist_ids: list[str] | None
         cmc: float | None
-        color_indicator: list[Color] | None
-        colors: list[Color] | None
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         flavor_text: str | None
         illustration_id: int | None
-        image_uris: list[str] | None
+        image_uris: ImageUris | None
         layout: str | None
-        loyalty: int | None
+        loyalty: str | None
         mana_cost: str | None
         name: str | None
         oracle_id: str | None
@@ -118,13 +159,13 @@ class FullCardFace(CardFace):
         artist: str | None = None,
         artist_ids: list[str] | None = None,
         cmc: float | None = None,
-        color_indicator: list[enums.Color] | None = None,
-        colors: list[enums.Color] | None = None,
+        color_indicator: set[Color] | list[Color] | None = None,
+        colors: set[Color] | list[Color] | None = None,
         flavor_text: str | None = None,
         illustration_id: int | None = None,
         image_uris: ImageUris | None = None,
         layout: str | None = None,
-        loyalty: int | None = None,
+        loyalty: str | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
         oracle_id: str | None = None,
@@ -136,15 +177,17 @@ class FullCardFace(CardFace):
         toughness: str | None = None,
         type_line: str | None = None,
         watermark: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.artist = artist
         self.artist_ids = artist_ids
-        self.cmc = cmc
-        self.color_indicator = color_indicator
-        self.colors = colors
+        self.cmc = CardPartsNormalizer.float(cmc)
+        self.color_indicator = CardPartsNormalizer.set(color_indicator)
+        self.colors = CardPartsNormalizer.set(colors)
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
-        self.image_uris = image_uris
+        self.image_uris = CardPartsNormalizer.image_uris(image_uris)
         self.layout = layout  # TODO(#36): convert to enum?
         self.loyalty = loyalty
         self.mana_cost = mana_cost
@@ -178,12 +221,16 @@ class Prices:
         usd_foil: float | None = None,
         usd_etched: float | None = None,
         eur: float | None = None,
+        eur_foil: float | None = None,
         tix: float | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
         self.usd = usd
         self.usd_foil = usd_foil
         self.usd_etched = usd_etched
         self.eur = eur
+        self.eur_foil = eur_foil
         self.tix = tix
 
 
@@ -192,18 +239,20 @@ class Preview:
     Object for information about where and when a card was previewed.
 
     Attributes:
-        previewed_at: datetime | None
+        previewed_at: date | None
         source: str | None
         source_uri: str | None
     """
 
     def __init__(
         self,
-        previewed_at: datetime | None = None,
+        previewed_at: date | None = None,
         source: str | None = None,
         source_uri: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.previewed_at = previewed_at
+        self.previewed_at = CardPartsNormalizer.date(previewed_at)
         self.source = source
         self.source_uri = source_uri
 
@@ -224,13 +273,16 @@ class RelatedCard:
 
     def __init__(
         self,
-        scryfall_id: str | None = None,
+        scryfall_id: str = "",
+        id: str = "",
         component: str | None = None,
         name: str | None = None,
         type_line: str | None = None,
         uri: str | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.scryfall_id = scryfall_id
+        self.scryfall_id = scryfall_id if scryfall_id else id
         self.component = component  # TODO(#36): convert to enum?
         self.name = name
         self.type_line = type_line

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 import scooze.models.utils as model_utils
 from pydantic import BaseModel, Field
@@ -18,8 +18,8 @@ class CardModel(BaseModel, validate_assignment=True):
 
     Attributes:
         cmc: float
-        color_identity: list[Color]
-        colors: list[Color] | None
+        color_identity: set[Color]
+        colors: set[Color] | None
         legalities: dict[Format, Legality] | None
         mana_cost: str
         name: str |
@@ -34,12 +34,12 @@ class CardModel(BaseModel, validate_assignment=True):
         default=0.0,
         description="Mana Value/Converted Mana Cost",
     )
-    color_identity: list[Color] = Field(
-        default=[],
+    color_identity: set[Color] = Field(
+        default=set(),
         description="This card's color identity, for Commander variant deckbuilding.",
     )
-    colors: list[Color] | None = Field(
-        default=[],
+    colors: set[Color] | None = Field(
+        default=set(),
         description="Color",
     )
     legalities: dict[Format, Legality] | None = Field(
@@ -81,7 +81,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     Attributes:
         ### Core fields
         arena_id: int | None
-        id: str
+        scryfall_id: str
         lang: str
         mtgo_id: int | None
         mtgo_foil_id: int | None
@@ -99,12 +99,12 @@ class FullCardModel(CardModel, validate_assignment=True):
         all_parts: list[RelatedCard] | None
         card_faces: list[CardFace] | None
         cmc: float
-        color_identity: list[Color]
-        color_indicator: list[Color] | None
-        colors: list[color] | None
+        color_identity: set[Color]
+        color_indicator: set[Color] | None
+        colors: set[Color] | None
         edhrec_rank: int | None
         hand_modifier: str | None
-        keywords: list[str]
+        keywords: set[str]
         layout: str
         legalities: dict[Format, Legality] | None
         life_modifier: str | None
@@ -115,7 +115,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         oversized: bool
         penny_rank: int | None
         power: str | None
-        produced_mana: list[Color] | None
+        produced_mana: set[Color] | None
         reserved: bool
         toughness: str | None
         type_line: str
@@ -123,20 +123,20 @@ class FullCardModel(CardModel, validate_assignment=True):
         ### Print fields
         artist: str | None
         artist_ids: list[str] | None
-        attraction_lights: list[int] | None
+        attraction_lights: set[int] | None
         booster: bool
         border_color: BorderColor
         card_back_id: str
         collector_number: str
         content_warning: bool
         digital: bool
-        finishes: list[Finish]
+        finishes: set[Finish]
         flavor_name: str | None
         flavor_text: str | None
-        frame_effects: list[str] | None
+        frame_effects: set[str] | None
         frame: str
         full_art: bool
-        games: list[Game]
+        games: set[Game]
         highres_image: bool
         illustation_id: str | None
         image_status: str
@@ -147,11 +147,11 @@ class FullCardModel(CardModel, validate_assignment=True):
         printed_text: str | None
         printed_type_line: str | None
         promo: bool
-        promo_types: list[str] | None
+        promo_types: set[str] | None
         purchase_uris: dict[str, str]
         rarity: Rarity
         related_uris: dict[str, str]
-        released_at: datetime
+        released_at: date
         reprint: bool
         scryfall_set_uri: str
         security_stamp: str | None
@@ -171,11 +171,13 @@ class FullCardModel(CardModel, validate_assignment=True):
     # region Core fields
 
     arena_id: int | None = Field(
+        default=None,
         description="This card's Arena ID, if applicable.",
     )
-    id: str = Field(
+    scryfall_id: str = Field(
         default="",
         description="Scryfall's unique ID for this card.",
+        alias="id",
     )
     lang: str = Field(
         # TODO(#48): better default?
@@ -183,21 +185,27 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="The language code for this print; see https://scryfall.com/docs/api/languages",
     )  # TODO(#36): convert to enum?
     mtgo_id: int | None = Field(
+        default=None,
         description="This card's MTGO Catalog ID, if applicable.",
     )
     mtgo_foil_id: int | None = Field(
+        default=None,
         description="This card's foil MTGO Catalog ID, if applicable.",
     )
     multiverse_ids: list[int] | None = Field(
+        default=None,
         description="This card's multiverse IDs on Gatherer, if any.",
     )
     tcgplayer_id: int | None = Field(
+        default=None,
         description="This card's ID on TCGplayer, or `productId` in their system.",
     )
     tcgplayer_etched_id: int | None = Field(
+        default=None,
         description="This card's ID on TCGplayer, for the etched version if that is a separate product.",
     )
     cardmarket_id: int | None = Field(
+        default=None,
         description="This card's ID on Cardmarket, or `idProduct` in their system.",
     )
     oracle_id: str | None = Field(
@@ -226,24 +234,30 @@ class FullCardModel(CardModel, validate_assignment=True):
     # region Gameplay fields
 
     all_parts: list[RelatedCardModel] | None = Field(
+        default=None,
         description="RelatedCard objects for tokens/meld pairs/other associated parts to this card, if applicable.",
     )
     card_faces: list[CardFaceModel] | None = Field(
+        default=None,
         description="All component CardFace objects of this card, for multifaced cards.",
-    )  # cmc defined by base model
+    )
+    # cmc defined by base model
     # color_identity defined by base model
-    color_indicator: list[Color] | None = Field(
+    color_indicator: set[Color] | None = Field(
+        default=None,
         description="The colors in this card's color indicator, if it has one.",
     )
     # colors defined by base model
     edhrec_rank: int | None = Field(
+        default=None,
         description="This card's rank/popularity on EDHREC, if applicable.",
     )
     hand_modifier: str | None = Field(
+        default=None,
         description="This card's Vanguard hand size modifier, if applicable.",
     )
-    keywords: list[str] = Field(
-        default=[],
+    keywords: set[str] = Field(
+        default=set(),
         description="Keywords and keyword actions this card uses.",
     )
     layout: str = Field(
@@ -252,14 +266,17 @@ class FullCardModel(CardModel, validate_assignment=True):
     )  # TODO(#36): convert to enum?
     # legalities defined by base model
     life_modifier: str | None = Field(
+        default=None,
         description="This card's Vanguard life modifier value, if applicable.",
     )
     loyalty: str | None = Field(
+        default=None,
         description="This card's starting planeswalker loyalty, if applicable.",
     )
     # mana_cost defined by base model
     # name defined by base model
     oracle_text: str | None = Field(
+        default=None,
         description="This card's oracle text, if any.",
     )
     oversized: bool = Field(
@@ -267,10 +284,12 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="Whether this card is oversized.",
     )
     penny_rank: int | None = Field(
+        default=None,
         description="This card's rank/popularity on Penny Dreadful.",
     )
     # power defined by base model
-    produced_mana: list[Color] | None = Field(
+    produced_mana: set[Color] | None = Field(
+        default=None,
         description="Which colors of mana this card can produce.",
     )
     reserved: bool = Field(
@@ -285,85 +304,111 @@ class FullCardModel(CardModel, validate_assignment=True):
     # region Print fields
 
     artist: str | None = Field(
+        default=None,
         description="Artist for this card.",
     )
     artist_ids: list[str] | None = Field(
+        default=None,
         description="List of Scryfall IDs for artists of this card.",
     )
-    attraction_lights: list[int] | None = Field(
+    attraction_lights: set[int] | None = Field(
+        default=None,
         description="Attraction lights lit on this card, if applicable.",
     )
     booster: bool = Field(
+        default=False,
         description="Whether this card can be opened in booster packs.",
     )
     border_color: BorderColor = Field(
+        default=BorderColor.BLACK,
         description="Border color of this card, from among black, white, borderless, silver, and gold.",
     )
     card_back_id: str = Field(
+        default="",
         description="Scryfall UUID of the card back design for this card.",
     )
     collector_number: str = Field(
+        default="",
         description="This card's collector number; can contain non-numeric characters.",
     )
     content_warning: bool = Field(
+        default=False,
         description="True if use of this print should be avoided; see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220",
     )
     digital: bool = Field(
+        default=False,
         description="True if this card was only released in a video game.",
     )
-    finishes: list[Finish] = Field(
+    finishes: set[Finish] = Field(
+        default=set(),
         description="Finishes this card is available in, from among foil, nonfoil, and etched.",
     )
     flavor_name: str | None = Field(
+        default=None,
         description="Alternate name for this card, such as on Godzilla series.",
     )
     flavor_text: str | None = Field(
+        default=None,
         description="Flavor text on this card, if any.",
     )
-    frame_effects: list[str] | None = Field(
+    frame_effects: set[str] | None = Field(
+        default=None,
         description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
     )  # TODO(#36): convert to enum?
     frame: str = Field(
+        default="",
         description="This card's frame layout; see https://scryfall.com/docs/api/frames",
-    )
+    )  # TODO(#36): convert to enum?
     full_art: bool = Field(
+        default=False,
         description="Whether this print is full-art.",
     )
-    games: list[Game] = Field(
+    games: set[Game] = Field(
+        default=set(),
         description="Which games this print is available on, from among paper, mtgo, and arena.",
     )
     highres_image: bool = Field(
+        default=False,
         description="Whether this card has a high-res image available.",
     )
     illustation_id: str | None = Field(
+        default="",
         description="A UUID for the particlar artwork on this print, consistent across art reprints.",
     )
     image_status: str = Field(
+        default="",
         description="The quality/status of images available for this card. Either missing, placeholder, lowres, or highres_scan.",
     )  # TODO(#36): convert to enum?
     image_uris: ImageUrisModel | None = Field(
+        default=None,
         description="Links to images of this card in various qualities.",
     )
     preview: PreviewModel | None = Field(
+        default=None,
         description="Information about where, when, and how this print was previewed.",
     )
     prices: PricesModel | None = Field(
+        default=None,
         description="Prices for this card on various marketplaces.",
     )
     printed_name: str | None = Field(
+        default=None,
         description="Printed name of this card, for localized non-English cards.",
     )
     printed_text: str | None = Field(
+        default=None,
         description="Printed text of this card, for localized non-English cards.",
     )
     printed_type_line: str | None = Field(
+        default=None,
         description="Printed type line of this card, for localized non-English cards.",
     )
     promo: bool = Field(
         default=False,
         description="Whether this print is a promo.",
     )
-    promo_types: list[str] | None = Field(
+    promo_types: set[str] | None = Field(
+        default=None,
         description="Which promo categories this print falls into, if any.",
     )
     purchase_uris: dict[str, str] = Field(
@@ -372,14 +417,16 @@ class FullCardModel(CardModel, validate_assignment=True):
     )  # TODO(#47): convert to object?
     rarity: Rarity = Field(
         # TODO(#48): better default?
+        default=Rarity.COMMON,
         description="The rarity of this print.",
     )
     related_uris: dict[str, str] = Field(
         default={},
         description="Links to this print's listing on other online resources.",
     )  # TODO(#47): convert to object?
-    released_at: datetime = Field(
+    released_at: date = Field(
         # TODO(#48): better default?
+        default=date(year=1993, month=8, day=5),  # LEA release date
         description="The date this card was first released.",
     )
     reprint: bool = Field(
@@ -391,6 +438,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="Link to the Scryfall set page for the set of this print.",
     )
     security_stamp: str | None = Field(
+        default=None,
         description="Security stamp on this card, if any.",
     )  # TODO(#36): convert to enum?
     set_name: str = Field(
@@ -430,9 +478,11 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="Whether this card print is a variation of another card object.",
     )
     variation_of: str | None = Field(
+        default=None,
         description="Which card object this object is a variant of, if any.",
     )
     watermark: str | None = Field(
+        default=None,
         description="Watermark printed on this card, if any.",
     )
 
