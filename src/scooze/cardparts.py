@@ -56,7 +56,7 @@ class CardPartsNormalizer(JsonNormalizer):
         """
         Normalize image_uris from JSON.
 
-        Parameters:
+        Args:
             image_uris: An instance of ImageUris or some JSON to normalize.
 
         Returns:
@@ -140,7 +140,7 @@ class FullCardFace(CardFace):
         color_indicator: Color indicator on this face, if any.
         colors: Colors of this face.
         flavor_text: Flavor text of this face, if any.
-        illustration_id: int | None
+        illustration_id: Scryfall illustration ID of this face, if any.
         image_uris: Scryfall illustration ID of this face, if any.
         layout: Layout of this face, if any.
         loyalty: Starting planeswalker loyalty of this face, if any.

@@ -10,7 +10,7 @@ class Deck:
     """
     A class to represent a deck of Magic: the Gathering cards.
 
-    Args:
+    Attributes:
         archetype: The archetype of this Deck.
         format: The format legality of the cards in this Deck.
         main: The main deck. Typically 60 cards minimum.
