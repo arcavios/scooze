@@ -11,7 +11,21 @@ from scooze.cardparts import (
     Prices,
     RelatedCard,
 )
-from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
+from scooze.enums import (
+    BorderColor,
+    Color,
+    Finish,
+    Format,
+    Frame,
+    FrameEffect,
+    Game,
+    ImageStatus,
+    Language,
+    Layout,
+    Legality,
+    Rarity,
+    SecurityStamp,
+)
 from scooze.models.card import CardModel
 
 ## Generic Types
@@ -258,7 +272,7 @@ class FullCard(OracleCard):
     Core fields
         arena_id: int | None
         scryfall_id: str
-        lang: str
+        lang: Language
         mtgo_id: int | None
         mtgo_foil_id: int | None
         multiverse_ids: list[int] | None
@@ -281,7 +295,7 @@ class FullCard(OracleCard):
         edhrec_rank: int | None
         hand_modifier: str | None
         keywords: set[str]
-        layout: str
+        layout: Layout
         legalities: dict[Format, Legality]
         life_modifier: str | None
         loyalty: str | None
@@ -309,13 +323,13 @@ class FullCard(OracleCard):
         finishes: set[Finish] | None
         flavor_name: str | None
         flavor_text: str | None
-        frame_effects: set[str] | None
-        frame: str | None
+        frame_effects: set[FrameEffect] | None
+        frame: Frame | None
         full_art: bool | None
         games: set[Game] | None
         highres_image: bool | None
         illustation_id: str | None
-        image_status: str | None
+        image_status: ImageStatus | None
         image_uris: ImageUris | None
         preview: Preview | None
         prices: Prices | None
@@ -330,7 +344,7 @@ class FullCard(OracleCard):
         released_at: date | None
         reprint: bool
         scryfall_set_uri: str
-        security_stamp: str | None
+        security_stamp: SecurityStamp | None
         set_name: str
         set_search_uri: str
         set_type: str
@@ -351,7 +365,7 @@ class FullCard(OracleCard):
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str = "",
-        lang: str = "en",  # TODO(#36): convert to enum?
+        lang: Language = "en",
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
         multiverse_ids: list[int] | None = None,
@@ -373,7 +387,7 @@ class FullCard(OracleCard):
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
         keywords: set[str] | list[str] = set(),
-        layout: str = "normal",  # TODO(#36): convert to enum?
+        layout: Layout = "normal",
         legalities: dict[Format, Legality] | None = None,
         life_modifier: str | None = None,
         loyalty: str | None = None,
@@ -400,13 +414,13 @@ class FullCard(OracleCard):
         finishes: set[Finish] | list[Finish] | None = None,
         flavor_name: str | None = None,
         flavor_text: str | None = None,
-        frame_effects: set[str] | list[str] | None = None,  # TODO(#36): convert to enum?
-        frame: str | None = None,
+        frame_effects: set[FrameEffect] | list[FrameEffect] | None = None,
+        frame: Frame | None = None,
         full_art: bool | None = None,
         games: set[Game] | list[Game] | None = None,
         highres_image: bool | None = None,
         illustration_id: str | None = None,
-        image_status: str | None = None,  # TODO(#36): convert to enum?
+        image_status: ImageStatus | None = None,
         image_uris: ImageUris | dict | None = None,
         preview: Preview | None = None,
         prices: Prices | dict | None = None,
@@ -421,7 +435,7 @@ class FullCard(OracleCard):
         released_at: date | str | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
-        security_stamp: str | None = None,  # TODO(#36): convert to enum?
+        security_stamp: SecurityStamp | None = None,
         set_name: str = "",
         set_search_uri: str = "",
         set_type: str = "",
