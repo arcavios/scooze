@@ -421,10 +421,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Links to images of this card in various qualities.",
     )
-    layout: str = Field(
+    layout: Layout = Field(
         default="normal",
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
-    )  # TODO(#36): convert to enum?
+    )
     oversized: bool = Field(
         default=False,
         description="Whether this card is oversized.",

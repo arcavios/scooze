@@ -455,7 +455,7 @@ class FullCard(OracleCard):
         illustration_id: str | None = None,
         image_status: ImageStatus | None = None,
         image_uris: ImageUris | dict | None = None,
-        layout: str = "normal",  # TODO(#36): convert to enum?
+        layout: Layout = "normal",
         preview: Preview | None = None,
         prices: Prices | dict | None = None,
         printed_name: str | None = None,
