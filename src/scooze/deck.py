@@ -11,32 +11,11 @@ class Deck:
     A class to represent a deck of Magic: the Gathering cards.
 
     Attributes:
-        archetype : str
-            The archetype of this Deck.
-        format : Format
-            The format legality of the cards in this Deck.
-        main : DeckPart
-            The main deck. Typically 60 cards minimum.
-        side : DeckPart
-            The sideboard. Typically 15 cards maximum.
-        cmdr : DeckPart
-            The command zone. Typically 1 or 2 cards in Commander formats.
-
-    Methods:
-        total():
-            The number of cards in this Deck.
-        diff(other: Deck):
-            Generates a diff between this Deck and another.
-        add_card(card: Card, quantity: int, in_the: InThe):
-            Adds a given quantity of a given card to this Deck.
-        add_cards(cards: Counter[Card], in_the: InThe):
-            Adds the given cards to this Deck.
-        remove_card(card: Card, quantity: int, in_the: InThe):
-            Removes a given quantity of a given card from this Deck.
-        remove_cards(cards: Counter[Card], in_the: InThe):
-            Removes the given cards from this Deck.
-        export(DecklistFormat):
-            Exports the Deck as a string with the given DecklistFormat.
+        archetype: The archetype of this Deck.
+        format: The format legality of the cards in this Deck.
+        main: The main deck. Typically 60 cards minimum.
+        side: The sideboard. Typically 15 cards maximum.
+        cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
     """
 
     def __init__(
@@ -83,12 +62,12 @@ class Deck:
         """
         Generates a diff between this Deck and another.
 
-        Parameters:
+        Args:
             other (Deck): The other Deck.
 
         Returns:
             diff (DeckDiff): Returns a DeckDiff with keys for each deck part.
-                Each contains a dict of every card in both decks and their counts.
+              Each contains a dict of each card in both decks and their counts.
         """
 
         return DeckDiff(
@@ -101,11 +80,12 @@ class Deck:
         """
         Determines if this Deck contains exactly the same cards as another.
 
-        Parameters:
+        Args:
             other (Deck): The other Deck.
 
         Returns:
-            same (bool): True if this Deck contains exactly the same cards as another, else False.
+            same (bool): True if this Deck contains exactly the same cards as
+              another, else False.
         """
 
         diff = self.diff(other)
@@ -118,7 +98,7 @@ class Deck:
         """
         Adds a given quantity of a given card to this Deck.
 
-        Parameters:
+        Args:
             card (Card): The card to add.
             quantity (int): The number of copies of the card to be added.
             in_the (InThe): Where to add the card (main, side, etc)
@@ -138,7 +118,7 @@ class Deck:
         """
         Adds the given cards to this Deck.
 
-        Parameters:
+        Args:
             cards (Counter[Card]): The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
         """
@@ -153,9 +133,10 @@ class Deck:
 
     def remove_card(self, card: Card, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
-        Removes a given quantity of a given card from this Deck. If quantity is not provided, removes all copies.
+        Removes a given quantity of a given card from this Deck. If quantity is
+        not provided, removes all copies.
 
-        Parameters:
+        Args:
             card (Card): The card to remove.
             quantity (int): The number of copies of the card to be removed.
             in_the (InThe): Where to remove the cards from (main, side, etc)
@@ -176,7 +157,7 @@ class Deck:
         """
         Removes the given cards from this Deck.
 
-        Parameters:
+        Args:
             cards (Counter[Card]): The cards to remove.
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
@@ -196,11 +177,12 @@ class Deck:
         """
         Exports this Deck as a string with the given DecklistFormatter.
 
-        Parameters:
+        Args:
             export_format (DecklistFormatter): The format of the exported Deck.
 
         Returns:
-            decklist (str): A string containing the names and quantities of the cards in this Deck.
+            decklist (str): A string containing the names and quantities of the
+              cards in this Deck.
         """
 
         match export_format:
