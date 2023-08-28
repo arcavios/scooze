@@ -61,7 +61,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         color_indicator: Color indicator on this face, if any.
         colors: Colors of this face.
         flavor_text: Flavor text of this face, if any.
-        illustration_id: int | None
+        illustration_id: Scryfall illustration ID of this face, if any.
         image_uris: Scryfall illustration ID of this face, if any.
         layout: Layout of this face, if any.
         loyalty: Starting planeswalker loyalty of this face, if any.
