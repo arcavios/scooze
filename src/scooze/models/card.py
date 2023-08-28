@@ -2,7 +2,22 @@ from datetime import date
 
 import scooze.models.utils as model_utils
 from pydantic import BaseModel, Field
-from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
+from scooze.enums import (
+    BorderColor,
+    Color,
+    Finish,
+    Format,
+    Frame,
+    FrameEffect,
+    Game,
+    ImageStatus,
+    Language,
+    Layout,
+    Legality,
+    Rarity,
+    SecurityStamp,
+    SetType,
+)
 from scooze.models.cardparts import (
     CardFaceModel,
     ImageUrisModel,
@@ -210,11 +225,11 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="Scryfall's unique ID for this card.",
         alias="id",
     )
-    lang: str = Field(
+    lang: Language = Field(
         # TODO(#48): better default?
         default="en",
         description="The language code for this print; see https://scryfall.com/docs/api/languages",
-    )  # TODO(#36): convert to enum?
+    )
     mtgo_id: int | None = Field(
         default=None,
         description="This card's MTGO Catalog ID, if applicable.",
@@ -374,14 +389,14 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Flavor text on this card, if any.",
     )
-    frame_effects: set[str] | None = Field(
+    frame_effects: set[FrameEffect] | None = Field(
         default=None,
         description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
-    )  # TODO(#36): convert to enum?
-    frame: str = Field(
+    )
+    frame: Frame = Field(
         default="",
         description="This card's frame layout; see https://scryfall.com/docs/api/frames",
-    )  # TODO(#36): convert to enum?
+    )
     full_art: bool = Field(
         default=False,
         description="Whether this print is full-art.",
@@ -398,18 +413,18 @@ class FullCardModel(CardModel, validate_assignment=True):
         default="",
         description="A UUID for the particlar artwork on this print, consistent across art reprints.",
     )
-    image_status: str = Field(
+    image_status: ImageStatus = Field(
         default="",
         description="The quality/status of images available for this card. Either missing, placeholder, lowres, or highres_scan.",
-    )  # TODO(#36): convert to enum?
+    )
     image_uris: ImageUrisModel | None = Field(
         default=None,
         description="Links to images of this card in various qualities.",
     )
-    layout: str = Field(
+    layout: Layout = Field(
         default="normal",
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
-    )  # TODO(#36): convert to enum?
+    )
     oversized: bool = Field(
         default=False,
         description="Whether this card is oversized.",
@@ -468,10 +483,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default="",
         description="Link to the Scryfall set page for the set of this print.",
     )
-    security_stamp: str | None = Field(
+    security_stamp: SecurityStamp | None = Field(
         default=None,
         description="Security stamp on this card, if any.",
-    )  # TODO(#36): convert to enum?
+    )
     set_name: str = Field(
         default="",
         description="Full name of the set this print belongs to.",
@@ -480,8 +495,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         default="",
         description="Link to Scryfall API to start paginating through this print's full set.",
     )
-    set_type: str = Field(
-        default="",
+    set_type: SetType | None = Field(
+        default=None,
         description="An overall categorization for each set, provided by Scryfall.",
     )
     set_uri: str = Field(

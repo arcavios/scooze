@@ -2,7 +2,7 @@ import json
 from datetime import date
 from typing import Self
 
-from scooze.enums import Color
+from scooze.enums import Color, Component, Layout
 from scooze.utils import JsonNormalizer
 
 
@@ -170,7 +170,7 @@ class FullCardFace(CardFace):
         flavor_text: str | None = None,
         illustration_id: int | None = None,
         image_uris: ImageUris | None = None,
-        layout: str | None = None,
+        layout: Layout | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
@@ -194,7 +194,7 @@ class FullCardFace(CardFace):
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
         self.image_uris = CardPartsNormalizer.image_uris(image_uris)
-        self.layout = layout  # TODO(#36): convert to enum?
+        self.layout = layout
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
@@ -284,7 +284,7 @@ class RelatedCard:
         self,
         scryfall_id: str = "",
         id: str = "",
-        component: str | None = None,
+        component: Component | None = None,
         name: str | None = None,
         type_line: str | None = None,
         uri: str | None = None,
@@ -292,7 +292,7 @@ class RelatedCard:
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.scryfall_id = scryfall_id if scryfall_id else id
-        self.component = component  # TODO(#36): convert to enum?
+        self.component = component
         self.name = name
         self.type_line = type_line
         self.uri = uri

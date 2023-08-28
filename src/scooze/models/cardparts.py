@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
 from pydantic import BaseModel, Field
-from scooze.enums import Color
+from scooze.enums import Color, Component, Layout
 
 
 class ImageUrisModel(BaseModel, validate_assignment=True):
@@ -113,10 +113,10 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         default=None,
         description="URIs for images of this face on Scryfall.",
     )
-    layout: str | None = Field(
+    layout: Layout | None = Field(
         default=None,
         description="Layout of this face, if any.",
-    )  # TODO(#36): convert to enum?
+    )
     loyalty: int | None = Field(
         default=None,
         description="Starting planeswalker loyalty of this face, if any.",
@@ -195,7 +195,10 @@ class PricesModel(BaseModel, validate_assignment=True):
         default=None,
         description="Price in Euros, from Cardmarket.",
     )
-    eur_foil: float | None = Field(default=None, description="Foil price in Euros, from Cardmarket.")
+    eur_foil: float | None = Field(
+        default=None,
+        description="Foil price in Euros, from Cardmarket.",
+    )
     tix: float | None = Field(
         default=None,
         description="Price in MTGO tix, from Cardhoarder.",
@@ -246,9 +249,9 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
         description="ID of linked component.",
         alias="id",
     )  # Scryfall ID
-    component: str = Field(
+    component: Component = Field(
         description="One of `token`, `meld_part`, `meld_result`, or `combo_piece`.",
-    )  # TODO(#36): convert to enum?
+    )
     name: str = Field(
         description="Name of linked component.",
     )
