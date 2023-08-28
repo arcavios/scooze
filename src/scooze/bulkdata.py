@@ -48,7 +48,3 @@ def download_all_bulk_data_files(
             bulk_file_type=bulk_type,
             file_path=file_path,
         )
-
-
-if __name__:
-    download_all_bulk_data_files()
