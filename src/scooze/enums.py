@@ -287,6 +287,37 @@ class SecurityStamp(ExtendedEnum, StrEnum):
     TRIANGLE = auto()  # Universes Beyond
 
 
+class SetType(ExtendedEnum, StrEnum):
+    """
+    A Scryfall-provided categorization for a set.
+    See https://scryfall.com/docs/api/sets for documentation.
+    """
+
+    ALCHEMY = auto()
+    ARCHENEMY = auto()
+    ARSENAL = auto()
+    BOX = auto()
+    COMMANDER = auto()
+    CORE = auto()
+    DRAFT_INNOVATION = auto()
+    DUEL_DECK = auto()
+    EXPANSION = auto()
+    FROM_THE_VAULT = auto()
+    FUNNY = auto()
+    MASTERPIECE = auto()
+    MASTERS = auto()
+    MEMORABILIA = auto()
+    MINIGAME = auto()
+    PLANECHASE = auto()
+    PREMIUM_DECK = auto()
+    PROMO = auto()
+    SPELLBOOK = auto()
+    STARTER = auto()
+    TOKEN = auto()
+    TREASURE_CHEST = auto()
+    VANGUARD = auto()
+
+
 # endregion
 
 # region Deck Enums
