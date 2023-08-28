@@ -55,34 +55,7 @@ def print_obj(obj):
     pprint(list(filter(lambda x: not x[0].endswith("__"), getmembers(obj))))
 
 
-# region Fixtures
-
-
-@pytest.fixture
-def legalities_ancestral_recall() -> dict:
-    return {
-        Format.ALCHEMY: Legality.NOT_LEGAL,
-        Format.BRAWL: Legality.NOT_LEGAL,
-        Format.COMMANDER: Legality.BANNED,
-        Format.DUEL: Legality.BANNED,
-        Format.EXPLORER: Legality.NOT_LEGAL,
-        Format.FUTURE: Legality.NOT_LEGAL,
-        Format.GLADIATOR: Legality.NOT_LEGAL,
-        Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
-        Format.LEGACY: Legality.BANNED,
-        Format.MODERN: Legality.NOT_LEGAL,
-        Format.OATHBREAKER: Legality.BANNED,
-        Format.OLDSCHOOL: Legality.NOT_LEGAL,
-        Format.PAUPER: Legality.NOT_LEGAL,
-        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
-        Format.PENNY: Legality.NOT_LEGAL,
-        Format.PIONEER: Legality.NOT_LEGAL,
-        Format.PREDH: Legality.BANNED,
-        Format.PREMODERN: Legality.NOT_LEGAL,
-        Format.STANDARD: Legality.NOT_LEGAL,
-        Format.VINTAGE: Legality.RESTRICTED,
-    }
+# region Fixturess
 
 
 @pytest.fixture
@@ -189,12 +162,34 @@ def json_snake_token(cards_json) -> dict:
 # region Card
 
 
-def test_card_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+def test_card_from_json_instant(json_ancestral_recall):
     card = Card.from_json(json_ancestral_recall)
     assert card.cmc == 1.0
     assert card.color_identity == {Color.BLUE}
     assert card.colors == {Color.BLUE}
-    assert card.legalities == legalities_ancestral_recall
+    assert card.legalities == {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
     assert card.mana_cost == "{U}"
     assert card.name == "Ancestral Recall"
     assert card.power is None
@@ -209,6 +204,41 @@ def test_card_from_json_creature(json_mystic_snake):
     assert card.power == "2"
     assert card.toughness == "2"
     assert card.type_line == "Creature — Snake"
+
+
+def test_card_from_json_token(json_snake_token):
+    token = Card.from_json(json_snake_token)
+    assert token.cmc == 0.0
+    assert token.color_identity == {Color.BLUE, Color.GREEN}
+    assert token.colors == {Color.BLUE, Color.GREEN}
+    assert token.legalities == {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.NOT_LEGAL,
+        Format.DUEL: Legality.NOT_LEGAL,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.NOT_LEGAL,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.NOT_LEGAL,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.NOT_LEGAL,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.NOT_LEGAL,
+    }
+    assert token.mana_cost == ""
+    assert token.name == "Snake"
+    assert token.power == "1"
+    assert token.toughness == "1"
+    assert token.type_line == "Token Creature — Snake"
 
 
 # endregion
@@ -264,6 +294,11 @@ def test_oraclecard_from_json_flip(json_orochi_eggwatcher):
     pass
 
 
+def test_oraclecard_from_json_token(json_snake_token):
+    # TODO: fill test
+    pass
+
+
 # endregion
 
 # region FullCard
@@ -283,7 +318,7 @@ def test_fullcard_from_json_transform_planeswalker(
 
     ## Front
     assert front.artist
-    # TODO: artist_id
+    assert front.artist_ids == None
     assert front.cmc is None
     assert front.color_indicator is None
     assert front.colors == {Color.RED, Color.GREEN}
@@ -314,7 +349,7 @@ def test_fullcard_from_json_transform_planeswalker(
 
     ## Back
     assert back.artist == "Anna Steinbauer"
-    # TODO: artist_id
+    assert back.artist_ids == None
     assert back.cmc is None
     assert back.color_indicator == {Color.RED, Color.GREEN}
     assert back.colors == {Color.RED, Color.GREEN}
@@ -349,6 +384,11 @@ def test_fullcard_from_json_digital(json_urzas_construction_drone):
     pass
 
 
+def test_fullcard_from_json_token(json_snake_token):
+    # TODO: fill test
+    pass
+
+
 # endregion
 
 # endregion
@@ -359,12 +399,34 @@ def test_fullcard_from_json_digital(json_urzas_construction_drone):
 # region CardModel
 
 
-def test_cardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+def test_cardmodel_from_json_instant(json_ancestral_recall):
     model = CardModel.model_validate(json_ancestral_recall)
     assert model.cmc == 1.0
     assert model.color_identity == {Color.BLUE}
     assert model.colors == {Color.BLUE}
-    assert model.legalities == legalities_ancestral_recall
+    assert model.legalities == {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
     assert model.mana_cost == "{U}"
     assert model.name == "Ancestral Recall"
     assert model.power == ""
@@ -372,19 +434,27 @@ def test_cardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral
     assert model.type_line == "Instant"
 
 
-# TODO: add tests for the other cards
+def test_cardmodel_from_json_creature(json_mystic_snake):
+    # TODO: fill test
+    pass
+
+
+def test_cardmodel_from_json_token(json_snake_token):
+    # TODO: fill test
+    pass
+
 
 # endregion
 
 # region FullCardModel
 
 
-def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+def test_fullcardmodel_from_json_instant(json_ancestral_recall):
     model = FullCardModel.model_validate(json_ancestral_recall)
     assert model.all_parts is None
     assert model.arena_id is None
     assert model.artist == "Ryan Pancoast"
-    # TODO: artist_id
+    assert model.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
     assert model.attraction_lights is None
     assert model.booster == True
     assert model.border_color == BorderColor.BLACK
@@ -422,7 +492,29 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.keywords == set()
     assert model.lang == "en"
     assert model.layout == "normal"
-    assert model.legalities == legalities_ancestral_recall
+    assert model.legalities == {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
     assert model.life_modifier is None
     assert model.loyalty is None
     assert model.mana_cost == "{U}"
@@ -436,13 +528,14 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.penny_rank is None
     assert model.power == ""
     assert model.preview is None
-    assert model.prices is not None  # TODO: is this the best way to do this?
 
-    #  'prices': {'eur': None,
-    #             'tix': 1.9,
-    #             'usd': None,
-    #             'usd_etched': None,
-    #             'usd_foil': None},
+    # Prices
+    assert model.prices.eur is None
+    assert model.prices.eur_foil is None
+    assert model.prices.tix == 1.9
+    assert model.prices.usd is None
+    assert model.prices.usd_etched is None
+    assert model.prices.usd_foil is None
 
     assert model.printed_name is None
     assert model.printed_text is None
@@ -491,7 +584,30 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.watermark is None
 
 
-# TODO: add tests for the other cards
+def test_fullcardmodel_from_json_transform_saga(json_tales_of_master_seshiro):
+    # TODO: fill test
+    pass
+
+
+def test_fullcardmodel_from_json_split_aftermath(json_driven_despair):
+    # TODO: fill test
+    pass
+
+
+def test_fullcardmodel_from_json_mdfc(json_turntimber_symbiosis):
+    # TODO: fill test
+    pass
+
+
+def test_fullcardmodel_from_json_flip(json_orochi_eggwatcher):
+    # TODO: fill test
+    pass
+
+
+def test_fullcardmodel_from_json_token(json_snake_token):
+    # TODO: fill test
+    pass
+
 
 # endregion
 
@@ -506,17 +622,89 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
 def test_card_from_cardmodel_instant(json_ancestral_recall):
     model = CardModel.model_validate(json_ancestral_recall)
     card = Card.from_model(model)
-    # print_obj(card)
     # TODO: tests go here
 
 
-# TODO: add tests for the other cards
+def test_card_from_cardmodel_creature(json_mystic_snake):
+    # TODO: fill test
+    pass
+
+
+def test_card_fromcardmodel_token(json_snake_token):
+    # TODO: fill test
+    pass
+
+
+# NOTE: just to see if going from FullCardModel -> Card works alright
+def test_card_from_fullcardmodel_instant(json_ancestral_recall):
+    # TODO: fill test
+    pass
+
+
+# endregion
+
+# region FullCardModel -> OracleCard
+
+
+def test_oraclecard_from_fullcardmodel_instant(json_ancestral_recall):
+    # TODO: fill test
+    pass
+
+
+def test_oraclecard_from_fullcardmodel_transform_saga(json_tales_of_master_seshiro):
+    # TODO: fill test
+    pass
+
+
+def test_oraclecard_from_fullcardmodel_split_aftermath(json_driven_despair):
+    # TODO: fill test
+    pass
+
+
+def test_oraclecard_from_fullcardmodel_mdfc(json_turntimber_symbiosis):
+    # TODO: fill test
+    pass
+
+
+def test_oraclecard_from_fullcardmodel_flip(json_orochi_eggwatcher):
+    # TODO: fill test
+    pass
+
+
+def test_oraclecard_from_fullcardmodel_token(json_snake_token):
+    # TODO: fill test
+    pass
+
 
 # endregion
 
 # region FullCardModel -> FullCard
 
-# TODO: add tests for the other cards
+
+def test_fullcard_from_fullcardmodel_transform_saga(json_tales_of_master_seshiro):
+    # TODO: fill test
+    pass
+
+
+def test_fullcard_from_fullcardmodel_split_aftermath(json_driven_despair):
+    # TODO: fill test
+    pass
+
+
+def test_fullcard_from_fullcardmodel_mdfc(json_turntimber_symbiosis):
+    # TODO: fill test
+    pass
+
+
+def test_fullcard_from_fullcardmodel_flip(json_orochi_eggwatcher):
+    # TODO: fill test
+    pass
+
+
+def test_fullcard_from_fullcardmodel_token(json_snake_token):
+    # TODO: fill test
+    pass
+
 
 # endregion
 
