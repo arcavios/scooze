@@ -10,8 +10,7 @@ class DeckModel(BaseModel, validate_assignment=True):
     """
     A model to represent a deck of Magic: the Gathering cards.
 
-    Attributes
-    ----------
+    Attributes:
     archetype : str
         The archetype of this DeckModel.
     format : Format

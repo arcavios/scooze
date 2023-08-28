@@ -10,35 +10,33 @@ class Deck:
     """
     A class to represent a deck of Magic: the Gathering cards.
 
-    Attributes
-    ----------
-    archetype : str
-        The archetype of this Deck.
-    format : Format
-        The format legality of the cards in this Deck.
-    main : DeckPart
-        The main deck. Typically 60 cards minimum.
-    side : DeckPart
-        The sideboard. Typically 15 cards maximum.
-    cmdr : DeckPart
-        The command zone. Typically 1 or 2 cards in Commander formats.
+    Attributes:
+        archetype : str
+            The archetype of this Deck.
+        format : Format
+            The format legality of the cards in this Deck.
+        main : DeckPart
+            The main deck. Typically 60 cards minimum.
+        side : DeckPart
+            The sideboard. Typically 15 cards maximum.
+        cmdr : DeckPart
+            The command zone. Typically 1 or 2 cards in Commander formats.
 
-    Methods
-    -------
-    total():
-        The number of cards in this Deck.
-    diff(other: Deck):
-        Generates a diff between this Deck and another.
-    add_card(card: Card, quantity: int, in_the: InThe):
-        Adds a given quantity of a given card to this Deck.
-    add_cards(cards: Counter[Card], in_the: InThe):
-        Adds the given cards to this Deck.
-    remove_card(card: Card, quantity: int, in_the: InThe):
-        Removes a given quantity of a given card from this Deck.
-    remove_cards(cards: Counter[Card], in_the: InThe):
-        Removes the given cards from this Deck.
-    export(DecklistFormat):
-        Exports the Deck as a string with the given DecklistFormat.
+    Methods:
+        total():
+            The number of cards in this Deck.
+        diff(other: Deck):
+            Generates a diff between this Deck and another.
+        add_card(card: Card, quantity: int, in_the: InThe):
+            Adds a given quantity of a given card to this Deck.
+        add_cards(cards: Counter[Card], in_the: InThe):
+            Adds the given cards to this Deck.
+        remove_card(card: Card, quantity: int, in_the: InThe):
+            Removes a given quantity of a given card from this Deck.
+        remove_cards(cards: Counter[Card], in_the: InThe):
+            Removes the given cards from this Deck.
+        export(DecklistFormat):
+            Exports the Deck as a string with the given DecklistFormat.
     """
 
     def __init__(

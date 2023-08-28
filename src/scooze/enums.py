@@ -18,10 +18,9 @@ class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
     """
     An extension of the classic Python Enum to support additional functionality.
 
-    Methods
-    -------
-    list():
-        Returns a list of the attributes of this Enum.
+    Methods:
+        list():
+            Returns a list of the attributes of this Enum.
     """
 
     @classmethod

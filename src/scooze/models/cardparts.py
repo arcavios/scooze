@@ -197,8 +197,7 @@ class PreviewModel(BaseModel, validate_assignment=True):
     """
     Object for information about where and when a card was previewed.
 
-    Attributes
-    ----------
+    Attributes:
         previewed_at: datetime | None
         source: str | None
         source_uri: str | None
