@@ -12,12 +12,15 @@ class ImageUris:
     Scryfall documentation: https://scryfall.com/docs/api/images
 
     Attributes:
-        png: str | None
-        border_crop: str | None
-        art_crop: str | None
-        large: str | None
-        normal: str | None
-        small: str | None
+        png: Full card, high quality image with transparent background and
+          rounded corners.
+        border_crop: Full card image with corners and majority of border
+          cropped out.
+        art_crop: Rectangular crop to just art box; may not be perfect for
+          cards with strange layouts.
+        large: Large JPG image (672x936)
+        normal: Medium JPG image (488x860)
+        small: Small JPG image (146x204)
     """
 
     def __init__(
@@ -53,7 +56,7 @@ class CardPartsNormalizer(JsonNormalizer):
         """
         Normalize image_uris from JSON.
 
-        Parameters:
+        Args:
             image_uris: An instance of ImageUris or some JSON to normalize.
 
         Returns:
@@ -74,17 +77,17 @@ class CardFace:
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
     Attributes:
-        cmc: float | None
-        color_indicator: set[Color] | None
-        colors: set[Color] | None
-        loyalty: str | None
-        mana_cost: str | None
-        name: str | None
-        oracle_id: str | None
-        oracle_text: str | None
-        power: str | None
-        toughness: str | None
-        type_line: str | None
+        cmc: Mana value of this face.
+        color_indicator: Color indicator on this face, if any.
+        colors: Colors of this face.
+        loyalty: Starting planeswalker loyalty of this face, if any.
+        mana_cost: Mana cost of this face.
+        name: Name of this face.
+        oracle_id: Oracle ID of this face, for reversible cards.
+        oracle_text: Oracle text of this face, if any.
+        power: Power of this face, if any.
+        toughness: Toughness of this face, if any.
+        type_line: Type line of this face, if any.
     """
 
     def __init__(
@@ -131,27 +134,30 @@ class FullCardFace(CardFace):
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
     Attributes:
-        artist: str | None
-        artist_ids: list[str] | None
-        cmc: float | None
-        color_indicator: set[Color] | None
-        colors: set[Color] | None
-        flavor_text: str | None
-        illustration_id: int | None
-        image_uris: ImageUris | None
-        layout: str | None
-        loyalty: str | None
-        mana_cost: str | None
-        name: str | None
-        oracle_id: str | None
-        oracle_text: str | None
-        power: str | None
-        printed_name: str | None
-        printed_text: str | None
-        printed_type_line: str | None
-        toughness: str | None
-        type_line: str | None
-        watermark: str | None
+        artist: Illustrator for art on this face.
+        artist_ids: List of Scryfall IDs for artists of this face.
+        cmc: Mana value of this face.
+        color_indicator: Color indicator on this face, if any.
+        colors: Colors of this face.
+        flavor_text: Flavor text of this face, if any.
+        illustration_id: Scryfall illustration ID of this face, if any.
+        image_uris: Scryfall illustration ID of this face, if any.
+        layout: Layout of this face, if any.
+        loyalty: Starting planeswalker loyalty of this face, if any.
+        mana_cost: Mana cost of this face.
+        name: Name of this face.
+        oracle_id: Oracle ID of this face, for reversible cards.
+        oracle_text: Oracle text of this face, if any.
+        power: Power of this face, if any.
+        printed_name: Printed name of this face, for localized non-English
+          cards.
+        printed_text: Printed text of this face, for localized non-English
+          cards.
+        printed_type_line: Printed type line of this face, for localized
+          non-English cards.
+        toughness: Toughness of this face, if any.
+        type_line: Type line of this face, if any.
+        watermark: Watermark printed on this face, if any.
     """
 
     def __init__(
@@ -208,11 +214,12 @@ class Prices:
     Object for all price data associated with a Card object.
 
     Attributes:
-        usd: float | None
-        usd_foil: float | None
-        usd_etched: float | None
-        eur: float | None
-        tix: float | None
+        usd: Price in US dollars, from TCGplayer.
+        usd_foil: Foil price in US dollars, from TCGplayer.
+        usd_etched: Etched foil price in US dollars, from TCGplayer.
+        eur: Price in Euros, from Cardmarket.
+        eur_foil: Foil price in Euros, from Cardmarket.
+        tix: Price in MTGO tix, from Cardhoarder.
     """
 
     def __init__(
@@ -239,9 +246,9 @@ class Preview:
     Object for information about where and when a card was previewed.
 
     Attributes:
-        previewed_at: date | None
-        source: str | None
-        source_uri: str | None
+        previewed_at: Date/time of preview being shown or added to Scryfall.
+        source: Name of preview source.
+        source_uri: Location of preview source.
     """
 
     def __init__(
@@ -259,16 +266,18 @@ class Preview:
 
 class RelatedCard:
     """
-    Data about Scryfall objects related to this card (tokens, cards referenced by name, meld pairs, etc.)
+    Data about Scryfall objects related to this card
+    (tokens, cards referenced by name, meld pairs, etc.)
 
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
-        scryfall_id: str | None
-        component: str | None
-        name: str | None
-        type_line: str | None
-        uri: str | None
+        scryfall_id: ID of linked component.
+        component: One of `token`, `meld_part`, `meld_result`, or
+          `combo_piece`.
+        name: Name of linked component.
+        type_line: Type line of linked component.
+        uri: URI of linked component.
     """
 
     def __init__(

@@ -13,11 +13,15 @@ def download_bulk_data_file(
 ) -> None:
     """
     Download a single bulk data file from Scryfall.
-    Parameters:
-        uri (str): Location of bulk data file (generally found from bulk info endpoint).
-        bulk_file_type (ScryfallBulkFile): Type of bulk file, used to set filename.
-        file_path (str): Directory to save bulk files. Defaults to `data/bulk/` if not specified.
+
+    Args:
+        uri: Location of bulk data file (generally found from bulk info
+          endpoint).
+        bulk_file_type: Type of bulk file, used to set filename.
+        file_path: Directory to save bulk files. Defaults to `data/bulk/` if
+          not specified.
     """
+
     # TODO(#74): flag for check vs existing file; don't overwrite with same file or older version
     with requests.get(uri, stream=True) as r:
         r.raise_for_status()
@@ -33,8 +37,10 @@ def download_all_bulk_data_files(
 ) -> None:
     """
     Download all supported Scryfall bulk data files to local filesystem.
-    Parameters:
-        file_path (str): Directory to save bulk files. Defaults to `data/bulk/` if not specified.
+
+    Args:
+        file_path: Directory to save bulk files. Defaults to `data/bulk/` if
+          not specified.
     """
     with requests.get(SCRYFALL_BULK_INFO_ENDPOINT) as bulk_metadata_request:
         bulk_metadata_request.raise_for_status()

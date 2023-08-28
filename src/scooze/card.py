@@ -20,17 +20,10 @@ F = TypeVar("F", CardFace, FullCardFace)  # generic CardFace type
 
 class CardNormalizer(CardPartsNormalizer):
     """
-    A simple class to be used when normalizing non-serializable data from JSON.
+    A simple class to use when normalizing non-serializable data from JSON.
 
-    Methods:
-        all_parts(all_parts):
-            Normalize all_parts as a list[RelatedCard].
-        card_faces(card_faces, card_face_class):
-            Normalize card_faces as a list[card_face_class].
-        preview(preview):
-            Normalize Preview.
-        prices(prices):
-            Normalize Prices.
+    Usage:
+        >>> card.prices = CardNormalizer.prices(prices_json)
     """
 
     @classmethod
@@ -38,7 +31,7 @@ class CardNormalizer(CardPartsNormalizer):
         """
         Normalize all_parts from JSON.
 
-        Parameters:
+        Args:
             all_parts: A list[RelatedCard] or list[JSON] to normalize.
 
         Returns:
@@ -59,9 +52,11 @@ class CardNormalizer(CardPartsNormalizer):
         """
         Normalize card_faces from JSON.
 
-        Parameters:
-            card_faces: A list[F] or list[JSON] to normalize. F is of type CardFace or FullCardFace.
-            card_face_class: A CardFace class to create an instance of (one of CardFace or FullCardFace).
+        Args:
+            card_faces: A list[F] or list[JSON] to normalize. F is of type
+              CardFace or FullCardFace.
+            card_face_class: A CardFace class to create an instance of.
+              (one of CardFace or FullCardFace)
 
         Returns:
             A list[F] where F is of type CardFace or FullCardFace.
@@ -77,7 +72,7 @@ class CardNormalizer(CardPartsNormalizer):
         """
         Normalize preview from JSON.
 
-        Parameters:
+        Args:
             preview: An instance of Preview or some JSON to normalize.
 
         Returns:
@@ -94,7 +89,7 @@ class CardNormalizer(CardPartsNormalizer):
         """
         Normalize prices from JSON.
 
-        Parameters:
+        Args:
             prices: An instance of Prices or some JSON to normalize.
 
         Returns:
@@ -109,18 +104,21 @@ class CardNormalizer(CardPartsNormalizer):
 
 class Card:
     """
-    A basic Card object with minimal fields. Contains all information you might use to sort a decklist.
+    A basic Card object with minimal fields. Contains all information you might
+    use to sort a decklist.
 
     Attributes:
-        cmc: float | None
-        color_identity: set[Color] | None
-        colors: set[Color] | None
-        legalities: dict[Format, Legality] | None
-        mana_cost: str | None
-        name: str | None
-        power: str | None
-        toughness: str | None
-        type_line: str | None
+        cmc: This card's mana value/converted mana cost.
+        color_identity: This card's color identity, for Commander variant
+          deckbuilding.
+        colors: This card's colors.
+        legalities: Formats and the legality status of this card in them.
+        mana_cost: Mana cost, as string of mana symbols.
+          (e.g. "{1}{W}{U}{B}{R}{G}")
+        name: This card's name.
+        power: Power of this card, if applicable.
+        toughness: Toughness of this card, if applicable.
+        type_line: This card's type line. (e.g. "Creature — Ooze")
     """
 
     def __init__(
@@ -171,29 +169,36 @@ class OracleCard(Card):
     All information in this class is print-agnostic.
 
     Attributes:
-        card_faces: list[CardFace] | None
-        cmc: float | None
-        color_identity: set[Color] | None
-        color_indicator: set[Color] | None
-        colors: set[Color] | None
-        edhrec_rank: int | None
-        hand_modifier: str | None
-        keywords: set[str]
-        legalities: dict[Format, Legality]
-        life_modifier: str | None
-        loyalty: str | None
-        mana_cost: str | None
-        name: str | None
-        oracle_id: str | None
-        oracle_text: str | None
-        prints_search_uri: str
-        penny_rank: int | None
-        power: str | None
-        produced_mana: set[Color] | None
-        reserved: bool
-        rulings_uri: str
-        toughness: str | None
-        type_line: str | None
+        card_faces: All component CardFace objects of this card, for multifaced
+          cards.
+        cmc: This card's mana value/converted mana cost.
+        color_identity: This card's color identity, for Commander variant
+          deckbuilding.
+        color_indicator: The colors in this card's color indicator, if it has
+          one.
+        colors: This card's colors.
+        edhrec_rank: This card's rank/popularity on EDHREC, if applicable.
+        hand_modifier: This card's Vanguard hand size modifier, if applicable.
+        keywords: Keywords and keyword actions this card uses.
+        legalities: Formats and the legality status of this card in them.
+        life_modifier: This card's Vanguard life modifier value, if applicable.
+        loyalty: This card's starting planeswalker loyalty, if applicable.
+        mana_cost: Mana cost, as string of mana symbols.
+          (e.g. "{1}{W}{U}{B}{R}{G}")
+        name: This card's name.
+        oracle_id: A UUID for this card's oracle identity; shared across prints
+          of the same card but not same-named objects with different gameplay
+          properties.
+        oracle_text: This card's oracle text, if any.
+        prints_search_uri: A link to begin paginating through all prints of
+          this card in Scryfall's API.
+        penny_rank: This card's rank/popularity on Penny Dreadful.
+        power: Power of this card, if applicable.
+        produced_mana: Which colors of mana this card can produce.
+        reserved: Whether this card is on the Reserved List.
+        rulings_uri: A link to rulings for this card in Scryfall's API.
+        toughness: Toughness of this card, if applicable.
+        type_line: This card's type line. (e.g. "Creature — Ooze")
     """
 
     def __init__(
@@ -256,92 +261,120 @@ class FullCard(OracleCard):
 
     Attributes:
     Core fields
-        arena_id: int | None
-        scryfall_id: str
-        lang: str
-        mtgo_id: int | None
-        mtgo_foil_id: int | None
-        multiverse_ids: list[int] | None
-        tcgplayer_id: int | None
-        tcgplayer_etched_id: int | None
-        cardmarket_id: int | None
-        oracle_id: str | None
-        prints_search_uri: str
-        rulings_uri: str
-        scryfall_uri: str
-        uri: str
+        arena_id: This card's Arena ID, if applicable.
+        scryfall_id: Scryfall's unique ID for this card.
+        lang: The language code for this print;
+          see https://scryfall.com/docs/api/languages
+        mtgo_id: This card's MTGO Catalog ID, if applicable.
+        mtgo_foil_id: This card's foil MTGO Catalog ID, if applicable.
+        multiverse_ids: This card's multiverse IDs on Gatherer, if any.
+        tcgplayer_id: This card's ID on TCGplayer, or `productId` in their
+          system.
+        tcgplayer_etched_id: This card's ID on TCGplayer, for the etched
+          version if that is a separate product.
+        cardmarket_id: This card's ID on Cardmarket, or `idProduct` in their
+          system.
+        oracle_id: A UUID for this card's oracle identity; shared across prints
+          of the same card but not same-named objects with different gameplay
+          properties.
+        prints_search_uri: A link to begin paginating through all prints of
+          this card in Scryfall's API.
+        rulings_uri: A link to rulings for this card in Scryfall's API.
+        scryfall_uri: A link to the Scryfall page for this card.
+        uri: A link to this card object in Scryfall's API.
 
     Gameplay fields
-        all_parts: list[RelatedCard] | None
-        card_faces: list[FullCardFace] | None
-        cmc: float
-        color_identity: set[Color]
-        color_indicator: set[Color] | None
-        colors: set[Color] | None
-        edhrec_rank: int | None
-        hand_modifier: str | None
-        keywords: set[str]
-        layout: str
-        legalities: dict[Format, Legality]
-        life_modifier: str | None
-        loyalty: str | None
-        mana_cost: str | None
-        name: str | None
-        oracle_text: str | None
-        oversized: bool
-        penny_rank: int | None
-        power: str | None
-        produced_mana: set[Color] | None
-        reserved: bool
-        toughness: str | None
-        type_line: str | None
+        all_parts: RelatedCard objects for tokens/meld pairs/other associated
+          parts to this card, if applicable.
+        card_faces: All component CardFace objects of this card, for multifaced
+          cards.
+        cmc: This card's mana value/converted mana cost.
+        color_identity: This card's color identity, for Commander variant
+          deckbuilding.
+        color_indicator: color_indicator: The colors in this card's color
+          indicator, if it has one.
+        colors: This card's colors.
+        edhrec_rank: This card's rank/popularity on EDHREC, if applicable.
+        hand_modifier: This card's Vanguard hand size modifier, if applicable.
+        keywords: Keywords and keyword actions this card uses.
+        legalities: Formats and the legality status of this card in them.
+        life_modifier: This card's Vanguard life modifier value, if applicable.
+        loyalty: This card's starting planeswalker loyalty, if applicable.
+        mana_cost: Mana cost, as string of mana symbols.
+          (e.g. "{1}{W}{U}{B}{R}{G}")
+        name: This card's name.
+        oracle_text: This card's oracle text, if any.
+        penny_rank: This card's rank/popularity on Penny Dreadful.
+        power: Power of this card, if applicable.
+        produced_mana: Which colors of mana this card can produce.
+        reserved: Whether this card is on the Reserved List.
+        toughness: Toughness of this card, if applicable.
+        type_line: This card's type line. (e.g. "Creature — Ooze")
 
     Print fields
-        artist: str | None
-        artist_ids: list[str] | None
-        attraction_lights: set[int] | None
-        booster: bool | None
-        border_color: BorderColor | None
-        card_back_id: str | None
-        collector_number: str | None
-        content_warning: bool | None
-        digital: bool | None
-        finishes: set[Finish] | None
-        flavor_name: str | None
-        flavor_text: str | None
-        frame_effects: set[str] | None
-        frame: str | None
-        full_art: bool | None
-        games: set[Game] | None
-        highres_image: bool | None
-        illustation_id: str | None
-        image_status: str | None
-        image_uris: ImageUris | None
-        preview: Preview | None
-        prices: Prices | None
-        printed_name: str | None
-        printed_text: str | None
-        printed_type_line: str | None
-        promo: bool
-        promo_types: set[str] | None
-        purchase_uris: dict[str, str] | None
-        rarity: Rarity | None
-        related_uris: dict[str, str] | None
-        released_at: date | None
-        reprint: bool
-        scryfall_set_uri: str
-        security_stamp: str | None
-        set_name: str
-        set_search_uri: str
-        set_type: str
-        set_uri: str
-        set: str
-        set_id: str
-        story_spotlight: bool
-        textless: bool
-        variation: bool
-        variation_of: str | None
-        watermark: str | None
+        artist: Artist for this card.
+        artist_ids: List of Scryfall IDs for artists of this card.
+        attraction_lights: Attraction lights lit on this card, if applicable.
+        booster: Whether this card can be opened in booster packs.
+        border_color: Border color of this card, from among
+          black, white, borderless, silver, and gold.
+        card_back_id: Scryfall UUID of the card back design for this card.
+        collector_number: This card's collector number; can contain non-numeric
+          characters.
+        content_warning: True if use of this print should be avoided;
+          see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220
+        digital: True if this card was only released in a video game.
+        finishes: Finishes this card is available in, from among foil, nonfoil, and etched.
+        flavor_name: Alternate name for this card, such as on Godzilla series.
+        flavor_text: Flavor text on this card, if any.
+        frame_effects: Special frame effects on this card;
+          see https://scryfall.com/docs/api/frames
+        frame: This card's frame layout;
+          see https://scryfall.com/docs/api/frames
+        full_art: Whether this print is full-art.
+        games: Which games this print is available on, from among
+          paper, mtgo, and arena.
+        highres_image: Whether this card has a high-res image available.
+        illustation_id: A UUID for the particlar artwork on this print,
+          consistent across art reprints.
+        image_status: The quality/status of images available for this card.
+          Either missing, placeholder, lowres, or highres_scan.
+        image_uris: Links to images of this card in various qualities.
+        layout: This card's printed layout;
+          see https://scryfall.com/docs/api/layouts
+        oversized: Whether this card is oversized.
+        preview: Information about where, when, and how this print was
+          previewed.
+        prices: Prices for this card on various marketplaces.
+        printed_name: Printed name of this card, for localized non-English
+          cards.
+        printed_text: Printed text of this card, for localized non-English
+          cards.
+        printed_type_line: Printed type line of this card, for localized
+          non-English cards.
+        promo: Whether this print is a promo.
+        promo_types: Which promo categories this print falls into, if any.
+        purchase_uris: Links to purchase this print from marketplaces.
+        rarity: The rarity of this print.
+        related_uris: Links to this print's listing on other online resources.
+        released_at: The date this card was first released.
+        reprint: Whether this print is a reprint from an earlier set.
+        scryfall_set_uri: Link to the Scryfall set page for the set of this
+          print.
+        security_stamp: Security stamp on this card, if any.
+        set_name: Full name of the set this print belongs to.
+        set_search_uri: Link to Scryfall API to start paginating through this
+          print's full set.
+        set_type: An overall categorization for each set, provided by Scryfall.
+        set_uri: Link to the set object for this print in Scryfall's API.
+        set: Set code of the set this print belongs to.
+        set_id: UUID of the set this print belongs to.
+        story_spotlight: Whether this print is a Story Spotlight.
+        textless: Whether this print is textless.
+        variation: Whether this card print is a variation of another card
+          object.
+        variation_of: Which card object this object is a variant of, if any.
+        watermark: Watermark printed on this card, if any.
     """
 
     def __init__(
@@ -373,7 +406,6 @@ class FullCard(OracleCard):
         edhrec_rank: int | None = None,
         hand_modifier: str | None = None,
         keywords: set[str] | list[str] = set(),
-        layout: str = "normal",  # TODO(#36): convert to enum?
         legalities: dict[Format, Legality] | None = None,
         life_modifier: str | None = None,
         loyalty: str | None = None,
@@ -408,6 +440,7 @@ class FullCard(OracleCard):
         illustration_id: str | None = None,
         image_status: str | None = None,  # TODO(#36): convert to enum?
         image_uris: ImageUris | dict | None = None,
+        layout: str = "normal",  # TODO(#36): convert to enum?
         preview: Preview | None = None,
         prices: Prices | dict | None = None,
         printed_name: str | None = None,
@@ -466,7 +499,6 @@ class FullCard(OracleCard):
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
         self.keywords = CardNormalizer.set(keywords)
-        self.layout = layout
         self.legalities = legalities
         self.life_modifier = life_modifier
         self.loyalty = loyalty
@@ -505,6 +537,7 @@ class FullCard(OracleCard):
         self.illustration_id = illustration_id
         self.image_status = image_status
         self.image_uris = CardNormalizer.image_uris(image_uris)
+        self.layout = layout
         self.preview = CardNormalizer.preview(preview)
         self.prices = CardNormalizer.prices(prices)
         self.printed_name = printed_name
