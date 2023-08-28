@@ -11,26 +11,27 @@ from scooze.models.card import CardModel, FullCardModel
 # TODO(#65): WRITE TESTS FOR CARD OBJECT HERE
 
 # TODO: remove NOTE s and TODO s from this file.
-# Write tests for Card conversion. Write tests for normal Card behavior
-# Write tests for CardModel conversion. Write tests for normal CardModel behavior
-# Add a token to the test suite
-
-# NOTE: these tests can be run with pytest -s so you can see the print statements
-# NOTE: helpful little jq that can get you a card from one of the bulk files. You can get scryfall_id from
-# image address on scryfall.com
+# helpful little jq that can get you a card from one of the bulk files. You can get scryfall_id from the card's json
 # ╰─❯ cat data/bulk/oracle_cards.json | jq '.[] | select(.id == "371ceb58-f498-4616-a7f0-eb118fe2e4ff")' > ./data/bulk/card.json
 
 # STUFF TO WORK THROUGH:
-# 1. it seems like methods with underscores in the name aren't able to go from json -> Model -> Card object. Investigate.
-# 2. we need to write code to get from Card -> json -> Card Model. This might be as easy as model_validate(**card.__dict__)
-# 3. The tests need to actually check the values to see if they're what we expect. Use a few different cards to really touch on every field you can
-# 4. The same tests should be done for Card and CardModel
-# 5. Rename the card classes. This shit sucks.
-#       Card and CardModel should be the ones you use the most and should just be called as such, idk.
-#       The simpler ones should have the more annoying names imo
-# 6. Fix the cards in the conftest and test_deckpart and test_deck to use regular Card instead of OracleCard (I think?)
-# 7. Do we want to have CardFaces on the regular cards? probably not? idk
-# 8. Figure out if Card.from_model() should use model_dump() or dict(). Investigate the key differences.
+# ✅ 1. it seems like methods with underscores in the name aren't able to go from json -> Model -> Card object. Investigate.
+#   - fixed with "populate_by_name" in the model config
+# ✅ 2. we need to write code to get from Card -> json -> Card Model. This might be as easy as model_validate(**card.__dict__)
+# ❌ 3. The tests need to actually check the values to see if they're what we expect. Use a few different cards to really touch on every field you can
+#   - this will go in a separate PR
+# ❌ 4. The same tests should be done for Card and CardModel
+#   - this will go in a separate PR
+# ❌ 5. Rename the card classes. This shit sucks.
+#   - Can we call FullCard ScryfallCard?
+# ❌ 6. Fix the cards in the conftest and test_deckpart and test_deck to use regular Card instead of OracleCard (I think?)
+#   - this will go in a separate PR with the additional tests
+# ✅ 7. Do we want to have CardFaces on the regular cards? probably not? idk
+#   - no, we do not want CardFaces on regular cards.
+# ✅ 8. Figure out if Card.from_model() should use model_dump() or dict(). Investigate the key differences.
+#   - dict does not recursively unpack objects inside of JSON. Therefore we will use .model_dump()
+# ✅ 9. Add a token to the test suite
+#   - halfway did this. The actual tests will need to be written in the next PR, but I added the token to the jsonl file and made a fixture for it
 
 
 @pytest.fixture
@@ -170,6 +171,12 @@ def json_turntimber_symbiosis(cards_json) -> dict:
 @pytest.fixture
 def json_orochi_eggwatcher(cards_json) -> dict:
     return get_card_json(cards_json, "a4f4aa3b-c64a-4430-b1a2-a7fca87d0a22")
+
+
+# Token
+@pytest.fixture
+def json_snake_token(cards_json) -> dict:
+    return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
 
 
 # endregion

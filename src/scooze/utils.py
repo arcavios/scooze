@@ -58,11 +58,29 @@ def get_logger(
 
 
 class JsonNormalizer:
-    # TODO: docstring
+    """
+    A simple class to be used when normalizing non-serializable data from JSON.
+
+    Methods:
+        date(d):
+            Normalize a date.
+        float(f):
+            Normalize a float.
+        set(s):
+            Normalize a set.
+    """
 
     @classmethod
     def date(cls, d: date | str | None) -> date:
-        # TODO: docstring
+        """
+        Normalize a date.
+
+        Parameters:
+            d: A date to normalize.
+
+        Returns:
+            A date.
+        """
 
         if d is None or isinstance(d, date):
             return d
@@ -71,7 +89,15 @@ class JsonNormalizer:
 
     @classmethod
     def float(cls, f: float | int | None) -> float:
-        # TODO: docstring
+        """
+        Normalize a float.
+
+        Parameters:
+            f: A float to normalize.
+
+        Returns:
+            A float.
+        """
 
         if f is None or isinstance(f, float):
             return f
@@ -80,7 +106,15 @@ class JsonNormalizer:
 
     @classmethod
     def set(cls, s: set[T] | list[T] | None) -> set[T]:
-        # TODO: docstring
+        """
+        Normalize a set.
+
+        Parameters:
+            d: A set to normalize.
+
+        Returns:
+            A set.
+        """
 
         if s is None or isinstance(s, set):
             return s
@@ -101,8 +135,8 @@ class DictDiff:
         contents (dict[Any, tuple[int, int]]): The contents of this diff.
 
     Methods:
-    get_diff(d1: dict, d2: dict, NO_KEY: Any)
-        Generate a diff between two dicts.
+        get_diff(d1: dict, d2: dict, NO_KEY: Any)
+            Generate a diff between two dicts.
     """
 
     def __init__(self, contents: dict[Any, tuple[int, int]]):

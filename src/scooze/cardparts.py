@@ -40,10 +40,25 @@ class ImageUris:
 
 
 class CardPartsNormalizer(JsonNormalizer):
-    # TODO: docstring
+    """
+    A simple class to be used when normalizing non-serializable data from JSON.
+
+    Methods:
+        image_uris(image_uris):
+            Normalize ImageUris.
+    """
+
     @classmethod
     def image_uris(cls, image_uris: ImageUris | dict | None) -> ImageUris:
-        # TODO: docstring
+        """
+        Normalize image_uris from JSON.
+
+        Parameters:
+            image_uris: An instance of ImageUris or some JSON to normalize.
+
+        Returns:
+            An instance of ImageUris.
+        """
 
         if image_uris is None or isinstance(image_uris, ImageUris):
             return image_uris
@@ -237,7 +252,7 @@ class Preview:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.previewed_at = CardPartsNormalizer.date(previewed_at)  # TODO: normalize
+        self.previewed_at = CardPartsNormalizer.date(previewed_at)
         self.source = source
         self.source_uri = source_uri
 

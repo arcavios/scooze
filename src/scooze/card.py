@@ -19,11 +19,31 @@ F = TypeVar("F", CardFace, FullCardFace)  # generic CardFace type
 
 
 class CardNormalizer(CardPartsNormalizer):
-    # TODO: docstring
+    """
+    A simple class to be used when normalizing non-serializable data from JSON.
+
+    Methods:
+        all_parts(all_parts):
+            Normalize all_parts as a list[RelatedCard].
+        card_faces(card_faces, card_face_class):
+            Normalize card_faces as a list[card_face_class].
+        preview(preview):
+            Normalize Preview.
+        prices(prices):
+            Normalize Prices.
+    """
 
     @classmethod
     def all_parts(cls, all_parts: list[RelatedCard] | list[dict] | None) -> list[RelatedCard]:
-        # TODO: docstring
+        """
+        Normalize all_parts from JSON.
+
+        Parameters:
+            all_parts: A list[RelatedCard] or list[JSON] to normalize.
+
+        Returns:
+            A list[RelatedCard].
+        """
 
         if all_parts is None or all(isinstance(part, RelatedCard) for part in all_parts):
             return all_parts
@@ -36,7 +56,17 @@ class CardNormalizer(CardPartsNormalizer):
         card_faces: list[F] | list[dict] | None,
         card_face_class: type[F] = CardFace,
     ) -> list[F]:
-        # TODO: docstring
+        """
+        Normalize card_faces from JSON.
+
+        Parameters:
+            card_faces: A list[F] or list[JSON] to normalize. F is of type CardFace or FullCardFace.
+            card_face_class: A CardFace class to create an instance of (one of CardFace or FullCardFace).
+
+        Returns:
+            A list[F] where F is of type CardFace or FullCardFace.
+        """
+
         if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
@@ -44,7 +74,15 @@ class CardNormalizer(CardPartsNormalizer):
 
     @classmethod
     def preview(cls, preview: Preview | dict | None) -> Preview:
-        # TODO: docstring
+        """
+        Normalize preview from JSON.
+
+        Parameters:
+            preview: An instance of Preview or some JSON to normalize.
+
+        Returns:
+            An instance of Preview.
+        """
 
         if preview is None or isinstance(preview, Preview):
             return preview
@@ -53,7 +91,15 @@ class CardNormalizer(CardPartsNormalizer):
 
     @classmethod
     def prices(cls, prices: Prices | dict | None) -> Prices:
-        # TODO: docstring
+        """
+        Normalize prices from JSON.
+
+        Parameters:
+            prices: An instance of Prices or some JSON to normalize.
+
+        Returns:
+            An instance of Prices.
+        """
 
         if prices is None or isinstance(prices, Prices):
             return prices
