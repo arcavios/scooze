@@ -194,10 +194,10 @@ class Language(ExtendedEnum, StrEnum):
     PHYREXIAN = "ph"
 
     # each used for a single promotional card
-    HEBREW = "he"
-    LATIN = "la"
     ANCIENT_GREEK = "grc"
     ARABIC = "ar"
+    HEBREW = "he"
+    LATIN = "la"
     SANSKRIT = "sa"
 
 
