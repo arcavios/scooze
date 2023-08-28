@@ -1,11 +1,9 @@
 import json
-from datetime import date, datetime
-from typing import TypeVar
+from datetime import date
+from typing import Self
 
 from scooze.enums import Color
-
-T = TypeVar("T")  # generic type
-F = TypeVar("F")  # generic CardFace type
+from scooze.utils import JsonNormalizer
 
 
 class ImageUris:
@@ -39,6 +37,18 @@ class ImageUris:
         self.large = large
         self.normal = normal
         self.small = small
+
+
+class CardPartsNormalizer(JsonNormalizer):
+    # TODO: docstring
+    @classmethod
+    def image_uris(cls, image_uris: ImageUris | dict | None) -> ImageUris:
+        # TODO: docstring
+
+        if image_uris is None or isinstance(image_uris, ImageUris):
+            return image_uris
+        elif isinstance(image_uris, dict):
+            return ImageUris(**image_uris)
 
 
 class CardFace:
@@ -78,9 +88,9 @@ class CardFace:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = self._normalize_float(cmc)
-        self.color_indicator = self._normalize_set(color_indicator)
-        self.colors = self._normalize_set(colors)
+        self.cmc = CardPartsNormalizer.float(cmc)
+        self.color_indicator = CardPartsNormalizer.set(color_indicator)
+        self.colors = CardPartsNormalizer.set(colors)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
@@ -90,28 +100,8 @@ class CardFace:
         self.toughness = toughness
         self.type_line = type_line
 
-    # region Normalizers
-
-    def _normalize_float(self, f: float | int | None) -> float:
-        # TODO: docstring
-
-        if f is None or isinstance(f, float):
-            return f
-        elif isinstance(f, int):
-            return float(f)
-
-    def _normalize_set(self, s: set[T] | list[T] | None) -> set[T]:
-        # TODO: docstring
-
-        if s is None or isinstance(s, set):
-            return s
-        elif isinstance(s, list):
-            return set(s)
-
-    # endregion
-
     @classmethod
-    def from_json(cls: type[F], data: dict | str) -> F:
+    def from_json(cls, data: dict | str) -> Self:
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
@@ -177,12 +167,12 @@ class FullCardFace(CardFace):
     ):
         self.artist = artist
         self.artist_ids = artist_ids
-        self.cmc = self._normalize_float(cmc)
-        self.color_indicator = self._normalize_set(color_indicator)
-        self.colors = self._normalize_set(colors)
+        self.cmc = CardPartsNormalizer.float(cmc)
+        self.color_indicator = CardPartsNormalizer.set(color_indicator)
+        self.colors = CardPartsNormalizer.set(colors)
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
-        self.image_uris = self._normalize_image_uris(image_uris)
+        self.image_uris = CardPartsNormalizer.image_uris(image_uris)
         self.layout = layout  # TODO(#36): convert to enum?
         self.loyalty = loyalty
         self.mana_cost = mana_cost
@@ -196,14 +186,6 @@ class FullCardFace(CardFace):
         self.toughness = toughness
         self.type_line = type_line
         self.watermark = watermark
-
-    def _normalize_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
-        # TODO: docstring
-
-        if image_uris is None or isinstance(image_uris, ImageUris):
-            return image_uris
-        elif isinstance(image_uris, dict):
-            return ImageUris(**image_uris)
 
 
 class Prices:
@@ -255,17 +237,9 @@ class Preview:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.previewed_at = self._normalize_date(previewed_at)  # TODO: normalize
+        self.previewed_at = CardPartsNormalizer.date(previewed_at)  # TODO: normalize
         self.source = source
         self.source_uri = source_uri
-
-    def _normalize_date(self, d: date | str | None) -> date:
-        # TODO: docstring
-
-        if d is None or isinstance(d, date):
-            return d
-        if isinstance(d, str):
-            return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format in utils if needed
 
 
 class RelatedCard:

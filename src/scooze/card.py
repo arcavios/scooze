@@ -1,9 +1,10 @@
 import json
-from datetime import date, datetime
-from typing import TypeVar
+from datetime import date
+from typing import Self, TypeVar
 
 from scooze.cardparts import (
     CardFace,
+    CardPartsNormalizer,
     FullCardFace,
     ImageUris,
     Preview,
@@ -13,9 +14,51 @@ from scooze.cardparts import (
 from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
 from scooze.models.card import CardModel
 
-C = TypeVar("C")  # generic Card type
+## Generic Types
 F = TypeVar("F", CardFace, FullCardFace)  # generic CardFace type
-T = TypeVar("T")  # generic type
+
+
+class CardNormalizer(CardPartsNormalizer):
+    # TODO: docstring
+
+    @classmethod
+    def all_parts(cls, all_parts: list[RelatedCard] | list[dict] | None) -> list[RelatedCard]:
+        # TODO: docstring
+
+        if all_parts is None or all(isinstance(part, RelatedCard) for part in all_parts):
+            return all_parts
+        elif all(isinstance(part, dict) for part in all_parts):
+            return [RelatedCard(**part) for part in all_parts]
+
+    @classmethod
+    def card_faces(
+        cls,
+        card_faces: list[F] | list[dict] | None,
+        card_face_class: type[F] = CardFace,
+    ) -> list[F]:
+        # TODO: docstring
+        if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
+            return card_faces
+        elif all(isinstance(card_face, dict) for card_face in card_faces):
+            return [card_face_class.from_json(card_face) for card_face in card_faces]
+
+    @classmethod
+    def preview(cls, preview: Preview | dict | None) -> Preview:
+        # TODO: docstring
+
+        if preview is None or isinstance(preview, Preview):
+            return preview
+        elif isinstance(preview, dict):
+            return Preview(**preview)
+
+    @classmethod
+    def prices(cls, prices: Prices | dict | None) -> Prices:
+        # TODO: docstring
+
+        if prices is None or isinstance(prices, Prices):
+            return prices
+        elif isinstance(prices, dict):
+            return Prices(**prices)
 
 
 class Card:
@@ -48,9 +91,9 @@ class Card:
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = self._normalize_float(cmc)
-        self.color_identity = self._normalize_set(color_identity)
-        self.colors = self._normalize_set(colors)
+        self.cmc = CardNormalizer.float(cmc)
+        self.color_identity = CardNormalizer.set(color_identity)
+        self.colors = CardNormalizer.set(colors)
         self.legalities = legalities
         self.mana_cost = mana_cost
         self.name = name
@@ -64,35 +107,15 @@ class Card:
     def __str__(self):
         return self.name
 
-    # region Normalizers
-
-    def _normalize_float(self, f: float | int | None) -> float:
-        # TODO: docstring
-
-        if f is None or isinstance(f, float):
-            return f
-        elif isinstance(f, int):
-            return float(f)
-
-    def _normalize_set(self, s: set[T] | list[T] | None) -> set[T]:
-        # TODO: docstring
-
-        if s is None or isinstance(s, set):
-            return s
-        elif isinstance(s, list):
-            return set(s)
-
-    # endregion
-
     @classmethod
-    def from_json(cls: type[C], data: dict | str) -> C:
+    def from_json(cls, data: dict | str) -> Self:
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
             return cls(**json.loads(data))
 
     @classmethod
-    def from_model(cls: type[C], model: CardModel) -> C:
+    def from_model(cls, model: CardModel) -> Self:
         return cls(**model.model_dump())
 
 
@@ -155,14 +178,14 @@ class OracleCard(Card):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.card_faces = self._normalize_card_faces(card_faces, card_face_class=CardFace)
-        self.cmc = self._normalize_float(cmc)
-        self.color_identity = self._normalize_set(color_identity)
-        self.color_indicator = self._normalize_set(color_indicator)
-        self.colors = self._normalize_set(colors)
+        self.card_faces = CardNormalizer.card_faces(card_faces, card_face_class=CardFace)
+        self.cmc = CardNormalizer.float(cmc)
+        self.color_identity = CardNormalizer.set(color_identity)
+        self.color_indicator = CardNormalizer.set(color_indicator)
+        self.colors = CardNormalizer.set(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
-        self.keywords = self._normalize_set(keywords)
+        self.keywords = CardNormalizer.set(keywords)
         self.legalities = legalities
         self.life_modifier = life_modifier
         self.loyalty = loyalty
@@ -173,26 +196,11 @@ class OracleCard(Card):
         self.prints_search_uri = prints_search_uri
         self.penny_rank = penny_rank
         self.power = power
-        self.produced_mana = self._normalize_set(produced_mana)
+        self.produced_mana = CardNormalizer.set(produced_mana)
         self.reserved = reserved
         self.rulings_uri = rulings_uri
         self.toughness = toughness
         self.type_line = type_line
-
-    # region Normalizers
-
-    def _normalize_card_faces(
-        self,
-        card_faces: list[F] | list[dict] | None,
-        card_face_class: type[F] = CardFace,
-    ) -> list[F]:
-        # TODO: docstring
-        if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
-            return card_faces
-        elif all(isinstance(card_face, dict) for card_face in card_faces):
-            return [card_face_class.from_json(card_face) for card_face in card_faces]
-
-    # endregion
 
 
 class FullCard(OracleCard):
@@ -403,15 +411,15 @@ class FullCard(OracleCard):
 
         # region Gameplay Fields
 
-        self.all_parts = self._normalize_all_parts(all_parts)
-        self.card_faces = self._normalize_card_faces(card_faces, card_face_class=FullCardFace)
-        self.cmc = self._normalize_float(cmc)
-        self.color_identity = self._normalize_set(color_identity)
-        self.color_indicator = self._normalize_set(color_indicator)
-        self.colors = self._normalize_set(colors)
+        self.all_parts = CardNormalizer.all_parts(all_parts)
+        self.card_faces = CardNormalizer.card_faces(card_faces, card_face_class=FullCardFace)
+        self.cmc = CardNormalizer.float(cmc)
+        self.color_identity = CardNormalizer.set(color_identity)
+        self.color_indicator = CardNormalizer.set(color_indicator)
+        self.colors = CardNormalizer.set(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
-        self.keywords = self._normalize_set(keywords)
+        self.keywords = CardNormalizer.set(keywords)
         self.layout = layout
         self.legalities = legalities
         self.life_modifier = life_modifier
@@ -422,7 +430,7 @@ class FullCard(OracleCard):
         self.oversized = oversized
         self.penny_rank = penny_rank
         self.power = power
-        self.produced_mana = self._normalize_set(produced_mana)
+        self.produced_mana = CardNormalizer.set(produced_mana)
         self.reserved = reserved
         self.toughness = toughness
         self.type_line = type_line
@@ -433,35 +441,35 @@ class FullCard(OracleCard):
 
         self.artist = artist
         self.artist_ids = artist_ids
-        self.attraction_lights = self._normalize_set(attraction_lights)
+        self.attraction_lights = CardNormalizer.set(attraction_lights)
         self.booster = booster
         self.border_color = border_color
         self.card_back_id = card_back_id
         self.collector_number = collector_number
         self.content_warning = content_warning
         self.digital = digital
-        self.finishes = self._normalize_set(finishes)
+        self.finishes = CardNormalizer.set(finishes)
         self.flavor_name = flavor_name
         self.flavor_text = flavor_text
-        self.frame_effects = self._normalize_set(frame_effects)
+        self.frame_effects = CardNormalizer.set(frame_effects)
         self.frame = frame
         self.full_art = full_art
-        self.games = self._normalize_set(games)
+        self.games = CardNormalizer.set(games)
         self.highres_image = highres_image
         self.illustration_id = illustration_id
         self.image_status = image_status
-        self.image_uris = self._normalize_image_uris(image_uris)
-        self.preview = self._normalize_preview(preview)
-        self.prices = self._normalize_prices(prices)
+        self.image_uris = CardNormalizer.image_uris(image_uris)
+        self.preview = CardNormalizer.preview(preview)
+        self.prices = CardNormalizer.prices(prices)
         self.printed_name = printed_name
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line
         self.promo = promo
-        self.promo_types = self._normalize_set(promo_types)
+        self.promo_types = CardNormalizer.set(promo_types)
         self.purchase_uris = purchase_uris
         self.rarity = rarity
         self.related_uris = related_uris
-        self.released_at = self._normalize_date(released_at)
+        self.released_at = CardNormalizer.date(released_at)
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri
         self.security_stamp = security_stamp
@@ -478,47 +486,3 @@ class FullCard(OracleCard):
         self.watermark = watermark
 
         # endregion
-
-    # region Normalizers
-
-    def _normalize_all_parts(self, all_parts: list[RelatedCard] | list[dict] | None) -> list[RelatedCard]:
-        # TODO: docstring
-
-        if all_parts is None or all(isinstance(part, RelatedCard) for part in all_parts):
-            return all_parts
-        elif all(isinstance(part, dict) for part in all_parts):
-            return [RelatedCard(**part) for part in all_parts]
-
-    def _normalize_date(self, d: date | str | None) -> date:
-        # TODO: docstring
-
-        if d is None or isinstance(d, date):
-            return d
-        if isinstance(d, str):
-            return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format in utils if needed
-
-    def _normalize_image_uris(self, image_uris: ImageUris | dict | None) -> ImageUris:
-        # TODO: docstring
-
-        if image_uris is None or isinstance(image_uris, ImageUris):
-            return image_uris
-        elif isinstance(image_uris, dict):
-            return ImageUris(**image_uris)
-
-    def _normalize_preview(self, preview: Preview | dict | None) -> Preview:
-        # TODO: docstring
-
-        if preview is None or isinstance(preview, Preview):
-            return preview
-        elif isinstance(preview, dict):
-            return Preview(**preview)
-
-    def _normalize_prices(self, prices: Prices | dict | None) -> Prices:
-        # TODO: docstring
-
-        if prices is None or isinstance(prices, Prices):
-            return prices
-        elif isinstance(prices, dict):
-            return Prices(**prices)
-
-    # endregion

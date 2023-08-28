@@ -1,10 +1,14 @@
 import logging
 import os.path
+from datetime import date, datetime
 from sys import stdout
 from typing import Any, TypeVar
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk/"
-T = TypeVar("T")
+
+## Generic Types
+T = TypeVar("T")  # generic type
+
 
 def get_logger(
     filename: str,
@@ -52,10 +56,21 @@ def get_logger(
 
 # region JSON Normalizer
 
+
 class JsonNormalizer:
     # TODO: docstring
-    # TODO: make these classmethods and set them up to be used in all the right places
-    def _normalize_float(self, f: float | int | None) -> float:
+
+    @classmethod
+    def date(cls, d: date | str | None) -> date:
+        # TODO: docstring
+
+        if d is None or isinstance(d, date):
+            return d
+        if isinstance(d, str):
+            return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
+
+    @classmethod
+    def float(cls, f: float | int | None) -> float:
         # TODO: docstring
 
         if f is None or isinstance(f, float):
@@ -63,13 +78,15 @@ class JsonNormalizer:
         elif isinstance(f, int):
             return float(f)
 
-    def _normalize_set(self, s: set[T] | list[T] | None) -> set[T]:
+    @classmethod
+    def set(cls, s: set[T] | list[T] | None) -> set[T]:
         # TODO: docstring
 
         if s is None or isinstance(s, set):
             return s
         elif isinstance(s, list):
             return set(s)
+
 
 # endregion
 
