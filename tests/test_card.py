@@ -5,7 +5,23 @@ from pprint import pprint
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
-from scooze.enums import BorderColor, Color, Finish, Format, Game, Legality, Rarity
+from scooze.enums import (
+    BorderColor,
+    Color,
+    Component,
+    Finish,
+    Format,
+    Frame,
+    FrameEffect,
+    Game,
+    ImageStatus,
+    Language,
+    Layout,
+    Legality,
+    Rarity,
+    SecurityStamp,
+    SetType,
+)
 from scooze.models.card import CardModel, FullCardModel
 
 # TODO(#65): WRITE TESTS FOR CARD OBJECT HERE
@@ -472,14 +488,14 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall):
     assert model.finishes == {Finish.NONFOIL, Finish.FOIL}
     assert model.flavor_name is None
     assert model.flavor_text is None
-    assert model.frame == "2015"
+    assert model.frame == Frame._2015
     assert model.frame_effects is None
     assert model.full_art == False
     assert model.games == {Game.MTGO}
     assert model.hand_modifier is None
     assert model.highres_image == True
     assert model.illustation_id == ""
-    assert model.image_status == "highres_scan"
+    assert model.image_status == ImageStatus.HIGHRES_SCAN
 
     # ImageURIs
     assert model.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
@@ -490,8 +506,8 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall):
     assert model.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
     assert model.keywords == set()
-    assert model.lang == "en"
-    assert model.layout == "normal"
+    assert model.lang == Language.ENGLISH
+    assert model.layout == Layout.NORMAL
     assert model.legalities == {
         Format.ALCHEMY: Legality.NOT_LEGAL,
         Format.BRAWL: Legality.NOT_LEGAL,
@@ -565,12 +581,12 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall):
     assert model.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
     assert model.scryfall_set_uri.startswith("https://scryfall.com/sets/")
     assert model.scryfall_uri.startswith("https://scryfall.com/card/")
-    assert model.security_stamp == "oval"
+    assert model.security_stamp == SecurityStamp.OVAL
     assert model.set == "vma"
     assert model.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
     assert model.set_name == "Vintage Masters"
     assert model.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert model.set_type == "masters"
+    assert model.set_type == SetType.MASTERS
     assert model.set_uri.startswith("https://api.scryfall.com/sets/")
     assert model.story_spotlight == False
     assert model.tcgplayer_etched_id is None
