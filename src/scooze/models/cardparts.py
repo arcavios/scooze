@@ -56,7 +56,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
 
     Attributes:
         artist: Illustrator for art on this face.
-        artist_ids: List of Scryfall IDs for artists of this face.
+        artist_id: Scryfall ID for the artist of this face.
         cmc: Mana value of this face.
         color_indicator: Color indicator on this face, if any.
         colors: Colors of this face.
@@ -85,9 +85,9 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         default=None,
         description="Illustrator for art on this face.",
     )
-    artist_ids: list[str] | None = Field(
+    artist_id: str | None = Field(
         default=None,
-        description="List of Scryfall IDs for artists of this face.",
+        description="Scryfall ID for the artist of this face.",
     )
     cmc: float | None = Field(
         default=None,

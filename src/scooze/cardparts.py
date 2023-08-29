@@ -135,7 +135,7 @@ class FullCardFace(CardFace):
 
     Attributes:
         artist: Illustrator for art on this face.
-        artist_ids: List of Scryfall IDs for artists of this face.
+        artist_id: Scryfall ID for the artist of this face.
         cmc: Mana value of this face.
         color_indicator: Color indicator on this face, if any.
         colors: Colors of this face.
@@ -163,7 +163,7 @@ class FullCardFace(CardFace):
     def __init__(
         self,
         artist: str | None = None,
-        artist_ids: list[str] | None = None,
+        artist_id: str | None = None,
         cmc: FloatableT | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
@@ -187,7 +187,7 @@ class FullCardFace(CardFace):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.artist = artist
-        self.artist_ids = artist_ids
+        self.artist_id = artist_id
         self.cmc = CardPartsNormalizer.float(cmc)
         self.color_indicator = CardPartsNormalizer.set(color_indicator)
         self.colors = CardPartsNormalizer.set(colors)
