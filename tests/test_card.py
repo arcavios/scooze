@@ -912,7 +912,9 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.watermark is None
 
 
-def test_fullcardmodel_from_json_transform_planeswalker(json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury):
+def test_fullcardmodel_from_json_transform_planeswalker(
+    json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury
+):
     model = FullCardModel.model_validate(json_arlinn_the_packs_hope)
 
     assert len(model.card_faces) == 2
@@ -980,7 +982,9 @@ def test_fullcardmodel_from_json_transform_planeswalker(json_arlinn_the_packs_ho
     assert back.watermark is None
 
 
-def test_fullcardmodel_from_json_reversible(json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom):
+def test_fullcardmodel_from_json_reversible(
+    json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
+):
     model = FullCardModel.model_validate(json_zndrsplt_eye_of_wisdom)
 
     # all_parts (RelatedCards)
@@ -1282,6 +1286,7 @@ def test_oraclecard_from_fullcardmodel_transform_saga(json_tales_of_master_seshi
 
 # region FullCardModel -> FullCard
 
+
 def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
     model = FullCardModel.model_validate(json_ancestral_recall)
     card = FullCard.from_model(model)
@@ -1395,7 +1400,10 @@ def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall, legalities_a
     assert card.variation_of is None
     assert card.watermark is None
 
-def test_fullcard_from_fullcardmodel_transform_planeswalker(json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury):
+
+def test_fullcard_from_fullcardmodel_transform_planeswalker(
+    json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury
+):
     model = FullCardModel.model_validate(json_arlinn_the_packs_hope)
     card = FullCard.from_model(model)
     assert len(card.card_faces) == 2
@@ -1463,7 +1471,9 @@ def test_fullcard_from_fullcardmodel_transform_planeswalker(json_arlinn_the_pack
     assert back.watermark is None
 
 
-def test_fullcard_from_fullcardmodel_reversible(json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom):
+def test_fullcard_from_fullcardmodel_reversible(
+    json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
+):
     model = FullCardModel.model_validate(json_zndrsplt_eye_of_wisdom)
     card = FullCard.from_model(model)
 
