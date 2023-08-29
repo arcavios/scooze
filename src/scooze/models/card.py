@@ -49,7 +49,7 @@ class CardModel(BaseModel, validate_assignment=True):
     model_config = model_utils.get_base_model_config()
 
     cmc: float | None = Field(
-        default=0.0,
+        default=None,
         description="This card's mana value/converted mana cost.",
     )
     color_identity: set[Color] = Field(
@@ -57,7 +57,7 @@ class CardModel(BaseModel, validate_assignment=True):
         description="This card's color identity, for Commander variant deckbuilding.",
     )
     colors: set[Color] | None = Field(
-        default=set(),
+        default=None,
         description="This card's colors.",
     )
     legalities: dict[Format, Legality] | None = Field(
@@ -73,11 +73,11 @@ class CardModel(BaseModel, validate_assignment=True):
         description="This card's name.",
     )
     power: str | None = Field(
-        default="",
+        default=None,
         description="Power of this card, if applicable.",
     )
     toughness: str | None = Field(
-        default="",
+        default=None,
         description="Toughness of this card, if applicable.",
     )
     type_line: str = Field(
@@ -255,7 +255,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="This card's ID on Cardmarket, or `idProduct` in their system.",
     )
     oracle_id: str | None = Field(
-        default="",
+        default=None,
         description="A UUID for this card's oracle identity; shared across prints of the same card but not same-named objects with different gameplay properties.",
     )
     prints_search_uri: str = Field(
@@ -410,7 +410,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="Whether this card has a high-res image available.",
     )
     illustration_id: str | None = Field(
-        default="",
+        default=None,
         description="A UUID for the particlar artwork on this print, consistent across art reprints.",
     )
     image_status: ImageStatus = Field(
