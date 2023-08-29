@@ -3,7 +3,7 @@ from datetime import date
 from typing import Self
 
 from scooze.enums import Color, Component, Layout
-from scooze.utils import JsonNormalizer, floatable
+from scooze.utils import JsonNormalizer, FloatableT
 
 
 class ImageUris:
@@ -92,7 +92,7 @@ class CardFace:
 
     def __init__(
         self,
-        cmc: floatable | None = None,
+        cmc: FloatableT | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
         loyalty: str | None = None,
@@ -164,7 +164,7 @@ class FullCardFace(CardFace):
         self,
         artist: str | None = None,
         artist_ids: list[str] | None = None,
-        cmc: floatable | None = None,
+        cmc: FloatableT | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
         flavor_text: str | None = None,
@@ -224,12 +224,12 @@ class Prices:
 
     def __init__(
         self,
-        usd: floatable | None = None,
-        usd_foil: floatable | None = None,
-        usd_etched: floatable | None = None,
-        eur: floatable | None = None,
-        eur_foil: floatable | None = None,
-        tix: floatable | None = None,
+        usd: FloatableT | None = None,
+        usd_foil: FloatableT | None = None,
+        usd_etched: FloatableT | None = None,
+        eur: FloatableT | None = None,
+        eur_foil: FloatableT | None = None,
+        tix: FloatableT | None = None,
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
