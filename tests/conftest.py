@@ -1,17 +1,253 @@
+import json
 from collections import Counter
 
 import pytest
 from scooze.card import OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
-from scooze.enums import Color, Format
+from scooze.enums import Color, Format, Legality
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
 # It was chosen because it has many colors of cards, lots of words, and many types.
 
 
-# region DecklistCards
+# region Card JSON
+
+
+@pytest.fixture(scope="session")
+def cards_json() -> list[str]:
+    with open("./data/test/test_cards.jsonl", "r") as json_file:
+        json_list = list(json_file)
+
+    return json_list
+
+
+def get_card_json(cards_json: list[str], id: str) -> dict:
+    """
+    Helper to get particular card_json
+    """
+    for json_str in cards_json:
+        card_json = json.loads(json_str)
+        if card_json["id"] == id:
+            return card_json
+
+
+# Instant
+@pytest.fixture(scope="session")
+def json_ancestral_recall(cards_json) -> dict:
+    return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
+
+
+# Creature
+@pytest.fixture(scope="session")
+def json_mystic_snake(cards_json) -> dict:
+    return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
+
+
+# Costless
+@pytest.fixture(scope="session")
+def json_ancestral_visions(cards_json) -> dict:
+    return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
+
+
+# Digital
+@pytest.fixture(scope="session")
+def json_urzas_construction_drone(cards_json) -> dict:
+    return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
+
+
+# Transform (Saga)
+@pytest.fixture(scope="session")
+def json_tales_of_master_seshiro(cards_json) -> dict:
+    return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
+
+
+# Transform (Planeswalker)
+@pytest.fixture(scope="session")
+def json_arlinn_the_packs_hope(cards_json) -> dict:
+    return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
+
+
+# Reversible
+@pytest.fixture(scope="session")
+def json_zndrsplt_eye_of_wisdom(cards_json) -> dict:
+    return get_card_json(cards_json, "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf")
+
+
+# Token
+@pytest.fixture(scope="session")
+def json_snake_token(cards_json) -> dict:
+    return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
+
+
+# Watermark
+@pytest.fixture(scope="session")
+def json_anaconda_7ed_foil(cards_json) -> dict:
+    return get_card_json(cards_json, "2dccffce-5ebd-4aaa-be05-1c6537d211f4")
+
+
+# Non-English
+@pytest.fixture(scope="session")
+def json_python_spanish(cards_json) -> dict:
+    return get_card_json(cards_json, "973dbd10-708a-42d5-ba15-615104563f0f")
+
+
+# Flavor Name / Text
+@pytest.fixture(scope="session")
+def json_elessar_the_elfstone(cards_json) -> dict:
+    return get_card_json(cards_json, "a1f3fc27-b3ea-476c-be23-f1c30ef27f96")  # Cloudstone Curio
+
+
+# Attraction
+@pytest.fixture(scope="session")
+def json_trash_bin(cards_json) -> dict:
+    return get_card_json(cards_json, "f07c39f7-5c3e-40f6-b584-458b65282a7e")
+
+
+# Variation / Variation Of
+@pytest.fixture(scope="session")
+def json_anaconda_portal(cards_json) -> dict:
+    return get_card_json(cards_json, "6ffba7a5-8845-46f4-bb86-4722d6cbd4c1")
+
+
+# endregion
+
+
+# region Fixtures for Card and CardModel tests
+
+
+@pytest.fixture(scope="session")
+def legalities_ancestral_recall() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
+
+
+@pytest.fixture(scope="session")
+def legalities_token() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.NOT_LEGAL,
+        Format.DUEL: Legality.NOT_LEGAL,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.NOT_LEGAL,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.NOT_LEGAL,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.NOT_LEGAL,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.NOT_LEGAL,
+    }
+
+
+@pytest.fixture(scope="session")
+def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.LEGAL,
+        Format.DUEL: Legality.LEGAL,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.LEGAL,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.LEGAL,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.NOT_LEGAL,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.LEGAL,
+    }
+
+
+@pytest.fixture(scope="session")
+def oracle_tales_of_master_seshiro() -> str:
+    return (
+        "(As this Saga enters and after your draw step, add a lore counter.)\n"
+        "I, II — Put a +1/+1 counter on target creature or Vehicle you control. It "
+        "gains vigilance until end of turn.\n"
+        "III — Exile this Saga, then return it to the battlefield transformed under "
+        "your control."
+    )
+
+
+@pytest.fixture(scope="session")
+def oracle_arlinn_the_packs_hope() -> str:
+    return (
+        "Daybound (If a player casts no spells during their own turn, it becomes "
+        "night next turn.)\n"
+        "+1: Until your next turn, you may cast creature spells as though they had "
+        "flash, and each creature you control enters the battlefield with an "
+        "additional +1/+1 counter on it.\n"
+        "−3: Create two 2/2 green Wolf creature tokens."
+    )
+
+
+@pytest.fixture(scope="session")
+def oracle_arlinn_the_moons_fury() -> str:
+    return (
+        "Nightbound (If a player casts at least two spells during their own turn, it "
+        "becomes day next turn.)\n"
+        "+2: Add {R}{G}.\n"
+        "0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf "
+        "creature with trample, indestructible, and haste."
+    )
+
+
+@pytest.fixture(scope="session")
+def oracle_zndrsplt_eye_of_wisdom() -> str:
+    return (
+        "Partner with Okaun, Eye of Chaos (When this creature enters the "
+        "battlefield, target player may put Okaun into their hand from their "
+        "library, then shuffle.)\n"
+        "At the beginning of combat on your turn, flip a coin until you lose a "
+        "flip.\n"
+        "Whenever a player wins a coin flip, draw a card."
+    )
+
+
+# endregion
+
+
+# region Decklist Cards
 
 # Cards are sorted alphabetically
 
@@ -398,128 +634,6 @@ def card_zagoth_triome() -> OracleCard:
 
 # endregion
 
-# region Formats
-
-
-@pytest.fixture
-def format_alchemy() -> Format:
-    return Format.ALCHEMY
-
-
-@pytest.fixture
-def format_brawl() -> Format:
-    return Format.BRAWL
-
-
-@pytest.fixture
-def format_commander() -> Format:
-    return Format.COMMANDER
-
-
-@pytest.fixture
-def format_duel() -> Format:
-    return Format.DUEL
-
-
-@pytest.fixture
-def format_explorer() -> Format:
-    return Format.EXPLORER
-
-
-@pytest.fixture
-def format_future() -> Format:
-    return Format.FUTURE
-
-
-@pytest.fixture
-def format_gladiator() -> Format:
-    return Format.GLADIATOR
-
-
-@pytest.fixture
-def format_historic() -> Format:
-    return Format.HISTORIC
-
-
-@pytest.fixture
-def format_historicbrawl() -> Format:
-    return Format.HISTORICBRAWL
-
-
-@pytest.fixture
-def format_legacy() -> Format:
-    return Format.LEGACY
-
-
-@pytest.fixture
-def format_modern() -> Format:
-    return Format.MODERN
-
-
-@pytest.fixture
-def format_oathbreaker() -> Format:
-    return Format.OATHBREAKER
-
-
-@pytest.fixture
-def format_oldschool() -> Format:
-    return Format.OLDSCHOOL
-
-
-@pytest.fixture
-def format_pauper() -> Format:
-    return Format.PAUPER
-
-
-@pytest.fixture
-def format_paupercommander() -> Format:
-    return Format.PAUPERCOMMANDER
-
-
-@pytest.fixture
-def format_penny() -> Format:
-    return Format.PENNY
-
-
-@pytest.fixture
-def format_pioneer() -> Format:
-    return Format.PIONEER
-
-
-@pytest.fixture
-def format_predh() -> Format:
-    return Format.PREDH
-
-
-@pytest.fixture
-def format_premodern() -> Format:
-    return Format.PREMODERN
-
-
-@pytest.fixture
-def format_standard() -> Format:
-    return Format.STANDARD
-
-
-@pytest.fixture
-def format_vintage() -> Format:
-    return Format.VINTAGE
-
-
-# non-Scryfall formats
-
-
-@pytest.fixture
-def format_limited() -> Format:
-    return Format.LIMITED
-
-
-@pytest.fixture
-def format_none() -> Format:
-    return Format.NONE
-
-
-# endregion
 
 # region DeckParts
 
@@ -745,12 +859,13 @@ def side_modern_4c_str(
 
 # endregion
 
+
 # region Deck
 
 
 @pytest.fixture
-def deck_modern_4c(archetype_modern_4c, format_modern, main_modern_4c, side_modern_4c) -> Deck:
-    return Deck(archetype=archetype_modern_4c, format=format_modern, main=main_modern_4c, side=side_modern_4c)
+def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck:
+    return Deck(archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c)
 
 
 # endregion

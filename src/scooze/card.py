@@ -1,7 +1,6 @@
 import json
 from datetime import date
 from typing import Self, TypeVar
-from scooze.utils import FloatableT
 
 from scooze.cardparts import (
     CardFace,
@@ -29,6 +28,7 @@ from scooze.enums import (
     SetType,
 )
 from scooze.models.card import CardModel
+from scooze.utils import FloatableT
 
 ## Generic Types
 F = TypeVar("F", CardFace, FullCardFace)  # generic CardFace type
