@@ -3,7 +3,7 @@ from datetime import date
 from typing import Self
 
 from scooze.enums import Color, Component, Layout
-from scooze.utils import JsonNormalizer
+from scooze.utils import JsonNormalizer, FloatableT
 
 
 class ImageUris:
@@ -92,7 +92,7 @@ class CardFace:
 
     def __init__(
         self,
-        cmc: float | None = None,
+        cmc: FloatableT | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
         loyalty: str | None = None,
@@ -164,7 +164,7 @@ class FullCardFace(CardFace):
         self,
         artist: str | None = None,
         artist_ids: list[str] | None = None,
-        cmc: float | None = None,
+        cmc: FloatableT | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
         flavor_text: str | None = None,
@@ -224,21 +224,21 @@ class Prices:
 
     def __init__(
         self,
-        usd: float | None = None,
-        usd_foil: float | None = None,
-        usd_etched: float | None = None,
-        eur: float | None = None,
-        eur_foil: float | None = None,
-        tix: float | None = None,
+        usd: FloatableT | None = None,
+        usd_foil: FloatableT | None = None,
+        usd_etched: FloatableT | None = None,
+        eur: FloatableT | None = None,
+        eur_foil: FloatableT | None = None,
+        tix: FloatableT | None = None,
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.usd = usd
-        self.usd_foil = usd_foil
-        self.usd_etched = usd_etched
-        self.eur = eur
-        self.eur_foil = eur_foil
-        self.tix = tix
+        self.usd = CardPartsNormalizer.float(usd)
+        self.usd_foil = CardPartsNormalizer.float(usd_foil)
+        self.usd_etched = CardPartsNormalizer.float(usd_etched)
+        self.eur = CardPartsNormalizer.float(eur)
+        self.eur_foil = CardPartsNormalizer.float(eur_foil)
+        self.tix = CardPartsNormalizer.float(tix)
 
 
 class Preview:
