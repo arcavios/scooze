@@ -49,6 +49,9 @@ from scooze.models.card import CardModel, FullCardModel
 # Notes about further coverage:
 #  - Need a card with a watermark I think
 #  - Need a card with `printed_name` `printed_type_line` `printed_text`
+#  - Need a card with `flavor_name` and `flavor_text`
+#  - Need a card with `attraction_lights`
+#  - Need a card with `variation` and `variation_of`
 
 
 @pytest.fixture
@@ -205,16 +208,19 @@ def oracle_zndrsplt_eye_of_wisdom() -> str:
 # region Card JSON Fixtures
 
 
+# Instant
 @pytest.fixture
 def json_ancestral_recall(cards_json) -> dict:
     return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
 
 
+# Creature
 @pytest.fixture
 def json_mystic_snake(cards_json) -> dict:
     return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
 
 
+# Costless
 @pytest.fixture
 def json_ancestral_visions(cards_json) -> dict:
     return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
@@ -236,24 +242,6 @@ def json_tales_of_master_seshiro(cards_json) -> dict:
 @pytest.fixture
 def json_arlinn_the_packs_hope(cards_json) -> dict:
     return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
-
-
-# Split (Aftermath)
-@pytest.fixture
-def json_driven_despair(cards_json) -> dict:
-    return get_card_json(cards_json, "7713ba59-dd4c-4b49-93a7-292728df86b8")
-
-
-# MDFC
-@pytest.fixture
-def json_turntimber_symbiosis(cards_json) -> dict:
-    return get_card_json(cards_json, "61bd69ea-1e9e-46b0-b1a1-ed7fdbe3deb6")
-
-
-# Flip
-@pytest.fixture
-def json_orochi_eggwatcher(cards_json) -> dict:
-    return get_card_json(cards_json, "a4f4aa3b-c64a-4430-b1a2-a7fca87d0a22")
 
 
 # Reversible
@@ -300,17 +288,26 @@ def test_card_from_json_creature(json_mystic_snake):
     assert card.type_line == "Creature — Snake"
 
 
+def test_card_from_json_costless(json_ancestral_visions):
+    card = Card.from_json(json_ancestral_visions)
+    assert card.cmc == 0.0
+    assert card.color_identity == {Color.BLUE}
+    assert card.colors == {Color.BLUE}
+    assert card.mana_cost == ""
+    assert card.type_line == "Sorcery"
+
+
 def test_card_from_json_token(json_snake_token, legalities_token):
-    token = Card.from_json(json_snake_token)
-    assert token.cmc == 0.0
-    assert token.color_identity == {Color.BLUE, Color.GREEN}
-    assert token.colors == {Color.BLUE, Color.GREEN}
-    assert token.legalities == legalities_token
-    assert token.mana_cost == ""
-    assert token.name == "Snake"
-    assert token.power == "1"
-    assert token.toughness == "1"
-    assert token.type_line == "Token Creature — Snake"
+    card = Card.from_json(json_snake_token)
+    assert card.cmc == 0.0
+    assert card.color_identity == {Color.BLUE, Color.GREEN}
+    assert card.colors == {Color.BLUE, Color.GREEN}
+    assert card.legalities == legalities_token
+    assert card.mana_cost == ""
+    assert card.name == "Snake"
+    assert card.power == "1"
+    assert card.toughness == "1"
+    assert card.type_line == "Token Creature — Snake"
 
 
 # endregion
@@ -318,10 +315,42 @@ def test_card_from_json_token(json_snake_token, legalities_token):
 # region OracleCard
 
 
+def test_oraclecard_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+    card = OracleCard.from_json(json_ancestral_recall)
+    assert card.card_faces is None
+    assert card.cmc == 1.0
+    assert card.color_identity == {Color.BLUE}
+    assert card.color_indicator is None
+    assert card.colors == {Color.BLUE}
+    assert card.edhrec_rank is None
+    assert card.hand_modifier is None
+    assert card.keywords == set()
+    assert card.legalities == legalities_ancestral_recall
+    assert card.life_modifier is None
+    assert card.loyalty is None
+    assert card.mana_cost == "{U}"
+    assert card.name == "Ancestral Recall"
+    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
+    assert card.oracle_text == "Target player draws three cards."
+    assert card.penny_rank is None
+    assert card.power is None
+    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert card.produced_mana is None
+    assert card.reserved == True
+    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
+    assert card.toughness is None
+    assert card.type_line == "Instant"
+
+
+def test_oraclecard_from_json_costless(json_ancestral_visions):
+    card = OracleCard.from_json(json_ancestral_visions)
+    assert card.color_indicator == {Color.BLUE}
+    assert card.keywords == {"Suspend"}
+
+
 def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro, oracle_tales_of_master_seshiro):
     card = OracleCard.from_json(json_tales_of_master_seshiro)
     assert len(card.card_faces) == 2
-    assert card.type_line == "Enchantment — Saga // Enchantment Creature — Snake Warrior"
     front, back = card.card_faces
 
     ## Front
@@ -351,39 +380,122 @@ def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro, oracl
     assert back.type_line == "Enchantment Creature — Snake Warrior"
 
 
-def test_oraclecard_from_json_split_aftermath(json_driven_despair):
-    # TODO: fill test
-    pass
-
-
-def test_oraclecard_from_json_mdfc(json_turntimber_symbiosis):
-    # TODO: fill test
-    pass
-
-
-def test_oraclecard_from_json_flip(json_orochi_eggwatcher):
-    # TODO: fill test
-    pass
-
-
-def test_oraclecard_from_json_reversible(json_zndrsplt_eye_of_wisdom):
-    # TODO: fill test
-    pass
-
-
-def test_oraclecard_from_json_token(json_snake_token):
-    # TODO: fill test
-    pass
-
-
 # endregion
 
 # region FullCard
 
 
-def test_fullcard_from_json_instant(json_ancestral_recall):
-    # TODO: fill test (all fields from top level and non-card face related stuff)
-    pass
+def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+    card = FullCard.from_json(json_ancestral_recall)
+    assert card.all_parts is None
+    assert card.arena_id is None
+    assert card.artist == "Ryan Pancoast"
+    assert card.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
+    assert card.attraction_lights is None
+    assert card.booster == True
+    assert card.border_color == BorderColor.BLACK
+    assert card.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
+    assert card.card_faces is None
+    assert card.cardmarket_id is None
+    assert card.cmc == 1.0
+    assert card.collector_number == "1"
+    assert card.color_identity == {Color.BLUE}
+    assert card.color_indicator is None
+    assert card.colors == {Color.BLUE}
+    assert card.content_warning is None
+    assert card.digital == True
+    assert card.edhrec_rank is None
+    assert card.finishes == {Finish.NONFOIL, Finish.FOIL}
+    assert card.flavor_name is None
+    assert card.flavor_text is None
+    assert card.frame == Frame._2015
+    assert card.frame_effects is None
+    assert card.full_art == False
+    assert card.games == {Game.MTGO}
+    assert card.hand_modifier is None
+    assert card.highres_image == True
+    assert card.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
+    assert card.image_status == ImageStatus.HIGHRES_SCAN
+
+    # ImageUris
+    assert card.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert card.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert card.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert card.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert card.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert card.image_uris.small.startswith("https://cards.scryfall.io/small/")
+
+    assert card.keywords == set()
+    assert card.lang == Language.ENGLISH
+    assert card.layout == Layout.NORMAL
+    assert card.legalities == legalities_ancestral_recall
+    assert card.life_modifier is None
+    assert card.loyalty is None
+    assert card.mana_cost == "{U}"
+    assert card.mtgo_foil_id == 53178
+    assert card.mtgo_id == 53177
+    assert card.multiverse_ids == [382841]
+    assert card.name == "Ancestral Recall"
+    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
+    assert card.oracle_text == "Target player draws three cards."
+    assert card.oversized == False
+    assert card.penny_rank is None
+    assert card.power is None
+    assert card.preview is None
+
+    # Prices
+    assert card.prices.eur is None
+    assert card.prices.eur_foil is None
+    assert card.prices.tix == 1.9
+    assert card.prices.usd is None
+    assert card.prices.usd_etched is None
+    assert card.prices.usd_foil is None
+
+    assert card.printed_name is None
+    assert card.printed_text is None
+    assert card.printed_type_line is None
+    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert card.produced_mana is None
+    assert card.promo == False
+    assert card.promo_types is None
+
+    # PurchaseUris
+    assert card.purchase_uris["cardhoarder"].startswith("https://www.cardhoarder.com/")
+    assert card.purchase_uris["cardmarket"].startswith("https://www.cardmarket.com/")
+    assert card.purchase_uris["tcgplayer"].startswith("https://www.tcgplayer.com/")
+
+    assert card.rarity == Rarity.BONUS
+
+    # RelatedUris
+    assert card.related_uris["edhrec"].startswith("https://edhrec.com/")
+    assert card.related_uris["gatherer"].startswith("https://gatherer.wizards.com/")
+    assert card.related_uris["tcgplayer_infinite_articles"].startswith("https://infinite.tcgplayer.com/")
+    assert card.related_uris["tcgplayer_infinite_decks"].startswith("https://infinite.tcgplayer.com/")
+
+    assert card.released_at == date(year=2014, month=6, day=16)
+    assert card.reprint == True
+    assert card.reserved == True
+    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
+    assert card.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
+    assert card.scryfall_set_uri.startswith("https://scryfall.com/sets/")
+    assert card.scryfall_uri.startswith("https://scryfall.com/card/")
+    assert card.security_stamp == SecurityStamp.OVAL
+    assert card.set == "vma"
+    assert card.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
+    assert card.set_name == "Vintage Masters"
+    assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert card.set_type == SetType.MASTERS
+    assert card.set_uri.startswith("https://api.scryfall.com/sets/")
+    assert card.story_spotlight == False
+    assert card.tcgplayer_etched_id is None
+    assert card.tcgplayer_id is None
+    assert card.textless == False
+    assert card.toughness is None
+    assert card.type_line == "Instant"
+    assert card.uri.startswith("https://api.scryfall.com/cards/")
+    assert card.variation == False
+    assert card.variation_of is None
+    assert card.watermark is None
 
 
 def test_fullcard_from_json_transform_planeswalker(
@@ -456,9 +568,12 @@ def test_fullcard_from_json_transform_planeswalker(
 
 
 def test_fullcard_from_json_digital(json_urzas_construction_drone):
-    # TODO: fill test
     card = FullCard.from_json(json_urzas_construction_drone)
-    pass
+    assert card.digital == True
+    assert card.games == {Game.ARENA}
+    assert card.highres_image == False
+    assert card.image_status == ImageStatus.LOWRES
+    assert card.keywords == {"Conjure", "Seek"}
 
 
 def test_fullcard_from_json_reversible(
@@ -490,6 +605,7 @@ def test_fullcard_from_json_reversible(
     assert card.border_color == BorderColor.BORDERLESS
     assert card.card_back_id is None
 
+    assert len(card.card_faces) == 2
     front, back = card.card_faces
 
     ## Front
@@ -610,9 +726,9 @@ def test_fullcard_from_json_reversible(
     assert card.promo_types is None
 
     # PurchaseUris
-    assert card.purchase_uris["cardhoarder"].startswith("https://www.cardhoarder.com/cards?")
-    assert card.purchase_uris["cardmarket"].startswith("https://www.cardmarket.com/en/Magic/Products/Search?")
-    assert card.purchase_uris["tcgplayer"].startswith("https://www.tcgplayer.com/product/")
+    assert card.purchase_uris["cardhoarder"].startswith("https://www.cardhoarder.com/")
+    assert card.purchase_uris["cardmarket"].startswith("https://www.cardmarket.com/")
+    assert card.purchase_uris["tcgplayer"].startswith("https://www.tcgplayer.com/")
 
     assert card.rarity == Rarity.RARE
 
@@ -645,11 +761,6 @@ def test_fullcard_from_json_reversible(
     assert card.watermark is None
 
 
-def test_fullcard_from_json_token(json_snake_token):
-    # TODO: fill test
-    pass
-
-
 # endregion
 
 # endregion
@@ -674,13 +785,25 @@ def test_cardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral
 
 
 def test_cardmodel_from_json_creature(json_mystic_snake):
-    # TODO: fill test
-    pass
+    model = CardModel.model_validate(json_mystic_snake)
+    assert model.color_identity == {Color.BLUE, Color.GREEN}
+    assert model.colors == {Color.BLUE, Color.GREEN}
+    assert model.power == "2"
+    assert model.toughness == "2"
+    assert model.type_line == "Creature — Snake"
 
 
-def test_cardmodel_from_json_token(json_snake_token):
-    # TODO: fill test
-    pass
+def test_cardmodel_from_json_token(json_snake_token, legalities_token):
+    model = CardModel.model_validate(json_snake_token)
+    assert model.cmc == 0.0
+    assert model.color_identity == {Color.BLUE, Color.GREEN}
+    assert model.colors == {Color.BLUE, Color.GREEN}
+    assert model.legalities == legalities_token
+    assert model.mana_cost == ""
+    assert model.name == "Snake"
+    assert model.power == "1"
+    assert model.toughness == "1"
+    assert model.type_line == "Token Creature — Snake"
 
 
 # endregion
@@ -717,10 +840,10 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.games == {Game.MTGO}
     assert model.hand_modifier is None
     assert model.highres_image == True
-    assert model.illustation_id == ""
+    assert model.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
     assert model.image_status == ImageStatus.HIGHRES_SCAN
 
-    # ImageURIs
+    # ImageUris
     assert model.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
     assert model.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
     assert model.image_uris.large.startswith("https://cards.scryfall.io/large/")
@@ -762,14 +885,14 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.promo == False
     assert model.promo_types is None
 
-    # PurchaseURIs
+    # PurchaseUris
     assert model.purchase_uris["cardhoarder"].startswith("https://www.cardhoarder.com/")
     assert model.purchase_uris["cardmarket"].startswith("https://www.cardmarket.com/")
     assert model.purchase_uris["tcgplayer"].startswith("https://www.tcgplayer.com/")
 
     assert model.rarity == Rarity.BONUS
 
-    # RelatedURIs
+    # RelatedUris
     assert model.related_uris["edhrec"].startswith("https://edhrec.com/")
     assert model.related_uris["gatherer"].startswith("https://gatherer.wizards.com/")
     assert model.related_uris["tcgplayer_infinite_articles"].startswith("https://infinite.tcgplayer.com/")
@@ -801,32 +924,14 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.watermark is None
 
 
-def test_fullcardmodel_from_json_transform_saga(json_tales_of_master_seshiro):
-    # TODO: fill test
-    pass
-
-
-def test_fullcardmodel_from_json_split_aftermath(json_driven_despair):
-    # TODO: fill test
-    pass
-
-
-def test_fullcardmodel_from_json_mdfc(json_turntimber_symbiosis):
-    # TODO: fill test
-    pass
-
-
-def test_fullcardmodel_from_json_flip(json_orochi_eggwatcher):
+def test_fullcardmodel_from_json_transform_planeswalker(json_arlinn_the_packs_hope):
+    model = FullCardModel.model_validate(json_arlinn_the_packs_hope)
+    pprint(model.model_dump())
     # TODO: fill test
     pass
 
 
 def test_fullcardmodel_from_json_reversible(json_zndrsplt_eye_of_wisdom):
-    # TODO: fill test
-    pass
-
-
-def test_fullcardmodel_from_json_token(json_snake_token):
     # TODO: fill test
     pass
 
@@ -852,11 +957,6 @@ def test_card_from_cardmodel_creature(json_mystic_snake):
     pass
 
 
-def test_card_fromcardmodel_token(json_snake_token):
-    # TODO: fill test
-    pass
-
-
 # NOTE: just to see if going from FullCardModel -> Card works alright
 def test_card_from_fullcardmodel_instant(json_ancestral_recall):
     # TODO: fill test
@@ -873,22 +973,7 @@ def test_oraclecard_from_fullcardmodel_instant(json_ancestral_recall):
     pass
 
 
-def test_oraclecard_from_fullcardmodel_transform_saga(json_tales_of_master_seshiro):
-    # TODO: fill test
-    pass
-
-
-def test_oraclecard_from_fullcardmodel_split_aftermath(json_driven_despair):
-    # TODO: fill test
-    pass
-
-
-def test_oraclecard_from_fullcardmodel_mdfc(json_turntimber_symbiosis):
-    # TODO: fill test
-    pass
-
-
-def test_oraclecard_from_fullcardmodel_flip(json_orochi_eggwatcher):
+def test_oraclecard_from_fullcardmodel_transform_planeswalker(json_arlinn_the_packs_hope):
     # TODO: fill test
     pass
 
@@ -898,42 +983,20 @@ def test_oraclecard_from_fullcardmodel_reversible(json_zndrsplt_eye_of_wisdom):
     pass
 
 
-def test_oraclecard_from_fullcardmodel_token(json_snake_token):
-    # TODO: fill test
-    pass
-
-
 # endregion
 
 # region FullCardModel -> FullCard
 
+def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall):
+    # TODO: fill test
+    pass
 
 def test_fullcard_from_fullcardmodel_transform_saga(json_tales_of_master_seshiro):
     # TODO: fill test
     pass
 
 
-def test_fullcard_from_fullcardmodel_split_aftermath(json_driven_despair):
-    # TODO: fill test
-    pass
-
-
-def test_fullcard_from_fullcardmodel_mdfc(json_turntimber_symbiosis):
-    # TODO: fill test
-    pass
-
-
-def test_fullcard_from_fullcardmodel_flip(json_orochi_eggwatcher):
-    # TODO: fill test
-    pass
-
-
 def test_fullcard_from_fullcardmodel_reversible(json_zndrsplt_eye_of_wisdom):
-    # TODO: fill test
-    pass
-
-
-def test_fullcard_from_fullcardmodel_token(json_snake_token):
     # TODO: fill test
     pass
 
