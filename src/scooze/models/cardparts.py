@@ -105,7 +105,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         default=None,
         description="Flavor text of this face, if any.",
     )
-    illustration_id: int | None = Field(
+    illustration_id: str | None = Field(
         default=None,
         description="Scryfall illustration ID of this face, if any.",
     )
