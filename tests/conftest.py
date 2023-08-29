@@ -23,8 +23,10 @@ def cards_json() -> list[str]:
     return json_list
 
 
-# NOTE: helper to get particular card_json
 def get_card_json(cards_json: list[str], id: str) -> dict:
+    """
+    Helper to get particular card_json
+    """
     for json_str in cards_json:
         card_json = json.loads(json_str)
         if card_json["id"] == id:
@@ -77,6 +79,36 @@ def json_zndrsplt_eye_of_wisdom(cards_json) -> dict:
 @pytest.fixture(scope="session")
 def json_snake_token(cards_json) -> dict:
     return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
+
+
+# Watermark
+@pytest.fixture(scope="session")
+def json_anaconda_7ed_foil(cards_json) -> dict:
+    return get_card_json(cards_json, "2dccffce-5ebd-4aaa-be05-1c6537d211f4")
+
+
+# Non-English
+@pytest.fixture(scope="session")
+def json_python_spanish(cards_json) -> dict:
+    return get_card_json(cards_json, "973dbd10-708a-42d5-ba15-615104563f0f")
+
+
+# Flavor Name / Text
+@pytest.fixture(scope="session")
+def json_elessar_the_elfstone(cards_json) -> dict:
+    return get_card_json(cards_json, "a1f3fc27-b3ea-476c-be23-f1c30ef27f96")  # Cloudstone Curio
+
+
+# Attraction
+@pytest.fixture(scope="session")
+def json_trash_bin(cards_json) -> dict:
+    return get_card_json(cards_json, "f07c39f7-5c3e-40f6-b584-458b65282a7e")
+
+
+# Variation / Variation Of
+@pytest.fixture(scope="session")
+def json_anaconda_portal(cards_json) -> dict:
+    return get_card_json(cards_json, "6ffba7a5-8845-46f4-bb86-4722d6cbd4c1")
 
 
 # endregion
@@ -693,6 +725,7 @@ def side_modern_4c_str(
 
 
 # endregion
+
 
 # region Deck
 

@@ -25,16 +25,11 @@ from scooze.models.card import CardModel, FullCardModel
 # helpful little jq that can get you a card from one of the bulk files. You can get scryfall_id from the card's json
 # ╰─❯ cat data/bulk/oracle_cards.json | jq '.[] | select(.id == "371ceb58-f498-4616-a7f0-eb118fe2e4ff")' > ./data/bulk/card.json
 
+
 # STUFF TO WORK THROUGH:
 # TODO:
-#  - Move fixtures to conftest or similar. We don't want to get_card_from_json every time
 #  - Split up Card vs CardModel tests into the right test files
-# Notes about further coverage:
-#  - Need a card with a watermark I think
-#  - Need a card with `printed_name` `printed_type_line` `printed_text`
-#  - Need a card with `flavor_name` and `flavor_text`
-#  - Need a card with `attraction_lights`
-#  - Need a card with `variation` and `variation_of`
+
 
 # region Fixtures
 
@@ -667,6 +662,34 @@ def test_fullcard_from_json_reversible(
     assert card.variation == False
     assert card.variation_of is None
     assert card.watermark is None
+
+
+def test_fullcard_from_json_watermark(json_anaconda_7ed_foil):
+    card = FullCard.from_json(json_anaconda_7ed_foil)
+    assert card.watermark == "wotc"
+
+
+def test_fullcard_from_json_non_english(json_python_spanish):
+    card = FullCard.from_json(json_python_spanish)
+    assert card.printed_name == "Pitón"
+
+
+def test_fullcard_from_json_flavor(json_elessar_the_elfstone):
+    card = FullCard.from_json(json_elessar_the_elfstone)
+    assert card.flavor_name == "Elessar, the Elfstone"
+    assert card.flavor_text == "Aragorn took the green stone and held it up, and there came a green fire from his hand."
+    assert card.name == "Cloudstone Curio"
+
+
+def test_fullcard_from_json_attraction(json_trash_bin):
+    card = FullCard.from_json(json_trash_bin)
+    assert card.attraction_lights == {2, 6}
+
+
+def test_fullcard_from_json_variation(json_anaconda_portal):
+    card = FullCard.from_json(json_anaconda_portal)
+    assert card.variation == True
+    assert card.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda
 
 
 # endregion
