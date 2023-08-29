@@ -7,6 +7,8 @@ from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe
 from scooze.utils import DictDiff
 
+# region Fixtures
+
 
 @pytest.fixture
 def cards(
@@ -41,6 +43,9 @@ def cmdr_part(cmdr_cards) -> DeckPart:
 @pytest.fixture
 def dictdiff_empty() -> DictDiff:
     return DictDiff(contents={})
+
+
+# endregion
 
 
 def test_archetype(archetype_modern_4c):

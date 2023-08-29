@@ -4,8 +4,9 @@ from sys import maxsize
 import pytest
 from scooze.card import Card
 from scooze.deckpart import DeckPart
-from scooze.enums import Color
 from scooze.utils import DictDiff
+
+# region Fixtures
 
 
 @pytest.fixture
@@ -18,6 +19,9 @@ def some_cards(card_chalice_of_the_void, card_hallowed_moonlight, card_veil_of_s
         }
     )
     return cards
+
+
+# endregion
 
 
 def test_cards(some_cards):

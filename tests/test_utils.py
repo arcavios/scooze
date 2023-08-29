@@ -41,10 +41,10 @@ def diffAB() -> dict[str, tuple[int, int]]:
 @pytest.fixture
 def diffAB_str() -> str:
     return (
-        """Annihilating Glare: (0, 1)\n"""
-        """Blackcleave Cliffs: (4, 2)\n"""
-        """Unlucky Witness: (3, 4)\n"""
-        """Urborg, Tomb of Yawgmoth: (0, 1)\n"""
+        "Annihilating Glare: (0, 1)\n"
+        "Blackcleave Cliffs: (4, 2)\n"
+        "Unlucky Witness: (3, 4)\n"
+        "Urborg, Tomb of Yawgmoth: (0, 1)\n"
     )
 
 

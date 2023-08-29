@@ -1,7 +1,4 @@
-import json
 from datetime import date
-from inspect import getmembers
-from pprint import pprint
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
@@ -38,28 +35,6 @@ from scooze.models.card import CardModel, FullCardModel
 #  - Need a card with `flavor_name` and `flavor_text`
 #  - Need a card with `attraction_lights`
 #  - Need a card with `variation` and `variation_of`
-
-
-@pytest.fixture
-def cards_json() -> list[str]:
-    with open("./data/test/test_cards.jsonl", "r") as json_file:
-        json_list = list(json_file)
-
-    return json_list
-
-
-# NOTE: helper to get particular card_json
-def get_card_json(cards_json: list[str], id: str) -> dict:
-    for json_str in cards_json:
-        card_json = json.loads(json_str)
-        if card_json["id"] == id:
-            return card_json
-
-
-# TODO: helper to print a card
-def print_obj(obj):
-    pprint(list(filter(lambda x: not x[0].endswith("__"), getmembers(obj))))
-
 
 # region Fixtures
 
@@ -119,7 +94,7 @@ def legalities_token() -> dict[Format, Legality]:
 
 
 @pytest.fixture
-def legalities_zndrsplt_eye_of_wisdom() -> dict:
+def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
         Format.BRAWL: Legality.NOT_LEGAL,
@@ -148,101 +123,48 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict:
 @pytest.fixture
 def oracle_tales_of_master_seshiro() -> str:
     return (
-        """(As this Saga enters and after your draw step, add a lore counter.)\n"""
-        """I, II — Put a +1/+1 counter on target creature or Vehicle you control. It """
-        """gains vigilance until end of turn.\n"""
-        """III — Exile this Saga, then return it to the battlefield transformed under """
-        """your control."""
+        "(As this Saga enters and after your draw step, add a lore counter.)\n"
+        "I, II — Put a +1/+1 counter on target creature or Vehicle you control. It "
+        "gains vigilance until end of turn.\n"
+        "III — Exile this Saga, then return it to the battlefield transformed under "
+        "your control."
     )
 
 
 @pytest.fixture
 def oracle_arlinn_the_packs_hope() -> str:
     return (
-        """Daybound (If a player casts no spells during their own turn, it becomes """
-        """night next turn.)\n"""
-        """+1: Until your next turn, you may cast creature spells as though they had """
-        """flash, and each creature you control enters the battlefield with an """
-        """additional +1/+1 counter on it.\n"""
-        """−3: Create two 2/2 green Wolf creature tokens."""
+        "Daybound (If a player casts no spells during their own turn, it becomes "
+        "night next turn.)\n"
+        "+1: Until your next turn, you may cast creature spells as though they had "
+        "flash, and each creature you control enters the battlefield with an "
+        "additional +1/+1 counter on it.\n"
+        "−3: Create two 2/2 green Wolf creature tokens."
     )
 
 
 @pytest.fixture
 def oracle_arlinn_the_moons_fury() -> str:
     return (
-        """Nightbound (If a player casts at least two spells during their own turn, it """
-        """becomes day next turn.)\n"""
-        """+2: Add {R}{G}.\n"""
-        """0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf """
-        """creature with trample, indestructible, and haste."""
+        "Nightbound (If a player casts at least two spells during their own turn, it "
+        "becomes day next turn.)\n"
+        "+2: Add {R}{G}.\n"
+        "0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf "
+        "creature with trample, indestructible, and haste."
     )
 
 
 @pytest.fixture
 def oracle_zndrsplt_eye_of_wisdom() -> str:
     return (
-        """Partner with Okaun, Eye of Chaos (When this creature enters the """
-        """battlefield, target player may put Okaun into their hand from their """
-        """library, then shuffle.)\n"""
-        """At the beginning of combat on your turn, flip a coin until you lose a """
-        """flip.\n"""
-        """Whenever a player wins a coin flip, draw a card."""
+        "Partner with Okaun, Eye of Chaos (When this creature enters the "
+        "battlefield, target player may put Okaun into their hand from their "
+        "library, then shuffle.)\n"
+        "At the beginning of combat on your turn, flip a coin until you lose a "
+        "flip.\n"
+        "Whenever a player wins a coin flip, draw a card."
     )
 
-
-# region Card JSON Fixtures
-
-
-# Instant
-@pytest.fixture
-def json_ancestral_recall(cards_json) -> dict:
-    return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
-
-
-# Creature
-@pytest.fixture
-def json_mystic_snake(cards_json) -> dict:
-    return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
-
-
-# Costless
-@pytest.fixture
-def json_ancestral_visions(cards_json) -> dict:
-    return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
-
-
-# Digital
-@pytest.fixture
-def json_urzas_construction_drone(cards_json) -> dict:
-    return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
-
-
-# Transform (Saga)
-@pytest.fixture
-def json_tales_of_master_seshiro(cards_json) -> dict:
-    return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
-
-
-# Transform (Planeswalker)
-@pytest.fixture
-def json_arlinn_the_packs_hope(cards_json) -> dict:
-    return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
-
-
-# Reversible
-@pytest.fixture
-def json_zndrsplt_eye_of_wisdom(cards_json) -> dict:
-    return get_card_json(cards_json, "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf")
-
-
-# Token
-@pytest.fixture
-def json_snake_token(cards_json) -> dict:
-    return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
-
-
-# endregion
 
 # endregion
 

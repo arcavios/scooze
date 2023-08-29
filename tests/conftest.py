@@ -1,7 +1,8 @@
+import json
 from collections import Counter
 
 import pytest
-from scooze.card import Card, OracleCard
+from scooze.card import OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.enums import Color, Format
@@ -9,6 +10,76 @@ from scooze.enums import Color, Format
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
 # It was chosen because it has many colors of cards, lots of words, and many types.
+
+
+# region Card JSON
+
+
+@pytest.fixture(scope="session")
+def cards_json() -> list[str]:
+    with open("./data/test/test_cards.jsonl", "r") as json_file:
+        json_list = list(json_file)
+
+    return json_list
+
+
+# NOTE: helper to get particular card_json
+def get_card_json(cards_json: list[str], id: str) -> dict:
+    for json_str in cards_json:
+        card_json = json.loads(json_str)
+        if card_json["id"] == id:
+            return card_json
+
+
+# Instant
+@pytest.fixture(scope="session")
+def json_ancestral_recall(cards_json) -> dict:
+    return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
+
+
+# Creature
+@pytest.fixture(scope="session")
+def json_mystic_snake(cards_json) -> dict:
+    return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
+
+
+# Costless
+@pytest.fixture(scope="session")
+def json_ancestral_visions(cards_json) -> dict:
+    return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
+
+
+# Digital
+@pytest.fixture(scope="session")
+def json_urzas_construction_drone(cards_json) -> dict:
+    return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
+
+
+# Transform (Saga)
+@pytest.fixture(scope="session")
+def json_tales_of_master_seshiro(cards_json) -> dict:
+    return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
+
+
+# Transform (Planeswalker)
+@pytest.fixture(scope="session")
+def json_arlinn_the_packs_hope(cards_json) -> dict:
+    return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
+
+
+# Reversible
+@pytest.fixture(scope="session")
+def json_zndrsplt_eye_of_wisdom(cards_json) -> dict:
+    return get_card_json(cards_json, "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf")
+
+
+# Token
+@pytest.fixture(scope="session")
+def json_snake_token(cards_json) -> dict:
+    return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
+
+
+# endregion
 
 
 # region Simple Cards
