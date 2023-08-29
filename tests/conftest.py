@@ -5,7 +5,7 @@ import pytest
 from scooze.card import OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
-from scooze.enums import Color, Format
+from scooze.enums import Color, Format, Legality
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
@@ -114,7 +114,140 @@ def json_anaconda_portal(cards_json) -> dict:
 # endregion
 
 
-# region Simple Cards
+# region Fixtures for Card and CardModel tests
+
+
+@pytest.fixture(scope="session")
+def legalities_ancestral_recall() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
+
+
+@pytest.fixture(scope="session")
+def legalities_token() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.NOT_LEGAL,
+        Format.DUEL: Legality.NOT_LEGAL,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.NOT_LEGAL,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.NOT_LEGAL,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.NOT_LEGAL,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.NOT_LEGAL,
+    }
+
+
+@pytest.fixture(scope="session")
+def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.LEGAL,
+        Format.DUEL: Legality.LEGAL,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.LEGAL,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.LEGAL,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.NOT_LEGAL,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.LEGAL,
+    }
+
+
+@pytest.fixture(scope="session")
+def oracle_tales_of_master_seshiro() -> str:
+    return (
+        "(As this Saga enters and after your draw step, add a lore counter.)\n"
+        "I, II — Put a +1/+1 counter on target creature or Vehicle you control. It "
+        "gains vigilance until end of turn.\n"
+        "III — Exile this Saga, then return it to the battlefield transformed under "
+        "your control."
+    )
+
+
+@pytest.fixture(scope="session")
+def oracle_arlinn_the_packs_hope() -> str:
+    return (
+        "Daybound (If a player casts no spells during their own turn, it becomes "
+        "night next turn.)\n"
+        "+1: Until your next turn, you may cast creature spells as though they had "
+        "flash, and each creature you control enters the battlefield with an "
+        "additional +1/+1 counter on it.\n"
+        "−3: Create two 2/2 green Wolf creature tokens."
+    )
+
+
+@pytest.fixture(scope="session")
+def oracle_arlinn_the_moons_fury() -> str:
+    return (
+        "Nightbound (If a player casts at least two spells during their own turn, it "
+        "becomes day next turn.)\n"
+        "+2: Add {R}{G}.\n"
+        "0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf "
+        "creature with trample, indestructible, and haste."
+    )
+
+
+@pytest.fixture(scope="session")
+def oracle_zndrsplt_eye_of_wisdom() -> str:
+    return (
+        "Partner with Okaun, Eye of Chaos (When this creature enters the "
+        "battlefield, target player may put Okaun into their hand from their "
+        "library, then shuffle.)\n"
+        "At the beginning of combat on your turn, flip a coin until you lose a "
+        "flip.\n"
+        "Whenever a player wins a coin flip, draw a card."
+    )
+
+
+# endregion
+
+
+# region Decklist Cards
 
 # Cards are sorted alphabetically
 
