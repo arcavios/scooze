@@ -3,7 +3,7 @@ from datetime import date
 from typing import Self
 
 from scooze.enums import Color, Component, Layout
-from scooze.utils import JsonNormalizer, FloatableT
+from scooze.utils import FloatableT, JsonNormalizer
 
 
 class ImageUris:

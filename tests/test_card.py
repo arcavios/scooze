@@ -395,7 +395,7 @@ def test_fullcard_from_json_transform_planeswalker(
 
     ## Front
     assert front.artist == "Anna Steinbauer"
-    assert front.artist_ids is None  # TODO: remove?
+    assert front.artist_id == "3516496c-c279-4b56-8239-720683d03ae0"
     assert front.cmc is None
     assert front.color_indicator is None
     assert front.colors == {Color.RED, Color.GREEN}
@@ -426,7 +426,7 @@ def test_fullcard_from_json_transform_planeswalker(
 
     ## Back
     assert back.artist == "Anna Steinbauer"
-    assert back.artist_ids is None  # TODO: remove?
+    assert back.artist_id == "3516496c-c279-4b56-8239-720683d03ae0"
     assert back.cmc is None
     assert back.color_indicator == {Color.RED, Color.GREEN}
     assert back.colors == {Color.RED, Color.GREEN}
@@ -494,7 +494,7 @@ def test_fullcard_from_json_reversible(
 
     ## Front
     assert front.artist == "Alexis Ziritt"
-    assert front.artist_ids is None  # TODO: remove?
+    assert front.artist_id == "add4cc84-9254-4c0b-8fcd-af4a238bdbd5"
     assert front.cmc == 5.0
     assert front.color_indicator is None
     assert front.colors == {Color.BLUE}
@@ -525,7 +525,7 @@ def test_fullcard_from_json_reversible(
 
     ## Back
     assert back.artist == "Alexis Ziritt"
-    assert back.artist_ids is None  # TODO: remove?
+    assert back.artist_id == "add4cc84-9254-4c0b-8fcd-af4a238bdbd5"
     assert back.cmc == 5.0
     assert back.color_indicator is None
     assert back.colors == {Color.BLUE}

@@ -8,7 +8,7 @@ DEFAULT_BULK_FILE_DIR = "./data/bulk/"
 
 ## Generic Types
 T = TypeVar("T")  # generic type
-FloatableT = TypeVar("FloatableT", float, int, str) # type that can normalize to float
+FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
 def get_logger(
