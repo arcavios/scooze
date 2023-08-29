@@ -81,7 +81,7 @@ class JsonNormalizer:
             return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
 
     @classmethod
-    def float(cls, f: float | int | None) -> float:
+    def float(cls, f: float | int | str | None) -> float:
         """
         Normalize a float.
 
@@ -94,7 +94,7 @@ class JsonNormalizer:
 
         if f is None or isinstance(f, float):
             return f
-        elif isinstance(f, int):
+        elif isinstance(f, int) or isinstance(f, str):
             return float(f)
 
     @classmethod
