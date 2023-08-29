@@ -926,9 +926,70 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
 
 def test_fullcardmodel_from_json_transform_planeswalker(json_arlinn_the_packs_hope):
     model = FullCardModel.model_validate(json_arlinn_the_packs_hope)
-    pprint(model.model_dump())
-    # TODO: fill test
-    pass
+
+    assert len(model.card_faces) == 2
+    front, back = model.card_faces
+
+    ## Front
+    assert front.artist == "Anna Steinbauer"
+    assert front.artist_id == "3516496c-c279-4b56-8239-720683d03ae0"
+    assert front.cmc is None
+    assert front.color_indicator is None
+    assert front.colors == {Color.RED, Color.GREEN}
+    assert front.flavor_text is None
+    assert front.illustration_id == "810f9359-c82f-4962-9f42-0d0a79ee4cae"
+
+    # Image Uris
+    assert front.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert front.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert front.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert front.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert front.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert front.image_uris.small.startswith("https://cards.scryfall.io/small/")
+
+    assert front.layout is None
+    assert front.loyalty == "4"
+    assert front.mana_cost == "{2}{R}{G}"
+    assert front.name == "Arlinn, the Pack's Hope"
+    assert front.oracle_id is None
+    assert front.oracle_text == oracle_arlinn_the_packs_hope
+    assert front.power is None
+    assert front.printed_name is None
+    assert front.printed_text is None
+    assert front.printed_type_line is None
+    assert front.toughness is None
+    assert front.type_line == "Legendary Planeswalker — Arlinn"
+    assert front.watermark is None
+
+    ## Back
+    assert back.artist == "Anna Steinbauer"
+    assert back.artist_id == "3516496c-c279-4b56-8239-720683d03ae0"
+    assert back.cmc is None
+    assert back.color_indicator == {Color.RED, Color.GREEN}
+    assert back.colors == {Color.RED, Color.GREEN}
+    assert back.flavor_text is None
+    assert back.illustration_id == "9d3b73cb-6d91-48f1-ab96-89971207556d"
+
+    # ImageUris
+    assert back.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert back.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert back.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert back.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert back.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert back.image_uris.small.startswith("https://cards.scryfall.io/small/")
+    assert back.layout is None
+    assert back.loyalty == "4"
+    assert back.mana_cost == ""
+    assert back.name == "Arlinn, the Moon's Fury"
+    assert back.oracle_id is None
+    assert back.oracle_text == oracle_arlinn_the_moons_fury
+    assert back.power is None
+    assert back.printed_name is None
+    assert back.printed_text is None
+    assert back.printed_type_line is None
+    assert back.toughness is None
+    assert back.type_line == "Legendary Planeswalker — Arlinn"
+    assert back.watermark is None
 
 
 def test_fullcardmodel_from_json_reversible(json_zndrsplt_eye_of_wisdom):
