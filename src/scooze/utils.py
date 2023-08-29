@@ -8,6 +8,7 @@ DEFAULT_BULK_FILE_DIR = "./data/bulk/"
 
 ## Generic Types
 T = TypeVar("T")  # generic type
+FloatableT = TypeVar("FloatableT", float, int, str) # type that can normalize to float
 
 
 def get_logger(
@@ -81,7 +82,7 @@ class JsonNormalizer:
             return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
 
     @classmethod
-    def float(cls, f: float | int | None) -> float:
+    def float(cls, f: FloatableT | None) -> float:
         """
         Normalize a float.
 
@@ -94,7 +95,7 @@ class JsonNormalizer:
 
         if f is None or isinstance(f, float):
             return f
-        elif isinstance(f, int):
+        elif isinstance(f, int) or isinstance(f, str):
             return float(f)
 
     @classmethod
