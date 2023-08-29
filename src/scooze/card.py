@@ -1,6 +1,7 @@
 import json
 from datetime import date
 from typing import Self, TypeVar
+from scooze.utils import floatable
 
 from scooze.cardparts import (
     CardFace,
@@ -138,7 +139,7 @@ class Card:
 
     def __init__(
         self,
-        cmc: float | int | str | None = None,
+        cmc: floatable | None = None,
         color_identity: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
         legalities: dict[Format, Legality] | None = None,
@@ -219,7 +220,7 @@ class OracleCard(Card):
     def __init__(
         self,
         card_faces: list[CardFace] | None = None,
-        cmc: float | int | str | None = None,
+        cmc: floatable | None = None,
         color_identity: set[Color] | list[Color] | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
@@ -414,7 +415,7 @@ class FullCard(OracleCard):
         # Gameplay Fields
         all_parts: list[RelatedCard] | None = None,
         card_faces: list[FullCardFace] | None = None,
-        cmc: float | int | str | None = None,
+        cmc: floatable | None = None,
         color_identity: set[Color] | list[Color] | None = None,
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
