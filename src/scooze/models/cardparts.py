@@ -117,7 +117,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
         default=None,
         description="Layout of this face, if any.",
     )
-    loyalty: int | None = Field(
+    loyalty: str | None = Field(
         default=None,
         description="Starting planeswalker loyalty of this face, if any.",
     )

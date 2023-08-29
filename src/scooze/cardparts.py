@@ -168,7 +168,7 @@ class FullCardFace(CardFace):
         color_indicator: set[Color] | list[Color] | None = None,
         colors: set[Color] | list[Color] | None = None,
         flavor_text: str | None = None,
-        illustration_id: int | None = None,
+        illustration_id: str | None = None,
         image_uris: ImageUris | None = None,
         layout: Layout | None = None,
         loyalty: str | None = None,
