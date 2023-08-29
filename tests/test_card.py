@@ -641,7 +641,7 @@ def test_fullcard_from_json_reversible(
     assert card.type_line is None
     assert card.uri.startswith("https://api.scryfall.com/cards/")
     assert card.variation == False
-    assert card.variation is None
+    assert card.variation_of is None
     assert card.watermark is None
 
 
