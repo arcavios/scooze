@@ -4,7 +4,7 @@ import pytest
 from scooze.card import Card
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart
-from scooze.enums import DecklistFormatter, InThe
+from scooze.enums import DecklistFormatter, Format, InThe
 from scooze.utils import DictDiff
 
 
@@ -48,9 +48,9 @@ def test_archetype(archetype_modern_4c):
     assert deck.archetype == archetype_modern_4c
 
 
-def test_format(format_modern):
-    deck = Deck(archetype="test_format", format=format_modern)
-    assert deck.format == format_modern
+def test_format():
+    deck = Deck(archetype="test_format", format=Format.MODERN)
+    assert deck.format == Format.MODERN
 
 
 def test_main(main_modern_4c):
