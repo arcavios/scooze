@@ -24,8 +24,6 @@ from scooze.enums import (
 )
 from scooze.models.card import CardModel, FullCardModel
 
-# TODO(#65): WRITE TESTS FOR CARD OBJECT HERE
-
 # TODO: remove NOTE s and TODO s from this file.
 # helpful little jq that can get you a card from one of the bulk files. You can get scryfall_id from the card's json
 # ╰─❯ cat data/bulk/oracle_cards.json | jq '.[] | select(.id == "371ceb58-f498-4616-a7f0-eb118fe2e4ff")' > ./data/bulk/card.json
