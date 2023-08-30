@@ -269,8 +269,8 @@ class OracleCard(Card):
         self.toughness = toughness
         self.type_line = type_line
 
-        def __hash__(self):
-            return self.oracle_id.__hash__()
+    def __hash__(self):
+        return self.oracle_id.__hash__()
 
 
 class FullCard(OracleCard):
