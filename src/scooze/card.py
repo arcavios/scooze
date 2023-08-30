@@ -266,6 +266,9 @@ class OracleCard(Card):
         self.toughness = toughness
         self.type_line = type_line
 
+        def __hash__(self):
+            return self.oracle_id.__hash__()
+
 
 class FullCard(OracleCard):
     """
@@ -578,3 +581,6 @@ class FullCard(OracleCard):
         self.watermark = watermark
 
         # endregion
+
+    def __hash__(self):
+        return self.scryfall_id.__hash__()
