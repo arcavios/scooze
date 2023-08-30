@@ -18,6 +18,53 @@ from scooze.enums import (
 )
 from scooze.models.card import CardModel, FullCardModel
 
+# region eq and ne
+
+def test_card_eq():
+    card = Card(name="Test Card")
+    card2 = Card(name="Test Card")
+    card3 = Card(name="Another Card")
+    assert card == card2
+    assert not card == card3
+
+def test_card_ne():
+    card = Card(name="Test Card")
+    card2 = Card(name="Test Card")
+    card3 = Card(name="Another Card")
+    assert not card != card2
+    assert card != card3
+
+def test_oraclecard_eq():
+    card = OracleCard(name="Test Card")
+    card2 = OracleCard(name="Test Card")
+    card3 = OracleCard(name="Another Card")
+    assert card == card2
+    assert not card == card3
+
+def test_oraclecard_ne():
+    card = OracleCard(name="Test Card")
+    card2 = OracleCard(name="Test Card")
+    card3 = OracleCard(name="Another Card")
+    assert not card != card2
+    assert card != card3
+
+def test_fullcard_eq():
+    card = FullCard(name="Test Card")
+    card2 = FullCard(name="Test Card")
+    card3 = FullCard(name="Another Card")
+    assert card == card2
+    assert not card == card3
+
+def test_fullcard_ne():
+    card = FullCard(name="Test Card")
+    card2 = FullCard(name="Test Card")
+    card3 = FullCard(name="Another Card")
+    assert not card != card2
+    assert card != card3
+
+# endregion
+
+
 # region Hash
 
 
