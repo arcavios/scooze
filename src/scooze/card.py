@@ -161,7 +161,7 @@ class Card:
         self.toughness = toughness
         self.type_line = type_line
 
-    def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
+    def __hash__(self):
         return self.name.__hash__()
 
     def __str__(self):
@@ -268,6 +268,9 @@ class OracleCard(Card):
         self.rulings_uri = rulings_uri
         self.toughness = toughness
         self.type_line = type_line
+
+        def __hash__(self):
+            return self.oracle_id.__hash__()
 
 
 class FullCard(OracleCard):
@@ -581,3 +584,6 @@ class FullCard(OracleCard):
         self.watermark = watermark
 
         # endregion
+
+    def __hash__(self):
+        return self.scryfall_id.__hash__()
