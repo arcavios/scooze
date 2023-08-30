@@ -5,6 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ReturnDocument
 from pymongo.results import DeleteResult, InsertManyResult
 from scooze.models.card import CardModelIn, CardModelOut
+from scooze.models.deck import DeckModelIn, DeckModelOut
 
 # region Motor and Mongo Setup
 
@@ -14,6 +15,7 @@ database = client.scooze
 
 # Collections
 cards_collection = database.get_collection("cards")
+decks_collection = database.get_collection("decks")
 
 # endregion
 
@@ -123,6 +125,61 @@ async def delete_cards_all() -> DeleteResult:
     delete_many_result = await cards_collection.delete_many({})  # NOTE: This deletes the entire collection.
     if delete_many_result:
         return delete_many_result
+
+
+# endregion
+
+# region Deck
+
+
+async def add_deck(deck: DeckModelIn) -> DeckModelOut:
+    # TODO(#45): router docstrings
+    insert_result = await decks_collection.insert_one(
+        deck.model_dump(
+            mode="json",
+            by_alias=True,
+        )
+    )
+    new_deck = await decks_collection.find_one({"_id": insert_result.inserted_id})
+    if new_deck:
+        return DeckModelOut(**new_deck)
+
+
+async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
+    # TODO(#45): router docstrings
+    if property_name == "_id":
+        value = ObjectId(value)
+    deck = await decks_collection.find_one({property_name: value})
+    if deck:
+        return DeckModelOut(**deck)
+
+
+async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
+    # TODO(#45): router docstrings
+    # Return false if an empty request body is sent.
+    if not deck.model_fields_set:
+        raise ValueError(f"No data given, skipping update for Deck with id: {id}")
+    updated_deck = await decks_collection.find_one_and_update(
+        {"_id": ObjectId(id)},
+        {
+            "$set": deck.model_dump(
+                mode="json",
+                by_alias=True,
+                include=deck.model_fields_set,
+            )
+        },
+        return_document=ReturnDocument.AFTER,
+    )
+    if updated_deck:
+        return DeckModelOut(**updated_deck)
+
+
+async def delete_deck(id: str) -> DeckModelOut:
+    # TODO(#45): router docstrings
+    deleted_deck = await decks_collection.find_one_and_delete({"_id": ObjectId(id)})
+
+    if deleted_deck:
+        return DeckModelOut(**deleted_deck)
 
 
 # endregion
