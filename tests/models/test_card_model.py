@@ -17,6 +17,28 @@ from scooze.enums import (
 )
 from scooze.models.card import CardModel, FullCardModel
 
+# region Hash
+
+
+def test_cardmodel_hash():
+    model = CardModel.model_construct(name="Test Card")
+    assert model.__hash__() == model.name.__hash__()
+    assert {model: "value"}[model] == "value"
+    card2 = CardModel.model_construct(name="Another Card")
+    assert model.__hash__() != card2.__hash__()
+
+
+def test_fullcardmodel_hash():
+    model = FullCardModel.model_construct(name="Test Card", oracle_id="an-oracle-id", scryfall_id="a-scryfall-id")
+    assert model.__hash__() == model.scryfall_id.__hash__()
+    assert {model: "value"}[model] == "value"
+    card2 = FullCardModel.model_construct(name="Another Card")
+    assert model.__hash__() != card2.__hash__()
+
+
+# endregion
+
+
 # region json -> CardModel
 
 # region CardModel
