@@ -19,12 +19,14 @@ from scooze.models.card import CardModel, FullCardModel
 
 # region eq and ne
 
+
 def test_cardmodel_eq():
     card = CardModel.model_construct(name="Test Card")
     card2 = CardModel.model_construct(name="Test Card")
     card3 = CardModel.model_construct(name="Another Card")
     assert card == card2
     assert not card == card3
+
 
 def test_cardmodel_ne():
     card = CardModel.model_construct(name="Test Card")
@@ -33,6 +35,7 @@ def test_cardmodel_ne():
     assert not card != card2
     assert card != card3
 
+
 def test_fullcardmodel_eq():
     card = FullCardModel.model_construct(name="Test Card")
     card2 = FullCardModel.model_construct(name="Test Card")
@@ -40,12 +43,14 @@ def test_fullcardmodel_eq():
     assert card == card2
     assert not card == card3
 
+
 def test_fullcardmodel_ne():
     card = FullCardModel.model_construct(name="Test Card")
     card2 = FullCardModel.model_construct(name="Test Card")
     card3 = FullCardModel.model_construct(name="Another Card")
     assert not card != card2
     assert card != card3
+
 
 # endregion
 
