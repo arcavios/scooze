@@ -17,48 +17,88 @@ database = client.scooze
 cards_collection = database.get_collection("cards")
 decks_collection = database.get_collection("decks")
 
+SCOOZE_COLLECTIONS = {
+    "card": cards_collection,
+    "deck": decks_collection,
+}
+
 # endregion
+
+# region Common/Helpers
+
+
+def _get_scooze_collection(doc_type: str):
+    if doc_type in SCOOZE_COLLECTIONS:
+        return SCOOZE_COLLECTIONS[doc_type]
+    else:
+        raise ValueError(f"No collection found for {doc_type.title}")
+
+
+async def _insert_document(doc_type: str, document: dict[str, Any]):
+    current_collection = _get_scooze_collection(doc_type)
+    insert_result = await current_collection.insert_one(document)
+    return await current_collection.find_one({"_id": insert_result.inserted_id})
+
+
+async def _get_document_by_property(doc_type: str, property_name: str, value):
+    current_collection = _get_scooze_collection(doc_type)
+    if property_name == "_id":
+        value = ObjectId(value)
+    return await current_collection.find_one({property_name: value})
+
+
+async def _update_document(doc_type: str, id: str, document: dict[str, Any]):
+    if len(document) == 0:
+        raise ValueError(f"No data given, skipping update for {doc_type.title} with id: {id}")
+    current_collection = _get_scooze_collection(doc_type)
+    return await current_collection.find_one_and_update(
+        {"_id": ObjectId(id)},
+        {"$set": document},
+        return_document=ReturnDocument.AFTER,
+    )
+
+
+async def _delete_document(doc_type: str, id: str):
+    current_collection = _get_scooze_collection(doc_type)
+    return await current_collection.find_one_and_delete({"_id": ObjectId(id)})
+
+
+# endregion
+
 
 # region Card
 
 
 async def add_card(card: CardModelIn) -> CardModelOut:
     # TODO(#45): router docstrings
-    insert_result = await cards_collection.insert_one(
+    new_card = await _insert_document(
+        "card",
         card.model_dump(
             mode="json",
             by_alias=True,
-        )
+        ),
     )
-    new_card = await cards_collection.find_one({"_id": insert_result.inserted_id})
     if new_card:
         return CardModelOut(**new_card)
 
 
 async def get_card_by_property(property_name: str, value) -> CardModelOut:
     # TODO(#45): router docstrings
-    if property_name == "_id":
-        value = ObjectId(value)
-    card = await cards_collection.find_one({property_name: value})
+    card = await _get_document_by_property("card", property_name, value)
     if card:
         return CardModelOut(**card)
 
 
 async def update_card(id: str, card: CardModelIn) -> CardModelOut:
     # TODO(#45): router docstrings
-    # Return false if an empty request body is sent.
-    if not card.model_fields_set:
-        raise ValueError(f"No data given, skipping update for Card with id: {id}")
-    updated_card = await cards_collection.find_one_and_update(
-        {"_id": ObjectId(id)},
-        {
-            "$set": card.model_dump(
-                mode="json",
-                by_alias=True,
-                include=card.model_fields_set,
-            )
-        },
-        return_document=ReturnDocument.AFTER,
+    updated_card = await _update_document(
+        "card",
+        id,
+        card.model_dump(
+            mode="json",
+            by_alias=True,
+            include=card.model_fields_set,
+        ),
     )
     if updated_card:
         return CardModelOut(**updated_card)
@@ -66,7 +106,7 @@ async def update_card(id: str, card: CardModelIn) -> CardModelOut:
 
 async def delete_card(id: str) -> CardModelOut:
     # TODO(#45): router docstrings
-    deleted_card = await cards_collection.find_one_and_delete({"_id": ObjectId(id)})
+    deleted_card = await _delete_document("card", id)
 
     if deleted_card:
         return CardModelOut(**deleted_card)
@@ -134,49 +174,43 @@ async def delete_cards_all() -> DeleteResult:
 
 async def add_deck(deck: DeckModelIn) -> DeckModelOut:
     # TODO(#45): router docstrings
-    insert_result = await decks_collection.insert_one(
+    new_deck = await _insert_document(
+        "deck",
         deck.model_dump(
             mode="json",
             by_alias=True,
-        )
+        ),
     )
-    new_deck = await decks_collection.find_one({"_id": insert_result.inserted_id})
     if new_deck:
         return DeckModelOut(**new_deck)
 
 
 async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
     # TODO(#45): router docstrings
-    if property_name == "_id":
-        value = ObjectId(value)
-    deck = await decks_collection.find_one({property_name: value})
+    deck = await _get_document_by_property("deck", property_name, value)
     if deck:
         return DeckModelOut(**deck)
 
 
 async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
     # TODO(#45): router docstrings
-    # Return false if an empty request body is sent.
-    if not deck.model_fields_set:
-        raise ValueError(f"No data given, skipping update for Deck with id: {id}")
-    updated_deck = await decks_collection.find_one_and_update(
-        {"_id": ObjectId(id)},
-        {
-            "$set": deck.model_dump(
-                mode="json",
-                by_alias=True,
-                include=deck.model_fields_set,
-            )
-        },
-        return_document=ReturnDocument.AFTER,
+    updated_deck = await _update_document(
+        "deck",
+        id,
+        deck.model_dump(
+            mode="json",
+            by_alias=True,
+            include=deck.model_fields_set,
+        ),
     )
+
     if updated_deck:
         return DeckModelOut(**updated_deck)
 
 
 async def delete_deck(id: str) -> DeckModelOut:
     # TODO(#45): router docstrings
-    deleted_deck = await decks_collection.find_one_and_delete({"_id": ObjectId(id)})
+    deleted_deck = await _delete_document("deck", id)
 
     if deleted_deck:
         return DeckModelOut(**deleted_deck)
