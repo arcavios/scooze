@@ -183,3 +183,50 @@ async def delete_deck(id: str) -> DeckModelOut:
 
 
 # endregion
+
+# region Decks
+
+
+async def add_decks(decks: list[DeckModelIn]) -> InsertManyResult:
+    # TODO(#45): router docstrings
+    insert_many_result = await decks_collection.insert_many(
+        [
+            deck.model_dump(
+                mode="json",
+                by_alias=True,
+            )
+            for deck in decks
+        ]
+    )
+    if insert_many_result:
+        return insert_many_result
+
+
+async def get_decks_by_property(
+    property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+) -> list[DeckModelOut]:
+    # TODO(#45): router docstrings
+    match property_name:
+        case "_id":
+            values = [ObjectId(i) for i in items]  # Handle ObjectIds
+        case _:
+            values = [i for i in items]
+
+    decks = (
+        await decks_collection.find({"$or": [{property_name: v} for v in values]})
+        .skip((page - 1) * page_size if paginated else 0)
+        .to_list(page_size if paginated else None)
+    )
+
+    if len(decks) > 0:
+        return [DeckModelOut(**deck) for deck in decks]
+
+
+async def delete_decks_all() -> DeleteResult:
+    # TODO(#45): router docstrings
+    delete_many_result = await decks_collection.delete_many({})  # NOTE: This deletes the entire collection.
+    if delete_many_result:
+        return delete_many_result
+
+
+# endregion
