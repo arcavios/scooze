@@ -87,7 +87,7 @@ class CardModel(BaseModel, validate_assignment=True):
 
     # TODO(#46): add Card field validators
 
-    def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
+    def __hash__(self):
         return self.name.__hash__()
 
 
