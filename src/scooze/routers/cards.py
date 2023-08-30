@@ -26,9 +26,9 @@ async def cards_root(limit: int = 3):
 
 @router.post("/add")
 async def add_cards(cards: list[CardModelIn]):
-    insert_many_result = await db.add_cards(cards=cards)
-    if insert_many_result:
-        return JSONResponse({"message": f"Created {len(insert_many_result.inserted_ids)} cards."}, status_code=200)
+    inserted_ids = await db.add_cards(cards=cards)
+    if inserted_ids:
+        return JSONResponse({"message": f"Created {len(inserted_ids)} cards."}, status_code=200)
     else:
         return JSONResponse({"message": f"Failed to create a new card."}, status_code=400)
 
@@ -51,9 +51,9 @@ async def get_cards_by(
 
 @router.delete("/delete/all/")
 async def delete_cards_all():
-    delete_many_response = await db.delete_cards_all()
+    deleted_count = await db.delete_cards_all()
 
-    if delete_many_response:
-        return JSONResponse({"message": f"Deleted {delete_many_response.deleted_count} cards."}, status_code=200)
+    if deleted_count:
+        return JSONResponse({"message": f"Deleted {deleted_count} cards."}, status_code=200)
     else:
         return JSONResponse({"message": f"No cards deleted."}, status_code=404)

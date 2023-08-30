@@ -26,6 +26,8 @@ SCOOZE_COLLECTIONS = {
 
 # region Common/Helpers
 
+# Single document
+
 
 def _get_scooze_collection(doc_type: str):
     if doc_type in SCOOZE_COLLECTIONS:
@@ -61,6 +63,36 @@ async def _update_document(doc_type: str, id: str, document: dict[str, Any]):
 async def _delete_document(doc_type: str, id: str):
     current_collection = _get_scooze_collection(doc_type)
     return await current_collection.find_one_and_delete({"_id": ObjectId(id)})
+
+
+# Bulk operations
+
+
+async def _insert_many_documents(doc_type: str, documents: list[dict[str, Any]]):
+    current_collection = _get_scooze_collection(doc_type)
+    return await current_collection.insert_many([documents])
+
+
+async def _get_documents_by_property(
+    doc_type: str, property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+):
+    current_collection = _get_scooze_collection(doc_type)
+    match property_name:
+        case "_id":
+            values = [ObjectId(i) for i in items]  # Handle ObjectIds
+        case _:
+            values = [i for i in items]
+
+    return (
+        await current_collection.find({"$or": [{property_name: v} for v in values]})
+        .skip((page - 1) * page_size if paginated else 0)
+        .to_list(page_size if paginated else None)
+    )
+
+
+async def _delete_documents(doc_type: str):
+    current_collection = _get_scooze_collection(doc_type)
+    return await current_collection.delete_many({})  # NOTE: This deletes the entire collection.
 
 
 # endregion
@@ -117,19 +149,20 @@ async def delete_card(id: str) -> CardModelOut:
 # region Cards
 
 
-async def add_cards(cards: list[CardModelIn]) -> InsertManyResult:
+async def add_cards(cards: list[CardModelIn]) -> list[str]:
     # TODO(#45): router docstrings
-    insert_many_result = await cards_collection.insert_many(
+    insert_many_result = await _insert_many_documents(
+        "card",
         [
             card.model_dump(
                 mode="json",
                 by_alias=True,
             )
             for card in cards
-        ]
+        ],
     )
     if insert_many_result:
-        return insert_many_result
+        return insert_many_result.inserted_ids
 
 
 async def get_cards_random(limit: int) -> list[CardModelOut]:
@@ -144,27 +177,17 @@ async def get_cards_by_property(
     property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[CardModelOut]:
     # TODO(#45): router docstrings
-    match property_name:
-        case "_id":
-            values = [ObjectId(i) for i in items]  # Handle ObjectIds
-        case _:
-            values = [i for i in items]
-
-    cards = (
-        await cards_collection.find({"$or": [{property_name: v} for v in values]})
-        .skip((page - 1) * page_size if paginated else 0)
-        .to_list(page_size if paginated else None)
-    )
+    cards = await _get_documents_by_property("card", property_name, items, paginated, page, page_size)
 
     if len(cards) > 0:
         return [CardModelOut(**card) for card in cards]
 
 
-async def delete_cards_all() -> DeleteResult:
+async def delete_cards_all() -> int:
     # TODO(#45): router docstrings
-    delete_many_result = await cards_collection.delete_many({})  # NOTE: This deletes the entire collection.
+    delete_many_result = await _delete_documents("card")
     if delete_many_result:
-        return delete_many_result
+        return delete_many_result.deleted_count
 
 
 # endregion
