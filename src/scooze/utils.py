@@ -2,7 +2,7 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import stdout
-from typing import Any, Generic, Hashable, Iterable, Mapping, Self, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, Self, TypeVar
 
 from frozendict import frozendict
 
@@ -191,12 +191,12 @@ class JsonNormalizer:
 # region Dict Diff
 
 
-class DictDiff(ComparableObject, Generic[T]):
+class DictDiff(ComparableObject):
     """
     Represents a diff between two dicts.
 
     Attributes:
-        contents (dict[T, tuple[int, int]]): The contents of this diff.
+        contents (dict[Any, tuple[int, int]]): The contents of this diff.
     """
 
     def __init__(self, contents: dict[T, tuple[int, int]]):
@@ -210,7 +210,7 @@ class DictDiff(ComparableObject, Generic[T]):
 
     # Source:  https://code.activestate.com/recipes/576644-diff-two-dictionaries/#c9
     @classmethod
-    def get_diff(cls, d1: dict[T], d2: dict[T], NO_KEY=0) -> "DictDiff[T]":
+    def get_diff(cls, d1: dict, d2: dict, NO_KEY=0) -> "DictDiff":
         """
         Generate a diff between two dicts.
 
@@ -225,11 +225,11 @@ class DictDiff(ComparableObject, Generic[T]):
               The values are tuple(v, v) for the values in each dict.
         """
 
-        both: set[T] = d1.keys() & d2.keys()
-        diff: dict[T, tuple[int, int]] = {k: (d1[k], d2[k]) for k in both if d1[k] != d2[k]}
+        both = d1.keys() & d2.keys()
+        diff = {k: (d1[k], d2[k]) for k in both if d1[k] != d2[k]}
         diff.update({k: (d1[k], NO_KEY) for k in d1.keys() - both})
         diff.update({k: (NO_KEY, d2[k]) for k in d2.keys() - both})
-        return DictDiff[T](diff)
+        return DictDiff(diff)
 
     # endregion
 

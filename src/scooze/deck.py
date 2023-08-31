@@ -54,7 +54,7 @@ class Deck(ComparableObject, Generic[C]):
         # should return a Counter of each color and the incidence of cards of that color in the deck (flag to ignore lands or other types)
         pass  # TODO: implement
 
-    def diff(self, other: Self) -> DeckDiff[C]:
+    def diff(self, other: Self) -> DeckDiff:
         """
         Generates a diff between this Deck and another.
 
@@ -66,13 +66,13 @@ class Deck(ComparableObject, Generic[C]):
               Each contains a dict of each card in both decks and their counts.
         """
 
-        return DeckDiff[C](
+        return DeckDiff(
             main=self.main.diff(other.main),
             side=self.side.diff(other.side),
             cmdr=self.cmdr.diff(other.cmdr),
         )
 
-    def decklist_equals(self, other):
+    def decklist_equals(self, other: Self):
         """
         Determines if this Deck contains exactly the same cards as another.
 

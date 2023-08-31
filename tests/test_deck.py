@@ -43,8 +43,8 @@ def cmdr_part(cmdr_cards) -> DeckPart[OracleCard]:
 
 
 @pytest.fixture
-def dictdiff_empty() -> DictDiff[OracleCard]:
-    return DictDiff[OracleCard](contents={})
+def dictdiff_empty() -> DictDiff:
+    return DictDiff(contents={})
 
 
 # endregion
@@ -94,13 +94,12 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 @pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
     deck_diff = deck_modern_4c.diff(deck_modern_4c)
-    pprint(deck_modern_4c.main.__key__)
     pprint(deck_diff.__key__)
     pprint(deck_diff.main.__key__)
 
-    other_deck_diff = DeckDiff[OracleCard](main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty)
-    # pprint(other_deck_diff.__key__)
-    # pprint(other_deck_diff.main.__key__)
+    other_deck_diff = DeckDiff(main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty)
+    pprint(other_deck_diff.__key__)
+    pprint(other_deck_diff.main.__key__)
 
     assert deck_diff == other_deck_diff
 
@@ -109,8 +108,8 @@ def test_diff_none(deck_modern_4c, dictdiff_empty):
 def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
     other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.MAIN)
-    assert deck_modern_4c.diff(other) == DeckDiff[OracleCard](
-        main=DictDiff[OracleCard]({card_kaheera_the_orphanguard: (0, 1)}),
+    assert deck_modern_4c.diff(other) == DeckDiff(
+        main=DictDiff({card_kaheera_the_orphanguard: (0, 1)}),
         side=dictdiff_empty,
         cmdr=dictdiff_empty,
     )
@@ -120,9 +119,9 @@ def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
 def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
     other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.SIDE)
-    assert deck_modern_4c.diff(other) == DeckDiff[OracleCard](
+    assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
-        side=DictDiff[OracleCard]({card_kaheera_the_orphanguard: (1, 2)}),
+        side=DictDiff({card_kaheera_the_orphanguard: (1, 2)}),
         cmdr=dictdiff_empty,
     )
 
@@ -136,10 +135,10 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
         side=deck_modern_4c.side,
         cmdr=cmdr_part,
     )
-    assert deck_modern_4c.diff(other) == DeckDiff[OracleCard](
+    assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
         side=dictdiff_empty,
-        cmdr=DictDiff[OracleCard](
+        cmdr=DictDiff(
             {
                 card_omnath_locus_of_creation: (0, 1),
                 card_supreme_verdict: (0, 1),

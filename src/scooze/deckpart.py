@@ -8,7 +8,7 @@ from scooze.utils import ComparableObject, DictDiff
 C = TypeVar("C", bound=Card)  # generic Card type
 
 
-class DeckDiff(ComparableObject, Generic[C]):
+class DeckDiff(ComparableObject):
     """
     A class to represent a diff between two decks.
 
@@ -18,7 +18,7 @@ class DeckDiff(ComparableObject, Generic[C]):
         cmdr: The diff between the command zones of two Decks.
     """
 
-    def __init__(self, main: DictDiff[C], side: DictDiff[C], cmdr: DictDiff[C]):
+    def __init__(self, main: DictDiff, side: DictDiff, cmdr: DictDiff):
         self.main = main
         self.side = side
         self.cmdr = cmdr
@@ -73,7 +73,7 @@ class DeckPart(ComparableObject, Generic[C]):
 
         return self.cards.total()
 
-    def diff(self, other: Self) -> DictDiff[C]:
+    def diff(self, other: Self) -> DictDiff:
         """
         Generates a diff between this DeckPart and another.
 
@@ -85,7 +85,7 @@ class DeckPart(ComparableObject, Generic[C]):
               DeckParts and their counts.
         """
 
-        return DictDiff[C].get_diff(self.cards, other.cards, NO_KEY=0)
+        return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
 
     def add_card(self, card: C, quantity: int = 1) -> None:
         """
