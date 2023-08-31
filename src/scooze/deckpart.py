@@ -1,11 +1,11 @@
 from collections import Counter
 from sys import maxsize
-from typing import Any, Generic, TypeVar
+from typing import Any, Generic, Self, TypeVar
 
 from scooze.card import Card, FullCard, OracleCard
 from scooze.utils import ComparableObject, DictDiff
 
-C = TypeVar("C", Card, OracleCard, FullCard)
+C = TypeVar("C", Card, OracleCard, FullCard)  # generic Card type
 
 
 class DeckDiff(ComparableObject, Generic[C]):
@@ -49,14 +49,12 @@ class DeckPart(ComparableObject, Generic[C]):
     """
 
     def __init__(self, cards: Counter[C] = Counter[C]()):
-        # Deep copy of Counter
-        self.cards = Counter[C]()
-        self.cards.update(cards)
+        self.cards = cards
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: C):
         return self.cards[key]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: C, value: int):
         self.cards[key] = value
 
     def __len__(self):
@@ -75,7 +73,7 @@ class DeckPart(ComparableObject, Generic[C]):
 
         return self.cards.total()
 
-    def diff(self, other) -> DictDiff[C]:
+    def diff(self, other: Self) -> DictDiff[C]:
         """
         Generates a diff between this DeckPart and another.
 

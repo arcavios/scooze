@@ -1,6 +1,6 @@
 from collections import Counter
 from sys import maxsize
-from typing import Generic
+from typing import Generic, Self
 
 from scooze.deckpart import C, DeckDiff, DeckPart
 from scooze.enums import Color, DecklistFormatter, Format, InThe, Legality
@@ -23,22 +23,20 @@ class Deck(ComparableObject, Generic[C]):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart = DeckPart[C](),
-        side: DeckPart = DeckPart[C](),
-        cmdr: DeckPart = DeckPart[C](),
+        main: DeckPart[C] = DeckPart[C](),
+        side: DeckPart[C] = DeckPart[C](),
+        cmdr: DeckPart[C] = DeckPart[C](),
     ):
         self.archetype = archetype
         self.format = format
-
-        # Deep copy of DeckPart
-        self.main = DeckPart[C](cards=main.cards)
-        self.side = DeckPart[C](cards=side.cards)
-        self.cmdr = DeckPart[C](cards=cmdr.cards)
+        self.main = main
+        self.side = side
+        self.cmdr = cmdr
 
     # def get_cards(self) -> Counter[C]:
     #     return self.main + self.side + self.cmdr
 
-    # cards = property(get_cards)
+    # cards = property(get_cards) # TODO:
 
     def __str__(self):
         decklist = self.export()
@@ -56,7 +54,7 @@ class Deck(ComparableObject, Generic[C]):
         # should return a Counter of each color and the incidence of cards of that color in the deck (flag to ignore lands or other types)
         pass  # TODO: implement
 
-    def diff(self, other) -> DeckDiff[C]:
+    def diff(self, other: Self) -> DeckDiff[C]:
         """
         Generates a diff between this Deck and another.
 

@@ -2,7 +2,7 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import stdout
-from typing import Any, Generic, Hashable, Iterable, Mapping, TypeVar
+from typing import Any, Generic, Hashable, Iterable, Mapping, Self, TypeVar
 
 from frozendict import frozendict
 
@@ -72,10 +72,10 @@ class ComparableObject:
     def get_key(self):
         return tuple(getattr(self, k) for k in self.__dict__.keys())
 
-    def __eq__(self, other):
+    def __eq__(self, other: Self):
         return self.__key__ == other.__key__
 
-    def __ne__(self, other):
+    def __ne__(self, other: Self):
         return not (self == other)
 
     __key__: tuple[Any, ...] = property(get_key)
@@ -191,7 +191,7 @@ class JsonNormalizer:
 # region Dict Diff
 
 
-class DictDiff(Generic[T]):
+class DictDiff(ComparableObject, Generic[T]):
     """
     Represents a diff between two dicts.
 
@@ -201,12 +201,6 @@ class DictDiff(Generic[T]):
 
     def __init__(self, contents: dict[T, tuple[int, int]]):
         self.contents = contents
-
-    def __eq__(self, other):
-        return self.contents == other.contents
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
 
     def __len__(self):
         return len(self.contents)
@@ -231,8 +225,8 @@ class DictDiff(Generic[T]):
               The values are tuple(v, v) for the values in each dict.
         """
 
-        both = d1.keys() & d2.keys()
-        diff = {k: (d1[k], d2[k]) for k in both if d1[k] != d2[k]}
+        both: set[T] = d1.keys() & d2.keys()
+        diff: dict[T, tuple[int, int]] = {k: (d1[k], d2[k]) for k in both if d1[k] != d2[k]}
         diff.update({k: (d1[k], NO_KEY) for k in d1.keys() - both})
         diff.update({k: (NO_KEY, d2[k]) for k in d2.keys() - both})
         return DictDiff[T](diff)

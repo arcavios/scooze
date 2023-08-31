@@ -1,4 +1,5 @@
 from collections import Counter
+from copy import deepcopy
 from pprint import pprint
 
 import pytest
@@ -61,11 +62,6 @@ def test_format():
 
 def test_main(main_modern_4c):
     deck = Deck[OracleCard](archetype="test_main", main=main_modern_4c)
-    print("deck main: ")
-    pprint(deck.main.__key__)
-
-    print("4c main: ")
-    pprint(main_modern_4c.__key__)
     assert deck.main == main_modern_4c
 
 
@@ -84,24 +80,12 @@ def test_total_cards(deck_modern_4c):
 
 
 def test_eq(deck_modern_4c):
-    deck = Deck[OracleCard](**deck_modern_4c.__dict__)
+    deck = deepcopy(deck_modern_4c)
     assert deck == deck_modern_4c
 
 
 def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
-    deck = Deck[OracleCard](**deck_modern_4c.__dict__)
-    deck.add_card(card_kaheera_the_orphanguard)
-    deck_modern_4c.add_card(card_kaheera_the_orphanguard)
-    assert deck == deck_modern_4c
-
-
-def test_eq(deck_modern_4c):
-    deck = Deck[OracleCard](**deck_modern_4c.__dict__)
-    assert deck == deck_modern_4c
-
-
-def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
-    deck = Deck[OracleCard](**deck_modern_4c.__dict__)
+    deck = deepcopy(deck_modern_4c)
     deck.add_card(card_kaheera_the_orphanguard)
     deck_modern_4c.add_card(card_kaheera_the_orphanguard)
     assert deck == deck_modern_4c
@@ -109,14 +93,18 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 @pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
-    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff[OracleCard](
-        main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty
-    )
+    something = deck_modern_4c.diff(deck_modern_4c)
+    pprint(something.__key__)
+
+    other = DeckDiff[OracleCard](main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty)
+    pprint(other.__key__)
+
+    assert something == other
 
 
 @pytest.mark.deck_diff
 def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
-    other = Deck[OracleCard](**deck_modern_4c.__dict__)
+    other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.MAIN)
     assert deck_modern_4c.diff(other) == DeckDiff[OracleCard](
         main=DictDiff[OracleCard]({card_kaheera_the_orphanguard: (0, 1)}),
@@ -127,7 +115,7 @@ def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
 
 @pytest.mark.deck_diff
 def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
-    other = Deck[OracleCard](**deck_modern_4c.__dict__)
+    other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.SIDE)
     assert deck_modern_4c.diff(other) == DeckDiff[OracleCard](
         main=dictdiff_empty,
