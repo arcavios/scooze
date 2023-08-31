@@ -674,8 +674,8 @@ def main_modern_4c(
     card_windswept_heath,
     card_wrenn_and_six,
     card_zagoth_triome,
-) -> DeckPart:
-    main_cards = Counter(
+) -> DeckPart[OracleCard]:
+    main_cards = Counter[OracleCard](
         {
             # Creature
             card_omnath_locus_of_creation: 3,
@@ -716,7 +716,7 @@ def main_modern_4c(
         }
     )
 
-    return DeckPart(main_cards)
+    return DeckPart[OracleCard](main_cards)
 
 
 @pytest.fixture
@@ -805,8 +805,8 @@ def side_modern_4c(
     card_supreme_verdict,
     card_veil_of_summer,
     card_wear_tear,
-) -> DeckPart:
-    side_cards = Counter(
+) -> DeckPart[OracleCard]:
+    side_cards = Counter[OracleCard](
         {
             card_aether_gust: 1,
             card_boseiju_who_endures: 1,
@@ -823,7 +823,7 @@ def side_modern_4c(
         }
     )
 
-    return DeckPart(side_cards)
+    return DeckPart[OracleCard](side_cards)
 
 
 @pytest.fixture
@@ -864,8 +864,8 @@ def side_modern_4c_str(
 
 
 @pytest.fixture
-def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck:
-    return Deck(archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c)
+def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck[OracleCard]:
+    return Deck[OracleCard](archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c)
 
 
 # endregion

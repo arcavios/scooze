@@ -1,13 +1,13 @@
 from collections import Counter
 from sys import maxsize
 
-from scooze.card import Card
-from scooze.deckpart import DeckDiff, DeckPart
+from scooze.deckpart import DeckDiff, DeckPart, C
 from scooze.enums import Color, DecklistFormatter, Format, InThe, Legality
 from scooze.utils import ComparableObject
+from typing import Generic
 
 
-class Deck(ComparableObject):
+class Deck(ComparableObject, Generic[C]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -23,17 +23,22 @@ class Deck(ComparableObject):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart = DeckPart(),
-        side: DeckPart = DeckPart(),
-        cmdr: DeckPart = DeckPart(),
+        main: DeckPart = DeckPart[C](),
+        side: DeckPart = DeckPart[C](),
+        cmdr: DeckPart = DeckPart[C](),
     ):
         self.archetype = archetype
         self.format = format
 
         # Deep copy of DeckPart
-        self.main = DeckPart(cards=main.cards)
-        self.side = DeckPart(cards=side.cards)
-        self.cmdr = DeckPart(cards=cmdr.cards)
+        self.main = DeckPart[C](cards=main.cards)
+        self.side = DeckPart[C](cards=side.cards)
+        self.cmdr = DeckPart[C](cards=cmdr.cards)
+
+    # def get_cards(self) -> Counter[C]:
+    #     return self.main + self.side + self.cmdr
+
+    # cards = property(get_cards)
 
     def __str__(self):
         decklist = self.export()
@@ -51,15 +56,7 @@ class Deck(ComparableObject):
         # should return a Counter of each color and the incidence of cards of that color in the deck (flag to ignore lands or other types)
         pass  # TODO: implement
 
-    def count_pips(self) -> Counter[Color]:
-        # should return a Counter of each color and the incidence of pips of that color in costs
-        pass  # TODO: implement
-
-    def count_types(self) -> Counter:
-        # should return a Counter of each card type and the incidence of cards of that type in the deck
-        pass  # TODO: implement NOTE: might not be possible without having some notion of Type?
-
-    def diff(self, other) -> DeckDiff:
+    def diff(self, other) -> DeckDiff[C]:
         """
         Generates a diff between this Deck and another.
 
@@ -71,7 +68,7 @@ class Deck(ComparableObject):
               Each contains a dict of each card in both decks and their counts.
         """
 
-        return DeckDiff(
+        return DeckDiff[C](
             main=self.main.diff(other.main),
             side=self.side.diff(other.side),
             cmdr=self.cmdr.diff(other.cmdr),
@@ -145,8 +142,12 @@ class Deck(ComparableObject):
         return self.main.total() + self.side.total() + self.cmdr.total()
 
     def total_cmc(self) -> int:
-        # should return the total cmc of the deck, optional flag to filter certain types (lands)
-        pass  # TODO: implement
+        """
+        TODO: docstring
+        should return the total cmc of the deck, optional flag to filter certain types (lands)
+        """
+
+
 
     def total_words(self) -> int:
         # should return the total number of words among cards in the deck, optional flag to filter certain types (lands)
@@ -154,7 +155,7 @@ class Deck(ComparableObject):
 
     # region Mutations
 
-    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
+    def add_card(self, card: C, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
         Adds a given quantity of a given card to this Deck.
 
@@ -174,12 +175,12 @@ class Deck(ComparableObject):
             case _:
                 pass  # TODO(#75): 'in' must be one of InThe.list()
 
-    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
+    def add_cards(self, cards: Counter[C], in_the: InThe = InThe.MAIN) -> None:
         """
         Adds the given cards to this Deck.
 
         Args:
-            cards (Counter[Card]): The cards to add.
+            cards (Counter[C]): The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
         """
 
@@ -191,13 +192,13 @@ class Deck(ComparableObject):
             case InThe.CMDR:
                 self.cmdr.add_cards(cards)
 
-    def remove_card(self, card: Card, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
+    def remove_card(self, card: C, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is
         not provided, removes all copies.
 
         Args:
-            card (Card): The card to remove.
+            card (C): The card to remove.
             quantity (int): The number of copies of the card to be removed.
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
@@ -213,12 +214,12 @@ class Deck(ComparableObject):
             case _:
                 pass  # TODO(#75): failed to remove card
 
-    def remove_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
+    def remove_cards(self, cards: Counter[C], in_the: InThe = InThe.MAIN) -> None:
         """
         Removes the given cards from this Deck.
 
         Args:
-            cards (Counter[Card]): The cards to remove.
+            cards (Counter[C]): The cards to remove.
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
 
