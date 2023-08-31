@@ -33,10 +33,10 @@ class Deck(ComparableObject, Generic[C]):
         self.side = side
         self.cmdr = cmdr
 
-    # def get_cards(self) -> Counter[C]:
-    #     return self.main + self.side + self.cmdr
+    def get_cards(self) -> Counter[C]:
+        return self.main + self.side + self.cmdr
 
-    # cards = property(get_cards) # TODO:
+    cards: Counter[C] = property(get_cards)
 
     def __str__(self):
         decklist = self.export()
@@ -144,6 +144,10 @@ class Deck(ComparableObject, Generic[C]):
         TODO: docstring
         should return the total cmc of the deck, optional flag to filter certain types (lands)
         """
+
+        for c, q in self.cards:
+            pass # TODO: not getting type hinting on cards here, why?
+
 
     def total_words(self) -> int:
         # should return the total number of words among cards in the deck, optional flag to filter certain types (lands)
