@@ -63,7 +63,7 @@ def get_logger(
 
 # region Base Classes
 
-class ScoozeObject:
+class ComparableObject:
     """
     A simple base class to support comparable objects.
     """
@@ -79,7 +79,7 @@ class ScoozeObject:
 
 
 
-class HashableObject(ScoozeObject, Hashable):
+class HashableObject(ComparableObject, Hashable):
     """
     A simple base class to support hashable objects.
     """
