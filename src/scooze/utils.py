@@ -61,7 +61,7 @@ def get_logger(
 
 class HashableObject(Hashable):
     """
-    TODO: docstring
+    A simple base class to support hashable objects.
     """
 
     def __key(self):

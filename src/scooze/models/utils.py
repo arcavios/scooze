@@ -150,7 +150,7 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
 
 class ScoozeBaseModel(BaseModel, validate_assignment=True):
     """
-    TODO: docstring
+    A simple base model class to support models in scooze.
     """
 
     model_config = ConfigDict(
