@@ -92,19 +92,6 @@ class DeckModel(ScoozeBaseModel):
 
     # endregion
 
-    def __eq__(self, other):
-        return (
-            self.archetype == other.archetype
-            and self.format == other.format
-            and self.date_played == other.date_played
-            and self.main == other.main
-            and self.side == other.side
-            and self.cmdr == other.cmdr
-        )
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
 
 class DeckModelIn(DeckModel):
     pass

@@ -93,7 +93,9 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 @pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
-    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty)
+    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(
+        main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty
+    )
 
 
 @pytest.mark.deck_diff
