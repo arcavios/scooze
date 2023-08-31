@@ -276,9 +276,9 @@ class PurchaseUris(HashableObject):
 
     def __init__(
         self,
-        tcgplayer: str | None,
-        cardmarket: str | None,
-        cardhoarder: str | None,
+        tcgplayer: str | None = None,
+        cardmarket: str | None = None,
+        cardhoarder: str | None = None,
     ):
         self.tcgplayer = tcgplayer
         self.cardmarket = cardmarket
