@@ -230,7 +230,7 @@ class PreviewModel(ScoozeBaseModel):
     )
 
 
-class PurchaseUrisModel(ScoozeBaseModel, validate_assignment=True):
+class PurchaseUrisModel(ScoozeBaseModel):
     """
     URIs to this card’s listing on major marketplaces.
 
@@ -288,7 +288,7 @@ class RelatedCardModel(ScoozeBaseModel):
     )
 
 
-class RelatedUrisModel(ScoozeBaseModel, validate_assignment=True):
+class RelatedUrisModel(ScoozeBaseModel):
     """
     Links to information about a Scryfall-based card object on other non-Scryfall resources.
 
