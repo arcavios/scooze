@@ -1,10 +1,10 @@
 from collections import Counter
 from sys import maxsize
+from typing import Generic
 
-from scooze.deckpart import DeckDiff, DeckPart, C
+from scooze.deckpart import C, DeckDiff, DeckPart
 from scooze.enums import Color, DecklistFormatter, Format, InThe, Legality
 from scooze.utils import ComparableObject
-from typing import Generic
 
 
 class Deck(ComparableObject, Generic[C]):
@@ -146,8 +146,6 @@ class Deck(ComparableObject, Generic[C]):
         TODO: docstring
         should return the total cmc of the deck, optional flag to filter certain types (lands)
         """
-
-
 
     def total_words(self) -> int:
         # should return the total number of words among cards in the deck, optional flag to filter certain types (lands)

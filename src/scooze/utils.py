@@ -2,7 +2,7 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import stdout
-from typing import Any, Hashable, Iterable, Mapping, TypeVar, Generic
+from typing import Any, Generic, Hashable, Iterable, Mapping, TypeVar
 
 from frozendict import frozendict
 
