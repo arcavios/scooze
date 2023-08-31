@@ -1,6 +1,6 @@
 from collections import Counter
 from sys import maxsize
-from typing import Any, Generic, Self, TypeVar
+from typing import Generic, Self, TypeVar
 
 from scooze.card import Card
 from scooze.utils import ComparableObject, DictDiff
