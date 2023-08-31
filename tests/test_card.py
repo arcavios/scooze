@@ -18,6 +18,39 @@ from scooze.enums import (
 )
 from scooze.models.card import CardModel, FullCardModel
 
+# region Hash
+
+
+def test_card_hash(json_anaconda_7ed_foil, json_anaconda_portal):
+    a7 = Card.from_json(json_anaconda_7ed_foil)
+    assert {a7: "value"}[a7] == "value"
+    ap = Card.from_json(json_anaconda_portal)
+    assert hash(a7) == hash(ap)  # all Card-level fields are the same
+    a7_clone = Card.from_json(json_anaconda_7ed_foil)
+    assert hash(a7) == hash(a7_clone)
+
+
+def test_oraclecard_hash(json_anaconda_7ed_foil, json_anaconda_portal):
+    a7 = OracleCard.from_json(json_anaconda_7ed_foil)
+    assert {a7: "value"}[a7] == "value"
+    ap = OracleCard.from_json(json_anaconda_portal)
+    assert hash(a7) != hash(ap)
+    a7_clone = OracleCard.from_json(json_anaconda_7ed_foil)
+    assert hash(a7) == hash(a7_clone)
+
+
+def test_fullcard_hash(json_anaconda_7ed_foil, json_anaconda_portal):
+    a7 = FullCard.from_json(json_anaconda_7ed_foil)
+    assert {a7: "value"}[a7] == "value"
+    ap = FullCard.from_json(json_anaconda_portal)
+    assert hash(a7) != hash(ap)
+    a7_clone = FullCard.from_json(json_anaconda_7ed_foil)
+    assert hash(a7) == hash(a7_clone)
+
+
+# endregion
+
+
 # region json -> Card Object
 
 # region Card
@@ -81,7 +114,7 @@ def test_oraclecard_from_json_instant(json_ancestral_recall, legalities_ancestra
     assert card.colors == {Color.BLUE}
     assert card.edhrec_rank is None
     assert card.hand_modifier is None
-    assert card.keywords == set()
+    assert card.keywords == frozenset()
     assert card.legalities == legalities_ancestral_recall
     assert card.life_modifier is None
     assert card.loyalty is None
@@ -147,7 +180,7 @@ def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_
     assert card.all_parts is None
     assert card.arena_id is None
     assert card.artist == "Ryan Pancoast"
-    assert card.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
+    assert card.artist_ids == tuple(["89cc9475-dda2-4d13-bf88-54b92867a25c"])
     assert card.attraction_lights is None
     assert card.booster == True
     assert card.border_color == BorderColor.BLACK
@@ -182,7 +215,7 @@ def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_
     assert card.image_uris.png.startswith("https://cards.scryfall.io/png/")
     assert card.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
-    assert card.keywords == set()
+    assert card.keywords == frozenset()
     assert card.lang == Language.ENGLISH
     assert card.layout == Layout.NORMAL
     assert card.legalities == legalities_ancestral_recall
@@ -191,7 +224,7 @@ def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_
     assert card.mana_cost == "{U}"
     assert card.mtgo_foil_id == 53178
     assert card.mtgo_id == 53177
-    assert card.multiverse_ids == [382841]
+    assert card.multiverse_ids == tuple([382841])
     assert card.name == "Ancestral Recall"
     assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
     assert card.oracle_text == "Target player draws three cards."
@@ -356,7 +389,7 @@ def test_fullcard_from_json_reversible(
 
     assert card.arena_id is None
     assert card.artist == "Alexis Ziritt"
-    assert card.artist_ids == ["add4cc84-9254-4c0b-8fcd-af4a238bdbd5"]
+    assert card.artist_ids == tuple(["add4cc84-9254-4c0b-8fcd-af4a238bdbd5"])
     assert card.attraction_lights is None
     assert card.booster == False
     assert card.border_color == BorderColor.BORDERLESS
@@ -457,7 +490,7 @@ def test_fullcard_from_json_reversible(
     assert card.mana_cost is None
     assert card.mtgo_foil_id is None
     assert card.mtgo_id is None
-    assert card.multiverse_ids == []
+    assert card.multiverse_ids == tuple([])
     assert card.name == "Zndrsplt, Eye of Wisdom // Zndrsplt, Eye of Wisdom"
     assert card.oracle_id is None
     assert card.oracle_text is None
@@ -610,7 +643,7 @@ def test_oraclecard_from_fullcardmodel_instant(json_ancestral_recall, legalities
     assert card.colors == {Color.BLUE}
     assert card.edhrec_rank is None
     assert card.hand_modifier is None
-    assert card.keywords == set()
+    assert card.keywords == frozenset()
     assert card.legalities == legalities_ancestral_recall
     assert card.life_modifier is None
     assert card.loyalty is None
@@ -672,7 +705,7 @@ def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall, legalities_a
     assert card.all_parts is None
     assert card.arena_id is None
     assert card.artist == "Ryan Pancoast"
-    assert card.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
+    assert card.artist_ids == tuple(["89cc9475-dda2-4d13-bf88-54b92867a25c"])
     assert card.attraction_lights is None
     assert card.booster == True
     assert card.border_color == BorderColor.BLACK
@@ -707,7 +740,7 @@ def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall, legalities_a
     assert card.image_uris.png.startswith("https://cards.scryfall.io/png/")
     assert card.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
-    assert card.keywords == set()
+    assert card.keywords == frozenset()
     assert card.lang == Language.ENGLISH
     assert card.layout == Layout.NORMAL
     assert card.legalities == legalities_ancestral_recall
@@ -716,7 +749,7 @@ def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall, legalities_a
     assert card.mana_cost == "{U}"
     assert card.mtgo_foil_id == 53178
     assert card.mtgo_id == 53177
-    assert card.multiverse_ids == [382841]
+    assert card.multiverse_ids == tuple([382841])
     assert card.name == "Ancestral Recall"
     assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
     assert card.oracle_text == "Target player draws three cards."
@@ -874,7 +907,7 @@ def test_fullcard_from_fullcardmodel_reversible(
 
     assert card.arena_id is None
     assert card.artist == "Alexis Ziritt"
-    assert card.artist_ids == ["add4cc84-9254-4c0b-8fcd-af4a238bdbd5"]
+    assert card.artist_ids == tuple(["add4cc84-9254-4c0b-8fcd-af4a238bdbd5"])
     assert card.attraction_lights is None
     assert card.booster == False
     assert card.border_color == BorderColor.BORDERLESS
@@ -975,7 +1008,7 @@ def test_fullcard_from_fullcardmodel_reversible(
     assert card.mana_cost == ""
     assert card.mtgo_foil_id is None
     assert card.mtgo_id is None
-    assert card.multiverse_ids == []
+    assert card.multiverse_ids == tuple([])
     assert card.name == "Zndrsplt, Eye of Wisdom // Zndrsplt, Eye of Wisdom"
     assert card.oracle_id is None
     assert card.oracle_text is None

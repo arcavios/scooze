@@ -2,11 +2,12 @@ from collections import Counter
 from datetime import date
 
 import scooze.models.utils as model_utils
-from pydantic import BaseModel, Field, model_validator
+from pydantic import Field, model_validator
 from scooze.enums import Format
+from scooze.models.utils import ScoozeBaseModel
 
 
-class DeckModel(BaseModel, validate_assignment=True):
+class DeckModel(ScoozeBaseModel):
     """
     A model to represent a deck of Magic: the Gathering cards.
 
@@ -18,8 +19,6 @@ class DeckModel(BaseModel, validate_assignment=True):
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
     """
-
-    model_config = model_utils.get_base_model_config()
 
     archetype: str = Field(
         default="",
@@ -33,15 +32,15 @@ class DeckModel(BaseModel, validate_assignment=True):
         default=None,
         description="The date this Deck was played.",
     )
-    main: Counter[model_utils.ObjectId] = Field(
+    main: Counter[model_utils.ObjectIdT] = Field(
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[model_utils.ObjectId] = Field(
+    side: Counter[model_utils.ObjectIdT] = Field(
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
-    cmdr: Counter[model_utils.ObjectId] = Field(
+    cmdr: Counter[model_utils.ObjectIdT] = Field(
         default=Counter(),
         description="The command zone. Typically 1 or 2 cards in Commander formats.",
     )
@@ -55,11 +54,9 @@ class DeckModel(BaseModel, validate_assignment=True):
         m_min, m_max = model_utils.main_size(self.format)
         if self.main.total() < m_min:
             e = ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
-            self._logger.error(e)
             raise e
         elif self.main.total() > m_max:
             e = ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
-            self._logger.error(e)
             raise e
         return self
 
@@ -102,7 +99,7 @@ class DeckModelIn(DeckModel):
 
 
 class DeckModelOut(DeckModel):
-    id: model_utils.ObjectId = Field(
+    id: model_utils.ObjectIdT = Field(
         default=None,
         alias="_id",
     )

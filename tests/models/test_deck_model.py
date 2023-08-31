@@ -2,9 +2,10 @@ from collections import Counter
 from datetime import datetime, timezone
 
 import pytest
+from bson import ObjectId
 from scooze.enums import Format
-from scooze.models.card import CardModel
 from scooze.models.deck import DeckModel
+from scooze.models.utils import ObjectIdT
 
 # region Fixtures
 
@@ -20,35 +21,35 @@ def today() -> datetime:
 
 
 @pytest.fixture
-def main_cards() -> Counter:
+def main_cards() -> Counter[ObjectIdT]:
     main_cards = Counter(
         {
-            CardModel.model_construct(name="Expedition Map", mana_value=1): 2,
-            CardModel.model_construct(name="Boseiju, Who Endures", mana_value=0): 2,
-            CardModel.model_construct(name="Forest", mana_value=0): 6,
+            ObjectId(): 2,
+            ObjectId(): 2,
+            ObjectId(): 6,
         }
     )
     return main_cards
 
 
 @pytest.fixture
-def side_cards() -> Counter:
+def side_cards() -> Counter[ObjectIdT]:
     side_cards = Counter(
         {
-            CardModel.model_construct(name="Pithing Needle", mana_value=1): 1,
-            CardModel.model_construct(name="Trail of Crumbs", mana_value=2, colors=["G"]): 2,
-            CardModel.model_construct(name="Forest", mana_value=0): 9,
-            CardModel.model_construct(name="Expedition Map", mana_value=1): 2,
+            ObjectId(): 1,
+            ObjectId(): 2,
+            ObjectId(): 9,
+            ObjectId(): 2,
         }
     )
     return side_cards
 
 
 @pytest.fixture
-def cmdr_cards() -> Counter:
+def cmdr_cards() -> Counter[ObjectIdT]:
     cmdr_cards = Counter(
         {
-            CardModel.model_construct(name="Mayael the Anima", mana_value=3): 1,
+            ObjectId(): 1,
         }
     )
     return cmdr_cards
