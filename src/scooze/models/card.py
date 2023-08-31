@@ -24,6 +24,7 @@ from scooze.models.cardparts import (
     PreviewModel,
     PricesModel,
     RelatedCardModel,
+    RelatedUrisModel,
 )
 
 
@@ -466,10 +467,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=Rarity.COMMON,
         description="The rarity of this print.",
     )
-    related_uris: dict[str, str] = Field(
-        default={},
+    related_uris: RelatedUrisModel = Field(
+        default=RelatedUrisModel(),
         description="Links to this print's listing on other online resources.",
-    )  # TODO(#47): convert to object?
+    )
     released_at: date = Field(
         # TODO(#48): better default?
         default=date(year=1993, month=8, day=5),  # LEA release date

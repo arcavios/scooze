@@ -296,3 +296,27 @@ class RelatedCard:
         self.name = name
         self.type_line = type_line
         self.uri = uri
+
+
+class RelatedUris:
+    """
+    Links to information about a Scryfall-based card object on other non-Scryfall resources.
+
+    Attributes
+        edhrec
+        gatherer
+        tcgplayer_infinite_articles
+        tcgplayer_infinite_decks
+    """
+
+    def __init__(
+        self,
+        edhrec: str | None = None,
+        gatherer: str | None = None,
+        tcgplayer_infinite_articles: str | None = None,
+        tcgplayer_infinite_decks: str | None = None,
+    ):
+        self.edhrec = edhrec
+        self.gatherer = gatherer
+        self.tcgplayer_infinite_articles = tcgplayer_infinite_articles
+        self.tcgplayer_infinite_decks = tcgplayer_infinite_decks

@@ -261,3 +261,32 @@ class RelatedCardModel(BaseModel, validate_assignment=True):
     uri: str = Field(
         description="URI of linked component.",
     )
+
+
+class RelatedUrisModel(BaseModel, validate_assignment=True):
+    """
+    Links to information about a Scryfall-based card object on other non-Scryfall resources.
+
+    Attributes
+        edhrec: Information about this card on edhrec.
+        gatherer: Information about this card on Gatherer.
+        tcgplayer_infinite_articles: Articles about this card on TCGplayer Infinite.
+        tcgplayer_infinite_decks: Decks including this card on TCGplayer Infinite.
+    """
+
+    edhrec: str | None = Field(
+        default=None,
+        description="Information about this card on edhrec.",
+    )
+    gatherer: str | None = Field(
+        default=None,
+        description="Information about this card on Gatherer.",
+    )
+    tcgplayer_infinite_articles: str | None = Field(
+        default=None,
+        description="Articles about this card on TCGplayer Infinite.",
+    )
+    tcgplayer_infinite_decks: str | None = Field(
+        default=None,
+        description="Decks including this card on TCGplayer Infinite.",
+    )

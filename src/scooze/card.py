@@ -10,6 +10,7 @@ from scooze.cardparts import (
     Preview,
     Prices,
     RelatedCard,
+    RelatedUris,
 )
 from scooze.enums import (
     BorderColor,
@@ -466,7 +467,7 @@ class FullCard(OracleCard):
         promo_types: set[str] | list[str] | None = None,
         purchase_uris: dict[str, str] = {},  # TODO(#47): convert to object?
         rarity: Rarity | None = None,  # TODO(#48): better default?
-        related_uris: dict[str, str] = {},  # TODO(#47): convert to object?
+        related_uris: RelatedUris = RelatedUris(),
         released_at: date | str | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
