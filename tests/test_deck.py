@@ -73,8 +73,8 @@ def test_cmdr(cmdr_part):
     assert deck.cmdr == cmdr_part
 
 
-def test_total(deck_modern_4c):
-    assert deck_modern_4c.total() == 75
+def test_total_cards(deck_modern_4c):
+    assert deck_modern_4c.total_cards() == 75
 
 
 def test_eq(deck_modern_4c):

@@ -3,7 +3,7 @@ from sys import maxsize
 
 from scooze.card import Card
 from scooze.deckpart import DeckDiff, DeckPart
-from scooze.enums import DecklistFormatter, Format, InThe
+from scooze.enums import Color, DecklistFormatter, Format, InThe, Legality
 from scooze.utils import ComparableObject
 
 
@@ -39,12 +39,25 @@ class Deck(ComparableObject):
         decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
-    def total(self) -> int:
-        """
-        The number of cards in this Deck.
-        """
+    def average_cmc(self) -> float:
+        # should return the average cost of cards in the deck, optional flag to exclude certain types (lands)
+        pass  # TODO: implement
 
-        return self.main.total() + self.side.total() + self.cmdr.total()
+    def average_words(self) -> float:
+        # should return the average number of words among cards in the deck (optional flag to exclude lands or other types)
+        pass  # TODO: implement NOTE: Only possible for FullCards at the moment
+
+    def count_colors(self) -> Counter[Color]:
+        # should return a Counter of each color and the incidence of cards of that color in the deck (flag to ignore lands or other types)
+        pass  # TODO: implement
+
+    def count_pips(self) -> Counter[Color]:
+        # should return a Counter of each color and the incidence of pips of that color in costs
+        pass  # TODO: implement
+
+    def count_types(self) -> Counter:
+        # should return a Counter of each card type and the incidence of cards of that type in the deck
+        pass  # TODO: implement NOTE: might not be possible without having some notion of Type?
 
     def diff(self, other) -> DeckDiff:
         """
@@ -81,6 +94,65 @@ class Deck(ComparableObject):
         same_side = bool(diff.side)
         same_cmdr = bool(diff.cmdr)
         return same_main and same_side and same_cmdr
+
+    def export(self, export_format: DecklistFormatter = None) -> str:
+        """
+        Exports this Deck as a string with the given DecklistFormatter.
+
+        Args:
+            export_format (DecklistFormatter): The format of the exported Deck.
+
+        Returns:
+            decklist (str): A string containing the names and quantities of the
+              cards in this Deck.
+        """
+
+        match export_format:
+            case DecklistFormatter.ARENA:
+                sb_prefix = "Sideboard\n"
+                cmdr_prefix = "Commander\n"
+                # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
+            case DecklistFormatter.MTGO:
+                sb_prefix = "SIDEBOARD:\n"
+                cmdr_prefix = ""
+                # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
+            case _:
+                sb_prefix = "Sideboard\n"  # Default
+                cmdr_prefix = "Commander\n"  # Default
+        sb_prefix = "\n" + sb_prefix
+        cmdr_suffix = "\n"
+
+        # Build the decklist string
+        main = str(self.main) if len(self.main) > 0 else ""
+        side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ""
+        cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ""
+        decklist = f"{cmdr}{main}{side}"
+        return decklist
+
+    def is_legal(self, format: Format) -> bool:
+        # should return true if the entire deck is legal in a given format and should return a list of cards that aren't legal otherwise (might need to name this differently)
+        pass  # TODO: implement
+
+    def legalities(self) -> dict[Format, Legality]:
+        # should return a dict[Format, Legality] of the cards contained within
+        pass  # TODO: implement
+
+    def total_cards(self) -> int:
+        """
+        The number of cards in this Deck.
+        """
+
+        return self.main.total() + self.side.total() + self.cmdr.total()
+
+    def total_cmc(self) -> int:
+        # should return the total cmc of the deck, optional flag to filter certain types (lands)
+        pass  # TODO: implement
+
+    def total_words(self) -> int:
+        # should return the total number of words among cards in the deck, optional flag to filter certain types (lands)
+        pass  # TODO: implement NOTE: Only possible for FullCards at the moment
+
+    # region Mutations
 
     def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
@@ -161,36 +233,4 @@ class Deck(ComparableObject):
             case _:
                 pass  # TODO(#75): failed to remove cards
 
-    def export(self, export_format: DecklistFormatter = None) -> str:
-        """
-        Exports this Deck as a string with the given DecklistFormatter.
-
-        Args:
-            export_format (DecklistFormatter): The format of the exported Deck.
-
-        Returns:
-            decklist (str): A string containing the names and quantities of the
-              cards in this Deck.
-        """
-
-        match export_format:
-            case DecklistFormatter.ARENA:
-                sb_prefix = "Sideboard\n"
-                cmdr_prefix = "Commander\n"
-                # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
-            case DecklistFormatter.MTGO:
-                sb_prefix = "SIDEBOARD:\n"
-                cmdr_prefix = ""
-                # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
-            case _:
-                sb_prefix = "Sideboard\n"  # Default
-                cmdr_prefix = "Commander\n"  # Default
-        sb_prefix = "\n" + sb_prefix
-        cmdr_suffix = "\n"
-
-        # Build the decklist string
-        main = str(self.main) if len(self.main) > 0 else ""
-        side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ""
-        cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ""
-        decklist = f"{cmdr}{main}{side}"
-        return decklist
+    # endregion
