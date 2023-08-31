@@ -529,9 +529,6 @@ class FullCardModel(CardModel, validate_assignment=True):
 
     # endregion
 
-    def __hash__(self):
-        return self.scryfall_id.__hash__()
-
 
 class CardModelIn(CardModel):
     pass
