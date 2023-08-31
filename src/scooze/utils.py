@@ -59,17 +59,35 @@ def get_logger(
     return logger
 
 
-class HashableObject(Hashable):
+# region Helper Classes
+
+# region Base Classes
+
+class ScoozeObject:
+    """
+    A simple base class to support comparable objects.
+    """
+
+    def _key(self):
+        return tuple([getattr(self, k) for k in self.__dict__.keys()])
+
+    def __eq__(self, other):
+        return self._key() == other._key()
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+
+class HashableObject(ScoozeObject, Hashable):
     """
     A simple base class to support hashable objects.
     """
 
-    def __key(self):
-        return tuple([getattr(self, k) for k in self.__dict__.keys()])
-
     def __hash__(self):
-        return hash(self.__key())
+        return hash(self._key())
 
+# endregion
 
 # region JSON Normalizer
 
@@ -217,3 +235,5 @@ class DictDiff:
         return DictDiff(diff)
 
     # endregion
+
+# endregion
