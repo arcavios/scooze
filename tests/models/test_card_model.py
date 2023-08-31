@@ -30,8 +30,8 @@ def test_cardmodel_from_json_instant(json_ancestral_recall, legalities_ancestral
     assert model.legalities == legalities_ancestral_recall
     assert model.mana_cost == "{U}"
     assert model.name == "Ancestral Recall"
-    assert model.power == None
-    assert model.toughness == None
+    assert model.power is None
+    assert model.toughness is None
     assert model.type_line == "Instant"
 
 
@@ -117,7 +117,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.oracle_text == "Target player draws three cards."
     assert model.oversized is False
     assert model.penny_rank is None
-    assert model.power == None
+    assert model.power is None
     assert model.preview is None
 
     # Prices
@@ -167,7 +167,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.tcgplayer_etched_id is None
     assert model.tcgplayer_id is None
     assert model.textless is False
-    assert model.toughness == None
+    assert model.toughness is None
     assert model.type_line == "Instant"
     assert model.uri.startswith("https://api.scryfall.com/cards/")
     assert model.variation is False
