@@ -6,7 +6,7 @@ from typing import Any, Hashable, Iterable, Mapping, TypeVar
 
 from frozendict import frozendict
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk/"
+DEFAULT_BULK_FILE_DIR = "./data/bulk/"  # TODO(#99) - Change DEFAULT_BULK_FILE_DIR to work when called from anywhere.
 
 ## Generic Types
 T = TypeVar("T")  # generic type
@@ -70,7 +70,7 @@ class ComparableObject:
     """
 
     def get_key(self):
-            return tuple(getattr(self, k) for k in self.__dict__.keys())
+        return tuple(getattr(self, k) for k in self.__dict__.keys())
 
     def __eq__(self, other):
         return self.__key__ == other.__key__

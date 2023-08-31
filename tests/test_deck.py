@@ -76,9 +76,11 @@ def test_cmdr(cmdr_part):
 def test_total(deck_modern_4c):
     assert deck_modern_4c.total() == 75
 
+
 def test_eq(deck_modern_4c):
     deck = Deck(**deck_modern_4c.__dict__)
     assert deck == deck_modern_4c
+
 
 def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
     deck = Deck(**deck_modern_4c.__dict__)
@@ -123,7 +125,7 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
         format=deck_modern_4c.format,
         main=deck_modern_4c.main,
         side=deck_modern_4c.side,
-        cmdr=cmdr_part
+        cmdr=cmdr_part,
     )
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
