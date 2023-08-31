@@ -63,6 +63,7 @@ def get_logger(
 
 # region Base Classes
 
+
 class ComparableObject:
     """
     A simple base class to support comparable objects.
@@ -78,7 +79,6 @@ class ComparableObject:
         return not (self == other)
 
 
-
 class HashableObject(ComparableObject, Hashable):
     """
     A simple base class to support hashable objects.
@@ -86,6 +86,7 @@ class HashableObject(ComparableObject, Hashable):
 
     def __hash__(self):
         return hash(self._key())
+
 
 # endregion
 
@@ -235,5 +236,6 @@ class DictDiff:
         return DictDiff(diff)
 
     # endregion
+
 
 # endregion

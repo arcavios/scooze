@@ -3,7 +3,7 @@ from sys import maxsize
 from typing import Any
 
 from scooze.card import Card
-from scooze.utils import DictDiff, ComparableObject
+from scooze.utils import ComparableObject, DictDiff
 
 
 class DeckDiff(ComparableObject):
