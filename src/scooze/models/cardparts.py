@@ -2,9 +2,10 @@ from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 from scooze.enums import Color, Component, Layout
+from scooze.models.utils import ScoozeBaseModel
 
 
-class ImageUrisModel(BaseModel, validate_assignment=True):
+class ImageUrisModel(ScoozeBaseModel):
     """
     URIs of images associated with this model on Scryfall.
     Scryfall documentation: https://scryfall.com/docs/api/images
@@ -47,7 +48,7 @@ class ImageUrisModel(BaseModel, validate_assignment=True):
     )
 
 
-class CardFaceModel(BaseModel, validate_assignment=True):
+class CardFaceModel(ScoozeBaseModel):
     """
     Model for a single face of a multi-faced CardModel.
     Multi-faced cards include MDFCs, split cards, aftermath, etc.
@@ -166,7 +167,7 @@ class CardFaceModel(BaseModel, validate_assignment=True):
     )
 
 
-class PricesModel(BaseModel, validate_assignment=True):
+class PricesModel(ScoozeBaseModel):
     """
     Model for all price data associated with a CardModel.
 
@@ -205,7 +206,7 @@ class PricesModel(BaseModel, validate_assignment=True):
     )
 
 
-class PreviewModel(BaseModel, validate_assignment=True):
+class PreviewModel(ScoozeBaseModel):
     """
     Object for information about where and when a card was previewed.
 
@@ -229,7 +230,7 @@ class PreviewModel(BaseModel, validate_assignment=True):
     )
 
 
-class RelatedCardModel(BaseModel, validate_assignment=True):
+class RelatedCardModel(ScoozeBaseModel):
     """
     Data about Scryfall objects related to this card
     (tokens, cards referenced by name, meld pairs, etc.)
