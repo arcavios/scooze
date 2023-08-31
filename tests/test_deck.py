@@ -89,6 +89,18 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
     assert deck == deck_modern_4c
 
 
+def test_eq(deck_modern_4c):
+    deck = Deck(**deck_modern_4c.__dict__)
+    assert deck == deck_modern_4c
+
+
+def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
+    deck = Deck(**deck_modern_4c.__dict__)
+    deck.add_card(card_kaheera_the_orphanguard)
+    deck_modern_4c.add_card(card_kaheera_the_orphanguard)
+    assert deck == deck_modern_4c
+
+
 @pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
     assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(

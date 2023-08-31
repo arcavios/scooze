@@ -140,7 +140,7 @@ class JsonNormalizer:
         Normalize a frozendict.
 
         Args:
-            s: A frozendict to normalize.
+            d: A frozendict to normalize.
 
         Returns:
             A frozendict.
@@ -174,7 +174,7 @@ class JsonNormalizer:
         Normalize a tuple.
 
         Args:
-            s: A tuple to normalize.
+            t: A tuple to normalize.
 
         Returns:
             A tuple.
