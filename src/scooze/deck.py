@@ -31,7 +31,6 @@ class Deck(ComparableObject):
         self.format = format
 
         # Deep copy of DeckPart
-        # TODO(#66): Add __copy__ and __deepcopy__ to Deck and DeckPart
         self.main = DeckPart(cards=main.cards)
         self.side = DeckPart(cards=side.cards)
         self.cmdr = DeckPart(cards=cmdr.cards)
