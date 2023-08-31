@@ -2,10 +2,11 @@ from sys import maxsize
 from typing import Annotated, Any, TypeAlias
 
 from bson import ObjectId as BsonObjectId
-from pydantic import ConfigDict, GetJsonSchemaHandler
+from pydantic import BaseModel, ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 from scooze.enums import Format
+from scooze.utils import HashableObject
 
 # region Private Utility Functions
 
@@ -18,14 +19,6 @@ def _to_lower_camel(string: str) -> str:
 # endregion
 
 # region Public Utility Functions
-
-
-def get_base_model_config() -> ConfigDict:
-    return ConfigDict(
-        alias_generator=_to_lower_camel,
-        arbitrary_types_allowed=True,
-        populate_by_name=True,
-    )
 
 
 def main_size(fmt: Format) -> tuple[int, int]:
@@ -155,6 +148,18 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
 # region Public Utility Classes
 
 
+class ScoozeBaseModel(BaseModel, validate_assignment=True):
+    """
+    TODO: docstring
+    """
+
+    model_config = ConfigDict(
+        alias_generator=_to_lower_camel,
+        arbitrary_types_allowed=True,
+        populate_by_name=True,
+    )
+
+
 # Solution to BSON/MongoDB ObjectId issue, provided by Pydantic author:
 # https://stackoverflow.com/a/76719893
 class ObjectIdPydanticAnnotation:
@@ -183,6 +188,6 @@ class ObjectIdPydanticAnnotation:
         return handler(core_schema.str_schema())
 
 
-ObjectId: TypeAlias = Annotated[BsonObjectId, ObjectIdPydanticAnnotation]
+ObjectIdT: TypeAlias = Annotated[BsonObjectId, ObjectIdPydanticAnnotation]
 
 # endregion
