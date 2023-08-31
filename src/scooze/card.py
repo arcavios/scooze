@@ -350,7 +350,7 @@ class FullCard(OracleCard):
         games: Which games this print is available on, from among
           paper, mtgo, and arena.
         highres_image: Whether this card has a high-res image available.
-        illustation_id: A UUID for the particlar artwork on this print,
+        illustration_id: A UUID for the particular artwork on this print,
           consistent across art reprints.
         image_status: The quality/status of images available for this card.
           Either missing, placeholder, lowres, or highres_scan.

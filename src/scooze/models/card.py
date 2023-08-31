@@ -169,7 +169,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         games: Which games this print is available on, from among
           paper, mtgo, and arena.
         highres_image: Whether this card has a high-res image available.
-        illustration_id: A UUID for the particlar artwork on this print,
+        illustration_id: A UUID for the particular artwork on this print,
           consistent across art reprints.
         image_status: The quality/status of images available for this card.
           Either missing, placeholder, lowres, or highres_scan.
@@ -408,7 +408,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     )
     illustration_id: str | None = Field(
         default=None,
-        description="A UUID for the particlar artwork on this print, consistent across art reprints.",
+        description="A UUID for the particular artwork on this print, consistent across art reprints.",
     )
     image_status: ImageStatus = Field(
         default="",
