@@ -57,7 +57,7 @@ class CardNormalizer(CardPartsNormalizer):
         if all_parts is None or all(isinstance(part, RelatedCard) for part in all_parts):
             return all_parts
         elif all(isinstance(part, dict) for part in all_parts):
-            return tuple([RelatedCard(**part) for part in all_parts])
+            return tuple(RelatedCard(**part) for part in all_parts)
 
     @classmethod
     def card_faces(
@@ -81,7 +81,7 @@ class CardNormalizer(CardPartsNormalizer):
         if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
-            return tuple([card_face_class.from_json(card_face) for card_face in card_faces])
+            return tuple(card_face_class.from_json(card_face) for card_face in card_faces)
 
     @classmethod
     def preview(cls, preview: Preview | dict | None) -> Preview:

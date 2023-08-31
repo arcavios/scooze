@@ -70,7 +70,7 @@ class ComparableObject:
     """
 
     def get_key(self):
-            return tuple([getattr(self, k) for k in self.__dict__.keys()])
+            return tuple(getattr(self, k) for k in self.__dict__.keys())
 
     def __eq__(self, other):
         return self.__key__ == other.__key__
