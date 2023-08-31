@@ -560,9 +560,9 @@ class FullCard(OracleCard):
         self.printed_type_line = printed_type_line
         self.promo = promo
         self.promo_types = CardNormalizer.frozenset(promo_types)
-        self.purchase_uris = CardNormalizer.frozendict(purchase_uris)
+        self.purchase_uris = CardNormalizer.purchase_uris(purchase_uris)
         self.rarity = rarity
-        self.related_uris = CardNormalizer.frozendict(related_uris)
+        self.related_uris = CardNormalizer.related_uris(related_uris)
         self.released_at = CardNormalizer.date(released_at)
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri

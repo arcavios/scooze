@@ -42,33 +42,6 @@ class ImageUris(HashableObject):
         self.small = small
 
 
-class CardPartsNormalizer(JsonNormalizer):
-    """
-    A simple class to be used when normalizing non-serializable data from JSON.
-
-    Methods:
-        image_uris(image_uris):
-            Normalize ImageUris.
-    """
-
-    @classmethod
-    def image_uris(cls, image_uris: ImageUris | dict | None) -> ImageUris:
-        """
-        Normalize image_uris from JSON.
-
-        Args:
-            image_uris: An instance of ImageUris or some JSON to normalize.
-
-        Returns:
-            An instance of ImageUris.
-        """
-
-        if image_uris is None or isinstance(image_uris, ImageUris):
-            return image_uris
-        elif isinstance(image_uris, dict):
-            return ImageUris(**image_uris)
-
-
 class CardFace(HashableObject):
     """
     Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
@@ -341,3 +314,58 @@ class RelatedUris:
         self.gatherer = gatherer
         self.tcgplayer_infinite_articles = tcgplayer_infinite_articles
         self.tcgplayer_infinite_decks = tcgplayer_infinite_decks
+
+
+class CardPartsNormalizer(JsonNormalizer):
+    """
+    A simple class to be used when normalizing non-serializable data from JSON.
+
+    Methods:
+        image_uris(image_uris):
+            Normalize ImageUris.
+    """
+
+    @classmethod
+    def image_uris(cls, image_uris: ImageUris | Mapping[str, str] | None) -> ImageUris:
+        """
+        Normalize image_uris from JSON.
+
+        Args:
+            image_uris: An instance of ImageUris or some JSON to normalize.
+
+        Returns:
+            An instance of ImageUris.
+        """
+
+        if image_uris is None or isinstance(image_uris, ImageUris):
+            return image_uris
+        elif isinstance(image_uris, dict):
+            return ImageUris(**image_uris)
+
+    @classmethod
+    def purchase_uris(cls, purchase_uris: PurchaseUris | Mapping[str, str] | None) -> PurchaseUris:
+        """
+
+        Args:
+            purchase_uris: An instance of PurchaseUris or some JSON to normalize.
+        Returns:
+             An instance of PurchaseUris.
+        """
+        if purchase_uris is None or isinstance(purchase_uris, PurchaseUris):
+            return purchase_uris
+        elif isinstance(purchase_uris, dict):
+            return PurchaseUris(**purchase_uris)
+
+    @classmethod
+    def related_uris(cls, related_uris: RelatedUris | Mapping[str, str] | None) -> RelatedUris:
+        """
+
+        Args:
+            related_uris: An instance of RelatedUris or some JSON to normalize.
+        Returns:
+             An instance of RelatedUris.
+        """
+        if related_uris is None or isinstance(related_uris, RelatedUris):
+            return related_uris
+        elif isinstance(related_uris, dict):
+            return RelatedUris(**related_uris)

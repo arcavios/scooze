@@ -69,7 +69,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.artist == "Ryan Pancoast"
     assert model.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
     assert model.attraction_lights is None
-    assert model.booster == True
+    assert model.booster is True
     assert model.border_color == BorderColor.BLACK
     assert model.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
     assert model.card_faces is None
@@ -79,18 +79,18 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.color_identity == {Color.BLUE}
     assert model.color_indicator is None
     assert model.colors == {Color.BLUE}
-    assert model.content_warning == False
-    assert model.digital == True
+    assert model.content_warning is False
+    assert model.digital is True
     assert model.edhrec_rank is None
     assert model.finishes == {Finish.NONFOIL, Finish.FOIL}
     assert model.flavor_name is None
     assert model.flavor_text is None
     assert model.frame == Frame._2015
     assert model.frame_effects is None
-    assert model.full_art == False
+    assert model.full_art is False
     assert model.games == {Game.MTGO}
     assert model.hand_modifier is None
-    assert model.highres_image == True
+    assert model.highres_image is True
     assert model.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
     assert model.image_status == ImageStatus.HIGHRES_SCAN
 
@@ -115,7 +115,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.name == "Ancestral Recall"
     assert model.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
     assert model.oracle_text == "Target player draws three cards."
-    assert model.oversized == False
+    assert model.oversized is False
     assert model.penny_rank is None
     assert model.power == None
     assert model.preview is None
@@ -133,25 +133,25 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.printed_type_line is None
     assert model.prints_search_uri.startswith("https://api.scryfall.com/cards/")
     assert model.produced_mana is None
-    assert model.promo == False
+    assert model.promo is False
     assert model.promo_types is None
 
     # PurchaseUris
-    assert model.purchase_uris["cardhoarder"].startswith("https://www.cardhoarder.com/")
-    assert model.purchase_uris["cardmarket"].startswith("https://www.cardmarket.com/")
-    assert model.purchase_uris["tcgplayer"].startswith("https://www.tcgplayer.com/")
+    assert model.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
+    assert model.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
+    assert model.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
 
     assert model.rarity == Rarity.BONUS
 
     # RelatedUris
-    assert model.related_uris["edhrec"].startswith("https://edhrec.com/")
-    assert model.related_uris["gatherer"].startswith("https://gatherer.wizards.com/")
-    assert model.related_uris["tcgplayer_infinite_articles"].startswith("https://infinite.tcgplayer.com/")
-    assert model.related_uris["tcgplayer_infinite_decks"].startswith("https://infinite.tcgplayer.com/")
+    assert model.related_uris.edhrec.startswith("https://edhrec.com/")
+    assert model.related_uris.gatherer.startswith("https://gatherer.wizards.com/")
+    assert model.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
+    assert model.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
 
     assert model.released_at == date(year=2014, month=6, day=16)
-    assert model.reprint == True
-    assert model.reserved == True
+    assert model.reprint is True
+    assert model.reserved is True
     assert model.rulings_uri.startswith("https://api.scryfall.com/cards/")
     assert model.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
     assert model.scryfall_set_uri.startswith("https://scryfall.com/sets/")
@@ -163,14 +163,14 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
     assert model.set_type == SetType.MASTERS
     assert model.set_uri.startswith("https://api.scryfall.com/sets/")
-    assert model.story_spotlight == False
+    assert model.story_spotlight is False
     assert model.tcgplayer_etched_id is None
     assert model.tcgplayer_id is None
-    assert model.textless == False
+    assert model.textless is False
     assert model.toughness == None
     assert model.type_line == "Instant"
     assert model.uri.startswith("https://api.scryfall.com/cards/")
-    assert model.variation == False
+    assert model.variation is False
     assert model.variation_of is None
     assert model.watermark is None
 
@@ -270,7 +270,7 @@ def test_fullcardmodel_from_json_reversible(
     assert model.artist == "Alexis Ziritt"
     assert model.artist_ids == ["add4cc84-9254-4c0b-8fcd-af4a238bdbd5"]
     assert model.attraction_lights is None
-    assert model.booster == False
+    assert model.booster is False
     assert model.border_color == BorderColor.BORDERLESS
     assert model.card_back_id == ""
 
@@ -345,18 +345,18 @@ def test_fullcardmodel_from_json_reversible(
     assert model.color_identity == {Color.BLUE}
     assert model.color_indicator is None
     assert model.colors is None
-    assert model.content_warning == False
-    assert model.digital == False
+    assert model.content_warning is False
+    assert model.digital is False
     assert model.edhrec_rank == 8719
     assert model.finishes == {Finish.FOIL}
     assert model.flavor_name is None
     assert model.flavor_text is None
     assert model.frame == Frame._2015
     assert model.frame_effects == {FrameEffect.INVERTED, FrameEffect.LEGENDARY}
-    assert model.full_art == False
+    assert model.full_art is False
     assert model.games == {Game.PAPER}
     assert model.hand_modifier is None
-    assert model.highres_image == True
+    assert model.highres_image is True
     assert model.illustration_id is None
     assert model.image_status == ImageStatus.HIGHRES_SCAN
     assert model.image_uris is None
@@ -373,7 +373,7 @@ def test_fullcardmodel_from_json_reversible(
     assert model.name == "Zndrsplt, Eye of Wisdom // Zndrsplt, Eye of Wisdom"
     assert model.oracle_id is None
     assert model.oracle_text is None
-    assert model.oversized == False
+    assert model.oversized is False
     assert model.penny_rank is None
     assert model.power is None
     assert model.preview is None
@@ -391,24 +391,24 @@ def test_fullcardmodel_from_json_reversible(
     assert model.printed_type_line is None
     assert model.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
     assert model.produced_mana is None
-    assert model.promo == False
+    assert model.promo is False
     assert model.promo_types is None
 
     # PurchaseUris
-    assert model.purchase_uris["cardhoarder"].startswith("https://www.cardhoarder.com/")
-    assert model.purchase_uris["cardmarket"].startswith("https://www.cardmarket.com/")
-    assert model.purchase_uris["tcgplayer"].startswith("https://www.tcgplayer.com/")
+    assert model.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
+    assert model.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
+    assert model.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
 
     assert model.rarity == Rarity.RARE
 
     # RelatedUris
-    assert model.related_uris["edhrec"].startswith("https://edhrec.com/")
-    assert model.related_uris["tcgplayer_infinite_articles"].startswith("https://infinite.tcgplayer.com/")
-    assert model.related_uris["tcgplayer_infinite_decks"].startswith("https://infinite.tcgplayer.com/")
+    assert model.related_uris.edhrec.startswith("https://edhrec.com/")
+    assert model.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
+    assert model.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
 
     assert model.released_at == date(year=2022, month=4, day=22)
-    assert model.reprint == True
-    assert model.reserved == False
+    assert model.reprint is True
+    assert model.reserved is False
     assert model.rulings_uri.startswith("https://api.scryfall.com/cards/")
     assert model.scryfall_id == "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf"
     assert model.scryfall_uri.startswith("https://scryfall.com/card/")
@@ -421,11 +421,11 @@ def test_fullcardmodel_from_json_reversible(
     assert model.set_uri.startswith("https://api.scryfall.com/sets/")
     assert model.tcgplayer_etched_id is None
     assert model.tcgplayer_id == 259216
-    assert model.textless == False
+    assert model.textless is False
     assert model.toughness is None
     assert model.type_line == ""
     assert model.uri.startswith("https://api.scryfall.com/cards/")
-    assert model.variation == False
+    assert model.variation is False
     assert model.variation_of is None
     assert model.watermark is None
 
@@ -454,7 +454,7 @@ def test_fullcardmodel_from_json_attraction(json_trash_bin):
 
 def test_fullcardmodel_from_json_variation(json_anaconda_portal):
     card = FullCardModel.model_validate(json_anaconda_portal)
-    assert card.variation == True
+    assert card.variation is True
     assert card.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda
 
 
