@@ -3,7 +3,7 @@ from copy import deepcopy
 from pprint import pprint
 
 import pytest
-from scooze.card import OracleCard
+from scooze.card import Card, FullCard, OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe
