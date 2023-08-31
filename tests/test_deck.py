@@ -77,6 +77,18 @@ def test_total(deck_modern_4c):
     assert deck_modern_4c.total() == 75
 
 
+def test_eq(deck_modern_4c):
+    deck = Deck(**deck_modern_4c.__dict__)
+    assert deck == deck_modern_4c
+
+
+def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
+    deck = Deck(**deck_modern_4c.__dict__)
+    deck.add_card(card_kaheera_the_orphanguard)
+    deck_modern_4c.add_card(card_kaheera_the_orphanguard)
+    assert deck == deck_modern_4c
+
+
 @pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
     assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(
@@ -86,12 +98,7 @@ def test_diff_none(deck_modern_4c, dictdiff_empty):
 
 @pytest.mark.deck_diff
 def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
-    other = Deck(
-        archetype=deck_modern_4c.archetype,
-        format=deck_modern_4c.format,
-        main=deck_modern_4c.main,
-        side=deck_modern_4c.side,
-    )  # TODO(#66): replace with __copy__ or __deepcopy__
+    other = Deck(**deck_modern_4c.__dict__)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.MAIN)
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=DictDiff({card_kaheera_the_orphanguard: (0, 1)}),
@@ -102,12 +109,7 @@ def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
 
 @pytest.mark.deck_diff
 def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
-    other = Deck(
-        archetype=deck_modern_4c.archetype,
-        format=deck_modern_4c.format,
-        main=deck_modern_4c.main,
-        side=deck_modern_4c.side,
-    )  # TODO(#66): replace with __copy__ or __deepcopy__
+    other = Deck(**deck_modern_4c.__dict__)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.SIDE)
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
@@ -124,7 +126,7 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
         main=deck_modern_4c.main,
         side=deck_modern_4c.side,
         cmdr=cmdr_part,
-    )  # TODO(#66): replace with __copy__ or __deepcopy__
+    )
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
         side=dictdiff_empty,

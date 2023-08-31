@@ -6,7 +6,7 @@ from typing import Any, Hashable, Iterable, Mapping, TypeVar
 
 from frozendict import frozendict
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk/"
+DEFAULT_BULK_FILE_DIR = "./data/bulk/"  # TODO(#99) - Change DEFAULT_BULK_FILE_DIR to work when called from anywhere.
 
 ## Generic Types
 T = TypeVar("T")  # generic type
@@ -59,17 +59,38 @@ def get_logger(
     return logger
 
 
-class HashableObject(Hashable):
+# region Helper Classes
+
+# region Base Classes
+
+
+class ComparableObject:
+    """
+    A simple base class to support comparable objects.
+    """
+
+    def get_key(self):
+        return tuple(getattr(self, k) for k in self.__dict__.keys())
+
+    def __eq__(self, other):
+        return self.__key__ == other.__key__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    __key__: tuple[Any, ...] = property(get_key)
+
+
+class HashableObject(ComparableObject, Hashable):
     """
     A simple base class to support hashable objects.
     """
 
-    def __key(self):
-        return tuple([getattr(self, k) for k in self.__dict__.keys()])
-
     def __hash__(self):
-        return hash(self.__key())
+        return hash(self.__key__)
 
+
+# endregion
 
 # region JSON Normalizer
 
@@ -217,3 +238,6 @@ class DictDiff:
         return DictDiff(diff)
 
     # endregion
+
+
+# endregion

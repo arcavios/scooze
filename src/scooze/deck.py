@@ -4,9 +4,10 @@ from sys import maxsize
 from scooze.card import Card
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe
+from scooze.utils import ComparableObject
 
 
-class Deck:
+class Deck(ComparableObject):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -30,22 +31,9 @@ class Deck:
         self.format = format
 
         # Deep copy of DeckPart
-        # TODO(#66): Add __copy__ and __deepcopy__ to Deck and DeckPart
         self.main = DeckPart(cards=main.cards)
         self.side = DeckPart(cards=side.cards)
         self.cmdr = DeckPart(cards=cmdr.cards)
-
-    def __eq__(self, other):
-        return (
-            self.archetype == other.archetype
-            and self.format == other.format
-            and self.main == other.main
-            and self.side == other.side
-            and self.cmdr == other.cmdr
-        )
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
 
     def __str__(self):
         decklist = self.export()

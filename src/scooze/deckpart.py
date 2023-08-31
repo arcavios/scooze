@@ -2,12 +2,11 @@ from collections import Counter
 from sys import maxsize
 from typing import Any
 
-import scooze.utils as utils
 from scooze.card import Card
-from scooze.utils import DictDiff
+from scooze.utils import ComparableObject, DictDiff
 
 
-class DeckDiff:
+class DeckDiff(ComparableObject):
     """
     A class to reprsent a diff between two decks.
 
@@ -21,12 +20,6 @@ class DeckDiff:
         self.main = main
         self.side = side
         self.cmdr = cmdr
-
-    def __eq__(self, other):
-        return self.main == other.main and self.side == other.side and self.cmdr == other.cmdr
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
 
     def __str__(self):
         if self.total() > 0:
@@ -45,7 +38,7 @@ class DeckDiff:
         return len(self.main) + len(self.side) + len(self.cmdr)
 
 
-class DeckPart:
+class DeckPart(ComparableObject):
     """
     A class to represent a part of a deck.
 
@@ -55,15 +48,8 @@ class DeckPart:
 
     def __init__(self, cards: Counter[Card] = Counter()):
         # Deep copy of Counter
-        # TODO(#66): Add __copy__ and __deepcopy__ to Deck and DeckPart
         self.cards = Counter()
         self.cards.update(cards)
-
-    def __eq__(self, other):
-        return self.cards == other.cards
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
 
     def __getitem__(self, key):
         return self.cards[key]

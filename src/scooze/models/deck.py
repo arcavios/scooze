@@ -53,10 +53,14 @@ class DeckModel(ScoozeBaseModel):
     def validate_main(self):
         m_min, m_max = model_utils.main_size(self.format)
         if self.main.total() < m_min:
-            e = ValueError(f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards.")
+            e = ValueError(
+                f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards. Expected at least {m_min}."
+            )
             raise e
         elif self.main.total() > m_max:
-            e = ValueError(f"Too many cards in main deck. Provided main deck has {self.main.total()} cards.")
+            e = ValueError(
+                f"Too many cards in main deck. Provided main deck has {self.main.total()} cards. Expected at most {m_max}."
+            )
             raise e
         return self
 
@@ -64,18 +68,26 @@ class DeckModel(ScoozeBaseModel):
     def validate_side(self):
         s_min, s_max = model_utils.side_size(self.format)
         if self.side.total() < s_min:
-            raise ValueError(f"Not enough cards in sideboard. Provided sideboard has {self.side.total()} cards.")
+            raise ValueError(
+                f"Not enough cards in sideboard. Provided sideboard has {self.side.total()} cards. Expected at least {s_min}."
+            )
         elif self.side.total() > s_max:
-            raise ValueError(f"Too many cards in sideboard. Provided sideboards has {self.side.total()} cards.")
+            raise ValueError(
+                f"Too many cards in sideboard. Provided sideboards has {self.side.total()} cards. Expected at most {s_max}."
+            )
         return self
 
     @model_validator(mode="after")
     def validate_cmdr(self):
         c_min, c_max = model_utils.cmdr_size(self.format)
         if self.cmdr.total() < c_min:
-            raise ValueError(f"Not enough cards in command zone. Provided command zone has {self.cmdr.total()} cards.")
+            raise ValueError(
+                f"Not enough cards in command zone. Provided command zone has {self.cmdr.total()} cards. Expected at least {c_min}."
+            )
         elif self.cmdr.total() > c_max:
-            raise ValueError(f"Too many cards in command zone. Provided command zone has {self.cmdr.total()} cards.")
+            raise ValueError(
+                f"Too many cards in command zone. Provided command zone has {self.cmdr.total()} cards. Expected at most {c_max}."
+            )
         return self
 
     # endregion

@@ -7,7 +7,6 @@ from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 from scooze.enums import Format
 
-
 # region Private Utility Functions
 
 
