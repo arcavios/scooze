@@ -229,6 +229,30 @@ class PreviewModel(BaseModel, validate_assignment=True):
     )
 
 
+class PurchaseUrisModel(BaseModel, validate_assignment=True):
+    """
+    URIs to this card’s listing on major marketplaces.
+
+    Attributes:
+        tcgplayer: Link to buy this card on the TCGplayer marketplace.
+        cardmarket: Link to buy this card on the Cardmarket marketplace.
+        cardhoarder: Link to buy this card digitally for MTGO on Cardhoarder.
+    """
+
+    tcgplayer: str | None = Field(
+        default=None,
+        description="Link to buy this card on the TCGplayer marketplace.",
+    )
+    cardmarket: str | None = Field(
+        default=None,
+        description="Link to buy this card on the Cardmarket marketplace.",
+    )
+    cardhoarder: str | None = Field(
+        default=None,
+        description="Link to buy this card digitally for MTGO on Cardhoarder.",
+    )
+
+
 class RelatedCardModel(BaseModel, validate_assignment=True):
     """
     Data about Scryfall objects related to this card

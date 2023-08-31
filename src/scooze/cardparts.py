@@ -264,6 +264,27 @@ class Preview:
         self.source_uri = source_uri
 
 
+class PurchaseUris:
+    """
+    URIs to this card’s listing on major marketplaces.
+
+    Attributes:
+        tcgplayer: Link to buy this card on the TCGplayer marketplace.
+        cardmarket: Link to buy this card on the Cardmarket marketplace.
+        cardhoarder: Link to buy this card digitally for MTGO on Cardhoarder.
+    """
+
+    def __init__(
+        self,
+        tcgplayer: str | None,
+        cardmarket: str | None,
+        cardhoarder: str | None,
+    ):
+        self.tcgplayer = tcgplayer
+        self.cardmarket = cardmarket
+        self.cardhoarder = cardhoarder
+
+
 class RelatedCard:
     """
     Data about Scryfall objects related to this card

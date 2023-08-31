@@ -9,6 +9,7 @@ from scooze.cardparts import (
     ImageUris,
     Preview,
     Prices,
+    PurchaseUris,
     RelatedCard,
     RelatedUris,
 )
@@ -465,7 +466,7 @@ class FullCard(OracleCard):
         printed_type_line: str | None = None,
         promo: bool = False,
         promo_types: set[str] | list[str] | None = None,
-        purchase_uris: dict[str, str] = {},  # TODO(#47): convert to object?
+        purchase_uris: PurchaseUris = PurchaseUris(),
         rarity: Rarity | None = None,  # TODO(#48): better default?
         related_uris: RelatedUris = RelatedUris(),
         released_at: date | str | None = None,  # TODO(#48): better default?

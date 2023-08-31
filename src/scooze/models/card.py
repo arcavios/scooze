@@ -23,6 +23,7 @@ from scooze.models.cardparts import (
     ImageUrisModel,
     PreviewModel,
     PricesModel,
+    PurchaseUrisModel,
     RelatedCardModel,
     RelatedUrisModel,
 )
@@ -458,10 +459,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Which promo categories this print falls into, if any.",
     )
-    purchase_uris: dict[str, str] = Field(
-        default={},
+    purchase_uris: PurchaseUrisModel = Field(
+        default=PurchaseUrisModel(),
         description="Links to purchase this print from marketplaces.",
-    )  # TODO(#47): convert to object?
+    )
     rarity: Rarity = Field(
         # TODO(#48): better default?
         default=Rarity.COMMON,
