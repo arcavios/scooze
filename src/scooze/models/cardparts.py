@@ -230,6 +230,30 @@ class PreviewModel(ScoozeBaseModel):
     )
 
 
+class PurchaseUrisModel(ScoozeBaseModel):
+    """
+    URIs to this card’s listing on major marketplaces.
+
+    Attributes:
+        tcgplayer: Link to buy this card on the TCGplayer marketplace.
+        cardmarket: Link to buy this card on the Cardmarket marketplace.
+        cardhoarder: Link to buy this card digitally for MTGO on Cardhoarder.
+    """
+
+    tcgplayer: str | None = Field(
+        default=None,
+        description="Link to buy this card on the TCGplayer marketplace.",
+    )
+    cardmarket: str | None = Field(
+        default=None,
+        description="Link to buy this card on the Cardmarket marketplace.",
+    )
+    cardhoarder: str | None = Field(
+        default=None,
+        description="Link to buy this card digitally for MTGO on Cardhoarder.",
+    )
+
+
 class RelatedCardModel(ScoozeBaseModel):
     """
     Data about Scryfall objects related to this card
@@ -261,4 +285,33 @@ class RelatedCardModel(ScoozeBaseModel):
     )
     uri: str = Field(
         description="URI of linked component.",
+    )
+
+
+class RelatedUrisModel(ScoozeBaseModel):
+    """
+    Links to information about a Scryfall-based card object on other non-Scryfall resources.
+
+    Attributes
+        edhrec: Information about this card on edhrec.
+        gatherer: Information about this card on Gatherer.
+        tcgplayer_infinite_articles: Articles about this card on TCGplayer Infinite.
+        tcgplayer_infinite_decks: Decks including this card on TCGplayer Infinite.
+    """
+
+    edhrec: str | None = Field(
+        default=None,
+        description="Information about this card on edhrec.",
+    )
+    gatherer: str | None = Field(
+        default=None,
+        description="Information about this card on Gatherer.",
+    )
+    tcgplayer_infinite_articles: str | None = Field(
+        default=None,
+        description="Articles about this card on TCGplayer Infinite.",
+    )
+    tcgplayer_infinite_decks: str | None = Field(
+        default=None,
+        description="Decks including this card on TCGplayer Infinite.",
     )

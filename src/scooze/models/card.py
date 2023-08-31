@@ -23,7 +23,9 @@ from scooze.models.cardparts import (
     ImageUrisModel,
     PreviewModel,
     PricesModel,
+    PurchaseUrisModel,
     RelatedCardModel,
+    RelatedUrisModel,
 )
 
 
@@ -167,7 +169,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         games: Which games this print is available on, from among
           paper, mtgo, and arena.
         highres_image: Whether this card has a high-res image available.
-        illustration_id: A UUID for the particlar artwork on this print,
+        illustration_id: A UUID for the particular artwork on this print,
           consistent across art reprints.
         image_status: The quality/status of images available for this card.
           Either missing, placeholder, lowres, or highres_scan.
@@ -406,7 +408,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     )
     illustration_id: str | None = Field(
         default=None,
-        description="A UUID for the particlar artwork on this print, consistent across art reprints.",
+        description="A UUID for the particular artwork on this print, consistent across art reprints.",
     )
     image_status: ImageStatus = Field(
         default="",
@@ -452,19 +454,19 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Which promo categories this print falls into, if any.",
     )
-    purchase_uris: dict[str, str] = Field(
-        default={},
+    purchase_uris: PurchaseUrisModel = Field(
+        default=PurchaseUrisModel(),
         description="Links to purchase this print from marketplaces.",
-    )  # TODO(#47): convert to object?
+    )
     rarity: Rarity = Field(
         # TODO(#48): better default?
         default=Rarity.COMMON,
         description="The rarity of this print.",
     )
-    related_uris: dict[str, str] = Field(
-        default={},
+    related_uris: RelatedUrisModel = Field(
+        default=RelatedUrisModel(),
         description="Links to this print's listing on other online resources.",
-    )  # TODO(#47): convert to object?
+    )
     released_at: date = Field(
         # TODO(#48): better default?
         default=date(year=1993, month=8, day=5),  # LEA release date

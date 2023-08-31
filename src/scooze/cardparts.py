@@ -42,33 +42,6 @@ class ImageUris(HashableObject):
         self.small = small
 
 
-class CardPartsNormalizer(JsonNormalizer):
-    """
-    A simple class to be used when normalizing non-serializable data from JSON.
-
-    Methods:
-        image_uris(image_uris):
-            Normalize ImageUris.
-    """
-
-    @classmethod
-    def image_uris(cls, image_uris: ImageUris | dict | None) -> ImageUris:
-        """
-        Normalize image_uris from JSON.
-
-        Args:
-            image_uris: An instance of ImageUris or some JSON to normalize.
-
-        Returns:
-            An instance of ImageUris.
-        """
-
-        if image_uris is None or isinstance(image_uris, ImageUris):
-            return image_uris
-        elif isinstance(image_uris, dict):
-            return ImageUris(**image_uris)
-
-
 class CardFace(HashableObject):
     """
     Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
@@ -264,6 +237,27 @@ class Preview(HashableObject):
         self.source_uri = source_uri
 
 
+class PurchaseUris(HashableObject):
+    """
+    URIs to this card’s listing on major marketplaces.
+
+    Attributes:
+        tcgplayer: Link to buy this card on the TCGplayer marketplace.
+        cardmarket: Link to buy this card on the Cardmarket marketplace.
+        cardhoarder: Link to buy this card digitally for MTGO on Cardhoarder.
+    """
+
+    def __init__(
+        self,
+        tcgplayer: str | None = None,
+        cardmarket: str | None = None,
+        cardhoarder: str | None = None,
+    ):
+        self.tcgplayer = tcgplayer
+        self.cardmarket = cardmarket
+        self.cardhoarder = cardhoarder
+
+
 class RelatedCard(HashableObject):
     """
     Data about Scryfall objects related to this card
@@ -296,3 +290,80 @@ class RelatedCard(HashableObject):
         self.name = name
         self.type_line = type_line
         self.uri = uri
+
+
+class RelatedUris(HashableObject):
+    """
+    Links to information about a Scryfall-based card object on other non-Scryfall resources.
+
+    Attributes:
+        edhrec
+        gatherer
+        tcgplayer_infinite_articles
+        tcgplayer_infinite_decks
+    """
+
+    def __init__(
+        self,
+        edhrec: str | None = None,
+        gatherer: str | None = None,
+        tcgplayer_infinite_articles: str | None = None,
+        tcgplayer_infinite_decks: str | None = None,
+    ):
+        self.edhrec = edhrec
+        self.gatherer = gatherer
+        self.tcgplayer_infinite_articles = tcgplayer_infinite_articles
+        self.tcgplayer_infinite_decks = tcgplayer_infinite_decks
+
+
+class CardPartsNormalizer(JsonNormalizer):
+    """
+    A simple class to be used when normalizing non-serializable data from JSON.
+    """
+
+    @classmethod
+    def image_uris(cls, image_uris: ImageUris | Mapping[str, str] | None) -> ImageUris:
+        """
+        Normalize image_uris from JSON.
+
+        Args:
+            image_uris: An instance of ImageUris or some JSON to normalize.
+
+        Returns:
+            An instance of ImageUris.
+        """
+
+        if image_uris is None or isinstance(image_uris, ImageUris):
+            return image_uris
+
+        return ImageUris(**image_uris)
+
+    @classmethod
+    def purchase_uris(cls, purchase_uris: PurchaseUris | Mapping[str, str] | None) -> PurchaseUris:
+        """
+        Normalize purchase_uris from JSON.
+
+        Args:
+            purchase_uris: An instance of PurchaseUris or some JSON to normalize.
+        Returns:
+             An instance of PurchaseUris.
+        """
+        if purchase_uris is None or isinstance(purchase_uris, PurchaseUris):
+            return purchase_uris
+
+        return PurchaseUris(**purchase_uris)
+
+    @classmethod
+    def related_uris(cls, related_uris: RelatedUris | Mapping[str, str] | None) -> RelatedUris:
+        """
+        Normalize related_uris from JSON.
+
+        Args:
+            related_uris: An instance of RelatedUris or some JSON to normalize.
+        Returns:
+             An instance of RelatedUris.
+        """
+        if related_uris is None or isinstance(related_uris, RelatedUris):
+            return related_uris
+
+        return RelatedUris(**related_uris)

@@ -9,7 +9,9 @@ from scooze.cardparts import (
     ImageUris,
     Preview,
     Prices,
+    PurchaseUris,
     RelatedCard,
+    RelatedUris,
 )
 from scooze.enums import (
     BorderColor,
@@ -348,7 +350,7 @@ class FullCard(OracleCard):
         games: Which games this print is available on, from among
           paper, mtgo, and arena.
         highres_image: Whether this card has a high-res image available.
-        illustation_id: A UUID for the particlar artwork on this print,
+        illustration_id: A UUID for the particular artwork on this print,
           consistent across art reprints.
         image_status: The quality/status of images available for this card.
           Either missing, placeholder, lowres, or highres_scan.
@@ -461,9 +463,9 @@ class FullCard(OracleCard):
         printed_type_line: str | None = None,
         promo: bool = False,
         promo_types: Iterable[str] | None = None,
-        purchase_uris: Mapping[str, str] = {},  # TODO(#47): convert to object?
+        purchase_uris: PurchaseUris = PurchaseUris(),
         rarity: Rarity | None = None,  # TODO(#48): better default?
-        related_uris: Mapping[str, str] = {},  # TODO(#47): convert to object?
+        related_uris: RelatedUris = RelatedUris(),
         released_at: date | str | None = None,  # TODO(#48): better default?
         reprint: bool = False,
         scryfall_set_uri: str = "",
@@ -558,9 +560,9 @@ class FullCard(OracleCard):
         self.printed_type_line = printed_type_line
         self.promo = promo
         self.promo_types = CardNormalizer.frozenset(promo_types)
-        self.purchase_uris = CardNormalizer.frozendict(purchase_uris)
+        self.purchase_uris = CardNormalizer.purchase_uris(purchase_uris)
         self.rarity = rarity
-        self.related_uris = CardNormalizer.frozendict(related_uris)
+        self.related_uris = CardNormalizer.related_uris(related_uris)
         self.released_at = CardNormalizer.date(released_at)
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri
