@@ -2,9 +2,9 @@ from collections import Counter
 from datetime import datetime, timezone
 
 import pytest
+from bson import ObjectId
 from scooze.enums import Format
 from scooze.models.deck import DeckModel
-from bson import ObjectId
 from scooze.models.utils import ObjectIdT
 
 # region Fixtures
