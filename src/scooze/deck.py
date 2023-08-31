@@ -23,9 +23,9 @@ class Deck(ComparableObject, Generic[C]):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart[C] = DeckPart[C](),
-        side: DeckPart[C] = DeckPart[C](),
-        cmdr: DeckPart[C] = DeckPart[C](),
+        main: DeckPart[C] = DeckPart(),
+        side: DeckPart[C] = DeckPart(),
+        cmdr: DeckPart[C] = DeckPart(),
     ):
         self.archetype = archetype
         self.format = format

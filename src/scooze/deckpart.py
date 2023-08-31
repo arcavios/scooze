@@ -48,7 +48,7 @@ class DeckPart(ComparableObject, Generic[C]):
         cards (Counter[C]): The cards in this DeckPart.
     """
 
-    def __init__(self, cards: Counter[C] = Counter[C]()):
+    def __init__(self, cards: Counter[C] = Counter()):
         self.cards = cards
 
     def __getitem__(self, key: C):
@@ -119,7 +119,7 @@ class DeckPart(ComparableObject, Generic[C]):
         """
 
         # using counterA - counterB results in a new Counter with only positive results
-        self.cards = self.cards - Counter[C]({card: quantity})
+        self.cards = self.cards - Counter({card: quantity})
 
     def remove_cards(self, cards: Counter[C]) -> None:
         """
