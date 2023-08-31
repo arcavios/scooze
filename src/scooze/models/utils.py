@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 from scooze.enums import Format
-from scooze.utils import HashableObject
+
 
 # region Private Utility Functions
 
