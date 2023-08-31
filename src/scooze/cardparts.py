@@ -292,11 +292,11 @@ class RelatedCard(HashableObject):
         self.uri = uri
 
 
-class RelatedUris:
+class RelatedUris(HashableObject):
     """
     Links to information about a Scryfall-based card object on other non-Scryfall resources.
 
-    Attributes
+    Attributes:
         edhrec
         gatherer
         tcgplayer_infinite_articles
@@ -319,10 +319,6 @@ class RelatedUris:
 class CardPartsNormalizer(JsonNormalizer):
     """
     A simple class to be used when normalizing non-serializable data from JSON.
-
-    Methods:
-        image_uris(image_uris):
-            Normalize ImageUris.
     """
 
     @classmethod
@@ -339,12 +335,13 @@ class CardPartsNormalizer(JsonNormalizer):
 
         if image_uris is None or isinstance(image_uris, ImageUris):
             return image_uris
-        elif isinstance(image_uris, dict):
-            return ImageUris(**image_uris)
+
+        return ImageUris(**image_uris)
 
     @classmethod
     def purchase_uris(cls, purchase_uris: PurchaseUris | Mapping[str, str] | None) -> PurchaseUris:
         """
+        Normalize purchase_uris from JSON.
 
         Args:
             purchase_uris: An instance of PurchaseUris or some JSON to normalize.
@@ -353,12 +350,13 @@ class CardPartsNormalizer(JsonNormalizer):
         """
         if purchase_uris is None or isinstance(purchase_uris, PurchaseUris):
             return purchase_uris
-        elif isinstance(purchase_uris, dict):
-            return PurchaseUris(**purchase_uris)
+
+        return PurchaseUris(**purchase_uris)
 
     @classmethod
     def related_uris(cls, related_uris: RelatedUris | Mapping[str, str] | None) -> RelatedUris:
         """
+        Normalize related_uris from JSON.
 
         Args:
             related_uris: An instance of RelatedUris or some JSON to normalize.
@@ -367,5 +365,5 @@ class CardPartsNormalizer(JsonNormalizer):
         """
         if related_uris is None or isinstance(related_uris, RelatedUris):
             return related_uris
-        elif isinstance(related_uris, dict):
-            return RelatedUris(**related_uris)
+
+        return RelatedUris(**related_uris)
