@@ -1,12 +1,12 @@
 import json
 from datetime import date
-from typing import Self
+from typing import Iterable, Mapping, Self
 
 from scooze.enums import Color, Component, Layout
-from scooze.utils import FloatableT, JsonNormalizer
+from scooze.utils import FloatableT, HashableObject, JsonNormalizer
 
 
-class ImageUris:
+class ImageUris(HashableObject):
     """
     URIs of images associated with this object on Scryfall.
     Scryfall documentation: https://scryfall.com/docs/api/images
@@ -69,7 +69,7 @@ class CardPartsNormalizer(JsonNormalizer):
             return ImageUris(**image_uris)
 
 
-class CardFace:
+class CardFace(HashableObject):
     """
     Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
     Multi-faced cards include MDFCs, split cards, aftermath, etc.
@@ -93,8 +93,8 @@ class CardFace:
     def __init__(
         self,
         cmc: FloatableT | None = None,
-        color_indicator: set[Color] | list[Color] | None = None,
-        colors: set[Color] | list[Color] | None = None,
+        color_indicator: Iterable[Color] | None = None,
+        colors: Iterable[Color] | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
         name: str | None = None,
@@ -107,8 +107,8 @@ class CardFace:
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.cmc = CardPartsNormalizer.float(cmc)
-        self.color_indicator = CardPartsNormalizer.set(color_indicator)
-        self.colors = CardPartsNormalizer.set(colors)
+        self.color_indicator = CardPartsNormalizer.frozenset(color_indicator)
+        self.colors = CardPartsNormalizer.frozenset(colors)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
@@ -165,8 +165,8 @@ class FullCardFace(CardFace):
         artist: str | None = None,
         artist_id: str | None = None,
         cmc: FloatableT | None = None,
-        color_indicator: set[Color] | list[Color] | None = None,
-        colors: set[Color] | list[Color] | None = None,
+        color_indicator: Iterable[Color] | None = None,
+        colors: Iterable[Color] | None = None,
         flavor_text: str | None = None,
         illustration_id: str | None = None,
         image_uris: ImageUris | None = None,
@@ -189,8 +189,8 @@ class FullCardFace(CardFace):
         self.artist = artist
         self.artist_id = artist_id
         self.cmc = CardPartsNormalizer.float(cmc)
-        self.color_indicator = CardPartsNormalizer.set(color_indicator)
-        self.colors = CardPartsNormalizer.set(colors)
+        self.color_indicator = CardPartsNormalizer.frozenset(color_indicator)
+        self.colors = CardPartsNormalizer.frozenset(colors)
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
         self.image_uris = CardPartsNormalizer.image_uris(image_uris)
@@ -209,7 +209,7 @@ class FullCardFace(CardFace):
         self.watermark = watermark
 
 
-class Prices:
+class Prices(HashableObject):
     """
     Object for all price data associated with a Card object.
 
@@ -241,7 +241,7 @@ class Prices:
         self.tix = CardPartsNormalizer.float(tix)
 
 
-class Preview:
+class Preview(HashableObject):
     """
     Object for information about where and when a card was previewed.
 
@@ -264,7 +264,7 @@ class Preview:
         self.source_uri = source_uri
 
 
-class RelatedCard:
+class RelatedCard(HashableObject):
     """
     Data about Scryfall objects related to this card
     (tokens, cards referenced by name, meld pairs, etc.)
@@ -282,8 +282,8 @@ class RelatedCard:
 
     def __init__(
         self,
+        id: str = "",  # Alias for scryfall_id
         scryfall_id: str = "",
-        id: str = "",
         component: Component | None = None,
         name: str | None = None,
         type_line: str | None = None,
