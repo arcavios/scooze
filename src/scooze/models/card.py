@@ -1,7 +1,7 @@
 from datetime import date
 
 import scooze.models.utils as model_utils
-from pydantic import BaseModel, Field
+from pydantic import Field
 from scooze.enums import (
     BorderColor,
     Color,
@@ -29,7 +29,7 @@ from scooze.models.cardparts import (
 )
 
 
-class CardModel(BaseModel, validate_assignment=True):
+class CardModel(model_utils.ScoozeBaseModel):
     """
     Model for a basic Card object with minimal fields. Contains all information
       you might use to sort a decklist.
@@ -47,8 +47,6 @@ class CardModel(BaseModel, validate_assignment=True):
         toughness: Toughness of this card, if applicable.
         type_line: This card's type line. (e.g. "Creature — Ooze")
     """
-
-    model_config = model_utils.get_base_model_config()
 
     cmc: float | None = Field(
         default=None,
@@ -88,9 +86,6 @@ class CardModel(BaseModel, validate_assignment=True):
     )
 
     # TODO(#46): add Card field validators
-
-    def __hash__(self):  # TODO(#19): placeholder hash function. replace with real one
-        return self.name.__hash__()
 
 
 class FullCardModel(CardModel, validate_assignment=True):
@@ -542,7 +537,7 @@ class CardModelIn(CardModel):
 
 
 class CardModelOut(CardModel):
-    id: model_utils.ObjectId = Field(
+    id: model_utils.ObjectIdT = Field(
         default=None,
         alias="_id",
     )

@@ -1,3 +1,5 @@
+from datetime import date
+
 from scooze.enums import (
     BorderColor,
     Color,
@@ -14,7 +16,6 @@ from scooze.enums import (
     SetType,
 )
 from scooze.models.card import CardModel, FullCardModel
-from datetime import date
 
 # region json -> CardModel
 

@@ -2,12 +2,15 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import stdout
-from typing import Any, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, TypeVar
+
+from frozendict import frozendict
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk/"
 
 ## Generic Types
 T = TypeVar("T")  # generic type
+V = TypeVar("V")  # generic value type
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
@@ -56,6 +59,18 @@ def get_logger(
     return logger
 
 
+class HashableObject(Hashable):
+    """
+    A simple base class to support hashable objects.
+    """
+
+    def __key(self):
+        return tuple([getattr(self, k) for k in self.__dict__.keys()])
+
+    def __hash__(self):
+        return hash(self.__key())
+
+
 # region JSON Normalizer
 
 
@@ -78,8 +93,8 @@ class JsonNormalizer:
 
         if d is None or isinstance(d, date):
             return d
-        if isinstance(d, str):
-            return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
+
+        return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
 
     @classmethod
     def float(cls, f: FloatableT | None) -> float:
@@ -95,25 +110,59 @@ class JsonNormalizer:
 
         if f is None or isinstance(f, float):
             return f
-        elif isinstance(f, int) or isinstance(f, str):
-            return float(f)
+
+        return float(f)
 
     @classmethod
-    def set(cls, s: set[T] | list[T] | None) -> set[T]:
+    def frozendict(cls, d: Mapping[T, V] | None) -> frozendict[T, V]:
         """
-        Normalize a set.
+        Normalize a frozendict.
 
         Args:
-            d: A set to normalize.
+            s: A frozendict to normalize.
 
         Returns:
-            A set.
+            A frozendict.
         """
 
-        if s is None or isinstance(s, set):
+        if d is None or isinstance(d, frozendict):
+            return d
+
+        return frozendict(d)
+
+    @classmethod
+    def frozenset(cls, s: Iterable[T] | None) -> frozenset[T]:
+        """
+        Normalize a frozenset.
+
+        Args:
+            s: A frozenset to normalize.
+
+        Returns:
+            A frozenset.
+        """
+
+        if s is None or isinstance(s, frozenset):
             return s
-        elif isinstance(s, list):
-            return set(s)
+
+        return frozenset(s)
+
+    @classmethod
+    def tuple(cls, t: Iterable[T] | None) -> tuple[T]:
+        """
+        Normalize a tuple.
+
+        Args:
+            s: A tuple to normalize.
+
+        Returns:
+            A tuple.
+        """
+
+        if t is None or isinstance(t, tuple):
+            return t
+
+        return tuple(t)
 
 
 # endregion
