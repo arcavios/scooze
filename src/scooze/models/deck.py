@@ -7,7 +7,7 @@ from scooze.enums import Format
 from scooze.models.utils import ScoozeBaseModel
 
 
-class DeckModel(ScoozeBaseModel, validate_assignment=True):
+class DeckModel(ScoozeBaseModel):
     """
     A model to represent a deck of Magic: the Gathering cards.
 
