@@ -48,13 +48,14 @@ def parse_args():
     parser.add_argument(
         "--include-cards",
         dest="cards",
+        choices=["test", "oracle", "artwork", "prints", "all"],
         help=(
             f"""R|Cards to include - [test, oracle, prints, all]\n"""
-            f"""\ttest - A set of cards that includes the Power 9 for testing purposes. (default)\n"""
+            f"""\ttest - A set of cards that includes the Power 9 for testing purposes.\n"""
             f"""\toracle - A set of cards that includes one version of each card ever printed.\n"""
             f"""\tartwork - A set of cards that includes each unique illustration once.\n"""
-            f"""\tprints - A set of cards that includes every version of each card ever printed. (in English where available)\n"""
-            f"""\tall - A set of every version of all cards and game objects in all available languages.\n"""
+            f"""\tprints - Every print of each card ever printed, in English where available.\n"""
+            f"""\tall - Every print of all cards and game objects in all languages.\n"""
         ),
     )
     parser.add_argument(
@@ -86,6 +87,7 @@ async def main():
             print("Deleting all decks from your local database...")
             # TODO(#30): needs deck endpoints
 
+    # Add specified card file to DB
     match args.cards:
         case "test":
             try:
@@ -109,25 +111,19 @@ async def main():
                         )
                     ]
                     await db.add_cards(cards)
-            except FileNotFoundError as e:
-                print("Bulk data file not present!")
-            except OSError as e:
+            except FileNotFoundError:
+                print("Oracle data file not found; no cards added to DB.")
                 # TODO(#44): download bulk file if not present?
+            except OSError as e:
                 print_error(e, "oracle cards")
-        # TODO(#44): duplicate the Oracle section for other file types
-        case "scryfall":
-            try:
-                with open("./data/bulk/scryfall_cards.json") as cards_file:
-                    print("Inserting Scryfall cards into the database...")
-                    # TODO(#44): read bulk files here
-            except OSError as e:
-                print_error(e, "scryfall cards")
+        case "artwork":
+            # TODO(#44): add support
+            print('support for "artwork" file not yet implemented')
+        case "prints":  # TODO(#44): add support
+            print('support for "prints" file not yet implemented')
+            # TODO(#44): add support
         case "all":
-            try:
-                print("Inserting ALL cards into the database...")
-                # TODO(#44): read bulk files here
-            except OSError as e:
-                print_error(e, "all cards")
+            print('support for "all" file not yet implemented')
         case _:
             print("No cards imported.")
 
