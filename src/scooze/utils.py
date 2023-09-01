@@ -6,7 +6,7 @@ from typing import Any, Hashable, Iterable, Mapping, TypeVar
 
 from frozendict import frozendict
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk/"
+DEFAULT_BULK_FILE_DIR = "./data/bulk"
 
 ## Generic Types
 T = TypeVar("T")  # generic type

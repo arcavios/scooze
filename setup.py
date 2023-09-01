@@ -1,10 +1,10 @@
 import argparse
 import asyncio
 import json
-from argparse import ArgumentParser
 
 from src.scooze import database as db
 from src.scooze.models.card import CardModelIn
+from src.scooze.utils import DEFAULT_BULK_FILE_DIR
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
@@ -27,15 +27,21 @@ def parse_args():
 
     parser.add_argument(
         "--clean-cards",
-        dest="--clean-cards",
+        dest="clean_cards",
         action="store_true",
         help="Deletes all entries currently in the cards collection before running setup.",
     )
     parser.add_argument(
         "--clean-decks",
-        dest="--clean-decks",
+        dest="clean_decks",
         action="store_true",
         help="Deletes all entries currently in the decks collection before running setup.",
+    )
+    parser.add_argument(
+        "--bulk-data-dir",
+        dest="bulk_data_dir",
+        default=DEFAULT_BULK_FILE_DIR,
+        help="Location to store bulk files. Defaults to ./data/bulk",
     )
     parser.add_argument(
         "--include-cards",
@@ -44,6 +50,7 @@ def parse_args():
             f"""R|Cards to include - [test, oracle, prints, all]\n"""
             f"""\ttest - A set of cards that includes the Power 9 for testing purposes. (default)\n"""
             f"""\toracle - A set of cards that includes one version of each card ever printed.\n"""
+            f"""\tartwork - A set of cards that includes each unique illustration once.\n"""
             f"""\tprints - A set of cards that includes every version of each card ever printed. (in English where available)\n"""
             f"""\tall - A set of every version of all cards and game objects in all available languages.\n"""
         ),
@@ -54,30 +61,30 @@ def parse_args():
         help="Decks to include - [test]",
     )
 
-    return vars(parser.parse_args())
+    return parser.parse_args()
 
 
 def print_error(e: Exception, txt: str):
     print(f"Encountered an error while trying to process {txt}...")
-    raise (e)
+    raise e
 
 
 async def main():
     args = parse_args()
 
-    if args["--clean-cards"]:
-        clean = True if input("Delete all CARDS before importing? [y/n]") == "y" else False
+    if args.clean_cards:
+        clean = input("Delete all CARDS before importing? [y/n]") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
             await db.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
 
-    if args["--clean-decks"]:
-        clean = True if input("Delete all DECKS before importing? [y/n]") == "y" else False
+    if args.clean_decks:
+        clean = input("Delete all DECKS before importing? [y/n]") in "yY"
         if clean:
             print("Deleting all decks from your local database...")
             # TODO(#30): needs deck endpoints
 
-    match args["cards"]:
+    match args.cards:
         case "test":
             try:
                 with open("./data/test/power9.jsonl") as cards_file:
@@ -88,12 +95,14 @@ async def main():
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
+            filepath = f"{args.bulk_data_dir}/oracle_cards.json"
             try:
-                with open("./data/bulk/oracle_cards.json") as cards_file:
+                with open(filepath) as cards_file:
                     print("Inserting oracle cards into the database...")
                 # TODO(#44): read bulk files here
             except OSError as e:
                 print_error(e, "oracle cards")
+        # TODO(#44): duplicate the Oracle section for other file types
         case "scryfall":
             try:
                 with open("./data/bulk/scryfall_cards.json") as cards_file:
@@ -110,7 +119,7 @@ async def main():
         case _:
             print("No cards imported.")
 
-    match args["decks"]:
+    match args.decks:
         case "test":
             print("test decks imported")
         case _:
