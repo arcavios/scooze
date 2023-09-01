@@ -1,5 +1,7 @@
 import argparse
 import asyncio
+
+import ijson
 import json
 
 from src.scooze import database as db
@@ -99,8 +101,18 @@ async def main():
             try:
                 with open(filepath) as cards_file:
                     print("Inserting oracle cards into the database...")
-                # TODO(#44): read bulk files here
+                    cards = [
+                        CardModelIn(**card_json)
+                        for card_json in ijson.items(
+                            cards_file,
+                            "item",
+                        )
+                    ]
+                    await db.add_cards(cards)
+            except FileNotFoundError as e:
+                print("Bulk data file not present!")
             except OSError as e:
+                # TODO(#44): download bulk file if not present?
                 print_error(e, "oracle cards")
         # TODO(#44): duplicate the Oracle section for other file types
         case "scryfall":

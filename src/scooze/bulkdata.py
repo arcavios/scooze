@@ -53,5 +53,5 @@ def download_all_bulk_data_files(
         download_bulk_data_file(
             uri=bulk_filename,
             bulk_file_type=bulk_type,
-            file_path=bulk_file_dir,
+            bulk_file_dir=bulk_file_dir,
         )

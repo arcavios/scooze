@@ -1,5 +1,5 @@
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 import pytest
 from bson import ObjectId
@@ -16,7 +16,7 @@ def archetype() -> str:
 
 
 @pytest.fixture
-def today() -> datetime:
+def today() -> date:
     return datetime.now(timezone.utc).date()
 
 
