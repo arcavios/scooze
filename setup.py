@@ -43,14 +43,14 @@ def parse_args():
         "--bulk-data-dir",
         dest="bulk_data_dir",
         default=DEFAULT_BULK_FILE_DIR,
-        help="Location to store bulk files. Defaults to ./data/bulk",
+        help="Directory to store bulk files. Defaults to ./data/bulk",
     )
     parser.add_argument(
         "--include-cards",
         dest="cards",
         choices=["test", "oracle", "artwork", "prints", "all"],
         help=(
-            f"""R|Cards to include - [test, oracle, prints, all]\n"""
+            f"""R|Cards to include - [test, oracle, artwork, prints, all]\n"""
             f"""\ttest - A set of cards that includes the Power 9 for testing purposes.\n"""
             f"""\toracle - A set of cards that includes one version of each card ever printed.\n"""
             f"""\tartwork - A set of cards that includes each unique illustration once.\n"""
@@ -117,13 +117,59 @@ async def main():
             except OSError as e:
                 print_error(e, "oracle cards")
         case "artwork":
-            # TODO(#44): add support
-            print('support for "artwork" file not yet implemented')
-        case "prints":  # TODO(#44): add support
-            print('support for "prints" file not yet implemented')
-            # TODO(#44): add support
+            filepath = f"{args.bulk_data_dir}/unique_artwork.json"
+            try:
+                with open(filepath) as cards_file:
+                    print("Inserting unique artwork cards into the database...")
+                    cards = [
+                        CardModelIn(**card_json)
+                        for card_json in ijson.items(
+                            cards_file,
+                            "item",
+                        )
+                    ]
+                    await db.add_cards(cards)
+            except FileNotFoundError:
+                print("All artwork cards data file not found; no cards added to DB.")
+                # TODO(#44): download bulk file if not present?
+            except OSError as e:
+                print_error(e, "unique artwork cards")
+        case "prints":
+            filepath = f"{args.bulk_data_dir}/default_cards.json"
+            try:
+                with open(filepath) as cards_file:
+                    print("Inserting all prints into the database...")
+                    cards = [
+                        CardModelIn(**card_json)
+                        for card_json in ijson.items(
+                            cards_file,
+                            "item",
+                        )
+                    ]
+                    await db.add_cards(cards)
+            except FileNotFoundError:
+                print("All prints data file not found; no cards added to DB.")
+                # TODO(#44): download bulk file if not present?
+            except OSError as e:
+                print_error(e, "all prints")
         case "all":
-            print('support for "all" file not yet implemented')
+            filepath = f"{args.bulk_data_dir}/all_cards.json"
+            try:
+                with open(filepath) as cards_file:
+                    print("Inserting all Scryfall cards into the database...")
+                    cards = [
+                        CardModelIn(**card_json)
+                        for card_json in ijson.items(
+                            cards_file,
+                            "item",
+                        )
+                    ]
+                    await db.add_cards(cards)
+            except FileNotFoundError:
+                print("All cards data file not found; no cards added to DB.")
+                # TODO(#44): download bulk file if not present?
+            except OSError as e:
+                print_error(e, "oracle cards")
         case _:
             print("No cards imported.")
 
