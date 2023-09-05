@@ -344,3 +344,18 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
 
 
 # endregion
+
+
+# region Database Enums
+
+
+class Collection(ExtendedEnum, StrEnum):
+    """
+    Collections in the Scooze database
+    """
+
+    CARD = "card"
+    DECK = "deck"
+
+
+# endregion
