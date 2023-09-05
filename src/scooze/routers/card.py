@@ -1,4 +1,4 @@
-import scooze.database as db
+import scooze.database.card as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from scooze.models.card import CardModelIn
