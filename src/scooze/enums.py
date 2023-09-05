@@ -354,8 +354,8 @@ class Collection(ExtendedEnum, StrEnum):
     Collections in the Scooze database
     """
 
-    CARD = "card"
-    DECK = "deck"
+    CARDS = "cards"
+    DECKS = "decks"
 
 
 # endregion

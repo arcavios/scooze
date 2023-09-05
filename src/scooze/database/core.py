@@ -9,20 +9,20 @@ from scooze.enums import Collection
 
 
 async def insert_document(col_type: Collection, document: dict[str, Any]):
-    insert_result = await db.scooze[col_type].insert_one(document)
-    return await db.scooze[col_type].find_one({"_id": insert_result.inserted_id})
+    insert_result = await db.client.scooze[col_type].insert_one(document)
+    return await db.client.scooze[col_type].find_one({"_id": insert_result.inserted_id})
 
 
 async def get_document_by_property(col_type: Collection, property_name: str, value):
     if property_name == "_id":
         value = ObjectId(value)
-    return await db.scooze[col_type].find_one({property_name: value})
+    return await db.client.scooze[col_type].find_one({property_name: value})
 
 
 async def update_document(col_type: Collection, id: str, document: dict[str, Any]):
     if len(document) == 0:
         raise ValueError(f"No data given, skipping update for {col_type.title} with id: {id}")
-    return await db.scooze[col_type].find_one_and_update(
+    return await db.client.scooze[col_type].find_one_and_update(
         {"_id": ObjectId(id)},
         {"$set": document},
         return_document=ReturnDocument.AFTER,
@@ -30,7 +30,7 @@ async def update_document(col_type: Collection, id: str, document: dict[str, Any
 
 
 async def delete_document(col_type: Collection, id: str):
-    return await db.scooze[col_type].find_one_and_delete({"_id": ObjectId(id)})
+    return await db.client.scooze[col_type].find_one_and_delete({"_id": ObjectId(id)})
 
 
 # endregion
@@ -39,12 +39,12 @@ async def delete_document(col_type: Collection, id: str):
 
 
 async def insert_many_documents(col_type: Collection, documents: list[dict[str, Any]]):
-    return await db.scooze[col_type].insert_many([documents])
+    return await db.client.scooze[col_type].insert_many([documents])
 
 
 async def get_random_documents(col_type: Collection, limit: int):
     pipeline = [{"$sample": {"size": limit}}]
-    return await db.scooze[col_type].aggregate(pipeline).to_list(limit)
+    return await db.client.scooze[col_type].aggregate(pipeline).to_list(limit)
 
 
 async def get_documents_by_property(
@@ -62,7 +62,7 @@ async def get_documents_by_property(
             values = [i for i in items]
 
     return (
-        await db.scooze[col_type]
+        await db.client.scooze[col_type]
         .find({"$or": [{property_name: v} for v in values]})
         .skip((page - 1) * page_size if paginated else 0)
         .to_list(page_size if paginated else None)
@@ -70,7 +70,7 @@ async def get_documents_by_property(
 
 
 async def delete_documents(col_type: Collection):
-    return await db.scooze[col_type].delete_many({})  # NOTE: This deletes the entire collection.
+    return await db.client.scooze[col_type].delete_many({})  # NOTE: This deletes the entire collection.
 
 
 # endregion
