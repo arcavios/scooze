@@ -349,7 +349,7 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
 # region Database Enums
 
 
-class Collection(ExtendedEnum, StrEnum):
+class DbCollection(ExtendedEnum, StrEnum):
     """
     Collections in the Scooze database
     """
