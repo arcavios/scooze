@@ -11,7 +11,7 @@ class CaseInsensitiveEnumMeta(EnumMeta):
 
     def __getitem__(self, item):
         if isinstance(item, str):
-            item = item.lower()
+            item = item.upper()
         return super().__getitem__(item)
 
 

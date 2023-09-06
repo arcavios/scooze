@@ -2,7 +2,7 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import stdout
-from typing import Any, Hashable, Iterable, Mapping, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, Type, TypeVar
 
 from frozendict import frozendict
 from scooze.enums import ExtendedEnum
@@ -97,20 +97,6 @@ class HashableObject(ComparableObject, Hashable):
 # region JSON Utils
 
 
-class JsonConverter:
-    """
-    A simple class to be used when converting types of data from JSON.
-    """
-
-    @classmethod
-    def enum(cls, e: E, v) -> E:
-        """
-        TODO: docstring
-        """
-
-        return E[v]
-
-
 class JsonNormalizer:
     """
     A simple class to be used when normalizing non-serializable data from JSON.
@@ -132,6 +118,14 @@ class JsonNormalizer:
             return d
 
         return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
+
+    @classmethod
+    def to_enum(cls, e: Type[E], v) -> E:
+        """
+        TODO: docstring
+        """
+
+        return e[v]
 
     @classmethod
     def to_float(cls, f: FloatableT | None) -> float:
