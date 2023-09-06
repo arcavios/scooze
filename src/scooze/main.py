@@ -1,12 +1,29 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from scooze.database.mongo import mongo_close, mongo_connect
 from scooze.routers.card import router as CardRouter
 from scooze.routers.cards import router as CardsRouter
+
+
+# Startup/shutdown
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Setup Mongo
+    await mongo_connect()
+
+    # Yield to the app
+    yield
+
+    # Mongo teardown
+    await mongo_close()
+
 
 app = FastAPI(
     title="scooze",
     summary="REST API for interacting with MongoDB for Magic: the Gathering tournaments, decklists, and cards.",
+    lifespan=lifespan,
 )
 
 
