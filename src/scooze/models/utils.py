@@ -21,6 +21,7 @@ def _to_lower_camel(string: str) -> str:
 
 # TODO: move these to utils or deck utils. these aren't used by only models
 
+
 def main_size(fmt: Format) -> tuple[int, int]:
     """
     Given a Format, what are the required min and max size for a main deck?

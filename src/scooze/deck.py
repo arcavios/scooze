@@ -140,13 +140,12 @@ class Deck(ComparableObject, Generic[C]):
         #     c_legal = c.legalities[format]
         #     if c_legal is Legality.LEGAL:
 
-            # legal &= c.legalities[format] in [Legality.LEGAL, Legality.RESTRICTED]
+        # legal &= c.legalities[format] in [Legality.LEGAL, Legality.RESTRICTED]
 
         # TODO: implement (keep in mind basics > 4. Cards that are legal <= 4, and cards that are restricted, <=1)
 
         # return self.legalities()[format]
         pass
-
 
     def total_cards(self) -> int:
         """

@@ -274,14 +274,17 @@ class OracleCard(Card):
         TODO:docstring
         """
 
-        pattern = r"([a-zA-Z0-9+/]+)" # words, excluding reminder text
+        pattern_reminder = r" ?\([^()]+\) ?"
+        pattern_words = r"([a-zA-Z0-9+/]+)"
 
         # MDFC
         try:
-            return sum([len(re.findall(pattern, face.oracle_text)) for face in self.card_faces])
+            return sum(
+                [len(re.findall(pattern_words, re.sub(pattern_reminder, face.oracle_text))) for face in self.card_faces]
+            )
         # Non-MDFC
         except TypeError:
-            return len(re.findall(pattern, self.oracle_text))
+            return len(re.findall(pattern_words, re.sub(pattern_reminder, self.oracle_text)))
 
 
 class FullCard(OracleCard):
