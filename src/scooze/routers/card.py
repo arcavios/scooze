@@ -63,9 +63,7 @@ async def update_card(card_id: str, card: CardModelIn):
     if updated_card:
         return JSONResponse(updated_card.model_dump(mode="json"), status_code=200)
     else:
-        # NOTE: in this setup, there isn't a way to distinguish between actually
-        # changing a value and finding something but not changing.
-        return JSONResponse({"message": f"Card with id {card_id} not updated."}, status_code=400)
+        return JSONResponse({"message": f"Card with id {card_id} not found."}, status_code=404)
 
 
 # Delete
