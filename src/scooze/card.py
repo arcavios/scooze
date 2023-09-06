@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import date
 from typing import Iterable, Mapping, Self, TypeVar
 
@@ -267,6 +268,20 @@ class OracleCard(Card):
         self.rulings_uri = rulings_uri
         self.toughness = toughness
         self.type_line = type_line
+
+    def total_words(self) -> int:
+        """
+        TODO:docstring
+        """
+
+        pattern = r"([a-zA-Z0-9]+)"
+
+        # MDFC
+        try:
+            return sum([len(re.findall(pattern, face.oracle_text)) for face in self.card_faces])
+        # Non-MDFC
+        except TypeError:
+            return len(re.findall(pattern, self.oracle_text))
 
 
 class FullCard(OracleCard):
@@ -580,3 +595,11 @@ class FullCard(OracleCard):
         self.watermark = watermark
 
         # endregion
+
+    def total_words(self) -> int:
+        """
+        TODO:docstring
+        """
+
+        # Don't double count reversible card text
+        return int(super().total_words() / (2 if self.layout == "reversible_card" else 1))

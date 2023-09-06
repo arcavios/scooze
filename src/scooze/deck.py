@@ -1,9 +1,10 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from sys import maxsize
-from typing import Generic, Self
+from typing import Generic, Self, get_args
 
+from scooze.card import FullCard, OracleCard
 from scooze.deckpart import C, DeckDiff, DeckPart
-from scooze.enums import Color, DecklistFormatter, Format, InThe, Legality
+from scooze.enums import DecklistFormatter, Format, InThe, Legality
 from scooze.utils import ComparableObject
 
 
@@ -33,26 +34,29 @@ class Deck(ComparableObject, Generic[C]):
         self.side = side
         self.cmdr = cmdr
 
-    def get_cards(self) -> Counter[C]:
-        return self.main + self.side + self.cmdr
-
-    cards: Counter[C] = property(get_cards)
+    @property
+    def cards(self) -> Counter[C]:
+        return self.main.cards + self.side.cards + self.cmdr.cards
 
     def __str__(self):
         decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
     def average_cmc(self) -> float:
-        # should return the average cost of cards in the deck, optional flag to exclude certain types (lands)
-        pass  # TODO: implement
+        """
+        TODO: docstring
+        should return the average cost of cards in the deck, optional flag to exclude certain types (lands)
+        """
+
+        return self.total_cmc() / self.total_cards()
 
     def average_words(self) -> float:
-        # should return the average number of words among cards in the deck (optional flag to exclude lands or other types)
-        pass  # TODO: implement NOTE: Only possible for FullCards at the moment
+        """
+        TODO: docstring
+        should return the average number of words among cards in the deck (optional flag to exclude lands or other types)
+        """
 
-    def count_colors(self) -> Counter[Color]:
-        # should return a Counter of each color and the incidence of cards of that color in the deck (flag to ignore lands or other types)
-        pass  # TODO: implement
+        return self.total_words() / self.total_cards()
 
     def diff(self, other: Self) -> DeckDiff:
         """
@@ -125,12 +129,20 @@ class Deck(ComparableObject, Generic[C]):
         return decklist
 
     def is_legal(self, format: Format) -> bool:
-        # should return true if the entire deck is legal in a given format and should return a list of cards that aren't legal otherwise (might need to name this differently)
-        pass  # TODO: implement
+        """
+        TODO: docstring
+        should return true if the entire deck is legal in a given format and should return a list of cards that aren't legal otherwise (might need to name this differently)
+        """
 
-    def legalities(self) -> dict[Format, Legality]:
-        # should return a dict[Format, Legality] of the cards contained within
-        pass  # TODO: implement
+        return self.legalities()[format]
+
+    def legalities(self) -> dict[Format, bool]:
+        """
+        TODO: docstring
+        should return a dict[Format, Legality] of the cards contained within
+        """
+
+        pass  # TODO: implement (keep in mind basics > 4. Cards that are legal <= 4, and cards that are restricted, <=1)
 
     def total_cards(self) -> int:
         """
@@ -145,13 +157,15 @@ class Deck(ComparableObject, Generic[C]):
         should return the total cmc of the deck, optional flag to filter certain types (lands)
         """
 
-        for c, q in self.cards:
-            pass # TODO: not getting type hinting on cards here, why?
-
+        return sum([c.cmc * q for c, q in self.cards.items()])
 
     def total_words(self) -> int:
-        # should return the total number of words among cards in the deck, optional flag to filter certain types (lands)
-        pass  # TODO: implement NOTE: Only possible for FullCards at the moment
+        """
+        TODO: docstring
+        should return the total number of words among cards in the deck, optional flag to filter certain types (lands)
+        """
+
+        return sum([c.total_words() * q for c, q in self.cards.items()])
 
     # region Mutations
 

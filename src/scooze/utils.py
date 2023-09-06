@@ -69,7 +69,8 @@ class ComparableObject:
     A simple base class to support comparable objects.
     """
 
-    def get_key(self):
+    @property
+    def __key__(self) -> tuple[Any, ...]:
         return tuple(getattr(self, k) for k in self.__dict__.keys())
 
     def __eq__(self, other: Self):
@@ -77,8 +78,6 @@ class ComparableObject:
 
     def __ne__(self, other: Self):
         return not (self == other)
-
-    __key__: tuple[Any, ...] = property(get_key)
 
 
 class HashableObject(ComparableObject, Hashable):
