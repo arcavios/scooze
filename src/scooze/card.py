@@ -274,7 +274,7 @@ class OracleCard(Card):
         TODO:docstring
         """
 
-        pattern = r"([a-zA-Z0-9]+)"
+        pattern = r"([a-zA-Z0-9+/]+)" # words, excluding reminder text
 
         # MDFC
         try:

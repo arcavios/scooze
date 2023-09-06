@@ -134,15 +134,19 @@ class Deck(ComparableObject, Generic[C]):
         should return true if the entire deck is legal in a given format and should return a list of cards that aren't legal otherwise (might need to name this differently)
         """
 
-        return self.legalities()[format]
+        # legal = True
 
-    def legalities(self) -> dict[Format, bool]:
-        """
-        TODO: docstring
-        should return a dict[Format, Legality] of the cards contained within
-        """
+        # for c, q in self.cards.items():
+        #     c_legal = c.legalities[format]
+        #     if c_legal is Legality.LEGAL:
 
-        pass  # TODO: implement (keep in mind basics > 4. Cards that are legal <= 4, and cards that are restricted, <=1)
+            # legal &= c.legalities[format] in [Legality.LEGAL, Legality.RESTRICTED]
+
+        # TODO: implement (keep in mind basics > 4. Cards that are legal <= 4, and cards that are restricted, <=1)
+
+        # return self.legalities()[format]
+        pass
+
 
     def total_cards(self) -> int:
         """
