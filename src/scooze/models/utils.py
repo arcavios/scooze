@@ -19,6 +19,7 @@ def _to_lower_camel(string: str) -> str:
 
 # region Public Utility Functions
 
+# TODO: move these to utils or deck utils. these aren't used by only models
 
 def main_size(fmt: Format) -> tuple[int, int]:
     """
