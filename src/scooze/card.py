@@ -45,7 +45,7 @@ class CardNormalizer(CardPartsNormalizer):
     """
 
     @classmethod
-    def all_parts(cls, all_parts: Iterable[RelatedCard] | Iterable[dict] | None) -> tuple[RelatedCard]:
+    def to_all_parts(cls, all_parts: Iterable[RelatedCard] | Iterable[dict] | None) -> tuple[RelatedCard]:
         """
         Normalize all_parts from JSON.
 
@@ -62,7 +62,7 @@ class CardNormalizer(CardPartsNormalizer):
             return tuple(RelatedCard(**part) for part in all_parts)
 
     @classmethod
-    def card_faces(
+    def to_card_faces(
         cls,
         card_faces: Iterable[F] | Iterable[dict] | None,
         card_face_class: type[F] = CardFace,
@@ -86,7 +86,7 @@ class CardNormalizer(CardPartsNormalizer):
             return tuple(card_face_class.from_json(card_face) for card_face in card_faces)
 
     @classmethod
-    def preview(cls, preview: Preview | dict | None) -> Preview:
+    def to_preview(cls, preview: Preview | dict | None) -> Preview:
         """
         Normalize preview from JSON.
 
@@ -103,7 +103,7 @@ class CardNormalizer(CardPartsNormalizer):
             return Preview(**preview)
 
     @classmethod
-    def prices(cls, prices: Prices | dict | None) -> Prices:
+    def to_prices(cls, prices: Prices | dict | None) -> Prices:
         """
         Normalize prices from JSON.
 
@@ -153,10 +153,10 @@ class Card(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = CardNormalizer.float(cmc)
-        self.color_identity = CardNormalizer.frozenset(color_identity)
-        self.colors = CardNormalizer.frozenset(colors)
-        self.legalities = CardNormalizer.frozendict(legalities)
+        self.cmc = CardNormalizer.to_float(cmc)
+        self.color_identity = CardNormalizer.to_frozenset(color_identity)
+        self.colors = CardNormalizer.to_frozenset(colors)
+        self.legalities = CardNormalizer.to_frozendict(legalities)
         self.mana_cost = mana_cost
         self.name = name
         self.power = power
@@ -244,15 +244,15 @@ class OracleCard(Card):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.card_faces = CardNormalizer.card_faces(card_faces, card_face_class=CardFace)
-        self.cmc = CardNormalizer.float(cmc)
-        self.color_identity = CardNormalizer.frozenset(color_identity)
-        self.color_indicator = CardNormalizer.frozenset(color_indicator)
-        self.colors = CardNormalizer.frozenset(colors)
+        self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=CardFace)
+        self.cmc = CardNormalizer.to_float(cmc)
+        self.color_identity = CardNormalizer.to_frozenset(color_identity)
+        self.color_indicator = CardNormalizer.to_frozenset(color_indicator)
+        self.colors = CardNormalizer.to_frozenset(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
-        self.keywords = CardNormalizer.frozenset(keywords)
-        self.legalities = CardNormalizer.frozendict(legalities)
+        self.keywords = CardNormalizer.to_frozenset(keywords)
+        self.legalities = CardNormalizer.to_frozendict(legalities)
         self.life_modifier = life_modifier
         self.loyalty = loyalty
         self.mana_cost = mana_cost
@@ -262,7 +262,7 @@ class OracleCard(Card):
         self.penny_rank = penny_rank
         self.power = power
         self.prints_search_uri = prints_search_uri
-        self.produced_mana = CardNormalizer.frozenset(produced_mana)
+        self.produced_mana = CardNormalizer.to_frozenset(produced_mana)
         self.reserved = reserved
         self.rulings_uri = rulings_uri
         self.toughness = toughness
@@ -491,7 +491,7 @@ class FullCard(OracleCard):
         self.lang = lang
         self.mtgo_id = mtgo_id
         self.mtgo_foil_id = mtgo_foil_id
-        self.multiverse_ids = CardNormalizer.tuple(multiverse_ids)
+        self.multiverse_ids = CardNormalizer.to_tuple(multiverse_ids)
         self.tcgplayer_id = tcgplayer_id
         self.tcgplayer_etched_id = tcgplayer_etched_id
         self.cardmarket_id = cardmarket_id
@@ -505,16 +505,16 @@ class FullCard(OracleCard):
 
         # region Gameplay Fields
 
-        self.all_parts = CardNormalizer.all_parts(all_parts)
-        self.card_faces = CardNormalizer.card_faces(card_faces, card_face_class=FullCardFace)
-        self.cmc = CardNormalizer.float(cmc)
-        self.color_identity = CardNormalizer.frozenset(color_identity)
-        self.color_indicator = CardNormalizer.frozenset(color_indicator)
-        self.colors = CardNormalizer.frozenset(colors)
+        self.all_parts = CardNormalizer.to_all_parts(all_parts)
+        self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=FullCardFace)
+        self.cmc = CardNormalizer.to_float(cmc)
+        self.color_identity = CardNormalizer.to_frozenset(color_identity)
+        self.color_indicator = CardNormalizer.to_frozenset(color_indicator)
+        self.colors = CardNormalizer.to_frozenset(colors)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
-        self.keywords = CardNormalizer.frozenset(keywords)
-        self.legalities = CardNormalizer.frozendict(legalities)
+        self.keywords = CardNormalizer.to_frozenset(keywords)
+        self.legalities = CardNormalizer.to_frozendict(legalities)
         self.life_modifier = life_modifier
         self.loyalty = loyalty
         self.mana_cost = mana_cost
@@ -523,7 +523,7 @@ class FullCard(OracleCard):
         self.oversized = oversized
         self.penny_rank = penny_rank
         self.power = power
-        self.produced_mana = CardNormalizer.frozenset(produced_mana)
+        self.produced_mana = CardNormalizer.to_frozenset(produced_mana)
         self.reserved = reserved
         self.toughness = toughness
         self.type_line = type_line
@@ -533,37 +533,37 @@ class FullCard(OracleCard):
         # region Print fields
 
         self.artist = artist
-        self.artist_ids = CardNormalizer.tuple(artist_ids)
-        self.attraction_lights = CardNormalizer.frozenset(attraction_lights)
+        self.artist_ids = CardNormalizer.to_tuple(artist_ids)
+        self.attraction_lights = CardNormalizer.to_frozenset(attraction_lights)
         self.booster = booster
         self.border_color = border_color
         self.card_back_id = card_back_id
         self.collector_number = collector_number
         self.content_warning = content_warning
         self.digital = digital
-        self.finishes = CardNormalizer.frozenset(finishes)
+        self.finishes = CardNormalizer.to_frozenset(finishes)
         self.flavor_name = flavor_name
         self.flavor_text = flavor_text
-        self.frame_effects = CardNormalizer.frozenset(frame_effects)
+        self.frame_effects = CardNormalizer.to_frozenset(frame_effects)
         self.frame = frame
         self.full_art = full_art
-        self.games = CardNormalizer.frozenset(games)
+        self.games = CardNormalizer.to_frozenset(games)
         self.highres_image = highres_image
         self.illustration_id = illustration_id
         self.image_status = image_status
-        self.image_uris = CardNormalizer.image_uris(image_uris)
+        self.image_uris = CardNormalizer.to_image_uris(image_uris)
         self.layout = layout
-        self.preview = CardNormalizer.preview(preview)
-        self.prices = CardNormalizer.prices(prices)
+        self.preview = CardNormalizer.to_preview(preview)
+        self.prices = CardNormalizer.to_prices(prices)
         self.printed_name = printed_name
         self.printed_text = printed_text
         self.printed_type_line = printed_type_line
         self.promo = promo
-        self.promo_types = CardNormalizer.frozenset(promo_types)
-        self.purchase_uris = CardNormalizer.purchase_uris(purchase_uris)
+        self.promo_types = CardNormalizer.to_frozenset(promo_types)
+        self.purchase_uris = CardNormalizer.to_purchase_uris(purchase_uris)
         self.rarity = rarity
-        self.related_uris = CardNormalizer.related_uris(related_uris)
-        self.released_at = CardNormalizer.date(released_at)
+        self.related_uris = CardNormalizer.to_related_uris(related_uris)
+        self.released_at = CardNormalizer.to_date(released_at)
         self.reprint = reprint
         self.scryfall_set_uri = scryfall_set_uri
         self.security_stamp = security_stamp

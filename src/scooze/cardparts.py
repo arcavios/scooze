@@ -79,9 +79,9 @@ class CardFace(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.cmc = CardPartsNormalizer.float(cmc)
-        self.color_indicator = CardPartsNormalizer.frozenset(color_indicator)
-        self.colors = CardPartsNormalizer.frozenset(colors)
+        self.cmc = CardPartsNormalizer.to_float(cmc)
+        self.color_indicator = CardPartsNormalizer.to_frozenset(color_indicator)
+        self.colors = CardPartsNormalizer.to_frozenset(colors)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
@@ -161,12 +161,12 @@ class FullCardFace(CardFace):
     ):
         self.artist = artist
         self.artist_id = artist_id
-        self.cmc = CardPartsNormalizer.float(cmc)
-        self.color_indicator = CardPartsNormalizer.frozenset(color_indicator)
-        self.colors = CardPartsNormalizer.frozenset(colors)
+        self.cmc = CardPartsNormalizer.to_float(cmc)
+        self.color_indicator = CardPartsNormalizer.to_frozenset(color_indicator)
+        self.colors = CardPartsNormalizer.to_frozenset(colors)
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
-        self.image_uris = CardPartsNormalizer.image_uris(image_uris)
+        self.image_uris = CardPartsNormalizer.to_image_uris(image_uris)
         self.layout = layout
         self.loyalty = loyalty
         self.mana_cost = mana_cost
@@ -206,12 +206,12 @@ class Prices(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.usd = CardPartsNormalizer.float(usd)
-        self.usd_foil = CardPartsNormalizer.float(usd_foil)
-        self.usd_etched = CardPartsNormalizer.float(usd_etched)
-        self.eur = CardPartsNormalizer.float(eur)
-        self.eur_foil = CardPartsNormalizer.float(eur_foil)
-        self.tix = CardPartsNormalizer.float(tix)
+        self.usd = CardPartsNormalizer.to_float(usd)
+        self.usd_foil = CardPartsNormalizer.to_float(usd_foil)
+        self.usd_etched = CardPartsNormalizer.to_float(usd_etched)
+        self.eur = CardPartsNormalizer.to_float(eur)
+        self.eur_foil = CardPartsNormalizer.to_float(eur_foil)
+        self.tix = CardPartsNormalizer.to_float(tix)
 
 
 class Preview(HashableObject):
@@ -232,7 +232,7 @@ class Preview(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.previewed_at = CardPartsNormalizer.date(previewed_at)
+        self.previewed_at = CardPartsNormalizer.to_date(previewed_at)
         self.source = source
         self.source_uri = source_uri
 
@@ -322,7 +322,7 @@ class CardPartsNormalizer(JsonNormalizer):
     """
 
     @classmethod
-    def image_uris(cls, image_uris: ImageUris | Mapping[str, str] | None) -> ImageUris:
+    def to_image_uris(cls, image_uris: ImageUris | Mapping[str, str] | None) -> ImageUris:
         """
         Normalize image_uris from JSON.
 
@@ -339,7 +339,7 @@ class CardPartsNormalizer(JsonNormalizer):
         return ImageUris(**image_uris)
 
     @classmethod
-    def purchase_uris(cls, purchase_uris: PurchaseUris | Mapping[str, str] | None) -> PurchaseUris:
+    def to_purchase_uris(cls, purchase_uris: PurchaseUris | Mapping[str, str] | None) -> PurchaseUris:
         """
         Normalize purchase_uris from JSON.
 
@@ -354,7 +354,7 @@ class CardPartsNormalizer(JsonNormalizer):
         return PurchaseUris(**purchase_uris)
 
     @classmethod
-    def related_uris(cls, related_uris: RelatedUris | Mapping[str, str] | None) -> RelatedUris:
+    def to_related_uris(cls, related_uris: RelatedUris | Mapping[str, str] | None) -> RelatedUris:
         """
         Normalize related_uris from JSON.
 

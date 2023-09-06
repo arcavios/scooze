@@ -5,12 +5,14 @@ from sys import stdout
 from typing import Any, Hashable, Iterable, Mapping, TypeVar
 
 from frozendict import frozendict
+from scooze.enums import ExtendedEnum
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk/"  # TODO(#99) - Change DEFAULT_BULK_FILE_DIR to work when called from anywhere.
 
 ## Generic Types
 T = TypeVar("T")  # generic type
 V = TypeVar("V")  # generic value type
+E = TypeVar("E", bound=ExtendedEnum)
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
@@ -92,7 +94,21 @@ class HashableObject(ComparableObject, Hashable):
 
 # endregion
 
-# region JSON Normalizer
+# region JSON Utils
+
+
+class JsonConverter:
+    """
+    A simple class to be used when converting types of data from JSON.
+    """
+
+    @classmethod
+    def enum(cls, e: E, v) -> E:
+        """
+        TODO: docstring
+        """
+
+        return E[v]
 
 
 class JsonNormalizer:
@@ -101,7 +117,7 @@ class JsonNormalizer:
     """
 
     @classmethod
-    def date(cls, d: date | str | None) -> date:
+    def to_date(cls, d: date | str | None) -> date:
         """
         Normalize a date.
 
@@ -118,7 +134,7 @@ class JsonNormalizer:
         return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
 
     @classmethod
-    def float(cls, f: FloatableT | None) -> float:
+    def to_float(cls, f: FloatableT | None) -> float:
         """
         Normalize a float.
 
@@ -135,7 +151,7 @@ class JsonNormalizer:
         return float(f)
 
     @classmethod
-    def frozendict(cls, d: Mapping[T, V] | None) -> frozendict[T, V]:
+    def to_frozendict(cls, d: Mapping[T, V] | None) -> frozendict[T, V]:
         """
         Normalize a frozendict.
 
@@ -152,7 +168,7 @@ class JsonNormalizer:
         return frozendict(d)
 
     @classmethod
-    def frozenset(cls, s: Iterable[T] | None) -> frozenset[T]:
+    def to_frozenset(cls, s: Iterable[T] | None) -> frozenset[T]:
         """
         Normalize a frozenset.
 
@@ -169,7 +185,7 @@ class JsonNormalizer:
         return frozenset(s)
 
     @classmethod
-    def tuple(cls, t: Iterable[T] | None) -> tuple[T]:
+    def to_tuple(cls, t: Iterable[T] | None) -> tuple[T]:
         """
         Normalize a tuple.
 
