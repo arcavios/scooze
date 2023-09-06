@@ -28,7 +28,7 @@ def request_body_card() -> CardModelIn:
 
 
 @pytest.mark.router_card
-@patch("scooze.database.add_card")
+@patch("scooze.database.card.add_card")
 def test_add_card(mock_add: MagicMock, client: TestClient, request_body_card: CardModelIn):
     card_json = request_body_card.model_dump(mode="json", by_alias=True)
     mock_add.return_value: CardModelOut = CardModelOut(**card_json)
@@ -40,7 +40,7 @@ def test_add_card(mock_add: MagicMock, client: TestClient, request_body_card: Ca
 
 
 @pytest.mark.router_card
-@patch("scooze.database.add_card")
+@patch("scooze.database.card.add_card")
 def test_add_card_bad(mock_add: MagicMock, client: TestClient, request_body_card: CardModelIn):
     card_json = request_body_card.model_dump(mode="json", by_alias=True)
     mock_add.return_value = None
