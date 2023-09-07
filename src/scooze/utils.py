@@ -13,7 +13,7 @@ DEFAULT_BULK_FILE_DIR = "./data/bulk/"  # TODO(#99) - Change DEFAULT_BULK_FILE_D
 T = TypeVar("T")  # generic type
 V = TypeVar("V")  # generic value type
 E = TypeVar("E", bound=ExtendedEnum)  # generic Enum
-F = TypeVar("F", bound=ExtendedEnum)  # generic Enum
+N = TypeVar("N", bound=ExtendedEnum)  # generic Enum
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
@@ -151,8 +151,8 @@ class JsonNormalizer:
 
     @classmethod
     def to_frozendict(
-        cls, d: Mapping[T, V] | None, convert_key_to_enum: E = None, convert_value_to_enum: F = None
-    ) -> frozendict[T | E, V | F]:
+        cls, d: Mapping[T, V] | None, convert_key_to_enum: E = None, convert_value_to_enum: N = None
+    ) -> frozendict[T | E, V | N]:
         """
         Normalize a frozendict.
 
