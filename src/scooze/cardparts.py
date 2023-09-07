@@ -162,12 +162,12 @@ class FullCardFace(CardFace):
         self.artist = artist
         self.artist_id = artist_id
         self.cmc = CardPartsNormalizer.to_float(cmc)
-        self.color_indicator = CardPartsNormalizer.to_frozenset(color_indicator)
-        self.colors = CardPartsNormalizer.to_frozenset(colors)
+        self.color_indicator = CardPartsNormalizer.to_frozenset(color_indicator, convert_to_enum=Color)
+        self.colors = CardPartsNormalizer.to_frozenset(colors, convert_to_enum=Color)
         self.flavor_text = flavor_text
         self.illustration_id = illustration_id
         self.image_uris = CardPartsNormalizer.to_image_uris(image_uris)
-        self.layout = layout
+        self.layout = CardPartsNormalizer.to_enum(Layout, layout)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
         self.name = name
@@ -286,7 +286,7 @@ class RelatedCard(HashableObject):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         self.scryfall_id = scryfall_id if scryfall_id else id
-        self.component = component
+        self.component = CardPartsNormalizer.to_enum(Component, component)
         self.name = name
         self.type_line = type_line
         self.uri = uri
