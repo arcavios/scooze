@@ -195,7 +195,7 @@ class JsonNormalizer:
         return frozenset({JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in s})
 
     @classmethod
-    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: E = None) -> tuple[T]:
+    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: E = None) -> tuple[T | E]:
         """
         Normalize a tuple.
 
