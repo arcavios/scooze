@@ -65,7 +65,7 @@ def test_archetype(archetype):
 
 def test_format(main_cards):
     deck = DeckModel.model_construct(archetype="test_format", format=Format.MODERN, main=main_cards)
-    assert deck.format == Format.MODERN
+    assert deck.format is Format.MODERN
 
 
 @pytest.mark.deck_validation
