@@ -126,11 +126,10 @@ class JsonNormalizer:
         TODO: docstring
         """
 
-        try:
-            return e[v]
-        except KeyError:
-            if v in e.list():
-                return e(v)
+        if v in e.list():
+            return e(v)
+
+        return e[v]
 
     @classmethod
     def to_float(cls, f: FloatableT | None) -> float:
