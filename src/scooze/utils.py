@@ -12,7 +12,8 @@ DEFAULT_BULK_FILE_DIR = "./data/bulk/"  # TODO(#99) - Change DEFAULT_BULK_FILE_D
 ## Generic Types
 T = TypeVar("T")  # generic type
 V = TypeVar("V")  # generic value type
-E = TypeVar("E", bound=ExtendedEnum)
+E = TypeVar("E", bound=ExtendedEnum)  # generic Enum
+F = TypeVar("F", bound=ExtendedEnum)  # generic Enum
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
@@ -125,7 +126,11 @@ class JsonNormalizer:
         TODO: docstring
         """
 
-        return e[v]
+        try:
+            return e[v]
+        except KeyError:
+            if v in e.list():
+                return e(v)
 
     @classmethod
     def to_float(cls, f: FloatableT | None) -> float:
@@ -145,7 +150,9 @@ class JsonNormalizer:
         return float(f)
 
     @classmethod
-    def to_frozendict(cls, d: Mapping[T, V] | None) -> frozendict[T, V]:
+    def to_frozendict(
+        cls, d: Mapping[T, V] | None, convert_key_to_enum: E = None, convert_value_to_enum: F = None
+    ) -> frozendict[T | E, V | F]:
         """
         Normalize a frozendict.
 
@@ -159,10 +166,19 @@ class JsonNormalizer:
         if d is None or isinstance(d, frozendict):
             return d
 
-        return frozendict(d)
+        return frozendict(
+            {
+                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k)
+                if convert_key_to_enum
+                else k: JsonNormalizer.to_enum(e=convert_value_to_enum, v=v)
+                if convert_value_to_enum
+                else v
+                for k, v in d.items()
+            }
+        )
 
     @classmethod
-    def to_frozenset(cls, s: Iterable[T] | None) -> frozenset[T]:
+    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: E = None) -> frozenset[T | E]:
         """
         Normalize a frozenset.
 
@@ -176,10 +192,10 @@ class JsonNormalizer:
         if s is None or isinstance(s, frozenset):
             return s
 
-        return frozenset(s)
+        return frozenset({JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in s})
 
     @classmethod
-    def to_tuple(cls, t: Iterable[T] | None) -> tuple[T]:
+    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: E = None) -> tuple[T]:
         """
         Normalize a tuple.
 
@@ -193,7 +209,7 @@ class JsonNormalizer:
         if t is None or isinstance(t, tuple):
             return t
 
-        return tuple(t)
+        return tuple([JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in t])
 
 
 # endregion
