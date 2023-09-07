@@ -354,8 +354,8 @@ class DbCollection(ExtendedEnum, StrEnum):
     Collections in the Scooze database.
     """
 
-    CARDS = auto()
-    DECKS = auto()
+    CARDS = "cards"
+    DECKS = "decks"
 
 
 # endregion
