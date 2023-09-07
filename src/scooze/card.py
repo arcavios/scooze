@@ -33,7 +33,7 @@ from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
-F = TypeVar("F", CardFace, FullCardFace)  # generic CardFace type
+F = TypeVar("F", bound=CardFace)  # generic CardFace type
 
 
 class Card(HashableObject):
