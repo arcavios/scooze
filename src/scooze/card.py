@@ -170,7 +170,9 @@ class OracleCard(Card):
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
         self.keywords = CardNormalizer.to_frozenset(keywords)
-        self.legalities = CardNormalizer.to_frozendict(legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality)
+        self.legalities = CardNormalizer.to_frozendict(
+            legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality
+        )
         self.life_modifier = life_modifier
         self.loyalty = loyalty
         self.mana_cost = mana_cost
@@ -432,7 +434,9 @@ class FullCard(OracleCard):
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
         self.keywords = CardNormalizer.to_frozenset(keywords)
-        self.legalities = CardNormalizer.to_frozendict(legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality)
+        self.legalities = CardNormalizer.to_frozendict(
+            legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality
+        )
         self.life_modifier = life_modifier
         self.loyalty = loyalty
         self.mana_cost = mana_cost
