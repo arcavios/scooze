@@ -123,7 +123,14 @@ class JsonNormalizer:
     @classmethod
     def to_enum(cls, e: Type[E], v) -> E:
         """
-        TODO: docstring
+        Normalize an Enum.
+
+        Args:
+            e: A type of Enum to normalize to.
+            v: A value to normalize.
+
+        Returns:
+            An instance of the given type of Enum.
         """
 
         if v is None:
@@ -159,6 +166,8 @@ class JsonNormalizer:
 
         Args:
             d: A frozendict to normalize.
+            convert_key_to_enum: A type of Enum to normalize keys to.
+            convert_value_to_enum: A type of Enum to normalize values to.
 
         Returns:
             A frozendict.
@@ -185,6 +194,7 @@ class JsonNormalizer:
 
         Args:
             s: A frozenset to normalize.
+            convert_to_enum: A type of Enum to normalize values to.
 
         Returns:
             A frozenset.
@@ -202,6 +212,7 @@ class JsonNormalizer:
 
         Args:
             t: A tuple to normalize.
+            convert_to_enum: A type of Enum to normalize values to.
 
         Returns:
             A tuple.
