@@ -351,7 +351,7 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
 
 class DbCollection(ExtendedEnum, StrEnum):
     """
-    Collections in the Scooze database
+    Collections in the Scooze database.
     """
 
     CARDS = auto()

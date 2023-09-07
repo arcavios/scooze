@@ -12,8 +12,8 @@ DEFAULT_BULK_FILE_DIR = "./data/bulk/"  # TODO(#99) - Change DEFAULT_BULK_FILE_D
 ## Generic Types
 T = TypeVar("T")  # generic type
 V = TypeVar("V")  # generic value type
-E = TypeVar("E", bound=ExtendedEnum)  # generic Enum
-N = TypeVar("N", bound=ExtendedEnum)  # generic Enum
+E = TypeVar("E", bound=ExtendedEnum)  # generic Enum type
+N = TypeVar("N", bound=ExtendedEnum)  # generic Enum (for mapping values) type
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
@@ -126,7 +126,9 @@ class JsonNormalizer:
         TODO: docstring
         """
 
-        if v in e.list():
+        if v is None:
+            return v
+        elif v in e.list():
             return e(v)
 
         return e[v]
@@ -162,7 +164,7 @@ class JsonNormalizer:
             A frozendict.
         """
 
-        if d is None or isinstance(d, frozendict):
+        if d is None:
             return d
 
         return frozendict(
@@ -188,7 +190,7 @@ class JsonNormalizer:
             A frozenset.
         """
 
-        if s is None or isinstance(s, frozenset):
+        if s is None:
             return s
 
         return frozenset({JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in s})
@@ -205,7 +207,7 @@ class JsonNormalizer:
             A tuple.
         """
 
-        if t is None or isinstance(t, tuple):
+        if t is None:
             return t
 
         return tuple([JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in t])
