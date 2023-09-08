@@ -1,10 +1,10 @@
 from collections import Counter
 from datetime import date
 
-import scooze.models.utils as model_utils
 from pydantic import Field, model_validator
 from scooze.enums import Format
-from scooze.models.utils import ScoozeBaseModel
+from scooze.models.utils import ObjectIdT, ScoozeBaseModel
+from scooze.utils import cmdr_size, main_size, side_size
 
 
 class DeckModel(ScoozeBaseModel):
@@ -32,15 +32,15 @@ class DeckModel(ScoozeBaseModel):
         default=None,
         description="The date this Deck was played.",
     )
-    main: Counter[model_utils.ObjectIdT] = Field(
+    main: Counter[ObjectIdT] = Field(
         default=Counter(),
         description="The main deck. Typically 60 cards minimum.",
     )
-    side: Counter[model_utils.ObjectIdT] = Field(
+    side: Counter[ObjectIdT] = Field(
         default=Counter(),
         description="The sideboard. Typically 15 cards maximum.",
     )
-    cmdr: Counter[model_utils.ObjectIdT] = Field(
+    cmdr: Counter[ObjectIdT] = Field(
         default=Counter(),
         description="The command zone. Typically 1 or 2 cards in Commander formats.",
     )
@@ -51,7 +51,7 @@ class DeckModel(ScoozeBaseModel):
 
     @model_validator(mode="after")
     def validate_main(self):
-        m_min, m_max = model_utils.main_size(self.format)
+        m_min, m_max = main_size(self.format)
         if self.main.total() < m_min:
             e = ValueError(
                 f"Not enough cards in main deck. Provided main deck has {self.main.total()} cards. Expected at least {m_min}."
@@ -66,7 +66,7 @@ class DeckModel(ScoozeBaseModel):
 
     @model_validator(mode="after")
     def validate_side(self):
-        s_min, s_max = model_utils.side_size(self.format)
+        s_min, s_max = side_size(self.format)
         if self.side.total() < s_min:
             raise ValueError(
                 f"Not enough cards in sideboard. Provided sideboard has {self.side.total()} cards. Expected at least {s_min}."
@@ -79,7 +79,7 @@ class DeckModel(ScoozeBaseModel):
 
     @model_validator(mode="after")
     def validate_cmdr(self):
-        c_min, c_max = model_utils.cmdr_size(self.format)
+        c_min, c_max = cmdr_size(self.format)
         if self.cmdr.total() < c_min:
             raise ValueError(
                 f"Not enough cards in command zone. Provided command zone has {self.cmdr.total()} cards. Expected at least {c_min}."
@@ -98,7 +98,7 @@ class DeckModelIn(DeckModel):
 
 
 class DeckModelOut(DeckModel):
-    id: model_utils.ObjectIdT = Field(
+    id: ObjectIdT = Field(
         default=None,
         alias="_id",
     )

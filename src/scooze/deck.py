@@ -48,7 +48,10 @@ class Deck(ComparableObject, Generic[C]):
         should return the average cost of cards in the deck, optional flag to exclude certain types (lands)
         """
 
-        return self.total_cmc() / self.total_cards()
+        try:
+            return self.total_cmc() / self.total_cards()
+        except ZeroDivisionError:
+            return 0
 
     def average_words(self) -> float:
         """
@@ -56,7 +59,10 @@ class Deck(ComparableObject, Generic[C]):
         should return the average number of words among cards in the deck (optional flag to exclude lands or other types)
         """
 
-        return self.total_words() / self.total_cards()
+        try:
+            return self.total_words() / self.total_cards()
+        except ZeroDivisionError:
+            return 0
 
     def diff(self, other: Self) -> DeckDiff:
         """
