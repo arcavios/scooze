@@ -224,7 +224,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     )
     lang: Language = Field(
         # TODO(#48): better default?
-        default="en",
+        default=Language.ENGLISH,
         description="The language code for this print; see https://scryfall.com/docs/api/languages",
     )
     mtgo_id: int | None = Field(
@@ -419,7 +419,7 @@ class FullCardModel(CardModel, validate_assignment=True):
         description="Links to images of this card in various qualities.",
     )
     layout: Layout = Field(
-        default="normal",
+        default=Layout.NORMAL,
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
     )
     oversized: bool = Field(

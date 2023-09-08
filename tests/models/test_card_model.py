@@ -108,7 +108,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
     assert model.attraction_lights is None
     assert model.booster is True
-    assert model.border_color == BorderColor.BLACK
+    assert model.border_color is BorderColor.BLACK
     assert model.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
     assert model.card_faces is None
     assert model.cardmarket_id is None
@@ -123,14 +123,14 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.finishes == {Finish.NONFOIL, Finish.FOIL}
     assert model.flavor_name is None
     assert model.flavor_text is None
-    assert model.frame == Frame._2015
+    assert model.frame is Frame._2015
     assert model.frame_effects is None
     assert model.full_art is False
     assert model.games == {Game.MTGO}
     assert model.hand_modifier is None
     assert model.highres_image is True
     assert model.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
-    assert model.image_status == ImageStatus.HIGHRES_SCAN
+    assert model.image_status is ImageStatus.HIGHRES_SCAN
 
     # ImageUris
     assert model.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
@@ -141,8 +141,8 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
     assert model.keywords == set()
-    assert model.lang == Language.ENGLISH
-    assert model.layout == Layout.NORMAL
+    assert model.lang is Language.ENGLISH
+    assert model.layout is Layout.NORMAL
     assert model.legalities == legalities_ancestral_recall
     assert model.life_modifier is None
     assert model.loyalty is None
@@ -179,7 +179,7 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
     assert model.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
 
-    assert model.rarity == Rarity.BONUS
+    assert model.rarity is Rarity.BONUS
 
     # RelatedUris
     assert model.related_uris.edhrec.startswith("https://edhrec.com/")
@@ -194,12 +194,12 @@ def test_fullcardmodel_from_json_instant(json_ancestral_recall, legalities_ances
     assert model.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
     assert model.scryfall_set_uri.startswith("https://scryfall.com/sets/")
     assert model.scryfall_uri.startswith("https://scryfall.com/card/")
-    assert model.security_stamp == SecurityStamp.OVAL
+    assert model.security_stamp is SecurityStamp.OVAL
     assert model.set == "vma"
     assert model.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
     assert model.set_name == "Vintage Masters"
     assert model.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert model.set_type == SetType.MASTERS
+    assert model.set_type is SetType.MASTERS
     assert model.set_uri.startswith("https://api.scryfall.com/sets/")
     assert model.story_spotlight is False
     assert model.tcgplayer_etched_id is None
@@ -292,13 +292,13 @@ def test_fullcardmodel_from_json_reversible(
     assert len(model.all_parts) == 2
     r1, r2 = model.all_parts
     # RelatedCard 1
-    assert r1.component == Component.COMBO_PIECE
+    assert r1.component is Component.COMBO_PIECE
     assert r1.name == "Zndrsplt, Eye of Wisdom // Zndrsplt, Eye of Wisdom"
     assert r1.scryfall_id == "e25ce640-baf5-442b-8b75-d05dd9fb20dd"
     assert r1.type_line == "Legendary Creature — Homunculus // Legendary Creature — Homunculus"
     assert r1.uri.startswith("https://api.scryfall.com/cards/")
     # RelatedCard 2
-    assert r2.component == Component.COMBO_PIECE
+    assert r2.component is Component.COMBO_PIECE
     assert r2.name == "Okaun, Eye of Chaos // Okaun, Eye of Chaos"
     assert r2.scryfall_id == "8421ad46-dc7f-4b66-800b-e41c30835300"
     assert r2.type_line == "Legendary Creature — Cyclops Berserker // Legendary Creature — Cyclops Berserker"
@@ -309,7 +309,7 @@ def test_fullcardmodel_from_json_reversible(
     assert model.artist_ids == ["add4cc84-9254-4c0b-8fcd-af4a238bdbd5"]
     assert model.attraction_lights is None
     assert model.booster is False
-    assert model.border_color == BorderColor.BORDERLESS
+    assert model.border_color is BorderColor.BORDERLESS
     assert model.card_back_id == ""
 
     assert len(model.card_faces) == 2
@@ -332,7 +332,7 @@ def test_fullcardmodel_from_json_reversible(
     assert front.image_uris.png.startswith("https://cards.scryfall.io/png/")
     assert front.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
-    assert front.layout == Layout.NORMAL
+    assert front.layout is Layout.NORMAL
     assert front.loyalty is None
     assert front.mana_cost == "{4}{U}"
     assert front.name == "Zndrsplt, Eye of Wisdom"
@@ -363,7 +363,7 @@ def test_fullcardmodel_from_json_reversible(
     assert back.image_uris.png.startswith("https://cards.scryfall.io/png/")
     assert back.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
-    assert back.layout == Layout.NORMAL
+    assert back.layout is Layout.NORMAL
     assert back.loyalty is None
     assert back.mana_cost == "{4}{U}"
     assert back.name == "Zndrsplt, Eye of Wisdom"
@@ -389,18 +389,18 @@ def test_fullcardmodel_from_json_reversible(
     assert model.finishes == {Finish.FOIL}
     assert model.flavor_name is None
     assert model.flavor_text is None
-    assert model.frame == Frame._2015
+    assert model.frame is Frame._2015
     assert model.frame_effects == {FrameEffect.INVERTED, FrameEffect.LEGENDARY}
     assert model.full_art is False
     assert model.games == {Game.PAPER}
     assert model.hand_modifier is None
     assert model.highres_image is True
     assert model.illustration_id is None
-    assert model.image_status == ImageStatus.HIGHRES_SCAN
+    assert model.image_status is ImageStatus.HIGHRES_SCAN
     assert model.image_uris is None
     assert model.keywords == {"Partner", "Partner with"}
-    assert model.lang == Language.ENGLISH
-    assert model.layout == Layout.REVERSIBLE_CARD
+    assert model.lang is Language.ENGLISH
+    assert model.layout is Layout.REVERSIBLE_CARD
     assert model.legalities == legalities_zndrsplt_eye_of_wisdom
     assert model.life_modifier is None
     assert model.loyalty is None
@@ -437,7 +437,7 @@ def test_fullcardmodel_from_json_reversible(
     assert model.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
     assert model.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
 
-    assert model.rarity == Rarity.RARE
+    assert model.rarity is Rarity.RARE
 
     # RelatedUris
     assert model.related_uris.edhrec.startswith("https://edhrec.com/")
@@ -450,12 +450,12 @@ def test_fullcardmodel_from_json_reversible(
     assert model.rulings_uri.startswith("https://api.scryfall.com/cards/")
     assert model.scryfall_id == "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf"
     assert model.scryfall_uri.startswith("https://scryfall.com/card/")
-    assert model.security_stamp == SecurityStamp.OVAL
+    assert model.security_stamp is SecurityStamp.OVAL
     assert model.set == "sld"
     assert model.set_id == "4d92a8a7-ccb0-437d-abdc-9d70fc5ed672"
     assert model.set_name == "Secret Lair Drop"
     assert model.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert model.set_type == SetType.BOX
+    assert model.set_type is SetType.BOX
     assert model.set_uri.startswith("https://api.scryfall.com/sets/")
     assert model.tcgplayer_etched_id is None
     assert model.tcgplayer_id == 259216

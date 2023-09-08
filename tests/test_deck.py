@@ -55,7 +55,7 @@ def test_archetype(archetype_modern_4c):
 
 def test_format():
     deck = Deck(archetype="test_format", format=Format.MODERN)
-    assert deck.format == Format.MODERN
+    assert deck.format is Format.MODERN
 
 
 def test_main(main_modern_4c):
