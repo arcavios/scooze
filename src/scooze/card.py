@@ -532,6 +532,7 @@ class FullCard(OracleCard):
         # Don't double count reversible card text
         return int(super().total_words() / (2 if self.layout == "reversible_card" else 1))
 
+
 class CardNormalizer(CardPartsNormalizer):
     """
     A simple class to use when normalizing non-serializable data from JSON.

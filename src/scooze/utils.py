@@ -2,7 +2,7 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import stdout
-from typing import Any, Hashable, Iterable, Mapping, Type, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
 from scooze.enums import ExtendedEnum
