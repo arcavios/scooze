@@ -11,7 +11,7 @@ class CaseInsensitiveEnumMeta(EnumMeta):
 
     def __getitem__(self, item):
         if isinstance(item, str):
-            item = item.lower()
+            item = item.upper()
         return super().__getitem__(item)
 
 
@@ -351,11 +351,11 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
 
 class DbCollection(ExtendedEnum, StrEnum):
     """
-    Collections in the Scooze database
+    Collections in the Scooze database.
     """
 
-    CARDS = auto()
-    DECKS = auto()
+    CARDS = "cards"
+    DECKS = "decks"
 
 
 # endregion
