@@ -1,11 +1,12 @@
-from collections import Counter, defaultdict
+from collections import Counter
 from sys import maxsize
-from typing import Generic, Self, get_args
+from typing import Generic, Self
 
-from scooze.card import FullCard, OracleCard
 from scooze.deckpart import C, DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe, Legality
-from scooze.utils import ComparableObject
+from scooze.utils import ComparableObject, check_max_relentless_quantity, max_quantity
+
+# TODO: for the deck enhancement ticket - write tests for these new functions
 
 
 class Deck(ComparableObject, Generic[C]):
@@ -140,18 +141,16 @@ class Deck(ComparableObject, Generic[C]):
         should return true if the entire deck is legal in a given format and should return a list of cards that aren't legal otherwise (might need to name this differently)
         """
 
-        # legal = True
+        for c, q in self.cards.items():
+            c_legal = c.legalities[format]
 
-        # for c, q in self.cards.items():
-        #     c_legal = c.legalities[format]
-        #     if c_legal is Legality.LEGAL:
+            if (c_legal is Legality.RESTRICTED and q > 1) or c_legal in [Legality.BANNED, Legality.NOT_LEGAL]:
+                return False
 
-        # legal &= c.legalities[format] in [Legality.LEGAL, Legality.RESTRICTED]
+            if q > max_quantity(format) and q > check_max_relentless_quantity(c.name):
+                return False
 
-        # TODO: implement (keep in mind basics > 4. Cards that are legal <= 4, and cards that are restricted, <=1)
-
-        # return self.legalities()[format]
-        pass
+        return True
 
     def total_cards(self) -> int:
         """

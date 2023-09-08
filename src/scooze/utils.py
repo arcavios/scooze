@@ -65,6 +65,81 @@ def get_logger(
 # region Deck Format Helpers
 
 
+def check_max_relentless_quantity(name: str) -> int:
+    """
+    Given a card name, what is the maximum quantity of a card in a deck?
+    """
+
+    match name:
+        case "Seven Dwarves":
+            return 7
+        case "Nazgûl" | "Nazgul":
+            return 9
+        case (
+            "Plains"
+            | "Island"
+            | "Swamp"
+            | "Mountain"
+            | "Forest"
+            | "Wastes"
+            | "Snow-Covered Plains"
+            | "Snow-Covered Island"
+            | "Snow-Covered Swamp"
+            | "Snow-Covered Mountain"
+            | "Snow-Covered Forest"
+            | "Dragon's Approach"
+            | "Persistent Petitioners"
+            | "Rat Colony"
+            | "Relentless Rats"
+            | "Shadowborn Apostle"
+        ):
+            return maxsize
+        case _:
+            return 0  # helps identify new relentless cards
+
+
+def max_quantity(fmt: Format) -> int:
+    """
+    Given a Format, what is the maximum quantity of a card in a deck?
+    """
+
+    match fmt.value:
+        case Format.LIMITED:
+            return maxsize
+
+        case (
+            Format.BRAWL
+            | Format.COMMANDER
+            | Format.DUEL
+            | Format.GLADIATOR
+            | Format.HISTORICBRAWL
+            | Format.OATHBREAKER
+            | Format.PAUPERCOMMANDER
+            | Format.PREDH
+        ):
+            return 1
+
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 4
+
+        case _:
+            return maxsize
+
+
 def main_size(fmt: Format) -> tuple[int, int]:
     """
     Given a Format, what are the required min and max size for a main deck?
