@@ -2,6 +2,7 @@ import json
 from collections import Counter
 
 import pytest
+from bson import ObjectId
 from scooze.card import OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
@@ -866,6 +867,27 @@ def side_modern_4c_str(
 @pytest.fixture
 def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck:
     return Deck(archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c)
+
+
+# endregion
+
+# region Deck Router
+
+
+@pytest.fixture
+def main_modern_4c_dict(main_modern_4c: DeckPart) -> dict:
+    # TODO(#111):
+    # For the moment, we don't really care that these are just
+    # randomly generated ObjectIds, so long as they are ObjectIds.
+    return {ObjectId(): q for _, q in main_modern_4c.cards.items()}
+
+
+@pytest.fixture
+def side_modern_4c_dict(side_modern_4c: DeckPart) -> dict:
+    # TODO(#111):
+    # For the moment, we don't really care that these are just
+    # randomly generated ObjectIds, so long as they are ObjectIds.
+    return {ObjectId(): q for _, q in side_modern_4c.cards.items()}
 
 
 # endregion
