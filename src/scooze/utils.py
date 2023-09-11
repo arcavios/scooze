@@ -65,7 +65,7 @@ def get_logger(
 # region Deck Format Helpers
 
 
-def check_max_relentless_quantity(name: str) -> int:
+def max_relentless_quantity(name: str) -> int:
     """
     Given a card name, what is the maximum quantity of a card in a deck?
     """
@@ -136,7 +136,7 @@ def max_quantity(fmt: Format) -> int:
         ):
             return 4
 
-        case _:
+        case Format.NONE | _:
             return maxsize
 
 
@@ -178,7 +178,7 @@ def main_size(fmt: Format) -> tuple[int, int]:
         case Format.GLADIATOR:
             return 100, 100
 
-        case _:
+        case Format.NONE | _:
             return 0, maxsize
 
 
@@ -220,7 +220,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
         ):
             return 0, 0
 
-        case _:
+        case Format.NONE | _:
             return 0, maxsize
 
 
@@ -258,7 +258,7 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
         case Format.OATHBREAKER:
             return 2, 2
 
-        case _:
+        case Format.NONE | _:
             return 0, maxsize
 
 

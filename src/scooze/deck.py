@@ -2,14 +2,12 @@ from collections import Counter
 from sys import maxsize
 from typing import Generic, Self
 
-from scooze.deckpart import C, DeckDiff, DeckPart
+from scooze.deckpart import CardT, DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe, Legality
-from scooze.utils import ComparableObject, check_max_relentless_quantity, max_quantity
-
-# TODO: for the deck enhancement ticket - write tests for these new functions
+from scooze.utils import ComparableObject, max_quantity, max_relentless_quantity
 
 
-class Deck(ComparableObject, Generic[C]):
+class Deck(ComparableObject, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -25,9 +23,9 @@ class Deck(ComparableObject, Generic[C]):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart[C] = DeckPart(),
-        side: DeckPart[C] = DeckPart(),
-        cmdr: DeckPart[C] = DeckPart(),
+        main: DeckPart[CardT] = DeckPart(),
+        side: DeckPart[CardT] = DeckPart(),
+        cmdr: DeckPart[CardT] = DeckPart(),
     ):
         self.archetype = archetype
         self.format = format
@@ -36,7 +34,7 @@ class Deck(ComparableObject, Generic[C]):
         self.cmdr = cmdr
 
     @property
-    def cards(self) -> Counter[C]:
+    def cards(self) -> Counter[CardT]:
         return self.main.cards + self.side.cards + self.cmdr.cards
 
     def __str__(self):
@@ -45,25 +43,31 @@ class Deck(ComparableObject, Generic[C]):
 
     def average_cmc(self) -> float:
         """
-        TODO: docstring
-        should return the average cost of cards in the deck, optional flag to exclude certain types (lands)
+        The average mana value of cards in this Deck.
         """
 
-        try:
+        # TODO(#112): Add type filters.
+        # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
+
+        total_cards = self.total_cards()
+
+        if total_cards > 0:
             return self.total_cmc() / self.total_cards()
-        except ZeroDivisionError:
-            return 0
+        return 0
 
     def average_words(self) -> float:
         """
-        TODO: docstring
-        should return the average number of words among cards in the deck (optional flag to exclude lands or other types)
+        The average number of words across all oracle text on all cards in this
+        Deck (excludes reminder text).
         """
 
-        try:
+        # TODO(#112): Add type filters.
+
+        total_cards = self.total_cards()
+
+        if total_cards > 0:
             return self.total_words() / self.total_cards()
-        except ZeroDivisionError:
-            return 0
+        return 0
 
     def diff(self, other: Self) -> DeckDiff:
         """
@@ -83,7 +87,7 @@ class Deck(ComparableObject, Generic[C]):
             cmdr=self.cmdr.diff(other.cmdr),
         )
 
-    def decklist_equals(self, other: Self):
+    def decklist_equals(self, other: Self) -> bool:
         """
         Determines if this Deck contains exactly the same cards as another.
 
@@ -137,8 +141,18 @@ class Deck(ComparableObject, Generic[C]):
 
     def is_legal(self, format: Format) -> bool:
         """
-        TODO: docstring
-        should return true if the entire deck is legal in a given format and should return a list of cards that aren't legal otherwise (might need to name this differently)
+        Determines if this Deck is legal in the given format.
+
+        - For cards with `Legality.RESTRICTED`, only 1 or fewer may be present
+        throughout all deck parts.
+        - For cards with `Legality.LEGAL`, only N or fewer may be present
+        throughout all deck parts where N is determined by the max quantity of
+        a single cards allowed by the given format.
+        - For cards with `Legality.BANNED` or `Legality.NOT_LEGAL`, none may be
+        present throught all deck parts.
+
+        Args:
+            format (Format): The format to check against.
         """
 
         for c, q in self.cards.items():
@@ -147,7 +161,7 @@ class Deck(ComparableObject, Generic[C]):
             if (c_legal is Legality.RESTRICTED and q > 1) or c_legal in [Legality.BANNED, Legality.NOT_LEGAL]:
                 return False
 
-            if q > max_quantity(format) and q > check_max_relentless_quantity(c.name):
+            if q > max_quantity(format) and q > max_relentless_quantity(c.name):
                 return False
 
         return True
@@ -161,23 +175,24 @@ class Deck(ComparableObject, Generic[C]):
 
     def total_cmc(self) -> int:
         """
-        TODO: docstring
-        should return the total cmc of the deck, optional flag to filter certain types (lands)
+        The total mana value of cards in this Deck.
         """
+
+        # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
 
         return sum([c.cmc * q for c, q in self.cards.items()])
 
     def total_words(self) -> int:
         """
-        TODO: docstring
-        should return the total number of words among cards in the deck, optional flag to filter certain types (lands)
+        The number of words across all oracle text on all cards in this Deck
+        (excludes reminder text).
         """
 
         return sum([c.total_words() * q for c, q in self.cards.items()])
 
     # region Mutations
 
-    def add_card(self, card: C, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
+    def add_card(self, card: CardT, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
         Adds a given quantity of a given card to this Deck.
 
@@ -197,12 +212,12 @@ class Deck(ComparableObject, Generic[C]):
             case _:
                 pass  # TODO(#75): 'in' must be one of InThe.list()
 
-    def add_cards(self, cards: Counter[C], in_the: InThe = InThe.MAIN) -> None:
+    def add_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
         """
         Adds the given cards to this Deck.
 
         Args:
-            cards (Counter[C]): The cards to add.
+            cards (Counter[CardT]): The cards to add.
             in_the (InThe): Where to add the cards (main, side, etc)
         """
 
@@ -214,13 +229,13 @@ class Deck(ComparableObject, Generic[C]):
             case InThe.CMDR:
                 self.cmdr.add_cards(cards)
 
-    def remove_card(self, card: C, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
+    def remove_card(self, card: CardT, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is
         not provided, removes all copies.
 
         Args:
-            card (C): The card to remove.
+            card (CardT): The card to remove.
             quantity (int): The number of copies of the card to be removed.
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
@@ -236,12 +251,12 @@ class Deck(ComparableObject, Generic[C]):
             case _:
                 pass  # TODO(#75): failed to remove card
 
-    def remove_cards(self, cards: Counter[C], in_the: InThe = InThe.MAIN) -> None:
+    def remove_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
         """
         Removes the given cards from this Deck.
 
         Args:
-            cards (Counter[C]): The cards to remove.
+            cards (Counter[CardT]): The cards to remove.
             in_the (InThe): Where to remove the cards from (main, side, etc)
         """
 
