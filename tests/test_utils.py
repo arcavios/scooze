@@ -158,198 +158,247 @@ def test_dictdiff_str(diffAB, diffAB_str):
     dict_diff = DictDiff(diffAB)
     assert str(dict_diff) == diffAB_str
 
+
 # region Test Format Max Card Quantity
 
 
 # region Relentless Cards
 
+
 @pytest.mark.card_quantity
 def test_fmt_alchemy_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_brawl_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_commander_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_duel_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_explorer_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_future_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_gladiator_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_historic_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_historicbrawl_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_legacy_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_modern_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_oathbreaker_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_oldschool_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_pauper_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_paupercommander_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_penny_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_pioneer_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_predh_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_premodern_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_standard_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_vintage_max_relentless_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_limited_max_relentless_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_none_max_relentless_quantity():
     pass
+
 
 # endregion
 
 # region Normal Cards
 
+
 @pytest.mark.card_quantity
 def test_fmt_alchemy_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_brawl_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_commander_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_duel_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_explorer_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_future_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_gladiator_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_historic_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_historicbrawl_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_legacy_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_modern_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_oathbreaker_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_oldschool_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_pauper_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_paupercommander_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_penny_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_pioneer_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_predh_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_premodern_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_standard_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_vintage_max_quantity():
     pass
+
 
 @pytest.mark.card_quantity
 def test_fmt_limited_max_quantity():
     pass
 
+
 @pytest.mark.card_quantity
 def test_fmt_none_max_quantity():
     pass
+
 
 # endregion
 
