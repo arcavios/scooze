@@ -12,25 +12,31 @@ from scooze.enums import Color, Format, Legality
 # It was chosen because it has many colors of cards, lots of words, and many types.
 
 
-# region Card JSON
-
-
 @pytest.fixture(scope="session")
 def cards_json() -> list[str]:
+    json_list = []
+
     with open("./data/test/test_cards.jsonl", "r") as json_file:
-        json_list = list(json_file)
+        json_list.extend(list(json_file))
+
+    with open("./data/test/4c_cards.jsonl", "r") as json_file:
+        json_list.extend(list(json_file))
 
     return json_list
 
 
-def get_card_json(cards_json: list[str], id: str) -> dict:
+def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
     """
-    Helper to get particular card_json
+    Helper to get JSON for a particular card.
     """
+
     for json_str in cards_json:
         card_json = json.loads(json_str)
-        if card_json["id"] == id:
+        if card_json["id"] == scryfall_id:
             return card_json
+
+
+# region Test Card JSON
 
 
 # Instant
@@ -247,389 +253,238 @@ def oracle_zndrsplt_eye_of_wisdom() -> str:
 # endregion
 
 
-# region Decklist Cards
+# region OracleCards
+
 
 # Cards are sorted alphabetically
 
 
-@pytest.fixture
-def card_aether_gust() -> OracleCard:
-    return OracleCard(
-        name="Aether Gust",
-        cmc=2,
-        colors=[Color.BLUE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_boseiju_who_endures() -> OracleCard:
-    return OracleCard(
-        name="Boseiju, Who Endures",
-        cmc=0,
-        colors=[],
-        type_line="Legendary Land",
-    )
-
-
-@pytest.fixture
-def card_breeding_pool() -> OracleCard:
-    return OracleCard(
-        name="Breeding Pool",
-        cmc=0,
-        colors=[],
-        type_line="Land - Forest Island",
-    )
-
-
-@pytest.fixture
-def card_chalice_of_the_void() -> OracleCard:
-    return OracleCard(
-        name="Chalice of the Void",
-        cmc=0,
-        colors=[],
-        type_line="Artifact",
-    )
-
-
-@pytest.fixture
-def card_counterspell() -> OracleCard:
-    return OracleCard(
-        name="Counterspell",
-        cmc=2,
-        colors=[Color.BLUE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_dovins_veto() -> OracleCard:
-    return OracleCard(
-        name="Dovin's Veto",
-        cmc=2,
-        colors=[Color.WHITE, Color.BLUE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_dress_down() -> OracleCard:
-    return OracleCard(
-        name="Dress Down",
-        cmc=2,
-        colors=[Color.BLUE],
-        type_line="Enchantment",
-    )
-
-
-@pytest.fixture
-def card_flooded_strand() -> OracleCard:
-    return OracleCard(
-        name="Flooded Strand",
-        cmc=0,
-        colors=[],
-        type_line="Land",
-    )
-
-
-@pytest.fixture
-def card_flusterstorm() -> OracleCard:
-    return OracleCard(
-        name="Flusterstorm",
-        cmc=1,
-        colors=[Color.BLUE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_force_of_negation() -> OracleCard:
-    return OracleCard(
-        name="Force of Negation",
-        cmc=3,
-        colors=[Color.BLUE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_forest() -> OracleCard:
-    return OracleCard(
-        name="Forest",
-        cmc=0,
-        colors=[],
-        type_line="Basic Land - Forest",
-    )
-
-
-@pytest.fixture
-def card_hallowed_fountain() -> OracleCard:
-    return OracleCard(
-        name="Hallowed Fountain",
-        cmc=0,
-        colors=[],
-        type_line="Land - Plains Island",
-    )
-
-
-@pytest.fixture
-def card_hallowed_moonlight() -> OracleCard:
-    return OracleCard(
-        name="Hallowed Moonlight",
-        cmc=2,
-        colors=[Color.WHITE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_island() -> OracleCard:
-    return OracleCard(
-        name="Island",
-        cmc=0,
-        colors=[],
-        type_line="Basic Land - Island",
-    )
-
-
-@pytest.fixture
-def card_kaheera_the_orphanguard() -> OracleCard:
-    return OracleCard(
-        name="Kaheera, the Orphanguard",
-        cmc=3,
-        colors=[Color.WHITE, Color.GREEN],
-        type_line="Legendary Creature - Cat Beast",
-    )
-
-
-@pytest.fixture
-def card_leyline_binding() -> OracleCard:
-    return OracleCard(
-        name="Leyline Binding",
-        cmc=6,
-        colors=[Color.WHITE],
-        type_line="Enchantment",
-    )
-
-
-@pytest.fixture
-def card_minamo_school_at_waters_edge() -> OracleCard:
-    return OracleCard(
-        name="Minamo, School at Water's Edge",
-        cmc=0,
-        colors=[],
-        type_line="Legendary Land",
-    )
-
-
-@pytest.fixture
-def card_misty_rainforest() -> OracleCard:
-    return OracleCard(
-        name="Misty Rainforest",
-        cmc=0,
-        colors=[],
-        type_line="Land",
-    )
-
-
-@pytest.fixture
-def card_omnath_locus_of_creation() -> OracleCard:
-    return OracleCard(
-        name="Omnath, Locus of Creation",
-        cmc=4,
-        colors=[Color.WHITE, Color.BLUE, Color.RED, Color.GREEN],
-        type_line="Legendary Creature - Elemental",
-    )
-
-
-@pytest.fixture
-def card_otawara_soaring_city() -> OracleCard:
-    return OracleCard(
-        name="Otawara, Soaring City",
-        cmc=0,
-        colors=[],
-        type_line="Legendary Land",
-    )
-
-
-@pytest.fixture
-def card_plains() -> OracleCard:
-    return OracleCard(
-        name="Plains",
-        cmc=0,
-        colors=[],
-        type_line="Basic Land - Plains",
-    )
-
-
-@pytest.fixture
-def card_prismatic_ending() -> OracleCard:
-    return OracleCard(
-        name="Prismatic Ending",
-        cmc=1,
-        colors=[Color.WHITE],
-        type_line="Sorcery",
-    )
-
-
-@pytest.fixture
-def card_raugrin_triome() -> OracleCard:
-    return OracleCard(
-        name="Raugrin Triome",
-        cmc=0,
-        colors=[],
-        type_line="Land - Island Mountain Plains",
-    )
-
-
-@pytest.fixture
-def card_sacred_foundry() -> OracleCard:
-    return OracleCard(
-        name="Sacred Foundry",
-        cmc=0,
-        colors=[],
-        type_line="Land - Mountain Plains",
-    )
-
-
-@pytest.fixture
-def card_solitude() -> OracleCard:
-    return OracleCard(
-        name="Solitude",
-        cmc=5,
-        colors=[Color.WHITE],
-        type_line="Creature - Elemental",
-    )
-
-
-@pytest.fixture
-def card_spell_pierce() -> OracleCard:
-    return OracleCard(
-        name="Spell Pierce",
-        cmc=1,
-        colors=[Color.BLUE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_steam_vents() -> OracleCard:
-    return OracleCard(
-        name="Steam Vents",
-        cmc=0,
-        colors=[],
-        type_line="Land - Island Mountain",
-    )
-
-
-@pytest.fixture
-def card_stern_scolding() -> OracleCard:
-    return OracleCard(
-        name="Stern Scolding",
-        cmc=1,
-        colors=[Color.BLUE],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_subtlety() -> OracleCard:
-    return OracleCard(
-        name="Subtlety",
-        cmc=4,
-        colors=[Color.BLUE],
-        type_line="Creature - Elemental",
-    )
-
-
-@pytest.fixture
-def card_supreme_verdict() -> OracleCard:
-    return OracleCard(
-        name="Supreme Verdict",
-        cmc=4,
-        colors=[Color.WHITE, Color.BLUE],
-        type_line="Sorcery",
-    )
-
-
-@pytest.fixture
-def card_teferi_time_raveler() -> OracleCard:
-    return OracleCard(
-        name="Teferi, Time Raveler",
-        cmc=3,
-        colors=[Color.WHITE, Color.BLUE],
-        type_line="Legendary Planeswalker - Teferi",
-    )
-
-
-@pytest.fixture
-def card_temple_garden() -> OracleCard:
-    return OracleCard(
-        name="Temple Garden",
-        cmc=0,
-        colors=[],
-        type_line="Land - Forest Plains",
-    )
-
-
-@pytest.fixture
-def card_the_one_ring() -> OracleCard:
-    return OracleCard(
-        name="The One Ring",
-        cmc=4,
-        colors=[],
-        type_line="Legendary Artifact",
-    )
-
-
-@pytest.fixture
-def card_veil_of_summer() -> OracleCard:
-    return OracleCard(
-        name="Veil of Summer",
-        cmc=1,
-        colors=[Color.GREEN],
-        type_line="Instant",
-    )
-
-
-@pytest.fixture
-def card_wear_tear() -> OracleCard:
-    return OracleCard(
-        name="Wear // Tear",
-        cmc=3,
-        colors=[Color.WHITE, Color.RED],
-        type_line="Instant // Instant",
-    )
-
-
-@pytest.fixture
-def card_windswept_heath() -> OracleCard:
-    return OracleCard(
-        name="Windswept Heath",
-        cmc=0,
-        colors=[],
-        type_line="Land",
-    )
-
-
-@pytest.fixture
-def card_wrenn_and_six() -> OracleCard:
-    return OracleCard(
-        name="Wrenn and Six",
-        cmc=2,
-        colors=[Color.RED, Color.GREEN],
-        type_line="Legendary Planeswalker - Wrenn",
-    )
-
-
-@pytest.fixture
-def card_zagoth_triome() -> OracleCard:
-    return OracleCard(
-        name="Zagoth Triome",
-        cmc=0,
-        colors=[],
-        type_line="Land - Swamp Forest Island",
-    )
+@pytest.fixture(scope="session")
+def card_aether_gust(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "783da808-6698-4e55-9fac-430a6effe2b1")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_boseiju_who_endures(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_breeding_pool(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "bb54233c-0844-4965-9cde-e8a4ef3e11b8")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_chalice_of_the_void(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_counterspell(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "8493131c-0a7b-4be6-a8a2-0b425f4f67fb")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_dovins_veto(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "5d6b5054-2224-4f68-9d82-3ed17c5dacc4")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_dress_down(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "04f9f061-67b8-4427-9fcb-b3ccfee8fc5d")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_flooded_strand(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "8c2996d9-3287-4480-8c04-7a378e37e3cf")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_flusterstorm(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "f900eeb7-7c45-44bc-ad3a-0bbe594ecf50")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_force_of_negation(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "1825a719-1b2a-4af9-9cd2-7cb497cd0317")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_forest(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "ecd6d8fb-780c-446c-a8bf-93386b22fe95")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_hallowed_fountain(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "f97a6d34-03ab-49f1-b02e-405b733f8843")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_hallowed_moonlight(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "94fd0c0f-4a6a-47cf-9f50-df0bbf19aae4")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_island(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "bd4b4da4-83f6-4280-880b-b6033308f2a2")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_kaheera_the_orphanguard(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "d4ebed0b-8060-4a7b-a060-5cfcd2172b16")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_leyline_binding(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "3c3ac3dd-35db-447f-8674-37b4680a1ef7")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_minamo_school_at_waters_edge(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "7536292c-da25-41c8-ba28-1e35758a7f3d")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_misty_rainforest(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "88231c0d-0cc8-44ec-bf95-81d1710ac141")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_omnath_locus_of_creation(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_otawara_soaring_city(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "486d7edc-d983-41f0-8b78-c99aecd72996")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_plains(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "c9cd4d57-8c51-4fcf-8a9f-5d6a61c33e3d")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_prismatic_ending(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "825969b9-3c70-4fca-8cab-696e9ca7cdb2")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_raugrin_triome(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "02138fbb-3962-4348-8d31-faaefba0b8b2")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_sacred_foundry(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b7b598d0-535d-477d-a33d-d6a10ff5439a")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_solitude(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "47a6234f-309f-4e03-9263-66da48b57153")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_spell_pierce(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "35b8a9db-d126-4038-abb1-74dcc5b36136")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_steam_vents(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b8ebe3cf-7143-453a-b0ef-2f5bdaac3185")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_stern_scolding(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "3ca1e1de-b916-445f-b3b2-0f4d0cc7ceeb")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_subtlety(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "701256d5-1389-48b7-9581-d6037209bd06")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_supreme_verdict(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "20b5fe42-929c-406d-9377-40b49f9d2e2c")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_teferi_time_raveler(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "5cb76266-ae50-4bbc-8f96-d98f309b02d3")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_temple_garden(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2b9b0195-beda-403e-bc27-7ae3be9f318c")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_the_one_ring(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "d5806e68-1054-458e-866d-1f2470f682b2")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_veil_of_summer(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "aa686c34-1c11-469f-93c2-f9891aea521f")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_wear_tear(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "e01cc65a-0e38-4f41-b9ed-796ef0355d0b")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_windswept_heath(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "e7b28650-cddc-4878-b1d1-b5a764f4df49")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_wrenn_and_six(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "5bd498cc-a609-4457-9325-6888d59ca36f")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_zagoth_triome(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "cc520518-2063-4b57-a0d4-10cf62a7175e")
+    return OracleCard.from_json(card_json)
 
 
 # endregion
