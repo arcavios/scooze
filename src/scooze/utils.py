@@ -2,15 +2,18 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import stdout
-from typing import Any, Hashable, Iterable, Mapping, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, Type, TypeVar
 
 from frozendict import frozendict
+from scooze.enums import ExtendedEnum
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
 
 ## Generic Types
 T = TypeVar("T")  # generic type
 V = TypeVar("V")  # generic value type
+E = TypeVar("E", bound=ExtendedEnum)  # generic Enum type
+N = TypeVar("N", bound=ExtendedEnum)  # generic Enum (for mapping values) type
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
@@ -92,7 +95,7 @@ class HashableObject(ComparableObject, Hashable):
 
 # endregion
 
-# region JSON Normalizer
+# region JSON Utils
 
 
 class JsonNormalizer:
@@ -101,7 +104,7 @@ class JsonNormalizer:
     """
 
     @classmethod
-    def date(cls, d: date | str | None) -> date:
+    def to_date(cls, d: date | str | None) -> date:
         """
         Normalize a date.
 
@@ -118,7 +121,27 @@ class JsonNormalizer:
         return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
 
     @classmethod
-    def float(cls, f: FloatableT | None) -> float:
+    def to_enum(cls, e: Type[E], v) -> E:
+        """
+        Normalize an Enum.
+
+        Args:
+            e: A type of Enum to normalize to.
+            v: A value to normalize.
+
+        Returns:
+            An instance of the given type of Enum.
+        """
+
+        if v is None:
+            return v
+        elif v in e.list():
+            return e(v)
+
+        return e[v]
+
+    @classmethod
+    def to_float(cls, f: FloatableT | None) -> float:
         """
         Normalize a float.
 
@@ -135,55 +158,70 @@ class JsonNormalizer:
         return float(f)
 
     @classmethod
-    def frozendict(cls, d: Mapping[T, V] | None) -> frozendict[T, V]:
+    def to_frozendict(
+        cls, d: Mapping[T, V] | None, convert_key_to_enum: E = None, convert_value_to_enum: N = None
+    ) -> frozendict[T | E, V | N]:
         """
         Normalize a frozendict.
 
         Args:
             d: A frozendict to normalize.
+            convert_key_to_enum: A type of Enum to normalize keys to.
+            convert_value_to_enum: A type of Enum to normalize values to.
 
         Returns:
             A frozendict.
         """
 
-        if d is None or isinstance(d, frozendict):
+        if d is None:
             return d
 
-        return frozendict(d)
+        return frozendict(
+            {
+                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k)
+                if convert_key_to_enum
+                else k: JsonNormalizer.to_enum(e=convert_value_to_enum, v=v)
+                if convert_value_to_enum
+                else v
+                for k, v in d.items()
+            }
+        )
 
     @classmethod
-    def frozenset(cls, s: Iterable[T] | None) -> frozenset[T]:
+    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: E = None) -> frozenset[T | E]:
         """
         Normalize a frozenset.
 
         Args:
             s: A frozenset to normalize.
+            convert_to_enum: A type of Enum to normalize values to.
 
         Returns:
             A frozenset.
         """
 
-        if s is None or isinstance(s, frozenset):
+        if s is None:
             return s
 
-        return frozenset(s)
+        return frozenset({JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in s})
 
     @classmethod
-    def tuple(cls, t: Iterable[T] | None) -> tuple[T]:
+    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: E = None) -> tuple[T | E]:
         """
         Normalize a tuple.
 
         Args:
             t: A tuple to normalize.
+            convert_to_enum: A type of Enum to normalize values to.
 
         Returns:
             A tuple.
         """
 
-        if t is None or isinstance(t, tuple):
+        if t is None:
             return t
 
-        return tuple(t)
+        return tuple([JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in t])
 
 
 # endregion
