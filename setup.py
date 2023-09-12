@@ -3,8 +3,9 @@ import asyncio
 import json
 
 import ijson
-from src.scooze import database as db
+import src.scooze.database.card as card_db
 from src.scooze.bulkdata import download_bulk_data_file_by_type
+from src.scooze.database import mongo
 from src.scooze.enums import ScryfallBulkFile
 from src.scooze.models.card import CardModelIn
 from src.scooze.utils import DEFAULT_BULK_FILE_DIR
@@ -85,7 +86,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
                     "item",
                 )
             ]
-            await db.card.add_cards(cards)
+            await card_db.add_cards(cards)
     except FileNotFoundError:
         print(file_path)
         download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
@@ -103,7 +104,7 @@ async def main():
         clean = input("Delete all CARDS before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
-            await db.card.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
+            await card_db.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
 
     if args.clean_decks:
         clean = input("Delete all DECKS before importing? [y/n] ") in "yY"
@@ -119,7 +120,7 @@ async def main():
                     print("Inserting test cards into the database...")
                     json_list = list(cards_file)
                     cards = [CardModelIn(**json.loads(card_json)) for card_json in json_list]
-                    await db.card.add_cards(cards)  # TODO(#7): this need async for now, replace with Python API
+                    await card_db.add_cards(cards)  # TODO(#7): this need async for now, replace with Python API
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
@@ -154,5 +155,12 @@ async def main():
     input("Press Enter to exit...")
 
 
+async def async_main():
+    await mongo.mongo_connect()
+    print(card_db.db_core.db.client)
+    await main()
+    await mongo.mongo_close()
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(async_main())
