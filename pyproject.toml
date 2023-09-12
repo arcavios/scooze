@@ -54,4 +54,5 @@ markers = [
     "deck_export: related to exporting a Deck as text or some other format",
     "deck_validation: related to forcing ValidationErrors from Pydantic",
     "router_card: related to /card routes",
+    "router_deck: related to /deck routes",
 ]

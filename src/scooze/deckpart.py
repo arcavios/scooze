@@ -48,7 +48,7 @@ class DeckPart(ComparableObject):
 
     def __init__(self, cards: Counter[Card] = Counter()):
         # Deep copy of Counter
-        self.cards = Counter()
+        self.cards: Counter[Card] = Counter()
         self.cards.update(cards)
 
     def __getitem__(self, key):

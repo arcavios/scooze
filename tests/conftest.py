@@ -1,15 +1,35 @@
 import json
 from collections import Counter
+from datetime import datetime, timezone
 
 import pytest
+from bson import ObjectId
+from fastapi.testclient import TestClient
 from scooze.card import OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.enums import Color, Format, Legality
+from scooze.main import app
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
 # It was chosen because it has many colors of cards, lots of words, and many types.
+
+
+# region Common
+
+
+@pytest.fixture(scope="session")
+def client() -> TestClient:
+    return TestClient(app)
+
+
+@pytest.fixture(scope="session")
+def today() -> datetime:
+    return datetime.now(timezone.utc).date()
+
+
+# endregion
 
 
 # region Card JSON
@@ -866,6 +886,28 @@ def side_modern_4c_str(
 @pytest.fixture
 def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck:
     return Deck(archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c)
+
+
+# endregion
+
+
+# region Deck Router
+
+
+@pytest.fixture
+def main_modern_4c_dict(main_modern_4c: DeckPart) -> dict:
+    # TODO(#111):
+    # For the moment, we don't really care that these are just
+    # randomly generated ObjectIds, so long as they are ObjectIds.
+    return {ObjectId(): q for _, q in main_modern_4c.cards.items()}
+
+
+@pytest.fixture
+def side_modern_4c_dict(side_modern_4c: DeckPart) -> dict:
+    # TODO(#111):
+    # For the moment, we don't really care that these are just
+    # randomly generated ObjectIds, so long as they are ObjectIds.
+    return {ObjectId(): q for _, q in side_modern_4c.cards.items()}
 
 
 # endregion
