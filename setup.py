@@ -50,12 +50,12 @@ def parse_args():
         dest="cards",
         choices=["test", "oracle", "artwork", "prints", "all"],
         help=(
-            f"""R|Cards to include - [test, oracle, artwork, prints, all]\n"""
-            f"""\ttest - A set of cards that includes the Power 9 for testing purposes.\n"""
-            f"""\toracle - A set of cards that includes one version of each card ever printed.\n"""
-            f"""\tartwork - A set of cards that includes each unique illustration once.\n"""
-            f"""\tprints - Every print of each card ever printed, in English where available.\n"""
-            f"""\tall - Every print of all cards and game objects in all languages.\n"""
+            f"R|Cards to include - [test, oracle, artwork, prints, all]\n"
+            f"\ttest - A set of cards that includes the Power 9 for testing purposes.\n"
+            f"\toracle - A set of cards that includes one version of each card ever printed.\n"
+            f"\tartwork - A set of cards that includes each unique illustration once.\n"
+            f"\tprints - Every print of each card ever printed, in English where available.\n"
+            f"\tall - Every print of all cards and game objects in all languages.\n"
         ),
     )
     parser.add_argument(
@@ -169,7 +169,7 @@ async def main():
                 print("All cards data file not found; no cards added to DB.")
                 # TODO(#44): download bulk file if not present?
             except OSError as e:
-                print_error(e, "oracle cards")
+                print_error(e, "all cards")
         case _:
             print("No cards imported.")
 
