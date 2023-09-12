@@ -58,7 +58,9 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
         if card_json["id"] == scryfall_id:
             return card_json
 
+
 # endregion
+
 
 # region Test Cards
 
