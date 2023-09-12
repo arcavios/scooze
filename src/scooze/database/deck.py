@@ -73,6 +73,13 @@ async def add_decks(decks: list[DeckModelIn]) -> list[str]:
         return insert_many_result.inserted_ids
 
 
+async def get_decks_random(limit: int) -> list[DeckModelOut]:
+    # TODO(#45): router docstrings
+    decks = await db_core.get_random_documents(DbCollection.DECKS, limit)
+    if len(decks) > 0:
+        return [DeckModelOut(**deck) for deck in decks]
+
+
 async def get_decks_by_property(
     property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[DeckModelOut]:

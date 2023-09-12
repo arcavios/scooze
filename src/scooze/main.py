@@ -5,6 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from scooze.database.mongo import mongo_close, mongo_connect
 from scooze.routers.card import router as CardRouter
 from scooze.routers.cards import router as CardsRouter
+from scooze.routers.deck import router as DeckRouter
+from scooze.routers.decks import router as DecksRouter
 
 
 # Startup/shutdown
@@ -30,6 +32,8 @@ app = FastAPI(
 # Router inclusion
 app.include_router(CardRouter)
 app.include_router(CardsRouter)
+app.include_router(DeckRouter)
+app.include_router(DecksRouter)
 
 # Mount index.html
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
