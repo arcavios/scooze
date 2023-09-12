@@ -1,10 +1,11 @@
 import argparse
 import asyncio
-
-import ijson
 import json
 
+import ijson
 from src.scooze import database as db
+from src.scooze.bulkdata import download_bulk_data_file_by_type
+from src.scooze.enums import ScryfallBulkFile
 from src.scooze.models.card import CardModelIn
 from src.scooze.utils import DEFAULT_BULK_FILE_DIR
 
@@ -72,6 +73,28 @@ def print_error(e: Exception, txt: str):
     raise e
 
 
+async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
+    file_path = f"{bulk_file_dir}{file_type}_cards.json"
+    try:
+        with open(file_path) as cards_file:
+            print(f"Inserting {file_type} cards into the database...")
+            cards = [
+                CardModelIn(**card_json)
+                for card_json in ijson.items(
+                    cards_file,
+                    "item",
+                )
+            ]
+            await db.card.add_cards(cards)
+    except FileNotFoundError:
+        download_now = input(f"{file_type} file not found; would you like to download it now? [y/n]") in "yY"
+        if not download_now:
+            print("No cards loaded into database.")
+            return
+        download_bulk_data_file_by_type(file_type, bulk_file_dir)
+        await load_card_file(file_type, bulk_file_dir)
+
+
 async def main():
     args = parse_args()
 
@@ -79,7 +102,7 @@ async def main():
         clean = input("Delete all CARDS before importing? [y/n]") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
-            await db.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
+            await db.card.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
 
     if args.clean_decks:
         clean = input("Delete all DECKS before importing? [y/n]") in "yY"
@@ -95,81 +118,29 @@ async def main():
                     print("Inserting test cards into the database...")
                     json_list = list(cards_file)
                     cards = [CardModelIn(**json.loads(card_json)) for card_json in json_list]
-                    await db.add_cards(cards)  # TODO(#7): this need async for now, replace with Python API
+                    await db.card.add_cards(cards)  # TODO(#7): this need async for now, replace with Python API
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
-            filepath = f"{args.bulk_data_dir}/oracle_cards.json"
-            try:
-                with open(filepath) as cards_file:
-                    print("Inserting oracle cards into the database...")
-                    cards = [
-                        CardModelIn(**card_json)
-                        for card_json in ijson.items(
-                            cards_file,
-                            "item",
-                        )
-                    ]
-                    await db.add_cards(cards)
-            except FileNotFoundError:
-                print("Oracle data file not found; no cards added to DB.")
-                # TODO(#44): download bulk file if not present?
-            except OSError as e:
-                print_error(e, "oracle cards")
+            await load_card_file(
+                ScryfallBulkFile.ORACLE,
+                args.bulk_data_dir,
+            )
         case "artwork":
-            filepath = f"{args.bulk_data_dir}/unique_artwork.json"
-            try:
-                with open(filepath) as cards_file:
-                    print("Inserting unique artwork cards into the database...")
-                    cards = [
-                        CardModelIn(**card_json)
-                        for card_json in ijson.items(
-                            cards_file,
-                            "item",
-                        )
-                    ]
-                    await db.add_cards(cards)
-            except FileNotFoundError:
-                print("All artwork cards data file not found; no cards added to DB.")
-                # TODO(#44): download bulk file if not present?
-            except OSError as e:
-                print_error(e, "unique artwork cards")
+            await load_card_file(
+                ScryfallBulkFile.ARTWORK,
+                args.bulk_data_dir,
+            )
         case "prints":
-            filepath = f"{args.bulk_data_dir}/default_cards.json"
-            try:
-                with open(filepath) as cards_file:
-                    print("Inserting all prints into the database...")
-                    cards = [
-                        CardModelIn(**card_json)
-                        for card_json in ijson.items(
-                            cards_file,
-                            "item",
-                        )
-                    ]
-                    await db.add_cards(cards)
-            except FileNotFoundError:
-                print("All prints data file not found; no cards added to DB.")
-                # TODO(#44): download bulk file if not present?
-            except OSError as e:
-                print_error(e, "all prints")
+            await load_card_file(
+                ScryfallBulkFile.DEFAULT,
+                args.bulk_data_dir,
+            )
         case "all":
-            filepath = f"{args.bulk_data_dir}/all_cards.json"
-            try:
-                with open(filepath) as cards_file:
-                    print("Inserting all Scryfall cards into the database...")
-                    cards = [
-                        CardModelIn(**card_json)
-                        for card_json in ijson.items(
-                            cards_file,
-                            "item",
-                        )
-                    ]
-                    await db.add_cards(cards)
-            except FileNotFoundError:
-                print("All cards data file not found; no cards added to DB.")
-                # TODO(#44): download bulk file if not present?
-            except OSError as e:
-                print_error(e, "all cards")
+            await load_card_file(
+                ScryfallBulkFile.ALL,
+                args.bulk_data_dir,
+            )
         case _:
             print("No cards imported.")
 

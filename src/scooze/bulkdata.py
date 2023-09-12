@@ -33,6 +33,30 @@ def download_bulk_data_file(
                 f.write(chunk)
 
 
+def download_bulk_data_file_by_type(
+    bulk_file_type: ScryfallBulkFile | None = None,
+    bulk_file_dir: str = DEFAULT_BULK_FILE_DIR,
+) -> None:
+    """
+    Get a bulk data file from Scryfall, specified by file type (from among ScryfallBulkFile).
+
+    Args:
+        bulk_file_type: Type of bulk file, used to set filename.
+        bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
+          not specified.
+    """
+
+    # get URI from Scryfall bulk endpoint
+
+    with requests.get(SCRYFALL_BULK_INFO_ENDPOINT) as bulk_metadata_request:
+        bulk_metadata_request.raise_for_status()
+        bulk_metadata = bulk_metadata_request.json()["data"]
+    bulk_files = {t["type"]: t["download_uri"] for t in bulk_metadata}
+    if bulk_file_type not in bulk_files:
+        return
+    download_bulk_data_file(bulk_files[bulk_file_type], bulk_file_type, bulk_file_dir)
+
+
 def download_all_bulk_data_files(
     bulk_file_dir: str = DEFAULT_BULK_FILE_DIR,
 ) -> None:
