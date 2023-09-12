@@ -3,12 +3,12 @@ import asyncio
 import json
 
 import ijson
-import src.scooze.database.card as card_db
-from src.scooze.bulkdata import download_bulk_data_file_by_type
-from src.scooze.database import mongo
-from src.scooze.enums import ScryfallBulkFile
-from src.scooze.models.card import CardModelIn
-from src.scooze.utils import DEFAULT_BULK_FILE_DIR
+import scooze.database.card as card_db
+from scooze.bulkdata import download_bulk_data_file_by_type
+from scooze.database import mongo
+from scooze.enums import ScryfallBulkFile
+from scooze.models.card import CardModelIn
+from scooze.utils import DEFAULT_BULK_FILE_DIR
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
@@ -74,7 +74,7 @@ def print_error(e: Exception, txt: str):
     raise e
 
 
-async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
+def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
     file_path = f"{bulk_file_dir}/{file_type}.json"
     try:
         with open(file_path) as cards_file:
@@ -86,7 +86,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
                     "item",
                 )
             ]
-            await card_db.add_cards(cards)
+            asyncio.run(card_db.add_cards(cards))
     except FileNotFoundError:
         print(file_path)
         download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
@@ -94,17 +94,17 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
             print("No cards loaded into database.")
             return
         download_bulk_data_file_by_type(file_type, bulk_file_dir)
-        await load_card_file(file_type, bulk_file_dir)
+        load_card_file(file_type, bulk_file_dir)
 
 
-async def main():
+def main():
     args = parse_args()
 
     if args.clean_cards:
         clean = input("Delete all CARDS before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
-            await card_db.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
+            asyncio.run(card_db.delete_cards_all())  # TODO(#7): this need async for now, replace with Python API
 
     if args.clean_decks:
         clean = input("Delete all DECKS before importing? [y/n] ") in "yY"
@@ -120,26 +120,26 @@ async def main():
                     print("Inserting test cards into the database...")
                     json_list = list(cards_file)
                     cards = [CardModelIn(**json.loads(card_json)) for card_json in json_list]
-                    await card_db.add_cards(cards)  # TODO(#7): this need async for now, replace with Python API
+                    asyncio.run(card_db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
-            await load_card_file(
+            load_card_file(
                 ScryfallBulkFile.ORACLE,
                 args.bulk_data_dir,
             )
         case "artwork":
-            await load_card_file(
+            load_card_file(
                 ScryfallBulkFile.ARTWORK,
                 args.bulk_data_dir,
             )
         case "prints":
-            await load_card_file(
+            load_card_file(
                 ScryfallBulkFile.DEFAULT,
                 args.bulk_data_dir,
             )
         case "all":
-            await load_card_file(
+            load_card_file(
                 ScryfallBulkFile.ALL,
                 args.bulk_data_dir,
             )
@@ -155,12 +155,14 @@ async def main():
     input("Press Enter to exit...")
 
 
-async def async_main():
-    await mongo.mongo_connect()
-    print(card_db.db_core.db.client)
-    await main()
-    await mongo.mongo_close()
-
-
 if __name__ == "__main__":
-    asyncio.run(async_main())
+    print(f"MongoDb: {mongo.db}")
+    print(f"CardDb: {card_db.db_core.db}")
+
+    asyncio.run(mongo.mongo_connect())
+
+    print(f"Mongo Client: {mongo.db.client}")
+    print(f"CardDb Client: {card_db.db_core.db.client}")
+
+    main()
+    asyncio.run(mongo.mongo_close())
