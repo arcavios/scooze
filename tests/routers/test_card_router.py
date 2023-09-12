@@ -2,15 +2,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
-from scooze.main import app
 from scooze.models.card import CardModelIn, CardModelOut
 
 # region Fixtures
-
-
-@pytest.fixture
-def client() -> TestClient:
-    return TestClient(app)
 
 
 @pytest.fixture

@@ -1,14 +1,16 @@
 from collections import Counter
 from sys import maxsize
-from typing import Any
+from typing import Generic, Self, TypeVar
 
 from scooze.card import Card
 from scooze.utils import ComparableObject, DictDiff
 
+CardT = TypeVar("CardT", bound=Card)  # generic Card type
+
 
 class DeckDiff(ComparableObject):
     """
-    A class to reprsent a diff between two decks.
+    A class to represent a diff between two decks.
 
     Attributes:
         main: The diff between the main decks of two Decks.
@@ -38,23 +40,21 @@ class DeckDiff(ComparableObject):
         return len(self.main) + len(self.side) + len(self.cmdr)
 
 
-class DeckPart(ComparableObject):
+class DeckPart(ComparableObject, Generic[CardT]):
     """
     A class to represent a part of a deck.
 
     Attributes:
-        cards (Counter[Card]): The cards in this DeckPart.
+        cards (Counter[CardT]): The cards in this DeckPart.
     """
 
-    def __init__(self, cards: Counter[Card] = Counter()):
-        # Deep copy of Counter
-        self.cards = Counter()
-        self.cards.update(cards)
+    def __init__(self, cards: Counter[CardT] = Counter()):
+        self.cards = cards
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: CardT):
         return self.cards[key]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: CardT, value: int):
         self.cards[key] = value
 
     def __len__(self):
@@ -73,7 +73,7 @@ class DeckPart(ComparableObject):
 
         return self.cards.total()
 
-    def diff(self, other) -> DictDiff:
+    def diff(self, other: Self) -> DictDiff:
         """
         Generates a diff between this DeckPart and another.
 
@@ -87,46 +87,46 @@ class DeckPart(ComparableObject):
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
 
-    def add_card(self, card: Card, quantity: int = 1) -> None:
+    def add_card(self, card: CardT, quantity: int = 1) -> None:
         """
         Adds a given quantity of a given card to this DeckPart.
 
         Args:
-            card (Card): The card to add.
+            card (CardT): The card to add.
             quantity (int): The number of copies of the card to be added.
         """
 
         self.cards.update({card: quantity})
 
-    def add_cards(self, cards: Counter[Card]) -> None:
+    def add_cards(self, cards: Counter[CardT]) -> None:
         """
         Adds the given cards to this DeckPart.
 
         Args:
-            cards (Counter[Card]): The cards to add.
+            cards (Counter[CardT]): The cards to add.
         """
 
         self.cards.update(cards)
 
-    def remove_card(self, card: Card, quantity: int = maxsize) -> None:
+    def remove_card(self, card: CardT, quantity: int = maxsize) -> None:
         """
         Removes a given quantity of a given card from this Deck. If quantity is
         not provided, removes all copies.
 
         Args:
-            card (Card): The card to remove.
+            card (CardT): The card to remove.
             quantity (int): The number of copies of the card to be removed.
         """
 
         # using counterA - counterB results in a new Counter with only positive results
         self.cards = self.cards - Counter({card: quantity})
 
-    def remove_cards(self, cards: Counter[Card]) -> None:
+    def remove_cards(self, cards: Counter[CardT]) -> None:
         """
         Removes the given cards from this DeckPart.
 
         Args:
-            cards (Counter[Card]): The cards to remove.
+            cards (Counter[CardT]): The cards to remove.
         """
 
         # using counterA - counterB results in a new Counter with only positive results

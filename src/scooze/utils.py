@@ -1,11 +1,11 @@
 import logging
 import os.path
 from datetime import date, datetime
-from sys import stdout
-from typing import Any, Hashable, Iterable, Mapping, Type, TypeVar
+from sys import maxsize, stdout
+from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
-from scooze.enums import ExtendedEnum
+from scooze.enums import ExtendedEnum, Format
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
 
@@ -62,6 +62,209 @@ def get_logger(
     return logger
 
 
+# region Deck Format Helpers
+
+
+def max_relentless_quantity(name: str) -> int:
+    """
+    Given a card name, what is the maximum quantity of a card in a deck?
+    """
+
+    match name:
+        case "Seven Dwarves":
+            return 7
+        case "Nazgûl" | "Nazgul":
+            return 9
+        case (
+            "Plains"
+            | "Island"
+            | "Swamp"
+            | "Mountain"
+            | "Forest"
+            | "Wastes"
+            | "Snow-Covered Plains"
+            | "Snow-Covered Island"
+            | "Snow-Covered Swamp"
+            | "Snow-Covered Mountain"
+            | "Snow-Covered Forest"
+            | "Dragon's Approach"
+            | "Persistent Petitioners"
+            | "Rat Colony"
+            | "Relentless Rats"
+            | "Shadowborn Apostle"
+        ):
+            return maxsize
+        case _:
+            return 0  # helps identify new relentless cards
+
+
+def max_card_quantity(fmt: Format) -> int:
+    """
+    Given a Format, what is the maximum quantity of a card in a deck?
+    """
+
+    match fmt.value:
+        case Format.LIMITED:
+            return maxsize
+
+        case (
+            Format.BRAWL
+            | Format.COMMANDER
+            | Format.DUEL
+            | Format.GLADIATOR
+            | Format.HISTORICBRAWL
+            | Format.OATHBREAKER
+            | Format.PAUPERCOMMANDER
+            | Format.PREDH
+        ):
+            return 1
+
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 4
+
+        case Format.NONE | _:
+            return maxsize
+
+
+def main_size(fmt: Format) -> tuple[int, int]:
+    """
+    Given a Format, what are the required min and max size for a main deck?
+    """
+
+    match fmt.value:
+        case Format.LIMITED:
+            return 40, maxsize
+
+        case Format.OATHBREAKER:
+            return 58, 58
+
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 60, maxsize
+
+        case (Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH):
+            return 99, 99
+
+        case Format.COMMANDER | Format.DUEL:
+            return 98, 99  # Accounting for Partner
+
+        case Format.GLADIATOR:
+            return 100, 100
+
+        case Format.NONE | _:
+            return 0, maxsize
+
+
+def side_size(fmt: Format) -> tuple[int, int]:
+    """
+    Given a Format, what are the min and max size for a sideboard?
+    """
+
+    match fmt.value:
+        case Format.LIMITED:
+            return 0, maxsize
+
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 0, 15
+
+        case (
+            Format.BRAWL
+            | Format.COMMANDER
+            | Format.DUEL
+            | Format.GLADIATOR
+            | Format.HISTORICBRAWL
+            | Format.OATHBREAKER
+            | Format.PAUPERCOMMANDER
+            | Format.PREDH
+        ):
+            return 0, 0
+
+        case Format.NONE | _:
+            return 0, maxsize
+
+
+def cmdr_size(fmt: Format) -> tuple[int, int]:
+    """
+    Given a Format, what are the min and max size for a command zone?
+    """
+
+    match fmt.value:
+        case (
+            Format.ALCHEMY
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.GLADIATOR
+            | Format.HISTORIC
+            | Format.LEGACY
+            | Format.LIMITED
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PAUPER
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.VINTAGE
+        ):
+            return 0, 0
+
+        case (Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH):
+            return 1, 1
+
+        case Format.COMMANDER | Format.DUEL:
+            return 1, 2  # Accounting for Partner
+
+        case Format.OATHBREAKER:
+            return 2, 2
+
+        case Format.NONE | _:
+            return 0, maxsize
+
+
+# endregion
+
+
 # region Helper Classes
 
 # region Base Classes
@@ -72,16 +275,15 @@ class ComparableObject:
     A simple base class to support comparable objects.
     """
 
-    def get_key(self):
+    @property
+    def __key__(self) -> tuple[Any, ...]:
         return tuple(getattr(self, k) for k in self.__dict__.keys())
 
-    def __eq__(self, other):
+    def __eq__(self, other: Self):
         return self.__key__ == other.__key__
 
-    def __ne__(self, other):
+    def __ne__(self, other: Self):
         return not (self == other)
-
-    __key__: tuple[Any, ...] = property(get_key)
 
 
 class HashableObject(ComparableObject, Hashable):
@@ -229,7 +431,7 @@ class JsonNormalizer:
 # region Dict Diff
 
 
-class DictDiff:
+class DictDiff(ComparableObject):
     """
     Represents a diff between two dicts.
 
@@ -237,14 +439,8 @@ class DictDiff:
         contents (dict[Any, tuple[int, int]]): The contents of this diff.
     """
 
-    def __init__(self, contents: dict[Any, tuple[int, int]]):
+    def __init__(self, contents: dict[T, tuple[int, int]]):
         self.contents = contents
-
-    def __eq__(self, other):
-        return self.contents == other.contents
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
 
     def __len__(self):
         return len(self.contents)
