@@ -182,7 +182,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         return self.main.total() + self.side.total() + self.cmdr.total()
 
-    def total_cmc(self) -> int:
+    def total_cmc(self) -> float:
         """
         The total mana value of cards in this Deck.
         """
