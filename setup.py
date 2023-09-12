@@ -77,8 +77,8 @@ def print_error(e: Exception, txt: str):
 def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
     file_path = f"{bulk_file_dir}/{file_type}.json"
     try:
-        with open(file_path) as cards_file:
-            print(f"Inserting {file_type} cards into the database...")
+        with open(file_path, "r", encoding="utf8") as cards_file:
+            print(f"Inserting {file_type} file into the database...")
             cards = [
                 CardModelIn(**card_json)
                 for card_json in ijson.items(
@@ -156,13 +156,6 @@ def main():
 
 
 if __name__ == "__main__":
-    print(f"MongoDb: {mongo.db}")
-    print(f"CardDb: {card_db.db_core.db}")
-
     asyncio.run(mongo.mongo_connect())
-
-    print(f"Mongo Client: {mongo.db.client}")
-    print(f"CardDb Client: {card_db.db_core.db.client}")
-
     main()
     asyncio.run(mongo.mongo_close())
