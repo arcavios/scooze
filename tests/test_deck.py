@@ -49,6 +49,10 @@ def dictdiff_empty() -> DictDiff:
 
 # endregion
 
+# region Magic Methods
+
+# region Init
+
 
 def test_archetype(archetype_modern_4c):
     deck = Deck[OracleCard](archetype=archetype_modern_4c)
@@ -75,8 +79,7 @@ def test_cmdr(cmdr_part):
     assert deck.cmdr == cmdr_part
 
 
-def test_total_cards(deck_modern_4c):
-    assert deck_modern_4c.total_cards() == 75
+# endregion
 
 
 def test_eq(deck_modern_4c):
@@ -89,6 +92,17 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
     deck.add_card(card_kaheera_the_orphanguard)
     deck_modern_4c.add_card(card_kaheera_the_orphanguard)
     assert deck == deck_modern_4c
+
+
+# endregion
+
+
+def test_average_cmc():
+    pass  # TODO: write test
+
+
+def test_average_words():
+    pass  # TODO: write test
 
 
 @pytest.mark.deck_diff
@@ -139,6 +153,53 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
             }
         ),
     )
+
+
+def test_decklist_equals():
+    pass  # TODO: write test
+
+
+def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
+    assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+
+
+def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
+    deck = Deck[OracleCard](archetype="test_export_default_no_side", main=main_modern_4c)
+    assert deck.export() == f"{main_modern_4c_str}"
+
+
+def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
+    deck = Deck[OracleCard](archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
+    assert deck.export() == f"Commander\n{cmdr_part}\n{main_modern_4c_str}"
+
+
+def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
+    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
+    assert deck.export(DecklistFormatter.ARENA) == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+
+
+def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
+    deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
+    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"
+
+
+def test_is_legal():
+    pass  # TODO: write test
+
+
+def test_total_cards(deck_modern_4c):
+    assert deck_modern_4c.total_cards() == 75
+
+
+def test_total_cmc():
+    pass  # TODO: write test
+
+
+def test_total_words():
+    pass  # TODO: write test
+
+
+# region Mutating Methods
 
 
 @pytest.mark.deck_add_cards
@@ -293,25 +354,4 @@ def test_remove_cards_cmdr(cmdr_part, cmdr_cards):
     assert deck.cmdr == cmdr_part
 
 
-def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
-
-
-def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
-    deck = Deck[OracleCard](archetype="test_export_default_no_side", main=main_modern_4c)
-    assert deck.export() == f"{main_modern_4c_str}"
-
-
-def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
-    deck = Deck[OracleCard](archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
-    assert deck.export() == f"Commander\n{cmdr_part}\n{main_modern_4c_str}"
-
-
-def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
-    assert deck.export(DecklistFormatter.ARENA) == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
-
-
-def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
-    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"
+# endregion

@@ -190,7 +190,7 @@ class Deck(ComparableObject, Generic[CardT]):
 
         return sum([c.total_words() * q for c, q in self.cards.items()])
 
-    # region Mutations
+    # region Mutating Methods
 
     def add_card(self, card: CardT, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """

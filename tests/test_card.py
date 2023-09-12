@@ -109,17 +109,24 @@ def test_fullcard_hash(json_anaconda_7ed_foil, json_anaconda_portal):
 
 # region Class Methods
 
+
 def test_oraclecard_oracle_text_without_reminder(json_arlinn_the_packs_hope):
     card = OracleCard.from_json(json_arlinn_the_packs_hope)
     front = card.card_faces[0]
-    assert front.oracle_text.startswith("Daybound (If a player casts no spells during their own turn, it becomes night next turn.)\n")
+    assert front.oracle_text.startswith(
+        "Daybound (If a player casts no spells during their own turn, it becomes night next turn.)\n"
+    )
     assert OracleCard.oracle_text_without_reminder(front.oracle_text).startswith("Daybound\n")
+
 
 def test_fullcard_oracle_text_without_reminder(json_arlinn_the_packs_hope):
     card = FullCard.from_json(json_arlinn_the_packs_hope)
     front = card.card_faces[0]
-    assert front.oracle_text.startswith("Daybound (If a player casts no spells during their own turn, it becomes night next turn.)\n")
+    assert front.oracle_text.startswith(
+        "Daybound (If a player casts no spells during their own turn, it becomes night next turn.)\n"
+    )
     assert FullCard.oracle_text_without_reminder(front.oracle_text).startswith("Daybound\n")
+
 
 # region json -> Card Object
 
@@ -1174,25 +1181,31 @@ def test_fullcardmodel_from_fullcardmodel_variation(json_anaconda_portal):
 
 # region Instance Methods
 
+
 def test_is_double_sided_transform(json_arlinn_the_packs_hope):
     card = OracleCard.from_json(json_arlinn_the_packs_hope)
     assert card.is_double_sided()
+
 
 def test_is_double_sided_reversible(json_zndrsplt_eye_of_wisdom):
     card = OracleCard.from_json(json_zndrsplt_eye_of_wisdom)
     assert card.is_double_sided()
 
+
 def test_total_words(json_ancestral_recall):
     card = OracleCard.from_json(json_ancestral_recall)
     assert card.total_words() == 5
+
 
 def test_total_words_transform(json_arlinn_the_packs_hope):
     card = OracleCard.from_json(json_arlinn_the_packs_hope)
     assert card.total_words() == 62
 
+
 def test_oraclecard_total_words_reversible(json_zndrsplt_eye_of_wisdom):
     card = OracleCard.from_json(json_zndrsplt_eye_of_wisdom)
     assert card.total_words() == 64
+
 
 def test_fullcard_total_words_reversible(json_zndrsplt_eye_of_wisdom):
     card = FullCard.from_json(json_zndrsplt_eye_of_wisdom)

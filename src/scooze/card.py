@@ -189,7 +189,6 @@ class OracleCard(Card):
         self.toughness = toughness
         self.type_line = type_line
 
-
     @classmethod
     def oracle_text_without_reminder(cls, oracle_text: str) -> str:
         """
