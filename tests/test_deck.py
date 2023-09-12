@@ -1,6 +1,7 @@
+import math
+import re
 from collections import Counter
 from copy import deepcopy
-from pprint import pprint
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
@@ -97,12 +98,14 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 # endregion
 
 
-def test_average_cmc():
-    pass  # TODO: write test
+def test_average_cmc(deck_modern_4c):
+    # 141 / 75
+    assert math.isclose(deck_modern_4c.average_cmc(), 1.88)
 
 
-def test_average_words():
-    pass  # TODO: write test
+def test_average_words(deck_modern_4c):
+    # 2118 / 75
+    assert math.isclose(deck_modern_4c.average_words(), 28.24)
 
 
 @pytest.mark.deck_diff
@@ -155,10 +158,6 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
     )
 
 
-def test_decklist_equals():
-    pass  # TODO: write test
-
-
 def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
     assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
@@ -183,20 +182,42 @@ def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_mo
     assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"
 
 
-def test_is_legal():
-    pass  # TODO: write test
+def test_is_legal(deck_modern_4c):
+    assert not deck_modern_4c.is_legal(Format.ALCHEMY)
+    assert not deck_modern_4c.is_legal(Format.BRAWL)
+    assert not deck_modern_4c.is_legal(Format.COMMANDER)
+    assert not deck_modern_4c.is_legal(Format.DUEL)
+    assert not deck_modern_4c.is_legal(Format.EXPLORER)
+    assert not deck_modern_4c.is_legal(Format.FUTURE)
+    assert not deck_modern_4c.is_legal(Format.GLADIATOR)
+    assert not deck_modern_4c.is_legal(Format.HISTORIC)
+    assert not deck_modern_4c.is_legal(Format.HISTORICBRAWL)
+    assert not deck_modern_4c.is_legal(Format.LEGACY)
+    assert deck_modern_4c.is_legal(Format.LIMITED)
+    assert deck_modern_4c.is_legal(Format.MODERN)
+    assert deck_modern_4c.is_legal(Format.NONE)
+    assert not deck_modern_4c.is_legal(Format.OATHBREAKER)
+    assert not deck_modern_4c.is_legal(Format.OLDSCHOOL)
+    assert not deck_modern_4c.is_legal(Format.PAUPER)
+    assert not deck_modern_4c.is_legal(Format.PAUPERCOMMANDER)
+    assert not deck_modern_4c.is_legal(Format.PENNY)
+    assert not deck_modern_4c.is_legal(Format.PIONEER)
+    assert not deck_modern_4c.is_legal(Format.PREDH)
+    assert not deck_modern_4c.is_legal(Format.PREMODERN)
+    assert not deck_modern_4c.is_legal(Format.STANDARD)
+    assert not deck_modern_4c.is_legal(Format.VINTAGE)
 
 
 def test_total_cards(deck_modern_4c):
     assert deck_modern_4c.total_cards() == 75
 
 
-def test_total_cmc():
-    pass  # TODO: write test
+def test_total_cmc(deck_modern_4c):
+    assert deck_modern_4c.total_cmc() == 141
 
 
-def test_total_words():
-    pass  # TODO: write test
+def test_total_words(deck_modern_4c):
+    assert deck_modern_4c.total_words() == 2118
 
 
 # region Mutating Methods

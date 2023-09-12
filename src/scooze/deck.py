@@ -2,12 +2,12 @@ from collections import Counter
 from sys import maxsize
 from typing import Generic, Self
 
+import scooze.utils as utils
 from scooze.deckpart import CardT, DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe, Legality
-from scooze.utils import ComparableObject, max_card_quantity, max_relentless_quantity
 
 
-class Deck(ComparableObject, Generic[CardT]):
+class Deck(utils.ComparableObject, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -155,13 +155,22 @@ class Deck(ComparableObject, Generic[CardT]):
             format (Format): The format to check against.
         """
 
+        # Check deck meets minimum size requirements
+        if self.main.total() < utils.main_size(format)[0]:
+            return False
+        if self.side.total() < utils.side_size(format)[0]:
+            return False
+        if self.cmdr.total() < utils.cmdr_size(format)[0]:
+            return False
+
+        # Check card quantities do not exceed acceptable maximums
         for c, q in self.cards.items():
-            c_legal = c.legalities[format]
+            c_legal = c.legalities[format] if format not in [Format.LIMITED, Format.NONE] else Legality.LEGAL
 
             if (c_legal is Legality.RESTRICTED and q > 1) or c_legal in [Legality.BANNED, Legality.NOT_LEGAL]:
                 return False
 
-            if q > max_card_quantity(format) and q > max_relentless_quantity(c.name):
+            if q > utils.max_card_quantity(format) and q > utils.max_relentless_quantity(c.name):
                 return False
 
         return True
