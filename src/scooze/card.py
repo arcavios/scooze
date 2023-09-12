@@ -206,7 +206,7 @@ class OracleCard(Card):
         Determines if this is a double-sided card.
         """
 
-        return bool(self.card_faces)
+        return self.card_faces is not None
 
     def total_words(self) -> int:
         """
