@@ -1,13 +1,13 @@
 from collections import Counter
 from sys import maxsize
+from typing import Generic, Self
 
-from scooze.card import Card
-from scooze.deckpart import DeckDiff, DeckPart
-from scooze.enums import DecklistFormatter, Format, InThe
-from scooze.utils import ComparableObject
+import scooze.utils as utils
+from scooze.deckpart import CardT, DeckDiff, DeckPart
+from scooze.enums import DecklistFormatter, Format, InThe, Legality
 
 
-class Deck(ComparableObject):
+class Deck(utils.ComparableObject, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -23,30 +23,53 @@ class Deck(ComparableObject):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart = DeckPart(),
-        side: DeckPart = DeckPart(),
-        cmdr: DeckPart = DeckPart(),
+        main: DeckPart[CardT] = DeckPart(),
+        side: DeckPart[CardT] = DeckPart(),
+        cmdr: DeckPart[CardT] = DeckPart(),
     ):
         self.archetype = archetype
         self.format = format
+        self.main = main
+        self.side = side
+        self.cmdr = cmdr
 
-        # Deep copy of DeckPart
-        self.main = DeckPart(cards=main.cards)
-        self.side = DeckPart(cards=side.cards)
-        self.cmdr = DeckPart(cards=cmdr.cards)
+    @property
+    def cards(self) -> Counter[CardT]:
+        return self.main.cards + self.side.cards + self.cmdr.cards
 
     def __str__(self):
         decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
-    def total(self) -> int:
+    def average_cmc(self) -> float:
         """
-        The number of cards in this Deck.
+        The average mana value of cards in this Deck.
         """
 
-        return self.main.total() + self.side.total() + self.cmdr.total()
+        # TODO(#112): Add type filters.
+        # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
 
-    def diff(self, other) -> DeckDiff:
+        total_cards = self.total_cards()
+
+        if total_cards > 0:
+            return self.total_cmc() / self.total_cards()
+        return 0
+
+    def average_words(self) -> float:
+        """
+        The average number of words across all oracle text on all cards in this
+        Deck (excludes reminder text).
+        """
+
+        # TODO(#112): Add type filters.
+
+        total_cards = self.total_cards()
+
+        if total_cards > 0:
+            return self.total_words() / self.total_cards()
+        return 0
+
+    def diff(self, other: Self) -> DeckDiff:
         """
         Generates a diff between this Deck and another.
 
@@ -64,7 +87,7 @@ class Deck(ComparableObject):
             cmdr=self.cmdr.diff(other.cmdr),
         )
 
-    def decklist_equals(self, other):
+    def decklist_equals(self, other: Self) -> bool:
         """
         Determines if this Deck contains exactly the same cards as another.
 
@@ -81,85 +104,6 @@ class Deck(ComparableObject):
         same_side = bool(diff.side)
         same_cmdr = bool(diff.cmdr)
         return same_main and same_side and same_cmdr
-
-    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
-        """
-        Adds a given quantity of a given card to this Deck.
-
-        Args:
-            card (Card): The card to add.
-            quantity (int): The number of copies of the card to be added.
-            in_the (InThe): Where to add the card (main, side, etc)
-        """
-
-        match in_the:
-            case InThe.MAIN:
-                self.main.add_card(card=card, quantity=quantity)
-            case InThe.SIDE:
-                self.side.add_card(card=card, quantity=quantity)
-            case InThe.CMDR:
-                self.cmdr.add_card(card=card, quantity=quantity)
-            case _:
-                pass  # TODO(#75): 'in' must be one of InThe.list()
-
-    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
-        """
-        Adds the given cards to this Deck.
-
-        Args:
-            cards (Counter[Card]): The cards to add.
-            in_the (InThe): Where to add the cards (main, side, etc)
-        """
-
-        match in_the:
-            case InThe.MAIN:
-                self.main.add_cards(cards)
-            case InThe.SIDE:
-                self.side.add_cards(cards)
-            case InThe.CMDR:
-                self.cmdr.add_cards(cards)
-
-    def remove_card(self, card: Card, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
-        """
-        Removes a given quantity of a given card from this Deck. If quantity is
-        not provided, removes all copies.
-
-        Args:
-            card (Card): The card to remove.
-            quantity (int): The number of copies of the card to be removed.
-            in_the (InThe): Where to remove the cards from (main, side, etc)
-        """
-
-        # using counterA - counterB results in a new Counter with only positive results
-        match in_the:
-            case InThe.MAIN:
-                self.main.remove_card(card=card, quantity=quantity)
-            case InThe.SIDE:
-                self.side.remove_card(card=card, quantity=quantity)
-            case InThe.CMDR:
-                self.cmdr.remove_card(card=card, quantity=quantity)
-            case _:
-                pass  # TODO(#75): failed to remove card
-
-    def remove_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
-        """
-        Removes the given cards from this Deck.
-
-        Args:
-            cards (Counter[Card]): The cards to remove.
-            in_the (InThe): Where to remove the cards from (main, side, etc)
-        """
-
-        # using counterA - counterB results in a new Counter with only positive results
-        match in_the:
-            case InThe.MAIN:
-                self.main.remove_cards(cards=cards)
-            case InThe.SIDE:
-                self.side.remove_cards(cards=cards)
-            case InThe.CMDR:
-                self.cmdr.remove_cards(cards=cards)
-            case _:
-                pass  # TODO(#75): failed to remove cards
 
     def export(self, export_format: DecklistFormatter = None) -> str:
         """
@@ -194,3 +138,146 @@ class Deck(ComparableObject):
         cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ""
         decklist = f"{cmdr}{main}{side}"
         return decklist
+
+    def is_legal(self, format: Format) -> bool:
+        """
+        Determines if this Deck is legal in the given format.
+
+        - For cards with `Legality.RESTRICTED`, only 1 or fewer may be present
+        throughout all deck parts.
+        - For cards with `Legality.LEGAL`, only N or fewer may be present
+        throughout all deck parts where N is determined by the max quantity of
+        a single cards allowed by the given format.
+        - For cards with `Legality.BANNED` or `Legality.NOT_LEGAL`, none may be
+        present throught all deck parts.
+
+        Args:
+            format (Format): The format to check against.
+        """
+
+        # Check deck meets minimum size requirements
+        if self.main.total() < utils.main_size(format)[0]:
+            return False
+        if self.side.total() < utils.side_size(format)[0]:
+            return False
+        if self.cmdr.total() < utils.cmdr_size(format)[0]:
+            return False
+
+        # Check card quantities do not exceed acceptable maximums
+        for c, q in self.cards.items():
+            c_legal = c.legalities[format] if format not in [Format.LIMITED, Format.NONE] else Legality.LEGAL
+
+            if (c_legal is Legality.RESTRICTED and q > 1) or c_legal in [Legality.BANNED, Legality.NOT_LEGAL]:
+                return False
+
+            if q > utils.max_card_quantity(format) and q > utils.max_relentless_quantity(c.name):
+                return False
+
+        return True
+
+    def total_cards(self) -> int:
+        """
+        The number of cards in this Deck.
+        """
+
+        return self.main.total() + self.side.total() + self.cmdr.total()
+
+    def total_cmc(self) -> float:
+        """
+        The total mana value of cards in this Deck.
+        """
+
+        # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
+
+        return sum([c.cmc * q for c, q in self.cards.items()])
+
+    def total_words(self) -> int:
+        """
+        The number of words across all oracle text on all cards in this Deck
+        (excludes reminder text).
+        """
+
+        return sum([c.total_words() * q for c, q in self.cards.items()])
+
+    # region Mutating Methods
+
+    def add_card(self, card: CardT, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
+        """
+        Adds a given quantity of a given card to this Deck.
+
+        Args:
+            card (Card): The card to add.
+            quantity (int): The number of copies of the card to be added.
+            in_the (InThe): Where to add the card (main, side, etc)
+        """
+
+        match in_the:
+            case InThe.MAIN:
+                self.main.add_card(card=card, quantity=quantity)
+            case InThe.SIDE:
+                self.side.add_card(card=card, quantity=quantity)
+            case InThe.CMDR:
+                self.cmdr.add_card(card=card, quantity=quantity)
+            case _:
+                pass  # TODO(#75): 'in' must be one of InThe.list()
+
+    def add_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
+        """
+        Adds the given cards to this Deck.
+
+        Args:
+            cards (Counter[CardT]): The cards to add.
+            in_the (InThe): Where to add the cards (main, side, etc)
+        """
+
+        match in_the:
+            case InThe.MAIN:
+                self.main.add_cards(cards)
+            case InThe.SIDE:
+                self.side.add_cards(cards)
+            case InThe.CMDR:
+                self.cmdr.add_cards(cards)
+
+    def remove_card(self, card: CardT, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
+        """
+        Removes a given quantity of a given card from this Deck. If quantity is
+        not provided, removes all copies.
+
+        Args:
+            card (CardT): The card to remove.
+            quantity (int): The number of copies of the card to be removed.
+            in_the (InThe): Where to remove the cards from (main, side, etc)
+        """
+
+        # using counterA - counterB results in a new Counter with only positive results
+        match in_the:
+            case InThe.MAIN:
+                self.main.remove_card(card=card, quantity=quantity)
+            case InThe.SIDE:
+                self.side.remove_card(card=card, quantity=quantity)
+            case InThe.CMDR:
+                self.cmdr.remove_card(card=card, quantity=quantity)
+            case _:
+                pass  # TODO(#75): failed to remove card
+
+    def remove_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
+        """
+        Removes the given cards from this Deck.
+
+        Args:
+            cards (Counter[CardT]): The cards to remove.
+            in_the (InThe): Where to remove the cards from (main, side, etc)
+        """
+
+        # using counterA - counterB results in a new Counter with only positive results
+        match in_the:
+            case InThe.MAIN:
+                self.main.remove_cards(cards=cards)
+            case InThe.SIDE:
+                self.side.remove_cards(cards=cards)
+            case InThe.CMDR:
+                self.cmdr.remove_cards(cards=cards)
+            case _:
+                pass  # TODO(#75): failed to remove cards
+
+    # endregion

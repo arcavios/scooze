@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import date
 from typing import Iterable, Mapping, Self, TypeVar
 
@@ -33,7 +34,7 @@ from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
-F = TypeVar("F", bound=CardFace)  # generic CardFace type
+CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type
 
 
 class Card(HashableObject):
@@ -187,6 +188,44 @@ class OracleCard(Card):
         self.rulings_uri = rulings_uri
         self.toughness = toughness
         self.type_line = type_line
+
+    @classmethod
+    def oracle_text_without_reminder(cls, oracle_text: str) -> str:
+        """
+        Provides the given oracle text with reminder text removed.
+
+        Args:
+            oracle_text (str): The oracle text of a card.
+        """
+
+        pattern_reminder = r" ?\([^()]+\) ?"  # text between parens ()
+        return re.sub(pattern_reminder, "", oracle_text)
+
+    def is_double_sided(self) -> bool:
+        """
+        Determines if this is a double-sided card.
+        """
+
+        return self.card_faces is not None
+
+    def total_words(self) -> int:
+        """
+        The number of words in this card's oracle text (excludes reminder text).
+        """
+
+        pattern_words = r"([a-zA-Z0-9+/{}']+)"  # words on a card
+
+        # MDFC
+        if self.is_double_sided():
+            return sum(
+                [
+                    len(re.findall(pattern_words, OracleCard.oracle_text_without_reminder(face.oracle_text)))
+                    for face in self.card_faces
+                ]
+            )
+        # Non-MDFC
+        else:
+            return len(re.findall(pattern_words, OracleCard.oracle_text_without_reminder(self.oracle_text)))
 
 
 class FullCard(OracleCard):
@@ -503,6 +542,14 @@ class FullCard(OracleCard):
 
         # endregion
 
+    def total_words(self) -> int:
+        """
+        The number of words in this card's oracle text (excludes reminder text).
+        """
+
+        # Don't double count reversible card text
+        return int(super().total_words() / (2 if self.layout is Layout.REVERSIBLE_CARD else 1))
+
 
 class CardNormalizer(CardPartsNormalizer):
     """
@@ -532,9 +579,9 @@ class CardNormalizer(CardPartsNormalizer):
     @classmethod
     def to_card_faces(
         cls,
-        card_faces: Iterable[F] | Iterable[dict] | None,
-        card_face_class: type[F] = CardFace,
-    ) -> tuple[F]:
+        card_faces: Iterable[CardFaceT] | Iterable[dict] | None,
+        card_face_class: type[CardFaceT] = CardFace,
+    ) -> tuple[CardFaceT]:
         """
         Normalize card_faces from JSON.
 

@@ -1,6 +1,5 @@
 from datetime import date
 
-import scooze.models.utils as model_utils
 from pydantic import Field
 from scooze.enums import (
     BorderColor,
@@ -27,9 +26,10 @@ from scooze.models.cardparts import (
     RelatedCardModel,
     RelatedUrisModel,
 )
+from scooze.models.utils import ObjectIdT, ScoozeBaseModel
 
 
-class CardModel(model_utils.ScoozeBaseModel):
+class CardModel(ScoozeBaseModel):
     """
     Model for a basic Card object with minimal fields. Contains all information
       you might use to sort a decklist.
@@ -537,7 +537,7 @@ class CardModelIn(CardModel):
 
 
 class CardModelOut(CardModel):
-    id: model_utils.ObjectIdT = Field(
+    id: ObjectIdT = Field(
         default=None,
         alias="_id",
     )
