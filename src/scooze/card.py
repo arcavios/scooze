@@ -189,12 +189,24 @@ class OracleCard(Card):
         self.toughness = toughness
         self.type_line = type_line
 
+
     @classmethod
-    def oracle_text_without_reminder(oracle_text: str) -> str:
+    def oracle_text_without_reminder(cls, oracle_text: str) -> str:
+        """
+        Provides the given oracle text with reminder text removed.
+
+        Args:
+            oracle_text (str): The oracle text of a card.
+        """
+
         pattern_reminder = r" ?\([^()]+\) ?"  # text between parens ()
         return re.sub(pattern_reminder, "", oracle_text)
 
     def is_double_sided(self) -> bool:
+        """
+        Determines if this is a double-sided card.
+        """
+
         return bool(self.card_faces)
 
     def total_words(self) -> int:
@@ -202,7 +214,7 @@ class OracleCard(Card):
         The number of words in this card's oracle text (excludes reminder text).
         """
 
-        pattern_words = r"([a-zA-Z0-9+/]+)"  # words on a card
+        pattern_words = r"([a-zA-Z0-9+/{}']+)"  # words on a card
 
         # MDFC
         if self.is_double_sided():

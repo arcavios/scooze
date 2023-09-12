@@ -36,7 +36,7 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
             return card_json
 
 
-# region Test Card JSON
+# region Test Cards
 
 
 # Instant
@@ -253,7 +253,7 @@ def oracle_zndrsplt_eye_of_wisdom() -> str:
 # endregion
 
 
-# region OracleCards
+# region Test OracleCards
 
 
 # Cards are sorted alphabetically
