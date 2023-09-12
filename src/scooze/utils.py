@@ -98,7 +98,7 @@ def max_relentless_quantity(name: str) -> int:
             return 0  # helps identify new relentless cards
 
 
-def max_quantity(fmt: Format) -> int:
+def max_card_quantity(fmt: Format) -> int:
     """
     Given a Format, what is the maximum quantity of a card in a deck?
     """

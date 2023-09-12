@@ -4,7 +4,7 @@ from typing import Generic, Self
 
 from scooze.deckpart import CardT, DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe, Legality
-from scooze.utils import ComparableObject, max_quantity, max_relentless_quantity
+from scooze.utils import ComparableObject, max_card_quantity, max_relentless_quantity
 
 
 class Deck(ComparableObject, Generic[CardT]):
@@ -161,7 +161,7 @@ class Deck(ComparableObject, Generic[CardT]):
             if (c_legal is Legality.RESTRICTED and q > 1) or c_legal in [Legality.BANNED, Legality.NOT_LEGAL]:
                 return False
 
-            if q > max_quantity(format) and q > max_relentless_quantity(c.name):
+            if q > max_card_quantity(format) and q > max_relentless_quantity(c.name):
                 return False
 
         return True

@@ -2,7 +2,14 @@ from sys import maxsize
 
 import pytest
 from scooze.enums import Format
-from scooze.utils import DictDiff, cmdr_size, main_size, side_size
+from scooze.utils import (
+    DictDiff,
+    cmdr_size,
+    main_size,
+    max_card_quantity,
+    max_relentless_quantity,
+    side_size,
+)
 
 # region Utils
 
@@ -166,238 +173,202 @@ def test_dictdiff_str(diffAB, diffAB_str):
 
 
 @pytest.mark.card_quantity
-def test_fmt_alchemy_max_relentless_quantity():
-    pass  # TODO: write test
+def test_basicland_max_relentless_quantity():
+    assert max_relentless_quantity
+    assert max_relentless_quantity("Plains") == maxsize
+    assert max_relentless_quantity("Island") == maxsize
+    assert max_relentless_quantity("Swamp") == maxsize
+    assert max_relentless_quantity("Mountain") == maxsize
+    assert max_relentless_quantity("Forest") == maxsize
+    assert max_relentless_quantity("Wastes") == maxsize
+    assert max_relentless_quantity("Snow-Covered Plains") == maxsize
+    assert max_relentless_quantity("Snow-Covered Island") == maxsize
+    assert max_relentless_quantity("Snow-Covered Swamp") == maxsize
+    assert max_relentless_quantity("Snow-Covered Mountain") == maxsize
+    assert max_relentless_quantity("Snow-Covered Forest") == maxsize
 
 
 @pytest.mark.card_quantity
-def test_fmt_brawl_max_relentless_quantity():
-    pass  # TODO: write test
+def test_sevendwarves_max_relentless_quantity():
+    assert max_relentless_quantity("Seven Dwarves") == 7
 
 
 @pytest.mark.card_quantity
-def test_fmt_commander_max_relentless_quantity():
-    pass  # TODO: write test
+def test_nazgul_max_relentless_quantity():
+    assert max_relentless_quantity("Nazgûl") == 9
+    assert max_relentless_quantity("Nazgul") == 9
 
 
 @pytest.mark.card_quantity
-def test_fmt_duel_max_relentless_quantity():
-    pass  # TODO: write test
+def test_relentless_max_relentless_quantity():
+    assert max_relentless_quantity("Relentless Rats") == maxsize
+    assert max_relentless_quantity("Dragon's Approach") == maxsize
+    assert max_relentless_quantity("Persistent Petitioners") == maxsize
+    assert max_relentless_quantity("Rat Colony") == maxsize
+    assert max_relentless_quantity("Relentless Rats") == maxsize
+    assert max_relentless_quantity("Shadowborn Apostle") == maxsize
 
 
 @pytest.mark.card_quantity
-def test_fmt_explorer_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_future_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_gladiator_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_historic_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_historicbrawl_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_legacy_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_modern_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_oathbreaker_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_oldschool_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_pauper_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_paupercommander_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_penny_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_pioneer_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_predh_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_premodern_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_standard_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_vintage_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_limited_max_relentless_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_none_max_relentless_quantity():
-    pass  # TODO: write test
+def test_normal_max_relentless_quantity():
+    assert max_relentless_quantity("Python") == 0
+    assert max_relentless_quantity("Scavenging Ooze") == 0
 
 
 # endregion
 
 # region Normal Cards
 
+# match fmt.value:
+#     case Format.LIMITED:
+#         return maxsize
 
-@pytest.mark.card_quantity
-def test_fmt_alchemy_max_quantity():
-    pass  # TODO: write test
+#     case (
+#         Format.BRAWL
+#         | Format.COMMANDER
+#         | Format.DUEL
+#         | Format.GLADIATOR
+#         | Format.HISTORICBRAWL
+#         | Format.OATHBREAKER
+#         | Format.PAUPERCOMMANDER
+#         | Format.PREDH
+#     ):
+#         return 1
 
+#     case (
+#         Format.ALCHEMY
+#         | Format.EXPLORER
+#         | Format.FUTURE
+#         | Format.HISTORIC
+#         | Format.LEGACY
+#         | Format.MODERN
+#         | Format.OLDSCHOOL
+#         | Format.PAUPER
+#         | Format.PENNY
+#         | Format.PIONEER
+#         | Format.PREMODERN
+#         | Format.STANDARD
+#         | Format.VINTAGE
+#     ):
+#         return 4
 
-@pytest.mark.card_quantity
-def test_fmt_brawl_max_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_commander_max_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_duel_max_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_explorer_max_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_future_max_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_gladiator_max_quantity():
-    pass  # TODO: write test
-
-
-@pytest.mark.card_quantity
-def test_fmt_historic_max_quantity():
-    pass  # TODO: write test
+#     case Format.NONE | _:
+#         return maxsize
 
 
 @pytest.mark.card_quantity
-def test_fmt_historicbrawl_max_quantity():
-    pass  # TODO: write test
+def test_fmt_alchemy_max_card_quantity():
+    assert max_card_quantity(Format.ALCHEMY) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_legacy_max_quantity():
-    pass  # TODO: write test
+def test_fmt_brawl_max_card_quantity():
+    assert max_card_quantity(Format.BRAWL) == 1
 
 
 @pytest.mark.card_quantity
-def test_fmt_modern_max_quantity():
-    pass  # TODO: write test
+def test_fmt_commander_max_card_quantity():
+    assert max_card_quantity(Format.COMMANDER) == 1
 
 
 @pytest.mark.card_quantity
-def test_fmt_oathbreaker_max_quantity():
-    pass  # TODO: write test
+def test_fmt_duel_max_card_quantity():
+    assert max_card_quantity(Format.DUEL) == 1
 
 
 @pytest.mark.card_quantity
-def test_fmt_oldschool_max_quantity():
-    pass  # TODO: write test
+def test_fmt_explorer_max_card_quantity():
+    assert max_card_quantity(Format.EXPLORER) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_pauper_max_quantity():
-    pass  # TODO: write test
+def test_fmt_future_max_card_quantity():
+    assert max_card_quantity(Format.FUTURE) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_paupercommander_max_quantity():
-    pass  # TODO: write test
+def test_fmt_gladiator_max_card_quantity():
+    assert max_card_quantity(Format.GLADIATOR) == 1
 
 
 @pytest.mark.card_quantity
-def test_fmt_penny_max_quantity():
-    pass  # TODO: write test
+def test_fmt_historic_max_card_quantity():
+    assert max_card_quantity(Format.HISTORIC) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_pioneer_max_quantity():
-    pass  # TODO: write test
+def test_fmt_historicbrawl_max_card_quantity():
+    assert max_card_quantity(Format.HISTORICBRAWL) == 1
 
 
 @pytest.mark.card_quantity
-def test_fmt_predh_max_quantity():
-    pass  # TODO: write test
+def test_fmt_legacy_max_card_quantity():
+    assert max_card_quantity(Format.LEGACY) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_premodern_max_quantity():
-    pass  # TODO: write test
+def test_fmt_modern_max_card_quantity():
+    assert max_card_quantity(Format.MODERN) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_standard_max_quantity():
-    pass  # TODO: write test
+def test_fmt_oathbreaker_max_card_quantity():
+    assert max_card_quantity(Format.OATHBREAKER) == 1
 
 
 @pytest.mark.card_quantity
-def test_fmt_vintage_max_quantity():
-    pass  # TODO: write test
+def test_fmt_oldschool_max_card_quantity():
+    assert max_card_quantity(Format.OLDSCHOOL) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_limited_max_quantity():
-    pass  # TODO: write test
+def test_fmt_pauper_max_card_quantity():
+    assert max_card_quantity(Format.PAUPER) == 4
 
 
 @pytest.mark.card_quantity
-def test_fmt_none_max_quantity():
-    pass  # TODO: write test
+def test_fmt_paupercommander_max_card_quantity():
+    assert max_card_quantity(Format.PAUPERCOMMANDER) == 1
+
+
+@pytest.mark.card_quantity
+def test_fmt_penny_max_card_quantity():
+    assert max_card_quantity(Format.PENNY) == 4
+
+
+@pytest.mark.card_quantity
+def test_fmt_pioneer_max_card_quantity():
+    assert max_card_quantity(Format.PIONEER) == 4
+
+
+@pytest.mark.card_quantity
+def test_fmt_predh_max_card_quantity():
+    assert max_card_quantity(Format.PREDH) == 1
+
+
+@pytest.mark.card_quantity
+def test_fmt_premodern_max_card_quantity():
+    assert max_card_quantity(Format.PREMODERN) == 4
+
+
+@pytest.mark.card_quantity
+def test_fmt_standard_max_card_quantity():
+    assert max_card_quantity(Format.STANDARD) == 4
+
+
+@pytest.mark.card_quantity
+def test_fmt_vintage_max_card_quantity():
+    assert max_card_quantity(Format.VINTAGE) == 4
+
+
+@pytest.mark.card_quantity
+def test_fmt_limited_max_card_quantity():
+    assert max_card_quantity(Format.LIMITED) == maxsize
+
+
+@pytest.mark.card_quantity
+def test_fmt_none_max_card_quantity():
+    assert max_card_quantity(Format.NONE) == maxsize
 
 
 # endregion
