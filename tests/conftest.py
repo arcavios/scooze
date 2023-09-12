@@ -1,16 +1,35 @@
 import json
 from collections import Counter
+from datetime import datetime, timezone
 
 import pytest
 from bson import ObjectId
+from fastapi.testclient import TestClient
 from scooze.card import OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.enums import Color, Format, Legality
+from scooze.main import app
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
 # It was chosen because it has many colors of cards, lots of words, and many types.
+
+
+# region Common
+
+
+@pytest.fixture(scope="session")
+def client() -> TestClient:
+    return TestClient(app)
+
+
+@pytest.fixture(scope="session")
+def today() -> datetime:
+    return datetime.now(timezone.utc).date()
+
+
+# endregion
 
 
 # region Card JSON
@@ -870,6 +889,7 @@ def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck:
 
 
 # endregion
+
 
 # region Deck Router
 

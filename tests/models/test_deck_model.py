@@ -1,5 +1,4 @@
 from collections import Counter
-from datetime import datetime, timezone
 
 import pytest
 from bson import ObjectId
@@ -13,11 +12,6 @@ from scooze.models.utils import ObjectIdT
 @pytest.fixture
 def archetype() -> str:
     return "Amulet Titan"
-
-
-@pytest.fixture
-def today() -> datetime:
-    return datetime.now(timezone.utc).date()
 
 
 @pytest.fixture

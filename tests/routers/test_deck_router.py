@@ -3,24 +3,18 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
-from scooze.main import app
 from scooze.models.deck import DeckModelIn, DeckModelOut
 
 # region Fixtures
 
 
 @pytest.fixture
-def client() -> TestClient:
-    return TestClient(app)
-
-
-@pytest.fixture
-def request_body_deck(archetype_modern_4c, main_modern_4c_dict, side_modern_4c_dict) -> DeckModelIn:
+def request_body_deck(archetype_modern_4c, main_modern_4c_dict, side_modern_4c_dict, today) -> DeckModelIn:
     return DeckModelIn.model_validate(
         {
             "archetype": archetype_modern_4c,
             "format": "modern",
-            "date_played": datetime.now().date(),
+            "date_played": today,
             "main": main_modern_4c_dict,
             "side": side_modern_4c_dict,
         }
