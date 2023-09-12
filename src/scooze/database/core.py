@@ -39,7 +39,7 @@ async def delete_document(col_type: DbCollection, id: str):
 
 
 async def insert_many_documents(col_type: DbCollection, documents: list[dict[str, Any]]):
-    return await db.client.scooze[col_type].insert_many([documents])
+    return await db.client.scooze[col_type].insert_many(documents)
 
 
 async def get_random_documents(col_type: DbCollection, limit: int):
