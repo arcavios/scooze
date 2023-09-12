@@ -74,7 +74,7 @@ def print_error(e: Exception, txt: str):
 
 
 async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
-    file_path = f"{bulk_file_dir}{file_type}_cards.json"
+    file_path = f"{bulk_file_dir}/{file_type}.json"
     try:
         with open(file_path) as cards_file:
             print(f"Inserting {file_type} cards into the database...")
@@ -87,7 +87,8 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
             ]
             await db.card.add_cards(cards)
     except FileNotFoundError:
-        download_now = input(f"{file_type} file not found; would you like to download it now? [y/n]") in "yY"
+        print(file_path)
+        download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
         if not download_now:
             print("No cards loaded into database.")
             return
@@ -99,13 +100,13 @@ async def main():
     args = parse_args()
 
     if args.clean_cards:
-        clean = input("Delete all CARDS before importing? [y/n]") in "yY"
+        clean = input("Delete all CARDS before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
             await db.card.delete_cards_all()  # TODO(#7): this need async for now, replace with Python API
 
     if args.clean_decks:
-        clean = input("Delete all DECKS before importing? [y/n]") in "yY"
+        clean = input("Delete all DECKS before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all decks from your local database...")
             # TODO(#30): needs deck endpoints
