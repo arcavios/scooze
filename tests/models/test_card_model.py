@@ -310,7 +310,7 @@ def test_fullcardmodel_from_json_reversible(
     assert model.attraction_lights is None
     assert model.booster is False
     assert model.border_color is BorderColor.BORDERLESS
-    assert model.card_back_id == ""
+    assert model.card_back_id is None
 
     assert len(model.card_faces) == 2
     front, back = model.card_faces
@@ -404,7 +404,7 @@ def test_fullcardmodel_from_json_reversible(
     assert model.legalities == legalities_zndrsplt_eye_of_wisdom
     assert model.life_modifier is None
     assert model.loyalty is None
-    assert model.mana_cost == ""
+    assert model.mana_cost is None
     assert model.mtgo_foil_id is None
     assert model.mtgo_id is None
     assert model.multiverse_ids == []
@@ -461,7 +461,7 @@ def test_fullcardmodel_from_json_reversible(
     assert model.tcgplayer_id == 259216
     assert model.textless is False
     assert model.toughness is None
-    assert model.type_line == ""
+    assert model.type_line is None
     assert model.uri.startswith("https://api.scryfall.com/cards/")
     assert model.variation is False
     assert model.variation_of is None

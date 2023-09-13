@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from fastapi.testclient import TestClient
 from scooze.models.card import CardModelIn, CardModelOut
+from bson import ObjectId
 
 # region Fixtures
 

@@ -987,7 +987,7 @@ def test_fullcard_from_fullcardmodel_reversible(
     assert card.attraction_lights is None
     assert card.booster is False
     assert card.border_color is BorderColor.BORDERLESS
-    assert card.card_back_id is ""
+    assert card.card_back_id is None
 
     assert len(card.card_faces) == 2
     front, back = card.card_faces
@@ -1081,7 +1081,7 @@ def test_fullcard_from_fullcardmodel_reversible(
     assert card.legalities == legalities_zndrsplt_eye_of_wisdom
     assert card.life_modifier is None
     assert card.loyalty is None
-    assert card.mana_cost == ""
+    assert card.mana_cost is None
     assert card.mtgo_foil_id is None
     assert card.mtgo_id is None
     assert card.multiverse_ids == tuple([])
@@ -1138,7 +1138,7 @@ def test_fullcard_from_fullcardmodel_reversible(
     assert card.tcgplayer_id == 259216
     assert card.textless is False
     assert card.toughness is None
-    assert card.type_line == ""
+    assert card.type_line is None
     assert card.uri.startswith("https://api.scryfall.com/cards/")
     assert card.variation is False
     assert card.variation_of is None
