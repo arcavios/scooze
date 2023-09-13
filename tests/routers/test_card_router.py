@@ -11,9 +11,13 @@ from scooze.models.card import CardModelIn, CardModelOut
 def request_body_card() -> CardModelIn:
     return CardModelIn.model_validate(
         {
-            "name": "Snapcaster Mage",
-            "colors": ["U"],
+            "id": "487116ab-b885-406b-aa54-56cb67eb3ca5", # Scryfall ID
+            "name": "Scavenging Ooze",
+            "colors": ["G"],
             "cmc": 2.0,
+            "power": "2",
+            "toughness": "2",
+            "typeLine": "Creature — Ooze",
         }
     )
 

@@ -237,7 +237,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     scryfall_id: str | None = Field(
         default=None,
         description="Scryfall's unique ID for this card.",
-        alias="id",
+        validation_alias="id",
     )
     lang: Language | None = Field(
         default=None,
