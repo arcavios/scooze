@@ -237,10 +237,10 @@ class Legality(ExtendedEnum, StrEnum):
     """
     String enum of different legalities that a card can have in a format.
 
-    legal: eligible to be played in a format, and not banned
-    not_legal: not eligible to be legal (never printed in right set/rarity)
-    banned: eligible to be legal, but specifically banned
-    restricted: only 1 copy allowed in a deck (specific to Vintage)
+    - legal: eligible to be played in a format, and not banned
+    - not_legal: not eligible to be legal (never printed in right set/rarity)
+    - banned: eligible to be legal, but specifically banned
+    - restricted: only 1 copy allowed in a deck (specific to Vintage)
     """
 
     LEGAL = auto()

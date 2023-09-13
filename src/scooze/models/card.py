@@ -48,12 +48,29 @@ class CardModel(ScoozeBaseModel):
         type_line: This card's type line. (e.g. "Creature — Ooze")
     """
 
+    model_config = ScoozeBaseModel.model_config.copy()
+    model_config["json_schema_extra"] = {
+        "examples": [
+            {
+                "cmc": 2.0,
+                "colorIdentity": [Color.GREEN],
+                "colors": [Color.GREEN],
+                "legalities": {Format.COMMANDER: Legality.LEGAL, Format.PAUPER: Legality.NOT_LEGAL},
+                "manaCost": "{1}{G}",
+                "name": "Scavenging Ooze",
+                "power": "2",
+                "toughness": "2",
+                "typeLine": "Creature — Ooze",
+            }
+        ]
+    }
+
     cmc: float | None = Field(
         default=None,
         description="This card's mana value/converted mana cost.",
     )
-    color_identity: set[Color] = Field(
-        default=set(),
+    color_identity: set[Color] | None = Field(
+        default=None,
         description="This card's color identity, for Commander variant deckbuilding.",
     )
     colors: set[Color] | None = Field(
@@ -61,15 +78,15 @@ class CardModel(ScoozeBaseModel):
         description="This card's colors.",
     )
     legalities: dict[Format, Legality] | None = Field(
-        default={},
+        default=None,
         description="Formats and the legality status of this card in them.",
     )
-    mana_cost: str = Field(
-        default="",
+    mana_cost: str | None = Field(
+        default=None,
         description='Mana cost, as string of mana symbols. (e.g. "{1}{W}{U}{B}{R}{G}")',
     )
-    name: str = Field(
-        default="",
+    name: str | None = Field(
+        default=None,
         description="This card's name.",
     )
     power: str | None = Field(
@@ -80,8 +97,8 @@ class CardModel(ScoozeBaseModel):
         default=None,
         description="Toughness of this card, if applicable.",
     )
-    type_line: str = Field(
-        default="",
+    type_line: str | None = Field(
+        default=None,
         description='This card\'s type line. (e.g. "Creature — Ooze")',
     )
 
@@ -217,14 +234,13 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="This card's Arena ID, if applicable.",
     )
-    scryfall_id: str = Field(
-        default="",
+    scryfall_id: str | None = Field(
+        default=None,
         description="Scryfall's unique ID for this card.",
         alias="id",
     )
-    lang: Language = Field(
-        # TODO(#48): better default?
-        default=Language.ENGLISH,
+    lang: Language | None = Field(
+        default=None,
         description="The language code for this print; see https://scryfall.com/docs/api/languages",
     )
     mtgo_id: int | None = Field(
@@ -255,20 +271,20 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="A UUID for this card's oracle identity; shared across prints of the same card but not same-named objects with different gameplay properties.",
     )
-    prints_search_uri: str = Field(
-        default="",
+    prints_search_uri: str | None = Field(
+        default=None,
         description="A link to begin paginating through all prints of this card in Scryfall's API.",
     )
-    rulings_uri: str = Field(
-        default="",
+    rulings_uri: str | None = Field(
+        default=None,
         description="A link to rulings for this card in Scryfall's API.",
     )
-    scryfall_uri: str = Field(
-        default="",
+    scryfall_uri: str | None = Field(
+        default=None,
         description="A link to the Scryfall page for this card.",
     )
-    uri: str = Field(
-        default="",
+    uri: str | None = Field(
+        default=None,
         description="A link to this card object in Scryfall's API.",
     )
 
@@ -299,8 +315,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="This card's Vanguard hand size modifier, if applicable.",
     )
-    keywords: set[str] = Field(
-        default=set(),
+    keywords: set[str] | None = Field(
+        default=None,
         description="Keywords and keyword actions this card uses.",
     )
     # legalities defined by base model
@@ -327,8 +343,8 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Which colors of mana this card can produce.",
     )
-    reserved: bool = Field(
-        default=False,
+    reserved: bool | None = Field(
+        default=None,
         description="Whether this card is on the Reserved List.",
     )
     # toughness defined by base model
@@ -350,32 +366,32 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Attraction lights lit on this card, if applicable.",
     )
-    booster: bool = Field(
-        default=False,
+    booster: bool | None = Field(
+        default=None,
         description="Whether this card can be opened in booster packs.",
     )
-    border_color: BorderColor = Field(
-        default=BorderColor.BLACK,
+    border_color: BorderColor | None = Field(
+        default=None,
         description="Border color of this card, from among black, white, borderless, silver, and gold.",
     )
-    card_back_id: str = Field(
-        default="",
+    card_back_id: str | None = Field(
+        default=None,
         description="Scryfall UUID of the card back design for this card.",
     )
-    collector_number: str = Field(
-        default="",
+    collector_number: str | None = Field(
+        default=None,
         description="This card's collector number; can contain non-numeric characters.",
     )
     content_warning: bool = Field(
         default=False,
         description="True if use of this print should be avoided; see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220",
     )
-    digital: bool = Field(
-        default=False,
+    digital: bool | None = Field(
+        default=None,
         description="True if this card was only released in a video game.",
     )
-    finishes: set[Finish] = Field(
-        default=set(),
+    finishes: set[Finish] | None = Field(
+        default=None,
         description="Finishes this card is available in, from among foil, nonfoil, and etched.",
     )
     flavor_name: str | None = Field(
@@ -390,40 +406,40 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
     )
-    frame: Frame = Field(
-        default="",
+    frame: Frame | None = Field(
+        default=None,
         description="This card's frame layout; see https://scryfall.com/docs/api/frames",
     )
-    full_art: bool = Field(
-        default=False,
+    full_art: bool | None = Field(
+        default=None,
         description="Whether this print is full-art.",
     )
-    games: set[Game] = Field(
-        default=set(),
+    games: set[Game] | None = Field(
+        default=None,
         description="Which games this print is available on, from among paper, mtgo, and arena.",
     )
-    highres_image: bool = Field(
-        default=False,
+    highres_image: bool | None = Field(
+        default=None,
         description="Whether this card has a high-res image available.",
     )
     illustration_id: str | None = Field(
         default=None,
         description="A UUID for the particular artwork on this print, consistent across art reprints.",
     )
-    image_status: ImageStatus = Field(
-        default="",
+    image_status: ImageStatus | None = Field(
+        default=None,
         description="The quality/status of images available for this card. Either missing, placeholder, lowres, or highres_scan.",
     )
     image_uris: ImageUrisModel | None = Field(
         default=None,
         description="Links to images of this card in various qualities.",
     )
-    layout: Layout = Field(
-        default=Layout.NORMAL,
+    layout: Layout | None = Field(
+        default=None,
         description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
     )
-    oversized: bool = Field(
-        default=False,
+    oversized: bool | None = Field(
+        default=None,
         description="Whether this card is oversized.",
     )
     preview: PreviewModel | None = Field(
@@ -446,78 +462,76 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Printed type line of this card, for localized non-English cards.",
     )
-    promo: bool = Field(
-        default=False,
+    promo: bool | None = Field(
+        default=None,
         description="Whether this print is a promo.",
     )
     promo_types: set[str] | None = Field(
         default=None,
         description="Which promo categories this print falls into, if any.",
     )
-    purchase_uris: PurchaseUrisModel = Field(
-        default=PurchaseUrisModel(),
+    purchase_uris: PurchaseUrisModel | None = Field(
+        default=None,
         description="Links to purchase this print from marketplaces.",
     )
-    rarity: Rarity = Field(
-        # TODO(#48): better default?
-        default=Rarity.COMMON,
+    rarity: Rarity | None = Field(
+        default=None,
         description="The rarity of this print.",
     )
-    related_uris: RelatedUrisModel = Field(
-        default=RelatedUrisModel(),
+    related_uris: RelatedUrisModel | None = Field(
+        default=None,
         description="Links to this print's listing on other online resources.",
     )
-    released_at: date = Field(
-        # TODO(#48): better default?
-        default=date(year=1993, month=8, day=5),  # LEA release date
+    released_at: date | None = Field(
+        default=None,
         description="The date this card was first released.",
     )
-    reprint: bool = Field(
-        default=False,
+    reprint: bool | None = Field(
+        default=None,
         description="Whether this print is a reprint from an earlier set.",
     )
-    scryfall_set_uri: str = Field(
-        default="",
+    scryfall_set_uri: str | None = Field(
+        default=None,
         description="Link to the Scryfall set page for the set of this print.",
     )
     security_stamp: SecurityStamp | None = Field(
         default=None,
         description="Security stamp on this card, if any.",
     )
-    set_name: str = Field(
-        default="",
+    set_name: str | None = Field(
+        default=None,
         description="Full name of the set this print belongs to.",
     )
-    set_search_uri: str = Field(
-        default="",
+    set_search_uri: str | None = Field(
+        default=None,
         description="Link to Scryfall API to start paginating through this print's full set.",
     )
     set_type: SetType | None = Field(
         default=None,
         description="An overall categorization for each set, provided by Scryfall.",
     )
-    set_uri: str = Field(
-        default="",
+    set_uri: str | None = Field(
+        default=None,
         description="Link to the set object for this print in Scryfall's API.",
     )
-    set: str = Field(
-        default="",
+    set: str | None = Field(
+        default=None,
         description="Set code of the set this print belongs to.",
     )
-    set_id: str = Field(
-        default="",
+    set_id: str | None = Field(
+        default=None,
         description="UUID of the set this print belongs to.",
     )
-    story_spotlight: bool = Field(
-        default=False,
+    story_spotlight: bool | None = Field(
+        default=None,
         description="Whether this print is a Story Spotlight.",
     )
-    textless: bool = Field(
-        default=False,
+    textless: bool | None = Field(
+        default=None,
         description="Whether this print is textless.",
     )
-    variation: bool = Field(
-        default=False,
+    variation: bool | None = Field(
+        default=None,
         description="Whether this card print is a variation of another card object.",
     )
     variation_of: str | None = Field(
@@ -532,11 +546,11 @@ class FullCardModel(CardModel, validate_assignment=True):
     # endregion
 
 
-class CardModelIn(CardModel):
+class CardModelIn(FullCardModel):
     pass
 
 
-class CardModelOut(CardModel):
+class CardModelOut(FullCardModel):
     id: ObjectIdT = Field(
         default=None,
         alias="_id",
