@@ -101,13 +101,13 @@ def main():
     args = parse_args()
 
     if args.clean_cards:
-        clean = input("Delete all CARDS before importing? [y/n] ") in "yY"
+        clean = input("Delete existing cards before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
             asyncio.run(card_db.delete_cards_all())  # TODO(#7): this need async for now, replace with Python API
 
     if args.clean_decks:
-        clean = input("Delete all DECKS before importing? [y/n] ") in "yY"
+        clean = input("Delete existing decks before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all decks from your local database...")
             # TODO(#30): needs deck endpoints
