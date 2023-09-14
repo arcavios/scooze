@@ -7,7 +7,7 @@ from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 from frozendict import frozendict
 from scooze.enums import ExtendedEnum, Format
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk/"  # TODO(#99) - Change DEFAULT_BULK_FILE_DIR to work when called from anywhere.
+DEFAULT_BULK_FILE_DIR = "./data/bulk"  # TODO(#99) - Change DEFAULT_BULK_FILE_DIR to work when called from anywhere.
 
 ## Generic Types
 T = TypeVar("T")  # generic type
