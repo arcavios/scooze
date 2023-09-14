@@ -17,7 +17,7 @@ async def cards_root(limit: int = 3):
     """
     Get random cards up to the given limit.
 
-    - **limit** - the maximum number of cards to get.
+    - **limit** - the maximum number of cards to get
     """
 
     cards = await db.get_cards_random(limit=limit)
