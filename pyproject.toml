@@ -48,7 +48,7 @@ markers = [
     "slow: expected to be slow",
     "card_quantity: related to card max quantity allowed per format",
     "dict_diff: related to DictDiff in utils",
-    "deck_diff: related to  Deck.diff()",
+    "deck_diff: related to Deck.diff()",
     "deck_size: related to deck size per format",
     "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
     "deck_remove_cards: related to Deck.remove_card() and Deck.remove_cards()",

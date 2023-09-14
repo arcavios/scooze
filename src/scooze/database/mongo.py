@@ -1,5 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
+# TODO(#119): database docstrings
+
 MONGO_URI = "mongodb://127.0.0.1:27017"
 
 

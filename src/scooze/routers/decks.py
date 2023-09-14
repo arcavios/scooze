@@ -5,6 +5,8 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from scooze.models.deck import DeckModelIn
 
+# TODO(#118): deck router docstringss
+
 router = APIRouter(
     prefix="/decks",
     tags=["decks"],
@@ -35,10 +37,10 @@ async def add_decks(decks: list[DeckModelIn]):
 
 @router.post("/by")
 async def get_decks_by(
-    property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ):
     decks = await db.get_decks_by_property(
-        property_name=property_name, items=items, paginated=paginated, page=page, page_size=page_size
+        property_name=property_name, values=values, paginated=paginated, page=page, page_size=page_size
     )
     if decks:
         return JSONResponse([deck.model_dump(mode="json") for deck in decks], status_code=200)

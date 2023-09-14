@@ -5,6 +5,8 @@ from pymongo import ReturnDocument
 from scooze.database.mongo import db
 from scooze.enums import DbCollection
 
+# TODO(#119): database docstrings
+
 # region Single document
 
 
@@ -50,20 +52,20 @@ async def get_random_documents(col_type: DbCollection, limit: int):
 async def get_documents_by_property(
     col_type: DbCollection,
     property_name: str,
-    items: list[Any],
+    values: list[Any],
     paginated: bool = True,
     page: int = 1,
     page_size: int = 10,
 ):
     match property_name:
         case "_id":
-            values = [ObjectId(i) for i in items]  # Handle ObjectIds
+            vals = [ObjectId(i) for i in values]  # Handle ObjectIds
         case _:
-            values = [i for i in items]
+            vals = values
 
     return (
         await db.client.scooze[col_type]
-        .find({"$or": [{property_name: v} for v in values]})
+        .find({"$or": [{property_name: v} for v in vals]})
         .skip((page - 1) * page_size if paginated else 0)
         .to_list(page_size if paginated else None)
     )
