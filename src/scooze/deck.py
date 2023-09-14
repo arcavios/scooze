@@ -99,10 +99,14 @@ class Deck(utils.ComparableObject, Generic[CardT]):
               another, else False.
         """
 
+        if self.total_cards() != other.total_cards():
+            return False
+
         diff = self.diff(other)
-        same_main = bool(diff.main)
-        same_side = bool(diff.side)
-        same_cmdr = bool(diff.cmdr)
+        same_main = not bool(diff.main)
+        same_side = not bool(diff.side)
+        same_cmdr = not bool(diff.cmdr)
+
         return same_main and same_side and same_cmdr
 
     def export(self, export_format: DecklistFormatter = None) -> str:
@@ -137,11 +141,14 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ""
         cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ""
         decklist = f"{cmdr}{main}{side}"
+
         return decklist
 
-    def is_legal(self, format: Format) -> bool:
+    def is_legal(self, format: Format = None) -> bool:
         """
         Determines if this Deck is legal in the given format.
+
+        Default checks against `self.Format`. If `self.Format` is unset, checks against `Format.NONE`.
 
         - For cards with `Legality.RESTRICTED`, only 1 or fewer may be present
         throughout all deck parts.
@@ -154,6 +161,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Args:
             format (Format): The format to check against.
         """
+
+        # Default
+        if format is None:
+                format = self.format if self.format is not None else Format.NONE
 
         # Check deck meets minimum size requirements
         if self.main.total() < utils.main_size(format)[0]:
