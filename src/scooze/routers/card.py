@@ -39,6 +39,8 @@ async def add_card(card: CardModelIn):
 async def get_card_by_id(card_id: str):
     """
     Get the card with the given scooze ID.
+
+    - **card_id** - the scooze ID of the card to get.
     """
 
     card = await db.get_card_by_property(property_name="_id", value=card_id)
@@ -54,6 +56,8 @@ async def get_card_by_name(card_name: str):
     Get a card by its name.
 
     If more than 1 version of the card is present, returns the first one found.
+
+    - **card_name** - the name of the card to get.s
     """
 
     card = await db.get_card_by_property(property_name="name", value=card_name)
@@ -73,6 +77,8 @@ async def update_card(card_id: str, card: CardModelIn):
 
     Fields will be updated according to the given payload. If a field is not
     present in the payload, it will not be updated.
+
+    - **card_id** - the scooze ID of the card to update.
     """
 
     updated_card = await db.update_card(id=card_id, card=card)
@@ -88,6 +94,11 @@ async def update_card(card_id: str, card: CardModelIn):
 
 @router.delete("/delete/{card_id}", summary="Delete an exisiting card")
 async def delete_card_by_id(card_id: str):
+    """
+    Delete an existing card with the given scooze ID.
+
+    - **card_id** - the scooze ID of the card to delete.
+    """
     deleted_card = await db.delete_card(id=card_id)
 
     if deleted_card:
