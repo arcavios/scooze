@@ -41,7 +41,7 @@ async def add_decks(decks: list[DeckModelIn]):
         return JSONResponse({"message": f"Failed to create a new deck."}, status_code=400)
 
 
-@router.post("/by", summary="Get cards by property")
+@router.post("/by", summary="Get decks by property")
 async def get_decks_by(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ):

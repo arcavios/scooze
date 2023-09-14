@@ -24,8 +24,16 @@ class DeckModel(ScoozeBaseModel):
     model_config["json_schema_extra"] = {
         "examples": [
             {
-                # TODO: example deck
-            }
+                "archetype": "Scooze Deck Example",
+                "format": "Limited",
+                "main": {
+                    "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id
+                    "6502bf77bffae3b433093dcb": 4,  # TODO(#6): replace with Scavenging Ooze scooze id
+                },
+                "side": {
+                    "6502bfe2e0e370d002c87ceb": 1,  # TODO(#6): replace with Keruga scooze id
+                },
+            },
         ]
     }
 
