@@ -48,7 +48,8 @@ async def get_cards_by(
 
     - **property_name** - the property to check against
     - **values** - matching values of the given property
-    - **paginated** - return paginated results if True, return all matches if False
+    - **paginated** - return paginated results if True, return all matches if
+    False
     - **page** - return matches from the given page
     - **page_size** - the number of results per page
     """
