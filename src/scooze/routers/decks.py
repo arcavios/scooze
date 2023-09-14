@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from scooze.models.deck import DeckModelIn
 
-# TODO(#118): deck router docstringss
+# TODO(#118): deck router docstrings
 
 router = APIRouter(
     prefix="/decks",
@@ -14,8 +14,14 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", summary="Get decks at random")
 async def decks_root(limit: int = 3):
+    """
+    Get random decks up to the given limit.
+
+    - **limit** - the maximum number of decks to get
+    """
+
     decks = await db.get_decks_random(limit=limit)
     if decks:
         return JSONResponse([deck.model_dump(mode="json") for deck in decks], status_code=200)
@@ -26,7 +32,7 @@ async def decks_root(limit: int = 3):
 # Create
 
 
-@router.post("/add")
+@router.post("/add", summary="Create new decks")
 async def add_decks(decks: list[DeckModelIn]):
     inserted_ids = await db.add_decks(decks=decks)
     if inserted_ids:
@@ -35,10 +41,21 @@ async def add_decks(decks: list[DeckModelIn]):
         return JSONResponse({"message": f"Failed to create a new deck."}, status_code=400)
 
 
-@router.post("/by")
+@router.post("/by", summary="Get cards by property")
 async def get_decks_by(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ):
+    """
+    Get decks where the given property matches any of the given values.
+
+    - **property_name** - the property to check against
+    - **values** - matching values of the given property
+    - **paginated** - return paginated results if True, return all matches if
+    False
+    - **page** - return matches from the given page
+    - **page_size** - the number of results per page
+    """
+
     decks = await db.get_decks_by_property(
         property_name=property_name, values=values, paginated=paginated, page=page, page_size=page_size
     )
@@ -51,7 +68,7 @@ async def get_decks_by(
 # Delete
 
 
-@router.delete("/delete/all/")
+@router.delete("/delete/all/", summary="Delete all decks")
 async def delete_decks_all():
     deleted_count = await db.delete_decks_all()
 

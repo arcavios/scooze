@@ -20,6 +20,15 @@ class DeckModel(ScoozeBaseModel):
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
     """
 
+    model_config = ScoozeBaseModel.model_config.copy()
+    model_config["json_schema_extra"] = {
+        "examples": [
+            {
+                # TODO: example deck
+            }
+        ]
+    }
+
     archetype: str = Field(
         default="",
         description="The archetype of this Deck.",
