@@ -99,6 +99,7 @@ async def delete_card_by_id(card_id: str):
 
     - **card_id** - the scooze ID of the card to delete
     """
+
     deleted_card = await db.delete_card(id=card_id)
 
     if deleted_card:
