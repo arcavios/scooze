@@ -164,7 +164,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         # Default
         if format is None:
-                format = self.format if self.format is not None else Format.NONE
+            format = self.format if self.format is not None else Format.NONE
 
         # Check deck meets minimum size requirements
         if self.main.total() < utils.main_size(format)[0]:

@@ -157,13 +157,20 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
         ),
     )
 
+
 def test_decklist_equals(deck_modern_4c, main_modern_4c, side_modern_4c, card_omnath_locus_of_creation):
-    deck = Deck[OracleCard](archetype="test_decklist_equals", format=Format.NONE, main=deepcopy(main_modern_4c), side=deepcopy(side_modern_4c))
+    deck = Deck[OracleCard](
+        archetype="test_decklist_equals",
+        format=Format.NONE,
+        main=deepcopy(main_modern_4c),
+        side=deepcopy(side_modern_4c),
+    )
     assert deck.archetype != deck_modern_4c.archetype
     assert deck.decklist_equals(deck_modern_4c)
 
     deck.add_card(card=card_omnath_locus_of_creation)
     assert not deck.decklist_equals(deck_modern_4c)
+
 
 def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
     assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
@@ -214,9 +221,9 @@ def test_is_legal(deck_modern_4c):
     assert not deck_modern_4c.is_legal(Format.STANDARD)
     assert not deck_modern_4c.is_legal(Format.VINTAGE)
 
-    assert deck_modern_4c.is_legal() # self.format
+    assert deck_modern_4c.is_legal()  # self.format
     deck_modern_4c.format = None
-    assert deck_modern_4c.is_legal() # format = None
+    assert deck_modern_4c.is_legal()  # format = None
 
 
 def test_total_cards(deck_modern_4c):
