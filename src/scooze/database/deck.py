@@ -4,11 +4,12 @@ import scooze.database.core as db_core
 from scooze.enums import DbCollection
 from scooze.models.deck import DeckModelIn, DeckModelOut
 
+# TODO(#119): database docstrings
+
 # region Deck
 
 
 async def add_deck(deck: DeckModelIn) -> DeckModelOut:
-    # TODO(#45): router docstrings
     new_deck = await db_core.insert_document(
         DbCollection.DECKS,
         deck.model_dump(
@@ -21,14 +22,12 @@ async def add_deck(deck: DeckModelIn) -> DeckModelOut:
 
 
 async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
-    # TODO(#45): router docstrings
     deck = await db_core.get_document_by_property(DbCollection.DECKS, property_name, value)
     if deck:
         return DeckModelOut(**deck)
 
 
 async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
-    # TODO(#45): router docstrings
     updated_deck = await db_core.update_document(
         DbCollection.DECKS,
         id,
@@ -44,7 +43,6 @@ async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
 
 
 async def delete_deck(id: str) -> DeckModelOut:
-    # TODO(#45): router docstrings
     deleted_deck = await db_core.delete_document(DbCollection.DECKS, id)
 
     if deleted_deck:
@@ -57,7 +55,6 @@ async def delete_deck(id: str) -> DeckModelOut:
 
 
 async def add_decks(decks: list[DeckModelIn]) -> list[str]:
-    # TODO(#45): router docstrings
     insert_many_result = await db_core.insert_many_documents(
         DbCollection.DECKS,
         [
@@ -74,18 +71,16 @@ async def add_decks(decks: list[DeckModelIn]) -> list[str]:
 
 
 async def get_decks_random(limit: int) -> list[DeckModelOut]:
-    # TODO(#45): router docstrings
     decks = await db_core.get_random_documents(DbCollection.DECKS, limit)
     if len(decks) > 0:
         return [DeckModelOut(**deck) for deck in decks]
 
 
 async def get_decks_by_property(
-    property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[DeckModelOut]:
-    # TODO(#45): router docstrings
     decks = await db_core.get_documents_by_property(
-        DbCollection.DECKS, property_name, items, paginated, page, page_size
+        DbCollection.DECKS, property_name, values, paginated, page, page_size
     )
 
     if len(decks) > 0:
@@ -93,7 +88,6 @@ async def get_decks_by_property(
 
 
 async def delete_decks_all() -> int:
-    # TODO(#45): router docstrings
     delete_many_result = await db_core.delete_documents(DbCollection.DECKS)
     if delete_many_result:
         return delete_many_result

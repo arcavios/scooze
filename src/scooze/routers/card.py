@@ -57,7 +57,7 @@ async def get_card_by_name(card_name: str):
 
     If more than 1 version of the card is present, returns the first one found.
 
-    - **card_name** - the name of the card to get.s
+    - **card_name** - the name of the card to get.
     """
 
     card = await db.get_card_by_property(property_name="name", value=card_name)

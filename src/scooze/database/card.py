@@ -4,6 +4,8 @@ import scooze.database.core as db_core
 from scooze.enums import DbCollection
 from scooze.models.card import CardModelIn, CardModelOut
 
+# TODO(#119): database docstrings
+
 # region Card
 
 
@@ -80,11 +82,11 @@ async def get_cards_random(limit: int) -> list[CardModelOut]:
 
 
 async def get_cards_by_property(
-    property_name: str, items: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[CardModelOut]:
     # TODO(#45): router docstrings
     cards = await db_core.get_documents_by_property(
-        DbCollection.CARDS, property_name, items, paginated, page, page_size
+        DbCollection.CARDS, property_name, values, paginated, page, page_size
     )
 
     if len(cards) > 0:
