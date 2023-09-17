@@ -1,49 +1,54 @@
-from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
+from mongomock import Collection, Database
 from scooze.models.deck import DeckModelIn, DeckModelOut
 
 # region Fixtures
-
-
-@pytest.fixture
-def request_body_deck(archetype_modern_4c, main_modern_4c_dict, side_modern_4c_dict, today) -> DeckModelIn:
-    return DeckModelIn.model_validate(
-        {
-            "archetype": archetype_modern_4c,
-            "format": "modern",
-            "date_played": today,
-            "main": main_modern_4c_dict,
-            "side": side_modern_4c_dict,
-        }
-    )
 
 
 # endregion
 
 
 @pytest.mark.router_deck
+@patch("scooze.database.deck.get_decks_random")
+def test_deck_root(
+    mock_get_random: MagicMock, client: TestClient, mock_decks_collection: Collection, deck_model_modern_4c: DeckModelIn
+):
+    mock_get_random.return_value = [DeckModelOut(**mock_decks_collection.find_one({"archetype": "Four-color Control"}))]
+    response = client.get("/deck/")
+    assert response.status_code == 200
+    response_json = response.json()
+    for k, v in deck_model_modern_4c.model_dump(mode="json").items():
+        assert response_json[k] == v
+
+
+# region Create
+
+
+@pytest.mark.router_deck
 @patch("scooze.database.deck.add_deck")
-def test_add_deck(mock_add: MagicMock, client: TestClient, request_body_deck: DeckModelIn):
-    deck_json = request_body_deck.model_dump(mode="json", by_alias=True)
+def test_add_deck(mock_add: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn):
+    deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
     mock_add.return_value: DeckModelOut = DeckModelOut(**deck_json)
     response = client.post("/deck/add", json={"deck": deck_json})
     assert response.status_code == 200
     response_json = response.json()
-    for k, v in request_body_deck.model_dump(mode="json").items():
+    for k, v in deck_model_modern_4c.model_dump(mode="json").items():
         assert response_json[k] == v
 
 
 @pytest.mark.router_deck
 @patch("scooze.database.deck.add_deck")
-def test_add_deck_bad(mock_add: MagicMock, client: TestClient, request_body_deck: DeckModelIn):
-    deck_json = request_body_deck.model_dump(mode="json", by_alias=True)
+def test_add_deck_bad(mock_add: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn):
+    deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
     mock_add.return_value = None
     response = client.post("/deck/add", json={"deck": deck_json})
     assert response.status_code == 400
     assert response.json()["message"] == "Failed to create a new deck."
 
+
+# endregion
 
 # TODO(#111): Complete testing for Deck router
