@@ -1146,29 +1146,34 @@ def test_fullcard_from_fullcardmodel_reversible(
 
 
 def test_fullcard_from_fullcardmodel_watermark(json_anaconda_7ed_foil):
-    card = FullCardModel.model_validate(json_anaconda_7ed_foil)
+    model = FullCardModel.model_validate(json_anaconda_7ed_foil)
+    card = FullCard.from_model(model)
     assert card.watermark == "wotc"
 
 
-def test_fullcardmodel_from_fullcardmodel_non_english(json_python_spanish):
-    card = FullCardModel.model_validate(json_python_spanish)
+def test_fullcard_from_fullcardmodel_non_english(json_python_spanish):
+    model = FullCardModel.model_validate(json_python_spanish)
+    card = FullCard.from_model(model)
     assert card.printed_name == "Pitón"
 
 
-def test_fullcardmodel_from_fullcardmodel_flavor(json_elessar_the_elfstone):
-    card = FullCardModel.model_validate(json_elessar_the_elfstone)
+def test_fullcard_from_fullcardmodel_flavor(json_elessar_the_elfstone):
+    model = FullCardModel.model_validate(json_elessar_the_elfstone)
+    card = FullCard.from_model(model)
     assert card.flavor_name == "Elessar, the Elfstone"
     assert card.flavor_text == "Aragorn took the green stone and held it up, and there came a green fire from his hand."
     assert card.name == "Cloudstone Curio"
 
 
-def test_fullcardmodel_from_fullcardmodel_attraction(json_trash_bin):
-    card = FullCardModel.model_validate(json_trash_bin)
+def test_fullcard_from_fullcardmodel_attraction(json_trash_bin):
+    model = FullCardModel.model_validate(json_trash_bin)
+    card = FullCard.from_model(model)
     assert card.attraction_lights == {2, 6}
 
 
-def test_fullcardmodel_from_fullcardmodel_variation(json_anaconda_portal):
-    card = FullCardModel.model_validate(json_anaconda_portal)
+def test_fullcard_from_fullcardmodel_variation(json_anaconda_portal):
+    model = FullCardModel.model_validate(json_anaconda_portal)
+    card = FullCard.from_model(model)
     assert card.variation is True
     assert card.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda
 

@@ -5,10 +5,11 @@ from typing import Generic, Iterable, Mapping, Self
 
 import scooze.api.card as card_api
 import scooze.utils as utils
-from bson import ObjectId
-from scooze.deckpart import CardT, DeckDiff, DeckPart
+from scooze.card import CardT
+from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe, Legality
 from scooze.models.deck import DeckModel
+from bson import ObjectId
 
 
 class Deck(utils.ComparableObject, Generic[CardT]):
