@@ -1,12 +1,14 @@
-import scooze.bulkdata as bulkdata
-import scooze.database.mongo as mongo
-import scooze.database.card as db_card
-import scooze.database.deck as db_deck
-from contextlib import AbstractContextManager
 import asyncio
-from scooze.card import Card
+from contextlib import AbstractContextManager
 from functools import cache
 
+import scooze.api.card as card_api
+import scooze.api.bulkdata as bulkdata_api
+import scooze.database.card as db_card
+import scooze.database.mongo as mongo
+from scooze.card import Card, FullCard
+from scooze.deckpart import CardT
+from scooze.enums import ScryfallBulkFile
 
 CONTEXT_ERROR_STR = "Scooze used outside of 'with' context"
 
@@ -15,24 +17,27 @@ class Scooze(AbstractContextManager):
     """
     # TODO(#7): docstring
     """
-    def __init__(self):
-        pass
+
+    def __init__(self, card_class: type[CardT] = FullCard):
+        self.card_class = card_class
 
     def __enter__(self):
         mongo.mongo_connect()
         self.safe_context = True
+
+        # TODO(#7): start local mongod, if not already running
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         mongo.mongo_close()
+        # TODO(#7): stop running mongod, if we started it
 
     @cache
     def get_card_by_name(self, name: str) -> Card | None:
         if not self.safe_context:
             raise RuntimeError(CONTEXT_ERROR_STR)
 
-        card_model = asyncio.run(db_card.get_card_by_property("name", name))
-        return Card.from_model(card_model)
+        return card_api.get_card_by_name(name, self.card_class)
 
     @cache
     def get_card_by_id(self, card_id: str) -> Card | None:
@@ -42,4 +47,12 @@ class Scooze(AbstractContextManager):
         card_model = asyncio.run(db_card.get_card_by_property("_id", card_id))
         return Card.from_model(card_model)
 
-
+    # region Bulk data I/O
+    def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
+        if not self.safe_context:
+            raise RuntimeError(CONTEXT_ERROR_STR)
+        return bulkdata_api.load_card_file(
+            file_type=file_type,
+            bulk_file_dir=bulk_file_dir,
+        )
+    # endregion
