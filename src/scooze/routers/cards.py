@@ -41,7 +41,11 @@ async def add_cards(cards: list[CardModelIn]):
 
 @router.post("/by", summary="Get cards by property")
 async def get_cards_by(
-    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str,
+    values: list[Any],
+    paginated: bool = True,
+    page: int = 1,
+    page_size: int = 10,
 ):
     """
     Get cards where the given property matches any of the given values.
