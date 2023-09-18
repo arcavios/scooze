@@ -633,3 +633,6 @@ class CardNormalizer(CardPartsNormalizer):
             return prices
         elif isinstance(prices, dict):
             return Prices(**prices)
+
+
+CardT = TypeVar("CardT", bound=Card)  # generic Card type

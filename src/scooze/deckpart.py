@@ -1,11 +1,9 @@
 from collections import Counter
 from sys import maxsize
-from typing import Generic, Self, TypeVar
+from typing import Generic, Self
 
-from scooze.card import Card
+from scooze.card import CardT
 from scooze.utils import ComparableObject, DictDiff
-
-CardT = TypeVar("CardT", bound=Card)  # generic Card type
 
 
 class DeckDiff(ComparableObject):

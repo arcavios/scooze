@@ -3,7 +3,8 @@ from sys import maxsize
 from typing import Generic, Self
 
 import scooze.utils as utils
-from scooze.deckpart import CardT, DeckDiff, DeckPart
+from scooze.card import CardT
+from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe, Legality
 
 
