@@ -3,8 +3,8 @@ from contextlib import AbstractContextManager
 from functools import cache
 from typing import Any, List
 
-import scooze.api.card as card_api
 import scooze.api.bulkdata as bulkdata_api
+import scooze.api.card as card_api
 import scooze.database.card as db_card
 import scooze.database.mongo as mongo
 from scooze.card import Card, FullCard

@@ -1,8 +1,8 @@
 import asyncio
+from typing import Any, List
 
 import scooze.database.card as db
 from scooze.deckpart import CardT
-from typing import Any, List
 
 
 # region Reading out single cards
@@ -25,13 +25,15 @@ def get_cards_by(
     page: int = 1,
     page_size: int = 10,
 ) -> List[CardT]:
-    card_models = asyncio.run(db.get_cards_by_property(
-        property_name=property_name,
-        values=values,
-        paginated=paginated,
-        page=page,
-        page_size=page_size
-    ))
+    card_models = asyncio.run(
+        db.get_cards_by_property(
+            property_name=property_name,
+            values=values,
+            paginated=paginated,
+            page=page,
+            page_size=page_size,
+        )
+    )
     return [card_class.from_model(m) for m in card_models]
 
 
