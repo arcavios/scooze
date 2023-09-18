@@ -35,7 +35,7 @@ async def add_deck(deck: DeckModelIn):
 # Read
 
 
-@router.get("/id/{id}", summary="Get a deck by ID")
+@router.get("/id/{deck_id}", summary="Get a deck by ID")
 async def get_deck_by_id(deck_id: str):
     """
     Get the deck with the given scooze ID.
