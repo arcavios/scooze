@@ -141,5 +141,3 @@ def test_delete_deck_bad_id(mock_delete: MagicMock, client: TestClient):
 
 
 # endregion
-
-# TODO(#111): Complete testing for Deck router
