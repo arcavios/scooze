@@ -1,10 +1,14 @@
+import json
 from collections import Counter
 from sys import maxsize
-from typing import Generic, Self
+from typing import Generic, Iterable, Mapping, Self
 
+import scooze.api.card as card_api
 import scooze.utils as utils
+from bson import ObjectId
 from scooze.deckpart import CardT, DeckDiff, DeckPart
 from scooze.enums import DecklistFormatter, Format, InThe, Legality
+from scooze.models.deck import DeckModel
 
 
 class Deck(utils.ComparableObject, Generic[CardT]):
@@ -29,9 +33,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
     ):
         self.archetype = archetype
         self.format = format
-        self.main = main
-        self.side = side
-        self.cmdr = cmdr
+        self.main = DeckNormalizer.to_deck_part(main)
+        self.side = DeckNormalizer.to_deck_part(side)
+        self.cmdr = DeckNormalizer.to_deck_part(cmdr)
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -40,6 +44,17 @@ class Deck(utils.ComparableObject, Generic[CardT]):
     def __str__(self):
         decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
+
+    @classmethod
+    def from_json(cls, data: dict | str) -> Self:
+        if isinstance(data, dict):
+            return cls(**data)
+        elif isinstance(data, str):
+            return cls(**json.loads(data))
+
+    @classmethod
+    def from_model(cls, model: DeckModel) -> Self:
+        return cls(**model.model_dump())
 
     def average_cmc(self) -> float:
         """
@@ -292,3 +307,37 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 pass  # TODO(#75): failed to remove cards
 
     # endregion
+
+
+class DeckNormalizer(utils.JsonNormalizer):
+    """
+    A simple class to use when normalizing non-serializable data from JSON.
+
+    Usage:
+        >>> deck.main = DeckNormalizer.deckpart(main_card_ids_json)
+    """
+
+    @classmethod
+    def to_deck_part(cls, deck_part: DeckPart[CardT] | Mapping[CardT | ObjectId | str, int] | None) -> DeckPart[CardT]:
+        """
+        Normalize DeckPart from JSON.
+
+        Args:
+            cards: A list of cards or scooze IDs of cards to normalize.
+
+        Returns:
+            An instance of DeckPart containing the given cards.
+        """
+
+        if deck_part is None or isinstance(deck_part, DeckPart[CardT]):
+            return deck_part
+        elif all(isinstance(card, CardT) for card in deck_part.keys()):
+            return DeckPart(cards=deck_part)
+        else:
+            if all(isinstance(card, str) for card in deck_part.keys()):
+                deck_part = {ObjectId(card_id): q for card_id, q in deck_part.items()}
+
+            # TODO: write objectid code
+            return DeckPart(
+                cards=Counter({card_api.get_card_by("_id", card_id): q for card_id, q in deck_part.items()})
+            )
