@@ -12,12 +12,12 @@ from scooze.enums import Format, Legality, ScryfallBulkFile
 CONTEXT_ERROR_STR = "Scooze used outside of 'with' context"
 
 
-class Scooze(AbstractContextManager):
+class ScoozeApi(AbstractContextManager):
     """
     Context manager object for doing I/O from a MongoDB.
 
     Sample usage:
-        with Scooze[OracleCard] as s:
+        with ScoozeApi[OracleCard] as s:
             pioneer_cards = s.get_cards_by_format(Format.PIONEER)
             woe_cards = s.get_cards_by_set("woe")
             black_lotus = s.get_card_by_scryfall_id
