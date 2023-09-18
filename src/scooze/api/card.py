@@ -46,18 +46,6 @@ def get_cards_by(
 
 # endregion
 
-# region Convenience methods for common lookups
-
-
-def get_cards_by_set(set_name: str, card_class: CardT) -> List[CardT]:
-    return get_cards_by(
-        property_name="set",
-        values=[set_name],
-        card_class=card_class,
-    )
-
-
-# endregion
 
 # region Adding/removing cards
 

@@ -90,6 +90,13 @@ class Scooze(AbstractContextManager):
 
     # endregion
 
+    def get_cards_by_set(self, set_name: str) -> List[CardT]:
+        return card_api.get_cards_by(
+            property_name="set",
+            values=[set_name],
+            card_class=self.card_class,
+        )
+
     # region Bulk data I/O
     def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
         if not self.safe_context:
