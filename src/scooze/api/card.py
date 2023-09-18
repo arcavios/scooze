@@ -6,7 +6,6 @@ import scooze.database.card as db
 from scooze.card import CardT
 from scooze.models.card import CardModelIn
 
-
 # region Reading out single cards
 
 
@@ -57,6 +56,7 @@ def get_cards_by_set(set_name: str, card_class: CardT) -> List[CardT]:
         card_class=card_class,
     )
 
+
 # TODO(#7): more convenience methods
 
 # endregion
@@ -73,7 +73,9 @@ def add_cards_to_db(cards: List[CardT]):
     card_models = [CardModelIn.from_json(json.dumps(card)) for card in cards]
     asyncio.run(db.add_cards(card_models))
 
+
 # TODO(#127): delete single card
+
 
 def remove_all_cards_from_db() -> int:
     return asyncio.run(db.delete_cards_all())
