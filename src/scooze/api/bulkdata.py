@@ -1,5 +1,3 @@
-import asyncio
-
 import ijson
 from scooze.api.card import add_cards_to_db
 from scooze.bulkdata import download_bulk_data_file_by_type
