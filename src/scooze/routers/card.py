@@ -35,7 +35,7 @@ async def add_card(card: CardModelIn):
 # Read
 
 
-@router.get("/id/{id}", summary="Get a card by ID")
+@router.get("/id/{card_id}", summary="Get a card by ID")
 async def get_card_by_id(card_id: str):
     """
     Get the card with the given scooze ID.
