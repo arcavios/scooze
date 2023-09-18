@@ -2,12 +2,12 @@ import asyncio
 from typing import Any, List
 
 import scooze.database.card as db
-from scooze.deckpart import CardT
+from scooze.card import CardT
 
 
 # region Reading out single cards
 def get_card_by_name(name: str, card_class: CardT) -> CardT | None:
-    card_model = asyncio.run(db.get_card_by_property("name", name))
+    card_model = asyncio.run(db.get_card_by_property(property_name="name", value=name))
     return card_class.from_model(card_model)
 
 

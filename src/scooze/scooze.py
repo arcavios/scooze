@@ -7,8 +7,7 @@ import scooze.api.bulkdata as bulkdata_api
 import scooze.api.card as card_api
 import scooze.database.card as db_card
 import scooze.database.mongo as mongo
-from scooze.card import Card, FullCard
-from scooze.deckpart import CardT
+from scooze.card import Card, CardT, FullCard
 from scooze.enums import ScryfallBulkFile
 
 CONTEXT_ERROR_STR = "Scooze used outside of 'with' context"
