@@ -57,8 +57,6 @@ def get_cards_by_set(set_name: str, card_class: CardT) -> List[CardT]:
     )
 
 
-# TODO(#7): more convenience methods
-
 # endregion
 
 # region Adding/removing cards

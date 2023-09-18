@@ -38,15 +38,34 @@ class Scooze(AbstractContextManager):
         if not self.safe_context:
             raise RuntimeError(CONTEXT_ERROR_STR)
 
-        return card_api.get_card_by_name(name, self.card_class)
+        return card_api.get_card_by(
+            property_name="name",
+            value=name,
+            card_class=self.card_class,
+        )
 
     @cache
     def get_card_by_id(self, card_id: str) -> Card | None:
         if not self.safe_context:
             raise RuntimeError(CONTEXT_ERROR_STR)
 
-        card_model = asyncio.run(db_card.get_card_by_property("_id", card_id))
-        return Card.from_model(card_model)
+        return card_api.get_card_by(
+            property_name="_id",
+            value=card_id,
+            card_class=self.card_class,
+        )
+
+    # endregion
+
+    # region Convenience methods for cards
+
+    # TODO(#7): more convenience methods
+    #   - get_cards_by_format(format)
+    #   - get_card_by_scryfall_id
+    #   - get_card_by_oracle_id
+    #   - get_card_by_name
+    #   - get_cards_by_set
+    #   - get_cards_by_format (plus legality filters?)
 
     # endregion
 
