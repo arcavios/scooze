@@ -3,24 +3,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 from fastapi.testclient import TestClient
 from mongomock import Collection
-from scooze.models.card import CardModelIn, CardModelOut
+from scooze.models.card import CardModelOut
 
 # region Fixtures
-
-
-@pytest.fixture
-def request_body_card() -> CardModelIn:
-    return CardModelIn.model_validate(
-        {
-            "id": "487116ab-b885-406b-aa54-56cb67eb3ca5",  # Scryfall ID
-            "name": "Scavenging Ooze",
-            "colors": ["G"],
-            "cmc": 2.0,
-            "power": "2",
-            "toughness": "2",
-            "typeLine": "Creature — Ooze",
-        }
-    )
 
 
 @pytest.fixture
@@ -41,6 +26,15 @@ def test_card_root(mock_get: MagicMock, client: TestClient, omnath: CardModelOut
     response_json = response.json()
     for k, v in omnath.model_dump(mode="json").items():
         assert response_json[k] == v
+
+
+@pytest.mark.router_card
+@patch("scooze.database.card.get_cards_random")
+def test_card_root_no_cards(mock_get: MagicMock, client: TestClient, omnath: CardModelOut):
+    mock_get.return_value = None
+    response = client.get("/card/")
+    assert response.status_code == 404
+    assert response.json()["message"] == "No cards found in the database."
 
 
 # region Create

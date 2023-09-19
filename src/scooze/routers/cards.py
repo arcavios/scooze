@@ -39,6 +39,9 @@ async def add_cards(cards: list[CardModelIn]):
         return JSONResponse({"message": f"Failed to create a new card."}, status_code=400)
 
 
+# Read
+
+
 @router.post("/by", summary="Get cards by property")
 async def get_cards_by(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
