@@ -37,14 +37,14 @@ def get_cards_by(
     return [card_class.from_model(m) for m in card_models]
 
 
-def add_card_to_db(card: CardT):
+def add_card_to_db(card: CardT) -> bool:
     card_model = CardModelIn.from_json(json.dumps(card))
-    asyncio.run(db.add_card(card_model))
+    return asyncio.run(db.add_card(card_model)) is not None
 
 
-def add_cards_to_db(cards: List[CardT]):
+def add_cards_to_db(cards: List[CardT]) -> List[str]:
     card_models = [CardModelIn.from_json(json.dumps(card)) for card in cards]
-    asyncio.run(db.add_cards(card_models))
+    return asyncio.run(db.add_cards(card_models))
 
 
 # TODO(#127): delete single card
