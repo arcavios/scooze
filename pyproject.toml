@@ -59,4 +59,5 @@ markers = [
     "router_card: related to /card routes",
     "router_cards: related to /cards routes",
     "router_deck: related to /deck routes",
+    "router_decks: related to /decks routes",
 ]
