@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "scooze"
 version = "0.1.0"
-description = "API tools for interacting with MongoDB for Magic: the Gathering tournaments, decklists, and cards."
+description = "Tools for interacting with Magic: the Gathering tournaments, decklists, and cards."
 authors = [
     "Alex Gimmi <iambroadband@gmail.com>",
     "Ben Horkley <ben.horkley@gmail.com>",
@@ -36,12 +36,6 @@ httpx = "^0.24.1"
 black = "^23.7.0"
 isort = "^5.12.0"
 mongomock = "^4.1.2"
-
-[[tool.poetry.source]]
-name = "packagr"
-url = "https://api.packagr.app/aGcEPILd"
-priority = "explicit"
-
 
 [tool.pytest.ini_options]
 # addopts = "-m 'not slow'"
