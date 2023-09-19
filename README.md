@@ -100,10 +100,11 @@ Here is an incomplete list of some projects that use scooze:
 
 Nope! You can use most of scooze's functionality without using a database at all.
 
+#### TODO: More FAQs
+
 ## Contributing
 
-If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/scooze/issues/new?assignees=&labels=bug&template=bug_report.md&title=).
-If you have an idea for an improvement or new feature 🚀, please open a [feature request](https://github.com/arcavios/scooze/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=).
+If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/scooze/issues/new?assignees=&labels=bug&template=bug_report.md&title=). If you have an idea for an improvement or new feature 🚀, please open a [feature request](https://github.com/arcavios/scooze/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=). If it is a security vulnerability, **DO NOT** create an issue. Please reach out to one of the team members directly.
 
 ---
 
