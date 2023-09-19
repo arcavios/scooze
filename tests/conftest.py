@@ -43,10 +43,10 @@ def today() -> datetime:
 def cards_json() -> list[str]:
     json_list = []
 
-    with open("./data/test/test_cards.jsonl", "r") as json_file:
+    with open("./data/test/test_cards.jsonl", "r", encoding="utf8") as json_file:
         json_list.extend(list(json_file))
 
-    with open("./data/test/4c_cards.jsonl", "r") as json_file:
+    with open("./data/test/4c_cards.jsonl", "r", encoding="utf8") as json_file:
         json_list.extend(list(json_file))
 
     return json_list
