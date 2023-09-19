@@ -36,7 +36,10 @@ async def add_cards(cards: list[CardModelIn]):
     if inserted_ids:
         return JSONResponse({"message": f"Created {len(inserted_ids)} cards."}, status_code=200)
     else:
-        return JSONResponse({"message": f"Failed to create a new card."}, status_code=400)
+        return JSONResponse({"message": f"Failed to create any new cards."}, status_code=400)
+
+
+# Read
 
 
 @router.post("/by", summary="Get cards by property")
@@ -66,7 +69,7 @@ async def get_cards_by(
 # Delete
 
 
-@router.delete("/delete/all/", summary="Delete all cards")
+@router.delete("/delete/all", summary="Delete all cards")
 async def delete_cards_all():
     deleted_count = await db.delete_cards_all()
 
