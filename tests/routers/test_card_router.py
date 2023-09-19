@@ -32,6 +32,17 @@ def omnath(mock_cards_collection: Collection) -> CardModelOut:
 # endregion
 
 
+@pytest.mark.router_card
+@patch("scooze.database.card.get_cards_random")
+def test_card_root(mock_get: MagicMock, client: TestClient, omnath: CardModelOut):
+    mock_get.return_value: list[CardModelOut] = [omnath]
+    response = client.get("/card/")
+    assert response.status_code == 200
+    response_json = response.json()
+    for k, v in omnath.model_dump(mode="json").items():
+        assert response_json[k] == v
+
+
 # region Create
 
 
@@ -127,6 +138,30 @@ def test_update_card_bad_id(mock_update: MagicMock, client: TestClient):
     response = client.patch("/card/update/blarghl", json={"card": {}})
     assert response.status_code == 404
     assert response.json()["message"] == "Card with id blarghl not found."
+
+
+# endregion
+
+
+# region Delete
+
+
+@pytest.mark.router_card
+@patch("scooze.database.card.delete_card")
+def test_delete_card(mock_update: MagicMock, client: TestClient, omnath: CardModelOut):
+    mock_update.return_value: CardModelOut = omnath
+    response = client.delete(f"/card/delete/{omnath.id}")
+    assert response.status_code == 200
+    assert response.json()["message"] == f"Card with id {omnath.id} deleted."
+
+
+@pytest.mark.router_card
+@patch("scooze.database.card.delete_card")
+def test_delete_card_bad_id(mock_update: MagicMock, client: TestClient):
+    mock_update.return_value = None
+    response = client.delete("/card/delete/blarghl")
+    assert response.status_code == 404
+    assert response.json()["message"] == "Card with id blarghl not deleted."
 
 
 # endregion
