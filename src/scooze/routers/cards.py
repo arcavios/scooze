@@ -34,7 +34,7 @@ async def cards_root(limit: int = 3):
 async def add_cards(cards: list[CardModelIn]):
     inserted_ids = await db.add_cards(cards=cards)
     if inserted_ids:
-        return JSONResponse({"message": f"Created {len(inserted_ids)} cards."}, status_code=200)
+        return JSONResponse({"message": f"Created {len(inserted_ids)} card(s)."}, status_code=200)
     else:
         return JSONResponse({"message": f"Failed to create any new cards."}, status_code=400)
 
@@ -63,7 +63,7 @@ async def get_cards_by(
     if cards:
         return JSONResponse([card.model_dump(mode="json") for card in cards], status_code=200)
     else:
-        return JSONResponse({"message": f"Cards not found."}, status_code=404)
+        return JSONResponse({"message": "Cards not found."}, status_code=404)
 
 
 # Delete
@@ -74,6 +74,6 @@ async def delete_cards_all():
     deleted_count = await db.delete_cards_all()
 
     if deleted_count:
-        return JSONResponse({"message": f"Deleted {deleted_count} cards."}, status_code=200)
+        return JSONResponse({"message": f"Deleted {deleted_count} card(s)."}, status_code=200)
     else:
-        return JSONResponse({"message": f"No cards deleted."}, status_code=404)
+        return JSONResponse({"message": "No cards deleted."}, status_code=404)

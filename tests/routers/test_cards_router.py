@@ -46,7 +46,7 @@ def test_cards_root(
 
 @pytest.mark.router_cards
 @patch("scooze.database.card.get_cards_random")
-def test_cards_root(mock_get: MagicMock, client: TestClient):
+def test_cards_root_no_cards(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
     response = client.get("/cards/")
     assert response.status_code == 404
@@ -65,7 +65,7 @@ def test_add_cards(
     mock_add.return_value: list[str] = [str(card.id) for card in cards_to_add]
     response = client.post("/cards/add", json=[card.model_dump(mode="json", by_alias=True) for card in cards_to_add])
     assert response.status_code == 200
-    assert response.json()["message"] == f"Created {len(cards_to_add)} cards."
+    assert response.json()["message"] == f"Created {len(cards_to_add)} card(s)."
 
 
 @pytest.mark.router_cards
@@ -116,12 +116,12 @@ def test_delete_cards(mock_update: MagicMock, client: TestClient, omnath: CardMo
     mock_update.return_value = 2
     response = client.delete("/cards/delete/all")
     assert response.status_code == 200
-    assert response.json()["message"] == "Deleted 2 cards."
+    assert response.json()["message"] == "Deleted 2 card(s)."
 
 
 @pytest.mark.router_cards
 @patch("scooze.database.card.delete_cards_all")
-def test_delete_all_cards(mock_update: MagicMock, client: TestClient):
+def test_delete_cards_bad(mock_update: MagicMock, client: TestClient):
     mock_update.return_value = None
     response = client.delete("/cards/delete/all")
     assert response.status_code == 404
