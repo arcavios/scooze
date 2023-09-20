@@ -13,7 +13,7 @@ Tools for interacting with Magic: the Gathering tournaments, decklists, and card
 
 ## Features
 
-This template repository comes with all of the boilerplate needed for:
+TODO: Add funny little emojis
 
 - CLI to manage a local database of Scryfall data
 - Robust data models for representing Magic: the Gathering cards and decks
