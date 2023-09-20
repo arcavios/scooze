@@ -11,7 +11,7 @@ from scooze.models.card import CardModelIn, CardModelOut
 
 async def add_card(card: CardModelIn) -> CardModelOut:
     """
-    Adds the given card to the database
+    Add a card to the database
 
     :param card: the card to insert
     :returns: the card that was inserted, or None if it was unable
@@ -32,7 +32,7 @@ async def get_card_by_property(property_name: str, value) -> CardModelOut:
     """
     Search the database for the first card that matches the given criteria
 
-    :param property_name: the property name to check
+    :param property_name: the property to check
     :param value: the value to match on
     :returns: the first matching card, or None if none were found
     """
@@ -44,11 +44,11 @@ async def get_card_by_property(property_name: str, value) -> CardModelOut:
 
 async def update_card(id: str, card: CardModelIn) -> CardModelOut:
     """
-    Updates the card with the given id with the given values
+    Update a card in the database with the given values
 
-    :param id: the id of the card to update
-    :param card: the values to update
-    :returns: the updated card, or None if it was unable to update or find the card
+    :param id: the ID of the card to update
+    :param card: the properties to update and their new values
+    :returns: the updated card, or None if it was unable to update or find it
     """
     updated_card = await db_core.update_document(
         DbCollection.CARDS,
@@ -65,10 +65,10 @@ async def update_card(id: str, card: CardModelIn) -> CardModelOut:
 
 async def delete_card(id: str) -> CardModelOut:
     """
-    Deletes the card with the given id
+    Delete a card from the database
 
-    :param id: the id of the card to delete
-    :returns: the deleted card, or None if unable to delete or find the card
+    :param id: the ID of the card to delete
+    :returns: the deleted card, or None if unable to delete or find it
     """
 
     deleted_card = await db_core.delete_document(DbCollection.CARDS, id)
@@ -85,7 +85,7 @@ async def delete_card(id: str) -> CardModelOut:
 
 async def add_cards(cards: list[CardModelIn]) -> list[str]:
     """
-    Adds the given list of cards to the database
+    Add a list of cards to the database
 
     :param cards: the list of card to insert
     :returns: the list of ids for cards that were inserted, or None if unable
@@ -122,12 +122,12 @@ async def get_cards_by_property(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[CardModelOut]:
     """
-    Search the database for the cards that match the given criteria, with options for pagination
+    Search the database for cards matching the given criteria, with options for pagination
 
-    :param property_name: the property name to check
+    :param property_name: the property to check
     :param values: a list of values to match on
     :param paginated: whether to paginate the results
-    :param page: the page to return, if paginated
+    :param page: the page to look at, if paginated
     :param page_size: the size of each page, if paginated
     :returns: a list of cards matching the search criteria, or None if none were found
     """

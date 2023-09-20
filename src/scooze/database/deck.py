@@ -11,7 +11,7 @@ from scooze.models.deck import DeckModelIn, DeckModelOut
 
 async def add_deck(deck: DeckModelIn) -> DeckModelOut:
     """
-    Adds the given deck to the database
+    Adds a deck to the database
 
     :param deck: the deck to insert
     :returns: the deck that was inserted, or None if it was unable
@@ -32,7 +32,7 @@ async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
     """
     Search the database for the first deck that matches the given criteria
 
-    :param property_name: the property name to check
+    :param property_name: the property to check
     :param value: the value to match on
     :returns: the first matching deck, or None if none were found
     """
@@ -44,10 +44,10 @@ async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
 
 async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
     """
-    Updates the deck with the given id with the given values
+    Update a deck in the database with the given values
 
-    :param id: the id of the deck to update
-    :param deck: the values to update
+    :param id: the ID of the deck to update
+    :param deck: the properties to update and their new values
     :returns: the updated deck, or None if it was unable to update or find the deck
     """
 
@@ -67,9 +67,9 @@ async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
 
 async def delete_deck(id: str) -> DeckModelOut:
     """
-    Deletes the deck with the given id
+    Delete a deck from the database
 
-    :param id: the id of the deck to delete
+    :param id: the ID of the deck to delete
     :returns: the deleted deck, or None if unable to delete or find the deck
     """
 
@@ -86,7 +86,7 @@ async def delete_deck(id: str) -> DeckModelOut:
 
 async def add_decks(decks: list[DeckModelIn]) -> list[str]:
     """
-    Adds the given list of decks to the database
+    Add a list of decks to the database
 
     :param decks: the list of deck to insert
     :returns: the list of ids for decks that were inserted, or None if unable
@@ -124,12 +124,12 @@ async def get_decks_by_property(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[DeckModelOut]:
     """
-    Search the database for the decks that match the given criteria, with options for pagination
+    Search the database for decks matching the given criteria, with options for pagination
 
-    :param property_name: the property name to check
+    :param property_name: the property to check
     :param values: a list of values to match on
     :param paginated: whether to paginate the results
-    :param page: the page to return, if paginated
+    :param page: the page to look at, if paginated
     :param page_size: the size of each page, if paginated
     :returns: a list of decks matching the search criteria, or None if none were found
     """
