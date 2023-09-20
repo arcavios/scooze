@@ -76,11 +76,11 @@ class DeckPart(ComparableObject, Generic[CardT]):
         Generates a diff between this DeckPart and another.
 
         Args:
-            other (DeckPart): The other DeckPart.
+            other: The other DeckPart.
 
         Returns:
-            diff (DictDiff): Returns a DictDiff with every card in both
-              DeckParts and their counts.
+            Returns a DictDiff with every card in both DeckParts and their
+            counts.
         """
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
@@ -90,8 +90,8 @@ class DeckPart(ComparableObject, Generic[CardT]):
         Adds a given quantity of a given card to this DeckPart.
 
         Args:
-            card (CardT): The card to add.
-            quantity (int): The number of copies of the card to be added.
+            card: The card to add.
+            quantity: The number of copies of the card to be added.
         """
 
         self.cards.update({card: quantity})
@@ -101,7 +101,7 @@ class DeckPart(ComparableObject, Generic[CardT]):
         Adds the given cards to this DeckPart.
 
         Args:
-            cards (Counter[CardT]): The cards to add.
+            cards: The cards to add.
         """
 
         self.cards.update(cards)
@@ -112,8 +112,8 @@ class DeckPart(ComparableObject, Generic[CardT]):
         not provided, removes all copies.
 
         Args:
-            card (CardT): The card to remove.
-            quantity (int): The number of copies of the card to be removed.
+            card: The card to remove.
+            quantity: The number of copies of the card to be removed.
         """
 
         # using counterA - counterB results in a new Counter with only positive results
@@ -124,7 +124,7 @@ class DeckPart(ComparableObject, Generic[CardT]):
         Removes the given cards from this DeckPart.
 
         Args:
-            cards (Counter[CardT]): The cards to remove.
+            cards: The cards to remove.
         """
 
         # using counterA - counterB results in a new Counter with only positive results

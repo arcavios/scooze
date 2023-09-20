@@ -195,7 +195,7 @@ class OracleCard(Card):
         Provides the given oracle text with reminder text removed.
 
         Args:
-            oracle_text (str): The oracle text of a card.
+            oracle_text: The oracle text of a card.
         """
 
         pattern_reminder = r" ?\([^()]+\) ?"  # text between parens ()
