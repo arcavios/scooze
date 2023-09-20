@@ -106,12 +106,14 @@ If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/s
     *Read more about forking [here](https://docs.github.com/en/get-started/quickstart/fork-a-repo).*
 
     ```
-    git clone https://www.github.com/arcavios/scooze
+    git clone https://www.github.com/link/to/fork
     cd ./scooze
     poetry install
     ```
 
 3. You're ready to develop!
+
+4. When you have changes you'd like the team to review, please submit a pull request!
 
 ---
 
