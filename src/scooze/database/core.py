@@ -5,8 +5,6 @@ from pymongo import ReturnDocument
 from scooze.database.mongo import db
 from scooze.enums import DbCollection
 
-# TODO(#119): database docstrings
-
 # region Single document
 
 
