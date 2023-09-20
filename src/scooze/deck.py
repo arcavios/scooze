@@ -75,11 +75,11 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Generates a diff between this Deck and another.
 
         Args:
-            other (Deck): The other Deck.
+            other: The other Deck.
 
         Returns:
-            diff (DeckDiff): Returns a DeckDiff with keys for each deck part.
-              Each contains a dict of each card in both decks and their counts.
+            Returns a DeckDiff with keys for each deck part. Each contains a
+            dict of each card in both decks and their counts.
         """
 
         return DeckDiff(
@@ -93,11 +93,11 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Determines if this Deck contains exactly the same cards as another.
 
         Args:
-            other (Deck): The other Deck.
+            other: The other Deck.
 
         Returns:
-            same (bool): True if this Deck contains exactly the same cards as
-              another, else False.
+            True if this Deck contains exactly the same cards as another, else
+            False.
         """
 
         if self.total_cards() != other.total_cards():
@@ -115,11 +115,11 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Exports this Deck as a string with the given DecklistFormatter.
 
         Args:
-            export_format (DecklistFormatter): The format of the exported Deck.
+            export_format: The format of the exported Deck.
 
         Returns:
-            decklist (str): A string containing the names and quantities of the
-              cards in this Deck.
+            A string containing the names and quantities of the cards in this
+            Deck.
         """
 
         match export_format:
@@ -160,7 +160,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         present throught all deck parts.
 
         Args:
-            format (Format): The format to check against.
+            format: The format to check against.
         """
 
         # Default
@@ -218,9 +218,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Adds a given quantity of a given card to this Deck.
 
         Args:
-            card (Card): The card to add.
-            quantity (int): The number of copies of the card to be added.
-            in_the (InThe): Where to add the card (main, side, etc)
+            card: The card to add.
+            quantity: The number of copies of the card to be added.
+            in_the: Where to add the card (main, side, etc)
         """
 
         match in_the:
@@ -238,8 +238,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Adds the given cards to this Deck.
 
         Args:
-            cards (Counter[CardT]): The cards to add.
-            in_the (InThe): Where to add the cards (main, side, etc)
+            cards: The cards to add.
+            in_the: Where to add the cards (main, side, etc)
         """
 
         match in_the:
@@ -256,9 +256,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         not provided, removes all copies.
 
         Args:
-            card (CardT): The card to remove.
-            quantity (int): The number of copies of the card to be removed.
-            in_the (InThe): Where to remove the cards from (main, side, etc)
+            card: The card to remove.
+            quantity: The number of copies of the card to be removed.
+            in_the: Where to remove the cards from (main, side, etc)
         """
 
         # using counterA - counterB results in a new Counter with only positive results
@@ -277,8 +277,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Removes the given cards from this Deck.
 
         Args:
-            cards (Counter[CardT]): The cards to remove.
-            in_the (InThe): Where to remove the cards from (main, side, etc)
+            cards: The cards to remove.
+            in_the: Where to remove the cards from (main, side, etc)
         """
 
         # using counterA - counterB results in a new Counter with only positive results

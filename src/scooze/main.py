@@ -7,6 +7,7 @@ from scooze.routers.card import router as CardRouter
 from scooze.routers.cards import router as CardsRouter
 from scooze.routers.deck import router as DeckRouter
 from scooze.routers.decks import router as DecksRouter
+import os
 
 
 # Startup/shutdown
@@ -36,4 +37,6 @@ app.include_router(DeckRouter)
 app.include_router(DecksRouter)
 
 # Mount index.html
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app_dir = os.path.dirname(__file__)
+static_dir = os.path.join(app_dir, "static/")
+app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
