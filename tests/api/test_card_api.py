@@ -3,6 +3,7 @@ import scooze.api.card as card_api
 import pytest
 
 
+# region Card fixtures
 @pytest.fixture(scope="session")
 def recall_base(json_ancestral_recall):
     return Card.from_json(json_ancestral_recall)
@@ -31,6 +32,9 @@ def mystic_snake_oracle(json_mystic_snake):
 @pytest.fixture(scope="session")
 def mystic_snake_full(json_mystic_snake):
     return FullCard.from_json(json_mystic_snake)
+
+
+# endregion
 
 
 def test_add_base_card(recall_base):
