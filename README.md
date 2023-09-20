@@ -6,27 +6,24 @@ Tools for interacting with Magic: the Gathering tournaments, decklists, and card
 - [Features](#features)
 - [Usage](#usage)
   - [Initial setup](#initial-setup)
-  - [Developer setup](#developer-setup)
 - [Projects using this template](#projects-using-this-template)
 - [FAQ](#faq)
 - [Contributing](#contributing)
+  - [Developer setup](#developer-setup)
 
 ## Features
-### TODO: write features list
 
 This template repository comes with all of the boilerplate needed for:
 
-⚙️ Robust (and free) CI with [GitHub Actions](https://github.com/features/actions):
-  - Unit tests ran with [PyTest](https://docs.pytest.org) against multiple Python versions and operating systems.
-  - Type checking with [mypy](https://github.com/python/mypy).
-  - Linting with [ruff](https://astral.sh/ruff).
-  - Formatting with [isort](https://pycqa.github.io/isort/) and [black](https://black.readthedocs.io/en/stable/).
-
-🤖 [Dependabot](https://github.blog/2020-06-01-keep-all-your-packages-up-to-date-with-dependabot/) configuration to keep your dependencies up-to-date.
-
-📄 Great looking API documentation built using [Sphinx](https://www.sphinx-doc.org/en/master/) (run `make docs` to preview).
-
-🚀 Automatic GitHub and PyPI releases. Just follow the steps in [`RELEASE_PROCESS.md`](./RELEASE_PROCESS.md) to trigger a new release.
+- CLI to manage a local database of Scryfall data
+- Robust data models for representing Magic: the Gathering cards and decks
+  - Cards
+    - In line with the Scryfall standard
+    - TODO: mention convenience methods / additional functionality build
+  - Decks
+    - TODO: mention convenience methods / additional functionality build
+- Python and REST APIs for interacting with the scooze database
+  - Note: v1 is local only
 
 ## Usage
 
@@ -72,18 +69,6 @@ This template repository comes with all of the boilerplate needed for:
     print(f"Legal in Explorer? {deck.is_legal(Format.EXPLORER)}")
     ```
 
-### Developer setup
-
-1. TODO: put the stuff from our original setup.md file from junkwinder here.
-
-2. Install poetry, then do
-
-    ```
-    git clone https://www.github.com/arcavios/scooze
-    cd ./scooze
-    poetry install
-    ```
-
 ## Projects using this template
 
 Here is an incomplete list of some projects that use scooze:
@@ -98,13 +83,35 @@ Here is an incomplete list of some projects that use scooze:
 
 #### Do I need to have MongoDB to use scooze?
 
-Nope! You can use most of scooze's functionality without using a database at all.
+Nope! You can use some of scooze's functionality without using a database at all.
 
 #### TODO: More FAQs
 
 ## Contributing
 
 If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/scooze/issues/new?assignees=&labels=bug&template=bug_report.md&title=). If you have an idea for an improvement or new feature 🚀, please open a [feature request](https://github.com/arcavios/scooze/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=). If it is a security vulnerability, **DO NOT** create an issue. Please reach out to one of the team members directly.
+
+### Developer setup
+
+1. Install Poetry
+	- [Introduction to Poetry](https://python-poetry.org/docs/#installation)
+	- Make sure it worked
+
+        ```
+        poetry --version
+        ```
+
+2. [Fork](https://github.com/arcavios/scooze/fork) and clone the scooze GitHub repo
+
+    *Read more about forking [here](https://docs.github.com/en/get-started/quickstart/fork-a-repo).*
+
+    ```
+    git clone https://www.github.com/arcavios/scooze
+    cd ./scooze
+    poetry install
+    ```
+
+3. You're ready to develop!
 
 ---
 
