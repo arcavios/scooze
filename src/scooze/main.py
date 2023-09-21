@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -7,7 +8,6 @@ from scooze.routers.card import router as CardRouter
 from scooze.routers.cards import router as CardsRouter
 from scooze.routers.deck import router as DeckRouter
 from scooze.routers.decks import router as DecksRouter
-import os
 
 
 # Startup/shutdown
