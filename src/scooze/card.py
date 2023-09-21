@@ -401,7 +401,7 @@ class FullCard(OracleCard):
         border_color: BorderColor | None = None,
         card_back_id: str | None = None,
         collector_number: str | None = None,
-        content_warning: bool | None = None,
+        content_warning: bool = False,
         digital: bool | None = None,
         finishes: Iterable[Finish] | None = None,
         flavor_name: str | None = None,
