@@ -1,12 +1,8 @@
 import argparse
-import asyncio
-import json
 
-import scooze.api.card as card_api
-import scooze.database.card as db
+import scooze.scoozeapi as scooze
 from scooze.api.bulkdata import load_card_file
 from scooze.catalogs import ScryfallBulkFile
-from scooze.database import mongo
 from scooze.models.card import CardModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
@@ -81,7 +77,7 @@ def main():
         clean = input("Delete existing cards before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
-            card_api.delete_all_cards_from_db()
+            scooze.delete_all_cards_from_db()
 
     if args.clean_decks:
         clean = input("Delete existing decks before importing? [y/n] ") in "yY"
@@ -133,6 +129,5 @@ def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(mongo.mongo_connect())
-    main()
-    asyncio.run(mongo.mongo_close())
+    with scooze:
+        main()

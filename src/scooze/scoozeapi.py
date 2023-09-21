@@ -1,4 +1,3 @@
-import asyncio
 from contextlib import AbstractContextManager
 from functools import cache
 from typing import Any, List
@@ -17,10 +16,10 @@ class ScoozeApi(AbstractContextManager):
     Context manager object for doing I/O from a MongoDB.
 
     Sample usage:
-        with ScoozeApi[OracleCard] as s:
-            pioneer_cards = s.get_cards_by_format(Format.PIONEER)
-            woe_cards = s.get_cards_by_set("woe")
-            black_lotus = s.get_card_by_scryfall_id
+        >>> with ScoozeApi[OracleCard] as s:
+                pioneer_cards = s.get_cards_by_format(Format.PIONEER)
+                woe_cards = s.get_cards_by_set("woe")
+                black_lotus = s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
     """
 
     def __init__(self, card_class: type[CardT] = FullCard):
@@ -34,6 +33,8 @@ class ScoozeApi(AbstractContextManager):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         mongo.mongo_close()
+
+    # region Cards
 
     def get_card_by(self, property_name: str, value) -> CardT:
         return card_api.get_card_by(property_name, value, self.card_class)
@@ -56,6 +57,7 @@ class ScoozeApi(AbstractContextManager):
         )
 
     # region Convenience methods for single-card lookup
+
     @cache
     def get_card_by_name(self, name: str) -> CardT:
         if not self.safe_context:
@@ -106,7 +108,10 @@ class ScoozeApi(AbstractContextManager):
 
     # endregion
 
+
+
     # region Bulk data I/O
+
     def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
         if not self.safe_context:
             raise RuntimeError(CONTEXT_ERROR_MSG)
@@ -114,5 +119,7 @@ class ScoozeApi(AbstractContextManager):
             file_type=file_type,
             bulk_file_dir=bulk_file_dir,
         )
+
+    # endregion
 
     # endregion
