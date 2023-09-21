@@ -27,7 +27,7 @@ async def add_card(card: CardModelIn) -> CardModelOut:
         ),
     )
     if new_card:
-        return CardModelOut(**new_card)
+        return CardModelOut.model_validate(new_card)
 
 
 async def get_card_by_property(property_name: str, value) -> CardModelOut:
@@ -44,7 +44,7 @@ async def get_card_by_property(property_name: str, value) -> CardModelOut:
 
     card = await db_core.get_document_by_property(DbCollection.CARDS, property_name, value)
     if card:
-        return CardModelOut(**card)
+        return CardModelOut.model_validate(card)
 
 
 async def update_card(id: str, card: CardModelIn) -> CardModelOut:
@@ -68,7 +68,7 @@ async def update_card(id: str, card: CardModelIn) -> CardModelOut:
         ),
     )
     if updated_card:
-        return CardModelOut(**updated_card)
+        return CardModelOut.model_validate(updated_card)
 
 
 async def delete_card(id: str) -> CardModelOut:
@@ -85,7 +85,7 @@ async def delete_card(id: str) -> CardModelOut:
     deleted_card = await db_core.delete_document(DbCollection.CARDS, id)
 
     if deleted_card:
-        return CardModelOut(**deleted_card)
+        return CardModelOut.model_validate(deleted_card)
 
 
 # endregion
@@ -132,7 +132,7 @@ async def get_cards_random(limit: int) -> list[CardModelOut]:
 
     cards = await db_core.get_random_documents(DbCollection.CARDS, limit)
     if len(cards) > 0:
-        return [CardModelOut(**card) for card in cards]
+        return [CardModelOut.model_validate(card) for card in cards]
 
 
 async def get_cards_by_property(
@@ -157,7 +157,7 @@ async def get_cards_by_property(
     )
 
     if len(cards) > 0:
-        return [CardModelOut(**card) for card in cards]
+        return [CardModelOut.model_validate(card) for card in cards]
 
 
 async def delete_cards_all() -> int:

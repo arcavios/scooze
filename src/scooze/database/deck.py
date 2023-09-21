@@ -26,7 +26,7 @@ async def add_deck(deck: DeckModelIn) -> DeckModelOut:
         ),
     )
     if new_deck:
-        return DeckModelOut(**new_deck)
+        return DeckModelOut.model_validate(new_deck)
 
 
 async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
@@ -43,7 +43,7 @@ async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
 
     deck = await db_core.get_document_by_property(DbCollection.DECKS, property_name, value)
     if deck:
-        return DeckModelOut(**deck)
+        return DeckModelOut.model_validate(deck)
 
 
 async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
@@ -69,7 +69,7 @@ async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
     )
 
     if updated_deck:
-        return DeckModelOut(**updated_deck)
+        return DeckModelOut.model_validate(updated_deck)
 
 
 async def delete_deck(id: str) -> DeckModelOut:
@@ -86,7 +86,7 @@ async def delete_deck(id: str) -> DeckModelOut:
     deleted_deck = await db_core.delete_document(DbCollection.DECKS, id)
 
     if deleted_deck:
-        return DeckModelOut(**deleted_deck)
+        return DeckModelOut.model_validate(deleted_deck)
 
 
 # endregion
@@ -133,7 +133,7 @@ async def get_decks_random(limit: int) -> list[DeckModelOut]:
 
     decks = await db_core.get_random_documents(DbCollection.DECKS, limit)
     if len(decks) > 0:
-        return [DeckModelOut(**deck) for deck in decks]
+        return [DeckModelOut.model_validate(deck) for deck in decks]
 
 
 async def get_decks_by_property(
@@ -158,7 +158,7 @@ async def get_decks_by_property(
     )
 
     if len(decks) > 0:
-        return [DeckModelOut(**deck) for deck in decks]
+        return [DeckModelOut.model_validate(deck) for deck in decks]
 
 
 async def delete_decks_all() -> int:

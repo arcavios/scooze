@@ -95,7 +95,7 @@ def main():
                 with open("./data/test/power9.jsonl") as cards_file:
                     print("Inserting test cards into the database...")
                     json_list = list(cards_file)
-                    cards = [CardModelIn(**json.loads(card_json)) for card_json in json_list]
+                    cards = [CardModelIn.model_validate_json(card_json) for card_json in json_list]
                     asyncio.run(card_db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
             except OSError as e:
                 print_error(e, "test cards")
