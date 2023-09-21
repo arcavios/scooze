@@ -269,7 +269,7 @@ def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_
     assert card.color_identity == {Color.BLUE}
     assert card.color_indicator is None
     assert card.colors == {Color.BLUE}
-    assert card.content_warning is None
+    assert card.content_warning is False
     assert card.digital is True
     assert card.edhrec_rank is None
     assert card.finishes == {Finish.NONFOIL, Finish.FOIL}
@@ -543,7 +543,7 @@ def test_fullcard_from_json_reversible(
     assert card.color_identity == {Color.BLUE}
     assert card.color_indicator is None
     assert card.colors is None
-    assert card.content_warning is None
+    assert card.content_warning is False
     assert card.digital is False
     assert card.edhrec_rank == 8719
     assert card.finishes == {Finish.FOIL}

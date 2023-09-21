@@ -2,8 +2,8 @@ from typing import Any
 
 from bson import ObjectId
 from pymongo import ReturnDocument
-from scooze.database.mongo import db
 from scooze.catalogs import DbCollection
+from scooze.database.mongo import db
 
 # region Single document
 
