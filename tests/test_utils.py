@@ -1,7 +1,7 @@
 from sys import maxsize
 
 import pytest
-from scooze.enums import Format
+from scooze.catalogs import Format
 from scooze.utils import (
     DictDiff,
     cmdr_size,

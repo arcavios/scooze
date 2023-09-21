@@ -5,7 +5,7 @@ from sys import maxsize, stdout
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
-from scooze.enums import ExtendedEnum, Format
+from scooze.catalogs import ExtendedEnum, Format
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"  # TODO(#99) - Change DEFAULT_BULK_FILE_DIR to work when called from anywhere.
 

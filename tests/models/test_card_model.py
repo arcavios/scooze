@@ -1,6 +1,6 @@
 from datetime import date
 
-from scooze.enums import (
+from scooze.catalogs import (
     BorderColor,
     Color,
     Component,
