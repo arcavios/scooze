@@ -1,10 +1,17 @@
 import argparse
+import asyncio
+import json
+import os
 
+import ijson
 import scooze.database.card as card_db
 import scooze.database.deck as deck_db
 import uvicorn
-from scooze.catalogs import DbCollection
-from scooze.utils import DEFAULT_BULK_FILE_DIR, SmartFormatter
+from scooze.bulkdata import download_bulk_data_file_by_type
+from scooze.catalogs import DbCollection, ScryfallBulkFile
+from scooze.models.card import CardModelIn
+from scooze.models.deck import DeckModelIn
+from scooze.utils import DEFAULT_BULK_FILE_DIR, DEFAULT_DECKS_DIR, SmartFormatter
 
 
 def run_cli():
@@ -18,7 +25,7 @@ def parse_args():
         f"""Welcome to the scooze CLI tool!\n"""
         f"""---------------------------------\n"""
         f"""This tool can be used to setup a local MongoDB of Magic card and\n"""
-        f"""deck data to test with, or to run the scooze swagger docs/ReDocs.\n"""
+        f"""deck data to test with, or to run the scooze Swagger UI/ReDocs.\n"""
         f"""You can use the following commands:\n\n"""
         f"""    run             Run the Swagger UI/ReDocs.\n\n"""
         f"""    load-cards      Load a set of cards into the database.\n"""
@@ -28,10 +35,12 @@ def parse_args():
         f"""        prints      Every print of each card ever printed, in English where available.\n"""
         f"""        all         Every print of all cards and game objects in all languages.\n\n"""
         f"""    load-decks      Load a set of decks into the database.\n"""
-        f"""        test        A set of decks for testing purposes.\n\n"""
-        f"""    delete-all      Delete all of a set of data from the database.\n"""
+        f"""        test        A set of decks for testing purposes.\n"""
+        f"""        all         All decks in the decks directory.\n\n"""
+        f"""    delete          Delete all of a set of data from the database.\n"""
         f"""        cards       Choose the cards collection.\n"""
-        f"""        decks       Choose the decks collection.\n\n"""
+        f"""        decks       Choose the decks collection.\n"""
+        f"""        all         All collections.\n\n"""
         f"""Use -h, --help for more information."""
     )
     parser = argparse.ArgumentParser(description=arg_desc, formatter_class=SmartFormatter)
@@ -39,49 +48,143 @@ def parse_args():
         "--bulk-data-dir",
         dest="bulk_data_dir",
         default=DEFAULT_BULK_FILE_DIR,
-        help="Directory to store bulk files. Defaults to ./data/bulk",
+        help="Directory to store bulk files, used with load-cards. Defaults to ./data/bulk",
+    )
+    parser.add_argument(
+        "--decks-dir",
+        dest="decks_dir",
+        default=DEFAULT_DECKS_DIR,
+        help="Directory to store deck files, used with load-decks. Defaults to ./data/decks",
     )
     parser.add_argument("commands", type=str, nargs="+", help="scooze commands")
 
     return parser.parse_args()
 
 
-def run_scooze_commands(commands: list[str], bulk_dir: str):
+def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
     command = commands[0]
     subcommands = commands[1:]
     match command:
         case "run":
+            # TODO(6): Replace localhost with wherever we're hosting
             uvicorn.run("scooze.main:app", host="127.0.0.1", port=8000, reload=True)
         case "load-cards":
-            match subcommands:
-                case ["test"]:
-                    pass
-                case ["oracle"]:
-                    pass
-                case ["artwork"]:
-                    pass
-                case ["prints"]:
-                    pass
-                case ["all"]:
-                    pass
-                case _:
-                    pass
+            to_load: list[ScryfallBulkFile] = []
+            load_all = "all" in subcommands
+            load_test = "test" in subcommands and not load_all
+
+            if load_all:
+                to_load.append(ScryfallBulkFile.ALL)
+            else:
+                if "oracle" in subcommands:
+                    to_load.append(ScryfallBulkFile.ORACLE)
+                if "artwork" in subcommands:
+                    to_load.append(ScryfallBulkFile.ARTWORK)
+                if "prints" in subcommands:
+                    to_load.append(ScryfallBulkFile.DEFAULT)
+
+            if len(to_load) == 0 and not load_test:
+                if len(subcommands) > 0 or load_test:
+                    print("Can only load: oracle; artwork; prints; test.")
+                else:
+                    print("No files were selected to load.")
+
+            for bulk_file in to_load:
+                load_bulk_file(bulk_file, bulk_dir)
+            if load_test:
+                load_test_cards()
         case "load-decks":
-            match subcommands:
-                case ["test"]:
-                    pass
-                case _:
-                    pass
-        case "delete-all":
-            match subcommands:
-                case ["cards"]:
-                    delete_collection(DbCollection.CARDS)
-                case ["decks"]:
-                    delete_collection(DbCollection.DECKS)
-                case _:
-                    print(f"Collection not recognized: {subcommands[0]}")
+            if "all" in subcommands:
+                load_all_decks(decks_dir)
+            elif "test" in subcommands:
+                load_test_decks()
+        case "delete":
+            to_delete: list[DbCollection] = []
+
+            if "all" in subcommands:
+                to_delete.extend(DbCollection.list())
+            else:
+                if "cards" in subcommands:
+                    to_delete.append(DbCollection.CARDS)
+                if "decks" in subcommands:
+                    to_delete.append(DbCollection.DECKS)
+
+            if len(to_delete) == 0:
+                if len(subcommands) > 0:
+                    print("Collections must be one of: cards; decks.")
+                else:
+                    print("No collections were given to delete.")
+
+            for collection in to_delete:
+                delete_collection(collection)
         case _:
             print(f"Command not recognized: {command}")
+
+
+def load_bulk_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
+    file_path = f"{bulk_file_dir}/{file_type}.json"
+    try:
+        with open(file_path, "r", encoding="utf8") as cards_file:
+            print(f"Inserting {file_type} file into the database...")
+            cards = [
+                CardModelIn(**card_json)
+                for card_json in ijson.items(
+                    cards_file,
+                    "item",
+                )
+            ]
+            asyncio.run(card_db.add_cards(cards))
+    except FileNotFoundError:
+        print(file_path)
+        download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
+        if not download_now:
+            print("No cards loaded into database.")
+            return
+        download_bulk_data_file_by_type(file_type, bulk_file_dir)
+        load_bulk_file(file_type, bulk_file_dir)
+
+
+def load_test_cards():
+    try:
+        with open("./data/test/power9.jsonl") as cards_file:
+            print("Inserting test cards into the database...")
+            json_list = list(cards_file)
+            cards = [CardModelIn(**json.loads(card_json)) for card_json in json_list]
+            asyncio.run(card_db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
+    except OSError as e:
+        print("Encountered an error while trying to load test cards")
+        raise e
+
+
+def load_all_decks(decks_dir: str):
+    files = os.listdir(decks_dir)
+    try:
+        for file_path in files:
+            with open(file_path, "r", encoding="utf8") as deck_file:
+                print(f"Inserting {file_path.split('/')[-1]} file into the database...")
+                decks = [
+                    DeckModelIn(**deck_json)
+                    for deck_json in ijson.items(
+                        deck_file,
+                        "item",
+                    )
+                ]
+                asyncio.run(deck_db.add_decks(decks))
+    except OSError as e:
+        print(f"Encountered an error while trying to load {file_path.split('/')[-1]}")
+        raise e
+
+
+def load_test_decks():
+    try:
+        with open("./data/test/pioneer_decks.jsonl") as decks_file:
+            print("Inserting test decks into the database...")
+            json_list = list(decks_file)
+            decks = [DeckModelIn(**json.loads(deck_json)) for deck_json in json_list]
+            asyncio.run(deck_db.add_decks(decks))  # TODO(#7): this need async for now, replace with Python API
+    except OSError as e:
+        print("Encountered an error while trying to load test decks")
+        raise e
 
 
 def delete_collection(coll: DbCollection):
