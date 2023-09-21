@@ -192,7 +192,7 @@ class OracleCard(Card):
     @classmethod
     def oracle_text_without_reminder(cls, oracle_text: str) -> str:
         """
-        Provides the given oracle text with reminder text removed.
+        Provide the given oracle text with reminder text removed.
 
         Args:
             oracle_text: The oracle text of a card.
@@ -203,7 +203,7 @@ class OracleCard(Card):
 
     def is_double_sided(self) -> bool:
         """
-        Determines if this is a double-sided card.
+        Determine if this is a double-sided card.
         """
 
         return self.card_faces is not None

@@ -72,14 +72,14 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def diff(self, other: Self) -> DeckDiff:
         """
-        Generates a diff between this Deck and another.
+        Generate a diff between this Deck and another.
 
         Args:
             other: The other Deck.
 
         Returns:
-            Returns a DeckDiff with keys for each deck part. Each contains a
-            dict of each card in both decks and their counts.
+            A DeckDiff with keys for each deck part. Each contains a dict of
+            each card in both decks and their counts.
         """
 
         return DeckDiff(
@@ -90,7 +90,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def decklist_equals(self, other: Self) -> bool:
         """
-        Determines if this Deck contains exactly the same cards as another.
+        Determine if this Deck contains exactly the same cards as another.
 
         Args:
             other: The other Deck.
@@ -112,7 +112,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def export(self, export_format: DecklistFormatter = None) -> str:
         """
-        Exports this Deck as a string with the given DecklistFormatter.
+        Export this Deck as a string with the given DecklistFormatter.
 
         Args:
             export_format: The format of the exported Deck.
@@ -147,7 +147,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def is_legal(self, format: Format = None) -> bool:
         """
-        Determines if this Deck is legal in the given format.
+        Determine if this Deck is legal in the given format.
 
         Default checks against `self.Format`. If `self.Format` is unset, checks against `Format.NONE`.
 
@@ -215,7 +215,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def add_card(self, card: CardT, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
-        Adds a given quantity of a given card to this Deck.
+        Add a given quantity of a given card to this Deck.
 
         Args:
             card: The card to add.
@@ -235,7 +235,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def add_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
         """
-        Adds the given cards to this Deck.
+        Add the given cards to this Deck.
 
         Args:
             cards: The cards to add.
@@ -252,7 +252,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def remove_card(self, card: CardT, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
-        Removes a given quantity of a given card from this Deck. If quantity is
+        Remove a given quantity of a given card from this Deck. If quantity is
         not provided, removes all copies.
 
         Args:
@@ -274,7 +274,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     def remove_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
         """
-        Removes the given cards from this Deck.
+        Remove the given cards from this Deck.
 
         Args:
             cards: The cards to remove.
