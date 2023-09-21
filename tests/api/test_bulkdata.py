@@ -1,15 +1,17 @@
 from unittest.mock import MagicMock, patch
 
-import scooze.api.bulkdata as bulk_api
 import pytest
+import scooze.api.bulkdata as bulk_api
 from bson import ObjectId
 from scooze.card import FullCard
 from scooze.catalogs import ScryfallBulkFile
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
+
 @pytest.fixture(scope="module")
 def file_type() -> str:
     return "bulk_test_cards"
+
 
 @pytest.fixture(scope="module")
 def bulk_file_dir() -> str:
@@ -34,9 +36,11 @@ def test_load_card_file_bad(mock_add: MagicMock, file_type, bulk_file_dir, capfd
     expected = f"Loading bulk_test_cards file into the database...\nNo cards loaded into database.\n"
     assert captured.out == expected
 
+
 def test_load_card_file_bad(capfd):
     # bulk_api.load_card_file(file_type="not real", bulk_file_dir="not real")
     # captured = capfd.readouterr()
     # expected = f"Loading bulk_test_cards file into the database...\nNo cards loaded into database.\n"
     # assert captured.out == expected
     # TODO: https://stackoverflow.com/questions/35851323/how-to-test-a-function-with-input-call
+    pass

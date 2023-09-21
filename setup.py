@@ -2,13 +2,13 @@ import argparse
 import asyncio
 import json
 
+import scooze.api.card as card_api
 import scooze.database.card as db
 from scooze.api.bulkdata import load_card_file
 from scooze.catalogs import ScryfallBulkFile
 from scooze.database import mongo
 from scooze.models.card import CardModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR
-import scooze.api.card as card_api
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
