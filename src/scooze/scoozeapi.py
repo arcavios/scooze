@@ -1,5 +1,6 @@
 from contextlib import AbstractContextManager
 from functools import cache
+import asyncio
 from typing import Any, List
 
 import scooze.api.bulkdata as bulkdata_api
@@ -29,13 +30,13 @@ class ScoozeApi(AbstractContextManager):
         self.card_class = card_class
 
     def __enter__(self):
-        mongo.mongo_connect()
+        asyncio.run(mongo.mongo_connect())
         self.safe_context = True
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        mongo.mongo_close()
+        asyncio.run(mongo.mongo_close())
 
     def _check_for_safe_context(self):
         if not self.safe_context:
