@@ -1,6 +1,7 @@
 from datetime import date
 
-from pydantic import Field
+from pydantic import Field, field_validator
+from scooze.cardparts import ImageUris
 from scooze.catalogs import Color, Component, Layout
 from scooze.models.utils import ScoozeBaseModel
 
@@ -166,6 +167,17 @@ class CardFaceModel(ScoozeBaseModel):
         description="Watermark printed on this face, if any.",
     )
 
+    # region Validators
+
+    @field_validator("image_uris", mode="before")
+    @classmethod
+    def image_uris_validator(cls, v):
+        if isinstance(v, ImageUris):
+            v = ImageUrisModel.model_validate(v.__dict__)
+        return v
+
+    # endregion
+
 
 class PricesModel(ScoozeBaseModel):
     """
@@ -292,7 +304,7 @@ class RelatedUrisModel(ScoozeBaseModel):
     """
     Links to information about a Scryfall-based card object on other non-Scryfall resources.
 
-    Attributes
+    Attributes:
         edhrec: Information about this card on edhrec.
         gatherer: Information about this card on Gatherer.
         tcgplayer_infinite_articles: Articles about this card on TCGplayer Infinite.

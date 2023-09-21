@@ -4,8 +4,8 @@ from typing import Generic, Self
 
 import scooze.utils as utils
 from scooze.card import CardT
-from scooze.deckpart import DeckDiff, DeckPart
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
+from scooze.deckpart import DeckDiff, DeckPart
 
 
 class Deck(utils.ComparableObject, Generic[CardT]):

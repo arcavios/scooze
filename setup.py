@@ -3,9 +3,14 @@ import asyncio
 import json
 
 import scooze.database.card as card_db
+<<<<<<< HEAD
 from scooze.api.bulkdata import load_card_file
 from scooze.database import mongo
+=======
+from scooze.bulkdata import download_bulk_data_file_by_type
+>>>>>>> dev
 from scooze.catalogs import ScryfallBulkFile
+from scooze.database import mongo
 from scooze.models.card import CardModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
