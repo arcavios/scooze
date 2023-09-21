@@ -9,12 +9,13 @@ from scooze.models.deck import DeckModelIn, DeckModelOut
 
 async def add_deck(deck: DeckModelIn) -> DeckModelOut:
     """
-    Adds a deck to the database
+    Adds a deck to the database.
 
     Args:
-        deck: The deck to insert
+        deck: The deck to insert.
+
     Returns:
-        The deck that was inserted, or None if it was unable
+        The deck that was inserted, or None if it was unable.
     """
 
     new_deck = await db_core.insert_document(
@@ -30,13 +31,14 @@ async def add_deck(deck: DeckModelIn) -> DeckModelOut:
 
 async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
     """
-    Search the database for the first deck that matches the given criteria
+    Search the database for the first deck that matches the given criteria.
 
     Args:
-        property_name: The property to check
-        value: The value to match on
+        property_name: The property to check.
+        value: The value to match on.
+
     Returns:
-        The first matching deck, or None if none were found
+        The first matching deck, or None if none were found.
     """
 
     deck = await db_core.get_document_by_property(DbCollection.DECKS, property_name, value)
@@ -46,13 +48,14 @@ async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
 
 async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
     """
-    Update a deck in the database with the given values
+    Update a deck in the database with the given values.
 
     Args:
-        id: The ID of the deck to update
-        deck: The properties to update and their new values
+        id: The ID of the deck to update.
+        deck: The properties to update and their new values.
+
     Returns:
-        The updated deck, or None if it was unable to update or find the deck
+        The updated deck, or None if it was unable to update or find the deck.
     """
 
     updated_deck = await db_core.update_document(
@@ -71,12 +74,13 @@ async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
 
 async def delete_deck(id: str) -> DeckModelOut:
     """
-    Delete a deck from the database
+    Delete a deck from the database.
 
     Args:
-        id: The ID of the deck to delete
+        id: The ID of the deck to delete.
+
     Returns:
-        The deleted deck, or None if unable to delete or find the deck
+        The deleted deck, or None if unable to delete or find the deck.
     """
 
     deleted_deck = await db_core.delete_document(DbCollection.DECKS, id)
@@ -92,12 +96,13 @@ async def delete_deck(id: str) -> DeckModelOut:
 
 async def add_decks(decks: list[DeckModelIn]) -> list[str]:
     """
-    Add a list of decks to the database
+    Add a list of decks to the database.
 
     Args:
-        decks: The list of deck to insert
+        decks: The list of deck to insert.
+
     Returns:
-        The list of ids for decks that were inserted, or None if unable
+        The list of ids for decks that were inserted, or None if unable.
     """
 
     insert_many_result = await db_core.insert_many_documents(
@@ -117,12 +122,13 @@ async def add_decks(decks: list[DeckModelIn]) -> list[str]:
 
 async def get_decks_random(limit: int) -> list[DeckModelOut]:
     """
-    Get a random assortment of decks from the database
+    Get a random assortment of decks from the database.
 
     Args:
-        limit: The number of decks to return
+        limit: The number of decks to return.
+
     Returns:
-        A random list of decks, or None if none were found
+        A random list of decks, or None if none were found.
     """
 
     decks = await db_core.get_random_documents(DbCollection.DECKS, limit)
@@ -134,16 +140,17 @@ async def get_decks_by_property(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[DeckModelOut]:
     """
-    Search the database for decks matching the given criteria, with options for pagination
+    Search the database for decks matching the given criteria, with options for pagination.
 
     Args:
-        property_name: The property to check
-        values: A list of values to match on
-        paginated: Whether to paginate the results
-        page: The page to look at, if paginated
-        page_size: The size of each page, if paginated
+        property_name: The property to check.
+        values: A list of values to match on.
+        paginated: Whether to paginate the results.
+        page: The page to look at, if paginated.
+        page_size: The size of each page, if paginated.
+
     Returns:
-        A list of decks matching the search criteria, or None if none were found
+        A list of decks matching the search criteria, or None if none were found.
     """
 
     decks = await db_core.get_documents_by_property(
@@ -156,10 +163,10 @@ async def get_decks_by_property(
 
 async def delete_decks_all() -> int:
     """
-    Delete all decks in the database
+    Delete all decks in the database.
 
     Returns:
-        The number of decks deleted, or None if none could be deleted
+        The number of decks deleted, or None if none could be deleted.
     """
 
     delete_many_result = await db_core.delete_documents(DbCollection.DECKS)
