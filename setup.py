@@ -2,7 +2,7 @@ import argparse
 import asyncio
 import json
 
-import scooze.database.card as card_db
+import scooze.database.card as db
 from scooze.api.bulkdata import load_card_file
 from scooze.catalogs import ScryfallBulkFile
 from scooze.database import mongo
@@ -80,7 +80,7 @@ def main():
         clean = input("Delete existing cards before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
-            asyncio.run(card_db.delete_cards_all())  # TODO(#7): this need async for now, replace with Python API
+            asyncio.run(db.delete_cards_all())  # TODO(#7): this need async for now, replace with Python API
 
     if args.clean_decks:
         clean = input("Delete existing decks before importing? [y/n] ") in "yY"
@@ -96,7 +96,7 @@ def main():
                     print("Inserting test cards into the database...")
                     json_list = list(cards_file)
                     cards = [CardModelIn.model_validate_json(card_json) for card_json in json_list]
-                    asyncio.run(card_db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
+                    asyncio.run(db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
