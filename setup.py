@@ -1,9 +1,8 @@
 import argparse
 
-import scooze.scoozeapi as scooze
-from scooze.api.bulkdata import load_card_file
 from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModelIn
+from scooze.scoozeapi import ScoozeApi
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
 
@@ -71,63 +70,63 @@ def print_error(e: Exception, txt: str):
 
 
 def main():
-    args = parse_args()
+    with ScoozeApi() as scooze:
+        args = parse_args()
 
-    if args.clean_cards:
-        clean = input("Delete existing cards before importing? [y/n] ") in "yY"
-        if clean:
-            print("Deleting all cards from your local database...")
-            scooze.delete_all_cards_from_db()
+        if args.clean_cards:
+            clean = input("Delete existing cards before importing? [y/n] ") in "yY"
+            if clean:
+                print("Deleting all cards from your local database...")
+                scooze.delete_all_cards_from_db()
 
-    if args.clean_decks:
-        clean = input("Delete existing decks before importing? [y/n] ") in "yY"
-        if clean:
-            print("Deleting all decks from your local database...")
-            # TODO(#30): needs deck endpoints
+        if args.clean_decks:
+            clean = input("Delete existing decks before importing? [y/n] ") in "yY"
+            if clean:
+                print("Deleting all decks from your local database...")
+                # TODO(#30): needs deck endpoints
 
-    # Add specified card file to DB
-    match args.cards:
-        case "test":
-            try:
-                with open("./data/test/power9.jsonl") as cards_file:
-                    print("Inserting test cards into the database...")
-                    json_list = list(cards_file)
-                    cards = [CardModelIn.model_validate_json(card_json) for card_json in json_list]
-                    card_api.add_cards_to_db(cards)
-            except OSError as e:
-                print_error(e, "test cards")
-        case "oracle":
-            load_card_file(
-                ScryfallBulkFile.ORACLE,
-                args.bulk_data_dir,
-            )
-        case "artwork":
-            load_card_file(
-                ScryfallBulkFile.ARTWORK,
-                args.bulk_data_dir,
-            )
-        case "prints":
-            load_card_file(
-                ScryfallBulkFile.DEFAULT,
-                args.bulk_data_dir,
-            )
-        case "all":
-            load_card_file(
-                ScryfallBulkFile.ALL,
-                args.bulk_data_dir,
-            )
-        case _:
-            print("No cards imported.")
+        # Add specified card file to DB
+        match args.cards:
+            case "test":
+                try:
+                    with open("./data/test/power9.jsonl") as cards_file:
+                        print("Inserting test cards into the database...")
+                        json_list = list(cards_file)
+                        cards = [CardModelIn.model_validate_json(card_json) for card_json in json_list]
+                        scooze.add_cards_to_db(cards)
+                except OSError as e:
+                    print_error(e, "test cards")
+            case "oracle":
+                scooze.load_card_file(
+                    ScryfallBulkFile.ORACLE,
+                    args.bulk_data_dir,
+                )
+            case "artwork":
+                scooze.load_card_file(
+                    ScryfallBulkFile.ARTWORK,
+                    args.bulk_data_dir,
+                )
+            case "prints":
+                scooze.load_card_file(
+                    ScryfallBulkFile.DEFAULT,
+                    args.bulk_data_dir,
+                )
+            case "all":
+                scooze.load_card_file(
+                    ScryfallBulkFile.ALL,
+                    args.bulk_data_dir,
+                )
+            case _:
+                print("No cards imported.")
 
-    match args.decks:
-        case "test":
-            print("test decks imported")
-        case _:
-            print("No decks imported.")
+        match args.decks:
+            case "test":
+                print("test decks imported")
+            case _:
+                print("No decks imported.")
 
     input("Press Enter to exit...")
 
 
 if __name__ == "__main__":
-    with scooze:
-        main()
+    main()

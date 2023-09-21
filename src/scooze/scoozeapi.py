@@ -5,10 +5,13 @@ from typing import Any, List
 import scooze.api.bulkdata as bulkdata_api
 import scooze.api.card as card_api
 import scooze.database.mongo as mongo
+from bson import ObjectId
 from scooze.card import CardT, FullCard
 from scooze.catalogs import Format, Legality, ScryfallBulkFile
 
 CONTEXT_ERROR_MSG = "Scooze used outside of 'with' context"
+
+# TODO(#7): docstrings here
 
 
 class ScoozeApi(AbstractContextManager):
@@ -16,7 +19,7 @@ class ScoozeApi(AbstractContextManager):
     Context manager object for doing I/O from a MongoDB.
 
     Sample usage:
-        >>> with ScoozeApi[OracleCard] as s:
+        >>> with ScoozeApi as s:
                 pioneer_cards = s.get_cards_by_format(Format.PIONEER)
                 woe_cards = s.get_cards_by_set("woe")
                 black_lotus = s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
@@ -34,9 +37,14 @@ class ScoozeApi(AbstractContextManager):
     def __exit__(self, exc_type, exc_val, exc_tb):
         mongo.mongo_close()
 
-    # region Cards
+    def _check_for_safe_context(self):
+        if not self.safe_context:
+            raise RuntimeError(CONTEXT_ERROR_MSG)
+
+    # region Card endpoints
 
     def get_card_by(self, property_name: str, value) -> CardT:
+        self._check_for_safe_context()
         return card_api.get_card_by(property_name, value, self.card_class)
 
     def get_cards_by(
@@ -47,6 +55,7 @@ class ScoozeApi(AbstractContextManager):
         page: int = 1,
         page_size: int = 10,
     ) -> List[CardT]:
+        self._check_for_safe_context()
         return card_api.get_cards_by(
             property_name=property_name,
             values=values,
@@ -60,9 +69,7 @@ class ScoozeApi(AbstractContextManager):
 
     @cache
     def get_card_by_name(self, name: str) -> CardT:
-        if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_MSG)
-
+        self._check_for_safe_context()
         return card_api.get_card_by(
             property_name="name",
             value=name,
@@ -71,8 +78,7 @@ class ScoozeApi(AbstractContextManager):
 
     @cache
     def get_card_by_scryfall_id(self, scryfall_id: str) -> CardT:
-        if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_MSG)
+        self._check_for_safe_context()
         return card_api.get_card_by(
             property_name="_id",
             value=scryfall_id,
@@ -81,8 +87,7 @@ class ScoozeApi(AbstractContextManager):
 
     @cache
     def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
-        if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_MSG)
+        self._check_for_safe_context()
         return card_api.get_card_by(
             property_name="oracle_id",
             value=oracle_id,
@@ -94,8 +99,7 @@ class ScoozeApi(AbstractContextManager):
     # region Convenience methods for multiple card lookup
 
     def get_cards_by_set(self, set_name: str) -> List[CardT]:
-        if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_MSG)
+        self._check_for_safe_context()
         return card_api.get_cards_by(
             property_name="set",
             values=[set_name],
@@ -104,22 +108,41 @@ class ScoozeApi(AbstractContextManager):
 
     def get_cards_by_format(self, format: Format, legality: Legality = Legality.LEGAL) -> List[CardT]:
         # TODO(#7)
+        self._check_for_safe_context()
+        # return card_api.get_cards_by(property_name="format",
+        #                              values=[format],
+        #                              )
         raise NotImplementedError("unable to get cards by format")
 
     # endregion
 
+    def add_card_to_db(self, card: CardT) -> ObjectId:
+        self._check_for_safe_context()
+        return card_api.add_card_to_db(card=card)
 
+    def add_cards_to_db(self, cards: List[CardT]) -> List[ObjectId]:
+        self._check_for_safe_context()
+        return card_api.add_cards_to_db(cards=cards)
+
+    def delete_all_cards_from_db(self) -> int:
+        self._check_for_safe_context()
+        return card_api.delete_all_cards_from_db()
+
+    # endregion
+
+    # region Deck endpoints
+
+    # TODO(#145) - add deck endpoints to python api
+
+    # endregion
 
     # region Bulk data I/O
 
     def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
-        if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_MSG)
+        self._check_for_safe_context()
         return bulkdata_api.load_card_file(
             file_type=file_type,
             bulk_file_dir=bulk_file_dir,
         )
-
-    # endregion
 
     # endregion
