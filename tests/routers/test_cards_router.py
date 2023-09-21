@@ -11,19 +11,19 @@ from scooze.models.card import CardModelOut
 @pytest.fixture
 def omnath(mock_cards_collection: Collection) -> CardModelOut:
     db_omnath = mock_cards_collection.find_one({"name": "Omnath, Locus of Creation"})
-    return CardModelOut(**db_omnath)
+    return CardModelOut.model_validate(db_omnath)
 
 
 @pytest.fixture
 def chalice(mock_cards_collection: Collection) -> CardModelOut:
     db_chalice = mock_cards_collection.find_one({"name": "Chalice of the Void"})
-    return CardModelOut(**db_chalice)
+    return CardModelOut.model_validate(db_chalice)
 
 
 @pytest.fixture
 def boseiju(mock_cards_collection: Collection) -> CardModelOut:
     db_boseiju = mock_cards_collection.find_one({"name": "Boseiju, Who Endures"})
-    return CardModelOut(**db_boseiju)
+    return CardModelOut.model_validate(db_boseiju)
 
 
 # endregion

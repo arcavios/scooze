@@ -11,7 +11,7 @@ from scooze.models.card import CardModelOut
 @pytest.fixture
 def omnath(mock_cards_collection: Collection) -> CardModelOut:
     db_omnath = mock_cards_collection.find_one({"name": "Omnath, Locus of Creation"})
-    return CardModelOut(**db_omnath)
+    return CardModelOut.model_validate(db_omnath)
 
 
 # endregion
@@ -116,7 +116,7 @@ def test_update_card(mock_update: MagicMock, client: TestClient, omnath: CardMod
     omnath_dump = omnath.model_dump(mode="json", by_alias=True)
     update_data = {"cmc": 5.0}
     omnath_dump.update(update_data)
-    new_omnath = CardModelOut(**omnath_dump)
+    new_omnath = CardModelOut.model_validate(omnath_dump)
     mock_update.return_value: CardModelOut = new_omnath
     response = client.patch(f"/card/update/{omnath.id}", json={"card": update_data})
     assert response.status_code == 200

@@ -771,7 +771,7 @@ def mock_cards_collection(mock_scooze_client: MongoClient, cards_json: list[str]
     cards_collection = mock_scooze_client.scooze[DbCollection.CARDS]
     for card in cards_json:
         cards_collection.insert_one(
-            CardModelIn(**json.loads(card)).model_dump(
+            CardModelIn.model_validate_json(card).model_dump(
                 mode="json",
                 by_alias=True,
             )
