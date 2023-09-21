@@ -2,7 +2,7 @@ import ijson
 from scooze.api.card import add_cards_to_db
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.card import FullCard
-from scooze.enums import ScryfallBulkFile
+from scooze.catalogs import ScryfallBulkFile
 
 
 def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
