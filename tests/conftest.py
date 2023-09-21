@@ -10,7 +10,7 @@ from mongomock import Collection, Database, MongoClient
 from scooze.card import OracleCard
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
-from scooze.enums import DbCollection, Format, Legality
+from scooze.catalogs import DbCollection, Format, Legality
 from scooze.main import app
 from scooze.models.card import CardModelIn
 from scooze.models.deck import DeckModelIn

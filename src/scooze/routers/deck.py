@@ -3,8 +3,6 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from scooze.models.deck import DeckModelIn
 
-# TODO(#118): deck router docstrings
-
 router = APIRouter(
     prefix="/deck",
     tags=["deck"],

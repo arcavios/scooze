@@ -2,7 +2,7 @@ import json
 from datetime import date
 from typing import Iterable, Mapping, Self
 
-from scooze.enums import Color, Component, Layout
+from scooze.catalogs import Color, Component, Layout
 from scooze.utils import FloatableT, HashableObject, JsonNormalizer
 
 

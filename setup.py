@@ -5,7 +5,7 @@ import json
 import scooze.database.card as card_db
 from scooze.api.bulkdata import load_card_file
 from scooze.database import mongo
-from scooze.enums import ScryfallBulkFile
+from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
