@@ -3,6 +3,7 @@ import json
 from typing import Any, List
 
 import scooze.database.card as db
+from bson import ObjectId
 from scooze.card import CardT
 from scooze.models.card import CardModelIn, CardModelOut
 
@@ -37,12 +38,13 @@ def get_cards_by(
     return [card_class.from_model(m) for m in card_models]
 
 
-def add_card_to_db(card: CardT) -> CardModelOut:
+def add_card_to_db(card: CardT) -> ObjectId:
     card_model = CardModelIn.model_validate(card.__dict__)
-    return asyncio.run(db.add_card(card_model))
+    model = asyncio.run(db.add_card(card_model))
+    return model.id if model is not None else None
 
 
-def add_cards_to_db(cards: List[CardT]) -> List[str]:
+def add_cards_to_db(cards: List[CardT]) -> List[ObjectId]:
     card_models = [CardModelIn.model_validate(card.__dict__) for card in cards]
     return asyncio.run(db.add_cards(card_models))
 

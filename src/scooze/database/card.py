@@ -1,6 +1,7 @@
 from typing import Any
 
 import scooze.database.core as db_core
+from bson import ObjectId
 from scooze.catalogs import DbCollection
 from scooze.models.card import CardModelIn, CardModelOut
 
@@ -93,7 +94,7 @@ async def delete_card(id: str) -> CardModelOut:
 # region Cards
 
 
-async def add_cards(cards: list[CardModelIn]) -> list[str]:
+async def add_cards(cards: list[CardModelIn]) -> list[ObjectId]:
     """
     Add a list of cards to the database.
 
