@@ -7,8 +7,9 @@ from bson import ObjectId
 from scooze.card import Card, FullCard, OracleCard
 from scooze.models.card import CardModelOut
 
-
 # region Card fixtures
+
+
 @pytest.fixture(scope="module")
 def recall_base(json_ancestral_recall) -> Card:
     return Card.from_json(json_ancestral_recall)
@@ -56,6 +57,10 @@ def cards_full(recall_full, mystic_snake_full) -> list[FullCard]:
 
 # endregion
 
+# TODO: test get_card
+
+# TODO: test get_cards
+
 
 @patch("scooze.database.card.add_card")
 def test_add_base_card(mock_add: MagicMock, recall_base: Card):
@@ -65,83 +70,61 @@ def test_add_base_card(mock_add: MagicMock, recall_base: Card):
     result = card_api.add_card_to_db(recall_base)
     assert result == model.id
 
+
 @patch("scooze.database.card.add_card")
-def test_add_oracle_card(mock_add: MagicMock, recall_oracle: Card):
-    model = CardModelOut.model_validate(recall_oracle.__dict__)
+def test_add_oracle_card(mock_add: MagicMock, recall_full: OracleCard):
+    model = CardModelOut.model_validate(recall_full.__dict__)
     model.id = ObjectId()
     mock_add.return_value: CardModelOut = model
-    result = card_api.add_card_to_db(recall_oracle)
+    result = card_api.add_card_to_db(recall_full)
     assert result == model.id
 
 
-# def test_add_oracle_card(recall_oracle):
-#     from scooze.database.mongo import mongo_close, mongo_connect
-
-#     asyncio.run(mongo_connect())
-#     result = card_api.add_card_to_db(recall_oracle)
-#     from pprint import pprint
-
-#     pprint(result)
-#     assert result
-#     asyncio.run(mongo_close())
+@patch("scooze.database.card.add_card")
+def test_add_full_card(mock_add: MagicMock, recall_full: FullCard):
+    model = CardModelOut.model_validate(recall_full.__dict__)
+    model.id = ObjectId()
+    mock_add.return_value: CardModelOut = model
+    result = card_api.add_card_to_db(recall_full)
+    assert result == model.id
 
 
-# def test_add_full_card(recall_full):
-#     from scooze.database.mongo import mongo_close, mongo_connect
-
-#     asyncio.run(mongo_connect())
-#     result = card_api.add_card_to_db(recall_full)
-#     from pprint import pprint
-
-#     pprint(result)
-#     assert result
-#     asyncio.run(mongo_close())
+@patch("scooze.database.card.add_card")
+def test_add_card_bad(mock_add: MagicMock, recall_base: Card):
+    mock_add.return_value = None
+    result = card_api.add_card_to_db(recall_base)
+    assert result is None
 
 
-# def test_add_base_cards(cards_base):
-#     from scooze.database.mongo import mongo_close, mongo_connect
-
-#     asyncio.run(mongo_connect())
-#     result = card_api.add_cards_to_db(cards_base)
-#     from pprint import pprint
-
-#     pprint(result)
-#     assert result
-#     asyncio.run(mongo_close())
+@patch("scooze.database.card.add_cards")
+def test_add_base_cards(mock_add: MagicMock, cards_base: list[Card]):
+    ids = [ObjectId() for _ in cards_base]
+    mock_add.return_value: list[ObjectId] = ids
+    results = card_api.add_cards_to_db(cards_base)
+    assert results == ids
 
 
-# def test_add_oracle_cards(cards_oracle):
-#     from scooze.database.mongo import mongo_close, mongo_connect
-
-#     asyncio.run(mongo_connect())
-#     result = card_api.add_cards_to_db(cards_oracle)
-#     from pprint import pprint
-
-#     pprint(result)
-#     assert result
-#     asyncio.run(mongo_close())
+@patch("scooze.database.card.add_cards")
+def test_add_oracle_cards(mock_add: MagicMock, cards_oracle: list[OracleCard]):
+    ids = [ObjectId() for _ in cards_oracle]
+    mock_add.return_value: list[ObjectId] = ids
+    results = card_api.add_cards_to_db(cards_oracle)
+    assert results == ids
 
 
-# def test_add_full_cards(cards_full):
-#     from scooze.database.mongo import mongo_close, mongo_connect
-
-#     asyncio.run(mongo_connect())
-#     result = card_api.add_cards_to_db(cards_full)
-#     from pprint import pprint
-
-#     pprint(result)
-#     assert result
-#     asyncio.run(mongo_close())
+@patch("scooze.database.card.add_cards")
+def test_add_full_cards(mock_add: MagicMock, cards_full: list[FullCard]):
+    ids = [ObjectId() for _ in cards_full]
+    mock_add.return_value: list[ObjectId] = ids
+    results = card_api.add_cards_to_db(cards_full)
+    assert results == ids
 
 
-# def test_add_mixed_cards(cards_base, cards_oracle, cards_full):
-#     cards_base.extend(cards_oracle + cards_full)
-#     from scooze.database.mongo import mongo_close, mongo_connect
+@patch("scooze.database.card.add_cards")
+def test_add_cards_bad(mock_add: MagicMock, cards_base: list[Card]):
+    mock_add.return_value = None
+    results = card_api.add_cards_to_db(cards_base)
+    assert results is None
 
-#     asyncio.run(mongo_connect())
-#     result = card_api.add_cards_to_db(cards_base)
-#     from pprint import pprint
 
-#     pprint(result)
-#     assert result
-#     asyncio.run(mongo_close())
+# TODO: test delete_all_cards
