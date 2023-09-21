@@ -4,7 +4,7 @@ from typing import Any, List
 
 import scooze.database.card as db
 from scooze.card import CardT
-from scooze.models.card import CardModelIn
+from scooze.models.card import CardModelIn, CardModelOut
 
 
 def get_card_by(property_name: str, value, card_class: CardT) -> CardT:
@@ -37,13 +37,15 @@ def get_cards_by(
     return [card_class.from_model(m) for m in card_models]
 
 
-def add_card_to_db(card: CardT) -> bool:
-    card_model = CardModelIn.from_json(json.dumps(card))
-    return asyncio.run(db.add_card(card_model)) is not None
+def add_card_to_db(card: CardT) -> CardModelOut:
+    # TODO: this needs to be replaced by CardModelIn.from_card(a_card)
+    card_model = CardModelIn.model_validate(card.__dict__)
+    return asyncio.run(db.add_card(card_model))
 
 
 def add_cards_to_db(cards: List[CardT]) -> List[str]:
-    card_models = [CardModelIn.from_json(json.dumps(card)) for card in cards]
+    # TODO: fix this
+    card_models = [CardModelIn.model_validate(json.dumps(card)) for card in cards]
     return asyncio.run(db.add_cards(card_models))
 
 
