@@ -54,6 +54,7 @@ def cards_full(recall_full):
 # endregion
 
 # TODO: clean these up with mocks
+# if you want to test this, you need to run mongod first!!
 # run tests with pytest -s to see the print statements
 # NOTE: these tests will actually add cards to your local database (it has to be running for these to pass)
 # you can see them with
