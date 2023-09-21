@@ -1,49 +1,43 @@
 # scooze
-Tools for interacting with Magic: the Gathering tournaments, decklists, and cards.
+A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments.
 
 ## In this README 👇
 
 - [Features](#features)
 - [Usage](#usage)
   - [Initial setup](#initial-setup)
-- [Projects using this template](#projects-using-this-template)
-- [FAQ](#faq)
 - [Contributing](#contributing)
   - [Developer setup](#developer-setup)
 
 ## Features
 
-TODO: Add funny little emojis
+🎛️ CLI to manage a local database of Scryfall data
 
-- CLI to manage a local database of Scryfall data
-- Robust data models for representing Magic: the Gathering cards and decks
-  - Cards
-    - In line with the Scryfall standard
-    - TODO: mention convenience methods / additional functionality build
-  - Decks
-    - TODO: mention convenience methods / additional functionality build
-- Python and REST APIs for interacting with the scooze database
+📊 Robust data models for representing Magic: the Gathering cards and decks
+  - Cards - follows the Scryfall standard
+  - Decks - main deck, sideboard, command zone. Format legality, average words, and more
+  - Tournaments - coming soon!
+
+🐍 Python and REST APIs for interacting with the scooze database
   - Note: v1 is local only
 
 ## Usage
 
 ### Initial setup
 
-1. Download and install [Python 3.11](https://www.python.org/downloads/release/python-3115/) or newer.
-
-2. Download and install this package from [PyPi](https://pypi.org/project/scooze/).
+1. Download and install this package from [PyPi](https://pypi.org/project/scooze/).
 
     ```
     pip install scooze
     ```
 
-3. Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
+2. Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
 
     Scooze depends on MongoDB to run your local database.
 
     *You can use scooze without MongoDB if you don't intend to use any of its database-related features.*
 
-4. Run the MongoDB server.
+3. Run the MongoDB server.
 
     ```
     mongod --dbpath path/to/db/
@@ -51,41 +45,23 @@ TODO: Add funny little emojis
 
     *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
 
-5. Run the scooze setup script to add some data to your local database.
+4. Run the scooze setup script to add some data to your local database.
 
     ```
     python -m scooze.cli --help
     python -m scooze.cli --include-cards oracle --include-decks pioneer
     ```
 
-6. Use scooze in your application code!
+5. Use scooze in your application code!
 
     ```
     from scooze.api import scooze_api
-    from scooze.enums import Format # TODO: this reads poorly and I'd prefer scooze.catalogs or something
+    from scooze.catalogs import Format
 
     deck = scooze_api.get_deck() # gets a random deck from your local database
     print(deck.export())
     print(f"Legal in Explorer? {deck.is_legal(Format.EXPLORER)}")
     ```
-
-## Projects using this template
-
-Here is an incomplete list of some projects that use scooze:
-
-- [junkwinder](https://github.com/arcavios/junkwinder)
-- [ophiomancer](https://github.com/arcavios/ophiomancer)
-- [scraptrawler](https://github.com/arcavios/scraptrawler)
-
-☝️ *Want your work featured here? Just open a pull request that adds the link.*
-
-## FAQ
-
-#### Do I need to have MongoDB to use scooze?
-
-Nope! You can use some of scooze's functionality without using a database at all.
-
-#### TODO: More FAQs
 
 ## Contributing
 
