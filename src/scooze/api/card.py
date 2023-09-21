@@ -1,5 +1,4 @@
 import asyncio
-import json
 from typing import Any, List
 
 import scooze.database.card as db
