@@ -33,3 +33,10 @@ def test_load_card_file_bad(mock_add: MagicMock, file_type, bulk_file_dir, capfd
     captured = capfd.readouterr()
     expected = f"Loading bulk_test_cards file into the database...\nNo cards loaded into database.\n"
     assert captured.out == expected
+
+def test_load_card_file_bad(capfd):
+    # bulk_api.load_card_file(file_type="not real", bulk_file_dir="not real")
+    # captured = capfd.readouterr()
+    # expected = f"Loading bulk_test_cards file into the database...\nNo cards loaded into database.\n"
+    # assert captured.out == expected
+    # TODO: https://stackoverflow.com/questions/35851323/how-to-test-a-function-with-input-call
