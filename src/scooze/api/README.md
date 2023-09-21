@@ -1,1 +1,1 @@
-Pythonic wrappers for synchronous database I/O.
+Python wrappers for synchronous database I/O.
