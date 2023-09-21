@@ -9,8 +9,6 @@ from scooze.routers.cards import router as CardsRouter
 from scooze.routers.deck import router as DeckRouter
 from scooze.routers.decks import router as DecksRouter
 
-# region Scooze FastAPI Setup
-
 
 # Startup/shutdown
 @asynccontextmanager
@@ -42,6 +40,3 @@ app.include_router(DecksRouter)
 app_dir = os.path.dirname(__file__)
 static_dir = os.path.join(app_dir, "static/")
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
-
-
-# endregion
