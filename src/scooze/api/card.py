@@ -38,14 +38,12 @@ def get_cards_by(
 
 
 def add_card_to_db(card: CardT) -> CardModelOut:
-    # TODO: this needs to be replaced by CardModelIn.from_card(a_card)
     card_model = CardModelIn.model_validate(card.__dict__)
     return asyncio.run(db.add_card(card_model))
 
 
 def add_cards_to_db(cards: List[CardT]) -> List[str]:
-    # TODO: fix this
-    card_models = [CardModelIn.model_validate(json.dumps(card)) for card in cards]
+    card_models = [CardModelIn.model_validate(card.__dict__) for card in cards]
     return asyncio.run(db.add_cards(card_models))
 
 
