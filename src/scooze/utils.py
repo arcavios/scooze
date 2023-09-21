@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os.path
 from datetime import date, datetime
@@ -60,6 +61,14 @@ def get_logger(
     logger.addHandler(ch)
 
     return logger
+
+
+class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
+    def _split_lines(self, text, width):
+        if text.startswith("R|"):
+            return text[2:].splitlines()
+        # this is the RawTextHelpFormatter._split_lines
+        return argparse.HelpFormatter._split_lines(self, text, width)
 
 
 # region Deck Format Helpers
