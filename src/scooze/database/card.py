@@ -101,7 +101,7 @@ async def add_cards(cards: list[CardModelIn]) -> list[str]:
         cards: The list of card to insert.
 
     Returns:
-        The list of ids for cards that were inserted, or None if unable.
+        The list of IDs for cards that were inserted, or None if unable.
     """
 
     insert_many_result = await db_core.insert_many_documents(

@@ -102,7 +102,7 @@ async def add_decks(decks: list[DeckModelIn]) -> list[str]:
         decks: The list of deck to insert.
 
     Returns:
-        The list of ids for decks that were inserted, or None if unable.
+        The list of IDs for decks that were inserted, or None if unable.
     """
 
     insert_many_result = await db_core.insert_many_documents(

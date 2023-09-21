@@ -15,6 +15,7 @@ async def insert_document(col_type: DbCollection, document: dict[str, Any]):
     Args:
         col_type: The collection to insert into.
         document: The document to insert.
+
     Returns:
         The inserted document, or None if unable to insert.
     """
@@ -31,6 +32,7 @@ async def get_document_by_property(col_type: DbCollection, property_name: str, v
         col_type: The collection to search.
         property_name: The property to check.
         value: The value to match on.
+
     Returns:
         The first matching document, or None if none were found.
     """
@@ -48,8 +50,10 @@ async def update_document(col_type: DbCollection, id: str, document: dict[str, A
         col_type: The collection containing the document to update.
         id: The ID of the document to update.
         document: The properties to update and their new values.
+
     Returns:
         The updated document, or None if it was unable to update or find it.
+
     Raises:
         ValueError: No data was given to update.
     """
@@ -70,6 +74,7 @@ async def delete_document(col_type: DbCollection, id: str):
     Args:
         col_type: The collection to delete from.
         id: The ID of the document to delete.
+
     Returns:
         The deleted document, or None if unable to delete.
     """
@@ -88,6 +93,7 @@ async def insert_many_documents(col_type: DbCollection, documents: list[dict[str
     Args:
         col_type: The collection to insert into.
         documents: The list of documents to insert.
+
     Returns:
         A PyMongo InsertManyResult.
     """
@@ -102,6 +108,7 @@ async def get_random_documents(col_type: DbCollection, limit: int):
     Args:
         col_type: The desired collection.
         limit: The number of documents to return.
+
     Returns:
         The list of random documents.
     """
@@ -127,6 +134,7 @@ async def get_documents_by_property(
         paginated: Whether to paginate the results.
         page: The page to look at, if paginated.
         page_size: The size of each page, if paginated.
+
     Returns:
         A list of matching documents, or None if none were found.
     """
@@ -150,6 +158,7 @@ async def delete_documents(col_type: DbCollection):
 
     Args:
         col_type: The collection to delete from.
+
     Returns:
         A PyMongo DeleteResult.
     """
