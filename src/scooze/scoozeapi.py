@@ -9,7 +9,7 @@ import scooze.database.mongo as mongo
 from scooze.card import CardT, FullCard
 from scooze.catalogs import Format, Legality, ScryfallBulkFile
 
-CONTEXT_ERROR_STR = "Scooze used outside of 'with' context"
+CONTEXT_ERROR_MSG = "Scooze used outside of 'with' context"
 
 
 class ScoozeApi(AbstractContextManager):
@@ -61,7 +61,7 @@ class ScoozeApi(AbstractContextManager):
     @cache
     def get_card_by_name(self, name: str) -> CardT:
         if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_STR)
+            raise RuntimeError(CONTEXT_ERROR_MSG)
 
         return card_api.get_card_by(
             property_name="name",
@@ -72,7 +72,7 @@ class ScoozeApi(AbstractContextManager):
     @cache
     def get_card_by_scryfall_id(self, scryfall_id: str) -> CardT:
         if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_STR)
+            raise RuntimeError(CONTEXT_ERROR_MSG)
         return card_api.get_card_by(
             property_name="_id",
             value=scryfall_id,
@@ -82,7 +82,7 @@ class ScoozeApi(AbstractContextManager):
     @cache
     def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
         if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_STR)
+            raise RuntimeError(CONTEXT_ERROR_MSG)
         return card_api.get_card_by(
             property_name="oracle_id",
             value=oracle_id,
@@ -95,7 +95,7 @@ class ScoozeApi(AbstractContextManager):
 
     def get_cards_by_set(self, set_name: str) -> List[CardT]:
         if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_STR)
+            raise RuntimeError(CONTEXT_ERROR_MSG)
         return card_api.get_cards_by(
             property_name="set",
             values=[set_name],
@@ -111,7 +111,7 @@ class ScoozeApi(AbstractContextManager):
     # region Bulk data I/O
     def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
         if not self.safe_context:
-            raise RuntimeError(CONTEXT_ERROR_STR)
+            raise RuntimeError(CONTEXT_ERROR_MSG)
         return bulkdata_api.load_card_file(
             file_type=file_type,
             bulk_file_dir=bulk_file_dir,
