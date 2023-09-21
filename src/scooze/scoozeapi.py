@@ -78,6 +78,15 @@ class ScoozeApi(AbstractContextManager):
         )
 
     @cache
+    def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
+        self._check_for_safe_context()
+        return card_api.get_card_by(
+            property_name="oracle_id",
+            value=oracle_id,
+            card_class=self.card_class,
+        )
+
+    @cache
     def get_card_by_scryfall_id(self, scryfall_id: str) -> CardT:
         self._check_for_safe_context()
         return card_api.get_card_by(
@@ -86,14 +95,7 @@ class ScoozeApi(AbstractContextManager):
             card_class=self.card_class,
         )
 
-    @cache
-    def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
-        self._check_for_safe_context()
-        return card_api.get_card_by(
-            property_name="oracle_id",
-            value=oracle_id,
-            card_class=self.card_class,
-        )
+
 
     # endregion
 
@@ -107,13 +109,7 @@ class ScoozeApi(AbstractContextManager):
             card_class=self.card_class,
         )
 
-    def get_cards_by_format(self, format: Format, legality: Legality = Legality.LEGAL) -> List[CardT]:
-        # TODO(#7)
-        self._check_for_safe_context()
-        # return card_api.get_cards_by(property_name="format",
-        #                              values=[format],
-        #                              )
-        raise NotImplementedError("unable to get cards by format")
+    # TODO(#??) - add function get_cards_by_format (format, legality)
 
     # endregion
 
