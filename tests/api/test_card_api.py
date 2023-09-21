@@ -22,33 +22,33 @@ def recall_full(json_ancestral_recall):
 
 
 @pytest.fixture(scope="module")
-def cards_base(recall_base):
-    return [recall_base, recall_base]
+def mystic_snake_base(json_mystic_snake):
+    return Card.from_json(json_mystic_snake)
 
 
 @pytest.fixture(scope="module")
-def cards_oracle(recall_oracle):
-    return [recall_oracle, recall_oracle]
+def mystic_snake_oracle(json_mystic_snake):
+    return OracleCard.from_json(json_mystic_snake)
 
 
 @pytest.fixture(scope="module")
-def cards_full(recall_full):
-    return [recall_full, recall_full]
+def mystic_snake_full(json_mystic_snake):
+    return FullCard.from_json(json_mystic_snake)
 
 
-# @pytest.fixture(scope="module")
-# def mystic_snake_base(json_mystic_snake):
-#     return Card.from_json(json_mystic_snake)
+@pytest.fixture(scope="module")
+def cards_base(recall_base, mystic_snake_base):
+    return [recall_base, mystic_snake_base]
 
 
-# @pytest.fixture(scope="module")
-# def mystic_snake_oracle(json_mystic_snake):
-#     return OracleCard.from_json(json_mystic_snake)
+@pytest.fixture(scope="module")
+def cards_oracle(recall_oracle, mystic_snake_oracle):
+    return [recall_oracle, mystic_snake_oracle]
 
 
-# @pytest.fixture(scope="module")
-# def mystic_snake_full(json_mystic_snake):
-#     return FullCard.from_json(json_mystic_snake)
+@pytest.fixture(scope="module")
+def cards_full(recall_full, mystic_snake_full):
+    return [recall_full, mystic_snake_full]
 
 
 # endregion
