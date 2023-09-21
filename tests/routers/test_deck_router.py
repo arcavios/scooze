@@ -1,9 +1,8 @@
-from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
-from mongomock import Collection, Database
+from mongomock import Collection
 from scooze.models.deck import DeckModelIn, DeckModelOut
 
 # region Fixtures
