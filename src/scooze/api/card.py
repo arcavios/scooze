@@ -54,5 +54,5 @@ def add_cards_to_db(cards: List[CardT]) -> List[ObjectId]:
 # TODO(#127): delete single card
 
 
-def delete_all_cards() -> int:
+def delete_all_cards_from_db() -> int:
     return asyncio.run(db.delete_cards_all())

@@ -131,12 +131,12 @@ def test_add_cards_bad(mock_add: MagicMock, cards_base: list[Card]):
 @patch("scooze.database.card.delete_cards_all")
 def test_delete_cards(mock_delete: MagicMock):
     mock_delete.return_value: int = 4
-    results = card_api.delete_all_cards()
+    results = card_api.delete_all_cards_from_db()
     assert results == 4
 
 
 @patch("scooze.database.card.delete_cards_all")
 def test_delete_cards_bad(mock_delete: MagicMock):
     mock_delete.return_value = None
-    results = card_api.delete_all_cards()
+    results = card_api.delete_all_cards_from_db()
     assert results is None

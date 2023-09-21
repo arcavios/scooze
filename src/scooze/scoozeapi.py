@@ -30,12 +30,10 @@ class ScoozeApi(AbstractContextManager):
         mongo.mongo_connect()
         self.safe_context = True
 
-        # TODO(#7): start local mongod, if not already running
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         mongo.mongo_close()
-        # TODO(#7): stop running mongod, if we started it
 
     def get_card_by(self, property_name: str, value) -> CardT:
         return card_api.get_card_by(property_name, value, self.card_class)

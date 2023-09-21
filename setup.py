@@ -8,6 +8,7 @@ from scooze.catalogs import ScryfallBulkFile
 from scooze.database import mongo
 from scooze.models.card import CardModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR
+import scooze.api.card as card_api
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
@@ -80,7 +81,7 @@ def main():
         clean = input("Delete existing cards before importing? [y/n] ") in "yY"
         if clean:
             print("Deleting all cards from your local database...")
-            asyncio.run(db.delete_cards_all())  # TODO(#7): this need async for now, replace with Python API
+            card_api.delete_all_cards_from_db()
 
     if args.clean_decks:
         clean = input("Delete existing decks before importing? [y/n] ") in "yY"
@@ -96,7 +97,7 @@ def main():
                     print("Inserting test cards into the database...")
                     json_list = list(cards_file)
                     cards = [CardModelIn.model_validate_json(card_json) for card_json in json_list]
-                    asyncio.run(db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
+                    card_api.add_cards_to_db(cards)
             except OSError as e:
                 print_error(e, "test cards")
         case "oracle":
