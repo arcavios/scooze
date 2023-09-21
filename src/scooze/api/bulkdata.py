@@ -1,7 +1,9 @@
 import ijson
+import asyncio
+import scooze.database.card as card_db
 from scooze.api.card import add_cards_to_db
 from scooze.bulkdata import download_bulk_data_file_by_type
-from scooze.card import FullCard
+from scooze.models.card import CardModelIn
 from scooze.catalogs import ScryfallBulkFile
 
 
@@ -11,13 +13,13 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
         with open(file_path, "r", encoding="utf8") as cards_file:
             print(f"Inserting {file_type} file into the database...")
             cards = [
-                FullCard.from_json(**card_json)
+                CardModelIn.model_validate(card_json)
                 for card_json in ijson.items(
                     cards_file,
                     "item",
                 )
             ]
-            add_cards_to_db(cards)
+            asyncio.run(card_db.add_cards(cards))
 
     except FileNotFoundError:
         print(file_path)
