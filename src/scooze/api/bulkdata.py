@@ -1,17 +1,17 @@
-import ijson
 import asyncio
-import scooze.database.card as card_db
-from scooze.api.card import add_cards_to_db
+
+import ijson
+import scooze.database.card as db
 from scooze.bulkdata import download_bulk_data_file_by_type
-from scooze.models.card import CardModelIn
 from scooze.catalogs import ScryfallBulkFile
+from scooze.models.card import CardModelIn
 
 
-def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
+def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
     file_path = f"{bulk_file_dir}/{file_type}.json"
     try:
-        with open(file_path, "r", encoding="utf8") as cards_file:
-            print(f"Inserting {file_type} file into the database...")
+        with open(file_path, "rb") as cards_file:
+            print(f"Loading {file_type} file into the database...")
             cards = [
                 CardModelIn.model_validate(card_json)
                 for card_json in ijson.items(
@@ -19,7 +19,11 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
                     "item",
                 )
             ]
-            asyncio.run(card_db.add_cards(cards))
+            results = asyncio.run(db.add_cards(cards))
+            if results:
+                print(f"Loaded {len(results)} cards to the database.")
+            else:
+                print(f"No cards loaded into database.")
 
     except FileNotFoundError:
         print(file_path)
