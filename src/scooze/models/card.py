@@ -1,7 +1,7 @@
 from datetime import date
 
 from pydantic import Field
-from scooze.enums import (
+from scooze.catalogs import (
     BorderColor,
     Color,
     Finish,

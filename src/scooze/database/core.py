@@ -3,7 +3,7 @@ from typing import Any
 from bson import ObjectId
 from pymongo import ReturnDocument
 from scooze.database.mongo import db
-from scooze.enums import DbCollection
+from scooze.catalogs import DbCollection
 
 # region Single document
 

@@ -1,7 +1,7 @@
 from datetime import date
 
 from scooze.card import Card, FullCard, OracleCard
-from scooze.enums import (
+from scooze.catalogs import (
     BorderColor,
     Color,
     Component,

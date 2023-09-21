@@ -1,7 +1,7 @@
 from datetime import date
 
 from pydantic import Field
-from scooze.enums import Color, Component, Layout
+from scooze.catalogs import Color, Component, Layout
 from scooze.models.utils import ScoozeBaseModel
 
 

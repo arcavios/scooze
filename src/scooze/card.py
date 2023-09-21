@@ -14,7 +14,7 @@ from scooze.cardparts import (
     RelatedCard,
     RelatedUris,
 )
-from scooze.enums import (
+from scooze.catalogs import (
     BorderColor,
     Color,
     Finish,

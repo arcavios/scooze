@@ -1,7 +1,7 @@
 from typing import Any
 
 import scooze.database.core as db_core
-from scooze.enums import DbCollection
+from scooze.catalogs import DbCollection
 from scooze.models.card import CardModelIn, CardModelOut
 
 # region Card

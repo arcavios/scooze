@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from fastapi.testclient import TestClient
 from mongomock import Collection
-from scooze.enums import Format
+from scooze.catalogs import Format
 from scooze.models.deck import DeckModelOut
 
 # region Fixtures
