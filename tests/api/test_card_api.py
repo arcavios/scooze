@@ -10,24 +10,27 @@ from scooze.models.card import CardModelOut
 @patch("scooze.database.card.get_card_by_property")
 def test_get_base_card(mock_get: MagicMock, recall_base: Card):
     model = CardModelOut.model_validate(recall_base.__dict__)
+    model.id = ObjectId()
     mock_get.return_value: CardModelOut = model
-    result = card_api.get_card_by("id", ObjectId(), card_class=Card)
+    result = card_api.get_card_by("id", model.id, card_class=Card)
     assert result == recall_base
 
 
 @patch("scooze.database.card.get_card_by_property")
 def test_get_oracle_card(mock_get: MagicMock, recall_oracle: OracleCard):
     model = CardModelOut.model_validate(recall_oracle.__dict__)
+    model.id = ObjectId()
     mock_get.return_value: CardModelOut = model
-    result = card_api.get_card_by("id", ObjectId(), card_class=OracleCard)
+    result = card_api.get_card_by("id", model.id, card_class=OracleCard)
     assert result == recall_oracle
 
 
 @patch("scooze.database.card.get_card_by_property")
 def test_get_full_card(mock_get: MagicMock, recall_full: FullCard):
     model = CardModelOut.model_validate(recall_full.__dict__)
+    model.id = ObjectId()
     mock_get.return_value: CardModelOut = model
-    result = card_api.get_card_by("id", ObjectId(), card_class=FullCard)
+    result = card_api.get_card_by("id", model.id, card_class=FullCard)
     assert result == recall_full
 
 
@@ -41,24 +44,27 @@ def test_get_card_bad(mock_get: MagicMock):
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_base_cards(mock_get: MagicMock, cards_base: list[Card]):
     models = [CardModelOut.model_validate(card.__dict__) for card in cards_base]
+    ids = [model.id for model in models]
     mock_get.return_value: list[CardModelOut] = models
-    results = card_api.get_cards_by("id", [ObjectId() for _ in cards_base], card_class=Card)
+    results = card_api.get_cards_by("id", ids, card_class=Card)
     assert results == cards_base
 
 
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_oracle_cards(mock_get: MagicMock, cards_oracle: list[OracleCard]):
     models = [CardModelOut.model_validate(card.__dict__) for card in cards_oracle]
+    ids = [model.id for model in models]
     mock_get.return_value: list[CardModelOut] = models
-    results = card_api.get_cards_by("id", [ObjectId() for _ in cards_oracle], card_class=OracleCard)
+    results = card_api.get_cards_by("id", ids, card_class=OracleCard)
     assert results == cards_oracle
 
 
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_full_cards(mock_get: MagicMock, cards_full: list[FullCard]):
     models = [CardModelOut.model_validate(card.__dict__) for card in cards_full]
+    ids = [model.id for model in models]
     mock_get.return_value: list[CardModelOut] = models
-    results = card_api.get_cards_by("id", [ObjectId() for _ in cards_full], card_class=FullCard)
+    results = card_api.get_cards_by("id", ids, card_class=FullCard)
     assert results == cards_full
 
 
