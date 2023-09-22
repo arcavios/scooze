@@ -4,7 +4,7 @@ from typing import Any, List
 import scooze.database.card as db
 from bson import ObjectId
 from scooze.card import CardT, FullCard
-from scooze.models.card import CardModelIn
+from scooze.models.card import CardModelIn, CardModelOut
 
 
 def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> CardT:
@@ -39,20 +39,21 @@ def get_cards_by(
         return [card_class.from_model(m) for m in card_models]
 
 
-def add_card_to_db(card: CardT) -> ObjectId:
+def add_card(card: CardT) -> ObjectId:
     card_model = CardModelIn.model_validate(card.__dict__)
-    model = asyncio.run(db.add_card(card_model))
+    model = asyncio.run(db.add_card(card=card_model))
     if model:
         return model.id
 
 
-def add_cards_to_db(cards: List[CardT]) -> List[ObjectId]:
+def add_cards(cards: List[CardT]) -> List[ObjectId]:
     card_models = [CardModelIn.model_validate(card.__dict__) for card in cards]
-    return asyncio.run(db.add_cards(card_models))
+    return asyncio.run(db.add_cards(cards=card_models))
 
 
-# TODO(#127): delete single card
+def delete_card(id: str) -> CardModelOut:
+    return asyncio.run(db.delete_card(id=id))
 
 
-def delete_all_cards_from_db() -> int:
+def delete_cards_all() -> int:
     return asyncio.run(db.delete_cards_all())

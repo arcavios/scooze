@@ -1,9 +1,9 @@
 from typing import Any
 
 import scooze.database.core as db_core
+from bson import ObjectId
 from scooze.catalogs import DbCollection
 from scooze.models.deck import DeckModelIn, DeckModelOut
-from bson import ObjectId
 
 # region Deck
 

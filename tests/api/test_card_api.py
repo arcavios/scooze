@@ -68,7 +68,7 @@ def test_add_base_card(mock_add: MagicMock, recall_base: Card):
     model = CardModelOut.model_validate(recall_base.__dict__)
     model.id = ObjectId()
     mock_add.return_value: CardModelOut = model
-    result = card_api.add_card_to_db(recall_base)
+    result = card_api.add_card(recall_base)
     assert result == model.id
 
 
@@ -77,7 +77,7 @@ def test_add_oracle_card(mock_add: MagicMock, recall_full: OracleCard):
     model = CardModelOut.model_validate(recall_full.__dict__)
     model.id = ObjectId()
     mock_add.return_value: CardModelOut = model
-    result = card_api.add_card_to_db(recall_full)
+    result = card_api.add_card(recall_full)
     assert result == model.id
 
 
@@ -86,14 +86,14 @@ def test_add_full_card(mock_add: MagicMock, recall_full: FullCard):
     model = CardModelOut.model_validate(recall_full.__dict__)
     model.id = ObjectId()
     mock_add.return_value: CardModelOut = model
-    result = card_api.add_card_to_db(recall_full)
+    result = card_api.add_card(recall_full)
     assert result == model.id
 
 
 @patch("scooze.database.card.add_card")
 def test_add_card_bad(mock_add: MagicMock, recall_base: Card):
     mock_add.return_value = None
-    result = card_api.add_card_to_db(recall_base)
+    result = card_api.add_card(recall_base)
     assert result is None
 
 
@@ -101,7 +101,7 @@ def test_add_card_bad(mock_add: MagicMock, recall_base: Card):
 def test_add_base_cards(mock_add: MagicMock, cards_base: list[Card]):
     ids = [ObjectId() for _ in cards_base]
     mock_add.return_value: list[ObjectId] = ids
-    results = card_api.add_cards_to_db(cards_base)
+    results = card_api.add_cards(cards_base)
     assert results == ids
 
 
@@ -109,7 +109,7 @@ def test_add_base_cards(mock_add: MagicMock, cards_base: list[Card]):
 def test_add_oracle_cards(mock_add: MagicMock, cards_oracle: list[OracleCard]):
     ids = [ObjectId() for _ in cards_oracle]
     mock_add.return_value: list[ObjectId] = ids
-    results = card_api.add_cards_to_db(cards_oracle)
+    results = card_api.add_cards(cards_oracle)
     assert results == ids
 
 
@@ -117,26 +117,26 @@ def test_add_oracle_cards(mock_add: MagicMock, cards_oracle: list[OracleCard]):
 def test_add_full_cards(mock_add: MagicMock, cards_full: list[FullCard]):
     ids = [ObjectId() for _ in cards_full]
     mock_add.return_value: list[ObjectId] = ids
-    results = card_api.add_cards_to_db(cards_full)
+    results = card_api.add_cards(cards_full)
     assert results == ids
 
 
 @patch("scooze.database.card.add_cards")
 def test_add_cards_bad(mock_add: MagicMock, cards_base: list[Card]):
     mock_add.return_value = None
-    results = card_api.add_cards_to_db(cards_base)
+    results = card_api.add_cards(cards_base)
     assert results is None
 
 
 @patch("scooze.database.card.delete_cards_all")
 def test_delete_cards(mock_delete: MagicMock):
     mock_delete.return_value: int = 4
-    results = card_api.delete_all_cards_from_db()
+    results = card_api.delete_cards_all()
     assert results == 4
 
 
 @patch("scooze.database.card.delete_cards_all")
 def test_delete_cards_bad(mock_delete: MagicMock):
     mock_delete.return_value = None
-    results = card_api.delete_all_cards_from_db()
+    results = card_api.delete_cards_all()
     assert results is None

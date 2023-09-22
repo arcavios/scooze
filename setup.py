@@ -77,7 +77,7 @@ def main():
             clean = input("Delete existing cards before importing? [y/n] ") in "yY"
             if clean:
                 print("Deleting all cards from your local database...")
-                scooze.delete_all_cards_from_db()
+                scooze.delete_cards_all()
 
         if args.clean_decks:
             clean = input("Delete existing decks before importing? [y/n] ") in "yY"
@@ -93,7 +93,7 @@ def main():
                         print("Inserting test cards into the database...")
                         json_list = list(cards_file)
                         cards = [CardModelIn.model_validate_json(card_json) for card_json in json_list]
-                        scooze.add_cards_to_db(cards)
+                        scooze.add_cards(cards)
                 except OSError as e:
                     print_error(e, "test cards")
             case "oracle":

@@ -1,6 +1,6 @@
+import asyncio
 from contextlib import AbstractContextManager
 from functools import cache
-import asyncio
 from typing import Any, List
 
 import scooze.api.bulkdata as bulkdata_api
@@ -95,8 +95,6 @@ class ScoozeApi(AbstractContextManager):
             card_class=self.card_class,
         )
 
-
-
     # endregion
 
     # region Convenience methods for multiple card lookup
@@ -109,21 +107,25 @@ class ScoozeApi(AbstractContextManager):
             card_class=self.card_class,
         )
 
-    # TODO(#??) - add function get_cards_by_format (format, legality)
+    # TODO(#146) - add function get_cards_by_format (format, legality)
 
     # endregion
 
-    def add_card_to_db(self, card: CardT) -> ObjectId:
+    def add_card(self, card: CardT) -> ObjectId:
         self._check_for_safe_context()
-        return card_api.add_card_to_db(card=card)
+        return card_api.add_card(card=card)
 
-    def add_cards_to_db(self, cards: List[CardT]) -> List[ObjectId]:
+    def add_cards(self, cards: List[CardT]) -> List[ObjectId]:
         self._check_for_safe_context()
-        return card_api.add_cards_to_db(cards=cards)
+        return card_api.add_cards(cards=cards)
 
-    def delete_all_cards_from_db(self) -> int:
+    def delete_card(self, id: str) -> CardT:
         self._check_for_safe_context()
-        return card_api.delete_all_cards_from_db()
+        return card_api.delete_card(id=id)
+
+    def delete_cards_all(self) -> int:
+        self._check_for_safe_context()
+        return card_api.delete_cards_all()
 
     # endregion
 
