@@ -5,12 +5,11 @@ import scooze.api.bulkdata as bulk_api
 from bson import ObjectId
 from scooze.card import FullCard
 from scooze.catalogs import ScryfallBulkFile
-from scooze.utils import DEFAULT_BULK_FILE_DIR
 
 
 @pytest.fixture(scope="module")
-def file_type() -> str:
-    return "bulk_test_cards"
+def file_type() -> ScryfallBulkFile:
+    return ScryfallBulkFile.DEFAULT
 
 
 @pytest.fixture(scope="module")
@@ -24,7 +23,7 @@ def test_load_card_file(mock_add: MagicMock, cards_full: list[FullCard], file_ty
     mock_add.return_value: list[ObjectId] = ids
     bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
     captured = capfd.readouterr()
-    expected = f"Loading bulk_test_cards file into the database...\nLoaded {len(ids)} cards to the database.\n"
+    expected = f"Loading {file_type} file into the database...\nLoaded {len(ids)} cards to the database.\n"
     assert captured.out == expected
 
 
@@ -33,7 +32,7 @@ def test_load_card_file_bad(mock_add: MagicMock, file_type, bulk_file_dir, capfd
     mock_add.return_value = None
     bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
     captured = capfd.readouterr()
-    expected = f"Loading bulk_test_cards file into the database...\nNo cards loaded into database.\n"
+    expected = f"Loading {file_type} file into the database...\nNo cards loaded into database.\n"
     assert captured.out == expected
 
 

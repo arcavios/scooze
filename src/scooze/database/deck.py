@@ -3,6 +3,7 @@ from typing import Any
 import scooze.database.core as db_core
 from scooze.catalogs import DbCollection
 from scooze.models.deck import DeckModelIn, DeckModelOut
+from bson import ObjectId
 
 # region Deck
 
@@ -94,7 +95,7 @@ async def delete_deck(id: str) -> DeckModelOut:
 # region Decks
 
 
-async def add_decks(decks: list[DeckModelIn]) -> list[str]:
+async def add_decks(decks: list[DeckModelIn]) -> list[ObjectId]:
     """
     Add a list of decks to the database.
 
