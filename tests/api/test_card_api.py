@@ -70,9 +70,9 @@ def test_get_full_cards(mock_get: MagicMock, cards_full: list[FullCard]):
 
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_cards_bad(mock_get: MagicMock, cards_base: list[Card]):
-    mock_get.return_value = None
+    mock_get.return_value = []
     results = card_api.get_cards_by("id", [ObjectId() for _ in cards_base], card_class=Card)
-    assert results is None
+    assert results == []
 
 
 @patch("scooze.database.card.add_card")
@@ -135,9 +135,9 @@ def test_add_full_cards(mock_add: MagicMock, cards_full: list[FullCard]):
 
 @patch("scooze.database.card.add_cards")
 def test_add_cards_bad(mock_add: MagicMock, cards_base: list[Card]):
-    mock_add.return_value = None
+    mock_add.return_value = []
     results = card_api.add_cards(cards_base)
-    assert results is None
+    assert results == []
 
 
 @patch("scooze.database.card.delete_cards_all")

@@ -35,8 +35,7 @@ def get_cards_by(
             page_size=page_size,
         )
     )
-    if card_models:
-        return [card_class.from_model(m) for m in card_models]
+    return [card_class.from_model(m) for m in card_models]
 
 
 def add_card(card: CardT) -> ObjectId:
