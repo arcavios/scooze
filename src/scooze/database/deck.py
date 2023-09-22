@@ -117,8 +117,7 @@ async def add_decks(decks: list[DeckModelIn]) -> list[ObjectId]:
         ],
     )
 
-    if insert_many_result:
-        return insert_many_result.inserted_ids
+    return insert_many_result.inserted_ids if insert_many_result else []
 
 
 async def get_decks_random(limit: int) -> list[DeckModelOut]:
@@ -133,8 +132,7 @@ async def get_decks_random(limit: int) -> list[DeckModelOut]:
     """
 
     decks = await db_core.get_random_documents(DbCollection.DECKS, limit)
-    if len(decks) > 0:
-        return [DeckModelOut.model_validate(deck) for deck in decks]
+    return [DeckModelOut.model_validate(deck) for deck in decks]
 
 
 async def get_decks_by_property(
@@ -158,8 +156,7 @@ async def get_decks_by_property(
         DbCollection.DECKS, property_name, values, paginated, page, page_size
     )
 
-    if len(decks) > 0:
-        return [DeckModelOut.model_validate(deck) for deck in decks]
+    return [DeckModelOut.model_validate(deck) for deck in decks]
 
 
 async def delete_decks_all() -> int:
