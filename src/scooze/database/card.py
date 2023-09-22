@@ -115,8 +115,7 @@ async def add_cards(cards: list[CardModelIn]) -> list[ObjectId]:
             for card in cards
         ],
     )
-    if insert_many_result:
-        return insert_many_result.inserted_ids
+    return insert_many_result.inserted_ids if insert_many_result else []
 
 
 async def get_cards_random(limit: int) -> list[CardModelOut]:
@@ -131,8 +130,7 @@ async def get_cards_random(limit: int) -> list[CardModelOut]:
     """
 
     cards = await db_core.get_random_documents(DbCollection.CARDS, limit)
-    if len(cards) > 0:
-        return [CardModelOut.model_validate(card) for card in cards]
+    return [CardModelOut.model_validate(card) for card in cards]
 
 
 async def get_cards_by_property(
@@ -156,8 +154,7 @@ async def get_cards_by_property(
         DbCollection.CARDS, property_name, values, paginated, page, page_size
     )
 
-    if len(cards) > 0:
-        return [CardModelOut.model_validate(card) for card in cards]
+    return [CardModelOut.model_validate(card) for card in cards]
 
 
 async def delete_cards_all() -> int:
