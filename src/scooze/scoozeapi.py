@@ -10,8 +10,6 @@ from bson import ObjectId
 from scooze.card import CardT, FullCard
 from scooze.catalogs import ScryfallBulkFile
 
-CONTEXT_ERROR_MSG = "Scooze used outside of 'with' context"
-
 # TODO(#7): docstrings here
 
 
@@ -41,7 +39,7 @@ class ScoozeApi(AbstractContextManager):
     def _check_for_safe_context(self, func):
         def wrapper(*args, **kwargs):
             if not self.safe_context:
-                raise RuntimeError(CONTEXT_ERROR_MSG)
+                raise RuntimeError("Scooze used outside of 'with' context")
             return func(args, kwargs)
 
         return wrapper
