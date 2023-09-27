@@ -26,7 +26,7 @@ async def add_deck(deck: DeckModelIn) -> DeckModelOut:
             by_alias=True,
         ),
     )
-    if new_deck:
+    if new_deck is not None:
         return DeckModelOut.model_validate(new_deck)
 
 
@@ -43,7 +43,7 @@ async def get_deck_by_property(property_name: str, value) -> DeckModelOut:
     """
 
     deck = await db_core.get_document_by_property(DbCollection.DECKS, property_name, value)
-    if deck:
+    if deck is not None:
         return DeckModelOut.model_validate(deck)
 
 
@@ -69,7 +69,7 @@ async def update_deck(id: str, deck: DeckModelIn) -> DeckModelOut:
         ),
     )
 
-    if updated_deck:
+    if updated_deck is not None:
         return DeckModelOut.model_validate(updated_deck)
 
 
@@ -86,7 +86,7 @@ async def delete_deck(id: str) -> DeckModelOut:
 
     deleted_deck = await db_core.delete_document(DbCollection.DECKS, id)
 
-    if deleted_deck:
+    if deleted_deck is not None:
         return DeckModelOut.model_validate(deleted_deck)
 
 
@@ -103,7 +103,7 @@ async def add_decks(decks: list[DeckModelIn]) -> list[ObjectId]:
         decks: The list of deck to insert.
 
     Returns:
-        The list of IDs for decks that were inserted, or None if unable.
+        The list of IDs for decks that were inserted, or empty list if unable.
     """
 
     insert_many_result = await db_core.insert_many_documents(
@@ -117,7 +117,7 @@ async def add_decks(decks: list[DeckModelIn]) -> list[ObjectId]:
         ],
     )
 
-    return insert_many_result.inserted_ids if insert_many_result else []
+    return insert_many_result.inserted_ids if insert_many_result is not None else []
 
 
 async def get_decks_random(limit: int) -> list[DeckModelOut]:
@@ -128,7 +128,7 @@ async def get_decks_random(limit: int) -> list[DeckModelOut]:
         limit: The number of decks to return.
 
     Returns:
-        A random list of decks, or None if none were found.
+        A random list of decks, or empty list if none were found.
     """
 
     decks = await db_core.get_random_documents(DbCollection.DECKS, limit)
@@ -139,7 +139,8 @@ async def get_decks_by_property(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[DeckModelOut]:
     """
-    Search the database for decks matching the given criteria, with options for pagination.
+    Search the database for decks matching the given criteria, with options for
+    pagination.
 
     Args:
         property_name: The property to check.
@@ -149,7 +150,8 @@ async def get_decks_by_property(
         page_size: The size of each page, if paginated.
 
     Returns:
-        A list of decks matching the search criteria, or None if none were found.
+        A list of decks matching the search criteria, or empty list if none
+        were found.
     """
 
     decks = await db_core.get_documents_by_property(
@@ -168,7 +170,7 @@ async def delete_decks_all() -> int:
     """
 
     delete_many_result = await db_core.delete_documents(DbCollection.DECKS)
-    if delete_many_result:
+    if delete_many_result is not None:
         return delete_many_result
 
 

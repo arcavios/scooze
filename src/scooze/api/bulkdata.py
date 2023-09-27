@@ -20,7 +20,7 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
                 )
             ]
             results = asyncio.run(db.add_cards(cards))
-            if results:
+            if results is not None:
                 print(f"Loaded {len(results)} cards to the database.")
             else:
                 print(f"No cards loaded into database.")
@@ -28,7 +28,7 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
     except FileNotFoundError:
         print(file_path)
         download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
-        if not download_now:
+        if not download_now is not None:
             print("No cards loaded into database.")
             return
         download_bulk_data_file_by_type(file_type, bulk_file_dir)

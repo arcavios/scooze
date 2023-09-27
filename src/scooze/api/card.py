@@ -14,7 +14,7 @@ def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> Card
             value=value,
         )
     )
-    if card_model:
+    if card_model is not None:
         return card_class.from_model(card_model)
 
 
@@ -41,7 +41,7 @@ def get_cards_by(
 def add_card(card: CardT) -> ObjectId:
     card_model = CardModelIn.model_validate(card.__dict__)
     model = asyncio.run(db.add_card(card=card_model))
-    if model:
+    if model is not None:
         return model.id
 
 
@@ -50,8 +50,8 @@ def add_cards(cards: List[CardT]) -> List[ObjectId]:
     return asyncio.run(db.add_cards(cards=card_models))
 
 
-def delete_card(id: str) -> CardModelOut:
-    return asyncio.run(db.delete_card(id=id))
+def delete_card(id: str, card_class: CardT = FullCard) -> CardModelOut:
+    return card_class.from_model(asyncio.run(db.delete_card(id=id)))
 
 
 def delete_cards_all() -> int:

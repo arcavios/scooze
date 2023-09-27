@@ -21,7 +21,7 @@ async def cards_root(limit: int = 3):
     """
 
     cards = await db.get_cards_random(limit=limit)
-    if cards:
+    if cards is not None:
         return JSONResponse([card.model_dump(mode="json") for card in cards], status_code=200)
     else:
         return JSONResponse({"message": "No cards found in the database."}, status_code=404)
@@ -33,7 +33,7 @@ async def cards_root(limit: int = 3):
 @router.post("/add", summary="Create new cards")
 async def add_cards(cards: list[CardModelIn]):
     inserted_ids = await db.add_cards(cards=cards)
-    if inserted_ids:
+    if inserted_ids is not None:
         return JSONResponse({"message": f"Created {len(inserted_ids)} card(s)."}, status_code=200)
     else:
         return JSONResponse({"message": f"Failed to create any new cards."}, status_code=400)
@@ -64,7 +64,7 @@ async def get_cards_by(
     cards = await db.get_cards_by_property(
         property_name=property_name, values=values, paginated=paginated, page=page, page_size=page_size
     )
-    if cards:
+    if cards is not None:
         return JSONResponse([card.model_dump(mode="json") for card in cards], status_code=200)
     else:
         return JSONResponse({"message": "Cards not found."}, status_code=404)
@@ -77,7 +77,7 @@ async def get_cards_by(
 async def delete_cards_all():
     deleted_count = await db.delete_cards_all()
 
-    if deleted_count:
+    if deleted_count is not None:
         return JSONResponse({"message": f"Deleted {deleted_count} card(s)."}, status_code=200)
     else:
         return JSONResponse({"message": "No cards deleted."}, status_code=404)

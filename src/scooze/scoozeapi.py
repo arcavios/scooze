@@ -39,7 +39,7 @@ class ScoozeApi(AbstractContextManager):
     def _check_for_safe_context(self, func):
         def wrapper(*args, **kwargs):
             if not self.safe_context:
-                raise RuntimeError("Scooze used outside of 'with' context")
+                raise RuntimeError("ScoozeApi used outside of 'with' context")
             return func(args, kwargs)
 
         return wrapper
@@ -123,7 +123,7 @@ class ScoozeApi(AbstractContextManager):
 
     @_check_for_safe_context
     def delete_card(self, id: str) -> CardT:
-        return card_api.delete_card(id=id)
+        return card_api.delete_card(id=id, card_class=self.card_class)
 
     @_check_for_safe_context
     def delete_cards_all(self) -> int:
