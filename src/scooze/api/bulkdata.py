@@ -8,6 +8,16 @@ from scooze.models.card import CardModelIn
 
 
 def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
+    """
+    Loads the desired file from the given directory into a local Mongo
+    database. Attempts to download it from Scryfall if it isn't found.
+
+    Args:
+        file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
+        to insert into the database.
+        bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
+    """
+
     file_path = f"{bulk_file_dir}/{file_type}.json"
     try:
         with open(file_path, "rb") as cards_file:
