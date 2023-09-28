@@ -264,7 +264,7 @@ class Rarity(ExtendedEnum, StrEnum):
 
 class ScryfallBulkFile(ExtendedEnum, StrEnum):
     """
-    URIs for Scryfall bulk files.
+    Canonical names for Scryfall bulk files.
     """
 
     ORACLE = "oracle_cards"
