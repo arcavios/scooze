@@ -6,12 +6,12 @@ from scooze.deck import Deck
 
 
 def get_deck_by(property_name: str, value, card_class: CardT) -> Deck[CardT]:
-    pass
+    raise NotImplementedError()
 
 
 def add_deck(deck: Deck):
-    pass
+    raise NotImplementedError()
 
 
 def delete_deck(id: str):
-    pass
+    raise NotImplementedError()

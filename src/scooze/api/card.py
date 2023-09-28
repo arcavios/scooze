@@ -88,7 +88,7 @@ def add_cards(cards: List[CardT]) -> List[ObjectId]:
     Add a list of cards to the database.
 
     Args:
-        cards: The list of card to insert.
+        cards: The list of cards to insert.
 
     Returns:
         The IDs of the inserted cards, or empty list if unable.
@@ -98,7 +98,7 @@ def add_cards(cards: List[CardT]) -> List[ObjectId]:
     return asyncio.run(db.add_cards(cards=card_models))
 
 
-def delete_card(id: str, card_class: CardT = FullCard) -> CardModelOut:
+def delete_card(id: str) -> bool:
     """
     Delete a card from the database.
 
@@ -106,10 +106,10 @@ def delete_card(id: str, card_class: CardT = FullCard) -> CardModelOut:
         id: The ID of the card to delete.
 
     Returns:
-        The deleted card, or None if unable to delete or find it.
+        True if the card is deleted, False otherwise.
     """
 
-    return card_class.from_model(asyncio.run(db.delete_card(id=id)))
+    return asyncio.run(db.delete_card(id=id)) is not None
 
 
 def delete_cards_all() -> int:

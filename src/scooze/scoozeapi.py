@@ -49,6 +49,7 @@ class ScoozeApi(AbstractContextManager):
 
     # region Card endpoints
 
+    @cache
     @_check_for_safe_context
     def get_card_by(self, property_name: str, value) -> CardT:
         """
@@ -215,7 +216,7 @@ class ScoozeApi(AbstractContextManager):
         return card_api.add_cards(cards=cards)
 
     @_check_for_safe_context
-    def delete_card(self, id: str) -> CardT:
+    def delete_card(self, id: str) -> bool:
         """
         Delete a card from the database.
 
@@ -223,10 +224,10 @@ class ScoozeApi(AbstractContextManager):
             id: The ID of the card to delete.
 
         Returns:
-            The deleted card, or None if unable to delete or find it.
+            True if the card is deleted, False otherwise.
         """
 
-        return card_api.delete_card(id=id, card_class=self.card_class)
+        return card_api.delete_card(id=id)
 
     @_check_for_safe_context
     def delete_cards_all(self) -> int:
