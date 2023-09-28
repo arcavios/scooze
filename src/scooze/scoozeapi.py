@@ -10,8 +10,6 @@ from bson import ObjectId
 from scooze.card import CardT, FullCard
 from scooze.catalogs import ScryfallBulkFile
 
-# TODO(#7): docstrings here
-
 
 class ScoozeApi(AbstractContextManager):
     """
@@ -107,7 +105,13 @@ class ScoozeApi(AbstractContextManager):
     @_check_for_safe_context
     def get_card_by_name(self, name: str) -> CardT:
         """
-        TODO: get_card_by_name docstring
+        Search the database for a card with the given name.
+
+        Args:
+            name: The card name to search for.
+
+        Returns:
+            A card with the given name if found, or None if none were found.
         """
 
         return card_api.get_card_by(
@@ -120,7 +124,13 @@ class ScoozeApi(AbstractContextManager):
     @_check_for_safe_context
     def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
         """
-        TODO: get_card_by_oracle_id docstring
+        Search the database for a card with the given Oracle ID.
+
+        Args:
+            oracle_id: The card [Oracle ID](https://scryfall.com/docs/api/cards) to search for.
+
+        Returns:
+            A card with the given Oracle ID if found, or None if none were found.
         """
 
         return card_api.get_card_by(
@@ -133,7 +143,13 @@ class ScoozeApi(AbstractContextManager):
     @_check_for_safe_context
     def get_card_by_scryfall_id(self, scryfall_id: str) -> CardT:
         """
-        TODO: get_card_by_scryfall_id docstring
+        Search the database for a card with the given Scryfall ID.
+
+        Args:
+            scryfall_id: The card [Scryfall ID](https://scryfall.com/docs/api/cards) to search for.
+
+        Returns:
+            A card with the given Scryfall ID if found, or None if none were found.
         """
 
         return card_api.get_card_by(
@@ -147,18 +163,26 @@ class ScoozeApi(AbstractContextManager):
     # region Convenience methods for multiple card lookup
 
     @_check_for_safe_context
-    def get_cards_by_set(self, set_name: str) -> List[CardT]:
+    def get_cards_by_set(self, set_code: str) -> List[CardT]:
         """
-        TODO: get_cards_by_set docstring
+        Search the database for all cards in the given set.
+        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)]
+        for a set (e.g. "CMD")
+
+        Args:
+            set_code: The set code to search for.
+
+        Returns:
+           A list of cards from the given set, or empty list if none were found.
         """
 
         return card_api.get_cards_by(
             property_name="set",
-            values=[set_name],
+            values=[set_code],
             card_class=self.card_class,
         )
 
-    # TODO(#146) - add function get_cards_by_format (format, legality)
+    # TODO(#146): add function get_cards_by_format (format, legality)
 
     # endregion
 
@@ -219,7 +243,7 @@ class ScoozeApi(AbstractContextManager):
 
     # region Deck endpoints
 
-    # TODO(#145) - add deck endpoints to python api
+    # TODO(#145): add deck endpoints to python api
 
     # endregion
 
