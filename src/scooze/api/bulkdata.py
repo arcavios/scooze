@@ -38,7 +38,7 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
                     return 0
 
                 for card_json in card_jsons:
-                    if (validated_card := try_validate_card(card_json)) is not None:
+                    if (validated_card := _try_validate_card(card_json)) is not None:
                         current_batch.append(validated_card)
                         current_batch_count += 1
                         if current_batch_count >= batch_size:
@@ -60,7 +60,18 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
         load_card_file(file_type, bulk_file_dir)
 
 
-def try_validate_card(card_json) -> CardModelIn | None:
+def _try_validate_card(card_json) -> CardModelIn | None:
+    """
+    Attempt to convert a single card's JSON to a model for DB import, and
+    report validation errors that arise in conversion.
+
+    Args:
+        card_json: JSON representation of a single card object.
+
+    Returns:
+        A validated model, or None if validation failed.
+
+    """
     try:
         card = CardModelIn.model_validate(card_json)
         return card
