@@ -45,11 +45,11 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
     *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
 
-4. Run the scooze setup script to add some data to your local database.
+4. Run the scooze CLI tool (installed with pip install) to add some data to your local database.
 
     ```
-    python -m scooze.cli --help
-    python -m scooze.cli --include-cards oracle --include-decks pioneer
+    scooze -h
+    scooze load-cards oracle
     ```
 
 5. Use scooze in your application code!
