@@ -60,7 +60,7 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
         load_card_file(file_type, bulk_file_dir)
 
 
-def _try_validate_card(card_json: dict) -> CardModelIn | None:
+def _try_validate_card(card_json) -> CardModelIn | None:
     """
     Attempt to convert a single card's JSON to a model for DB import, and
     report validation errors that arise in conversion.
@@ -70,8 +70,8 @@ def _try_validate_card(card_json: dict) -> CardModelIn | None:
 
     Returns:
         A validated model, or None if validation failed.
-    """
 
+    """
     try:
         card = CardModelIn.model_validate(card_json)
         return card

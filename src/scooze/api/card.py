@@ -34,7 +34,7 @@ def get_cards_by(
     property_name: str,
     values: list[Any],
     card_class: CardT = FullCard,
-    paginated: bool = False,
+    paginated: bool = True,
     page: int = 1,
     page_size: int = 10,
 ) -> List[CardT]:
