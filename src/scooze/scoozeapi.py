@@ -16,7 +16,7 @@ class ScoozeApi(AbstractContextManager):
     Context manager object for doing I/O from a Mongo database.
 
     Sample usage:
-        >>> with ScoozeApi as s:
+        >>> with ScoozeApi() as s:
                 green_cards = s.get_cards_by("colors", [Color.GREEN])
                 woe_cards = s.get_cards_by_set("woe")
                 black_lotus = s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
@@ -24,6 +24,7 @@ class ScoozeApi(AbstractContextManager):
 
     def __init__(self, card_class: type[CardT] = FullCard):
         self.card_class = card_class
+        self.safe_context = False
 
     def __enter__(self):
         asyncio.run(mongo.mongo_connect())
@@ -34,17 +35,23 @@ class ScoozeApi(AbstractContextManager):
     def __exit__(self, exc_type, exc_val, exc_tb):
         asyncio.run(mongo.mongo_close())
 
-    def _check_for_safe_context(self):
+    def _check_for_safe_context(func):
         """
-        Ensure an instance method of ScoozeApi is called in a safe context.
+        Wrapper to ensure an instance method of ScoozeApi is called in a safe
+        context.
         """
 
-        if not self.safe_context:
-            raise RuntimeError("ScoozeApi used outside of 'with' context")
+        def wrapper(self, *args, **kwargs):
+            if not self.safe_context:
+                raise RuntimeError("ScoozeApi used outside of 'with' context")
+            return func(self, args, kwargs)
+
+        return wrapper
 
     # region Card endpoints
 
     @cache
+    @_check_for_safe_context
     def get_card_by(self, property_name: str, value) -> CardT:
         """
         Search the database for the first card that matches the given criteria.
@@ -52,14 +59,15 @@ class ScoozeApi(AbstractContextManager):
         Args:
             property_name: The property to check.
             value: The value to match on.
+            card_class: The type of card to return.
 
         Returns:
             The first matching card, or None if none were found.
         """
 
-        self._check_for_safe_context()
-        return card_api.get_card_by(property_name, value, self.card_class)
+        return card_api.get_card_by(property_name, value, card_class=self.card_class)
 
+    @_check_for_safe_context
     def get_cards_by(
         self,
         property_name: str,
@@ -84,7 +92,6 @@ class ScoozeApi(AbstractContextManager):
             were found.
         """
 
-        self._check_for_safe_context()
         return card_api.get_cards_by(
             property_name=property_name,
             values=values,
@@ -97,6 +104,7 @@ class ScoozeApi(AbstractContextManager):
     # region Convenience methods for single-card lookup
 
     @cache
+    @_check_for_safe_context
     def get_card_by_name(self, name: str) -> CardT:
         """
         Search the database for a card with the given name.
@@ -108,7 +116,6 @@ class ScoozeApi(AbstractContextManager):
             A card with the given name if found, or None if none were found.
         """
 
-        self._check_for_safe_context()
         return card_api.get_card_by(
             property_name="name",
             value=name,
@@ -116,6 +123,7 @@ class ScoozeApi(AbstractContextManager):
         )
 
     @cache
+    @_check_for_safe_context
     def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
         """
         Search the database for a card with the given Oracle ID.
@@ -127,7 +135,6 @@ class ScoozeApi(AbstractContextManager):
             A card with the given Oracle ID if found, or None if none were found.
         """
 
-        self._check_for_safe_context()
         return card_api.get_card_by(
             property_name="oracle_id",
             value=oracle_id,
@@ -135,6 +142,7 @@ class ScoozeApi(AbstractContextManager):
         )
 
     @cache
+    @_check_for_safe_context
     def get_card_by_scryfall_id(self, scryfall_id: str) -> CardT:
         """
         Search the database for a card with the given Scryfall ID.
@@ -146,7 +154,6 @@ class ScoozeApi(AbstractContextManager):
             A card with the given Scryfall ID if found, or None if none were found.
         """
 
-        self._check_for_safe_context()
         return card_api.get_card_by(
             property_name="scryfall_id",
             value=scryfall_id,
@@ -157,10 +164,11 @@ class ScoozeApi(AbstractContextManager):
 
     # region Convenience methods for multiple card lookup
 
+    @_check_for_safe_context
     def get_cards_by_set(self, set_code: str) -> List[CardT]:
         """
         Search the database for all cards in the given set.
-        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
+        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)]
         for a set (e.g. "CMD")
 
         Args:
@@ -170,7 +178,6 @@ class ScoozeApi(AbstractContextManager):
            A list of cards from the given set, or empty list if none were found.
         """
 
-        self._check_for_safe_context()
         return card_api.get_cards_by(
             property_name="set",
             values=[set_code],
@@ -181,6 +188,7 @@ class ScoozeApi(AbstractContextManager):
 
     # endregion
 
+    @_check_for_safe_context
     def add_card(self, card: CardT) -> ObjectId:
         """
         Add a card to the database.
@@ -192,9 +200,9 @@ class ScoozeApi(AbstractContextManager):
             The ID of the inserted card, or None if it was unable.
         """
 
-        self._check_for_safe_context()
         return card_api.add_card(card=card)
 
+    @_check_for_safe_context
     def add_cards(self, cards: List[CardT]) -> List[ObjectId]:
         """
         Add a list of cards to the database.
@@ -206,9 +214,9 @@ class ScoozeApi(AbstractContextManager):
             The IDs of the inserted cards, or empty list if unable.
         """
 
-        self._check_for_safe_context()
         return card_api.add_cards(cards=cards)
 
+    @_check_for_safe_context
     def delete_card(self, id: str) -> bool:
         """
         Delete a card from the database.
@@ -220,9 +228,9 @@ class ScoozeApi(AbstractContextManager):
             True if the card is deleted, False otherwise.
         """
 
-        self._check_for_safe_context()
         return card_api.delete_card(id=id)
 
+    @_check_for_safe_context
     def delete_cards_all(self) -> int:
         """
         Delete all cards in the database.
@@ -231,7 +239,6 @@ class ScoozeApi(AbstractContextManager):
             The number of cards deleted, or None if none could be deleted.
         """
 
-        self._check_for_safe_context()
         return card_api.delete_cards_all()
 
     # endregion
@@ -244,6 +251,7 @@ class ScoozeApi(AbstractContextManager):
 
     # region Bulk data I/O
 
+    @_check_for_safe_context
     def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
         """
         Loads the desired file from the given directory into a local Mongo
@@ -255,7 +263,6 @@ class ScoozeApi(AbstractContextManager):
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
         """
 
-        self._check_for_safe_context()
         return bulkdata_api.load_card_file(
             file_type=file_type,
             bulk_file_dir=bulk_file_dir,
