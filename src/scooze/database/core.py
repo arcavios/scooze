@@ -24,7 +24,7 @@ async def insert_document(col_type: DbCollection, document: dict[str, Any]):
     # creates less headaches if you doubleclick in the Swagger UI or similar.
     return await db.client.scooze[col_type].find_one_and_update(
         document,
-        {"$set": document},
+        {"$setOnInsert": document},
         upsert=True,
         return_document=ReturnDocument.AFTER,
     )
