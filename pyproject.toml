@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "scooze"
-version = "0.1.0"
+version = "1.0.3"
 description = "A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments."
 authors = [
-    "Alex Gimmi <iambroadband@gmail.com>",
+    "Alexander Gimmi <iambroadband@gmail.com>",
     "Ben Horkley <ben.horkley@gmail.com>",
     "Jacob Ginsparg <jacobginsparg@gmail.com>",
 ]
@@ -20,6 +20,10 @@ line-length = 120
 [tool.isort]
 profile = "black"
 src_paths = ["scooze", "tests"]
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/arcavios/scooze"
+"Bug Tracker" = "https://github.com/arcavios/scooze/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.11, <3.12"
