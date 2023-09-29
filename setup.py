@@ -2,7 +2,7 @@ import argparse
 
 from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModelIn
-from scooze.scoozeapi import ScoozeApi
+from scooze.api import ScoozeApi
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
 
