@@ -4,19 +4,17 @@ import json
 import os
 
 import ijson
-import scooze.database.card as card_db
 import scooze.database.deck as deck_db
 import uvicorn
-from scooze.bulkdata import download_bulk_data_file_by_type
+from scooze.api import ScoozeApi
 from scooze.catalogs import DbCollection, ScryfallBulkFile
-from scooze.models.card import CardModelIn
 from scooze.models.deck import DeckModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR, DEFAULT_DECKS_DIR, SmartFormatter
 
 
 def run_cli():
     args = parse_args()
-    run_scooze_commands(args.commands, args.bulk_data_dir)
+    run_scooze_commands(args.commands, args.bulk_data_dir, args.decks_dir)
 
 
 def parse_args():
@@ -29,13 +27,13 @@ def parse_args():
         f"""You can use the following commands:\n\n"""
         f"""    run             Run the Swagger UI/ReDocs.\n\n"""
         f"""    load-cards      Load a set of cards into the database.\n"""
-        f"""        test        A set of cards that includes the Power 9 for testing purposes.\n"""
-        f"""        oracle      A set of cards that includes one version of each card ever printed.\n"""
-        f"""        artwork     A set of cards that includes each unique illustration once.\n"""
+        f"""        test        The Power 9, for testing purposes.\n"""
+        f"""        oracle      One version of each card ever printed.\n"""
+        f"""        artwork     Includes each unique illustration once.\n"""
         f"""        prints      Every print of each card ever printed, in English where available.\n"""
         f"""        all         Every print of all cards and game objects in all languages.\n\n"""
         f"""    load-decks      Load a set of decks into the database.\n"""
-        f"""        test        A set of decks for testing purposes.\n"""
+        f"""        test        A set of Pioneer decks for testing purposes.\n"""
         f"""        all         All decks in the decks directory.\n\n"""
         f"""    delete          Delete all of a set of data from the database.\n"""
         f"""        cards       Choose the cards collection.\n"""
@@ -89,11 +87,13 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                 else:
                     print("No files were selected to load.")
 
-            for bulk_file in to_load:
-                load_bulk_file(bulk_file, bulk_dir)
-            if load_test:
-                load_test_cards()
+            with ScoozeApi() as s:
+                for bulk_file in to_load:
+                    s.load_card_file(bulk_file, bulk_dir)
+                if load_test:
+                    s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
         case "load-decks":
+            # TODO(#145): Use ScoozeApi to load decks via API
             if "all" in subcommands:
                 load_all_decks(decks_dir)
             elif "test" in subcommands:
@@ -121,41 +121,7 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
             print(f"Command not recognized: {command}")
 
 
-def load_bulk_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
-    file_path = f"{bulk_file_dir}/{file_type}.json"
-    try:
-        with open(file_path, "r", encoding="utf8") as cards_file:
-            print(f"Inserting {file_type} file into the database...")
-            cards = [
-                CardModelIn(**card_json)
-                for card_json in ijson.items(
-                    cards_file,
-                    "item",
-                )
-            ]
-            asyncio.run(card_db.add_cards(cards))
-    except FileNotFoundError:
-        print(file_path)
-        download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
-        if not download_now:
-            print("No cards loaded into database.")
-            return
-        download_bulk_data_file_by_type(file_type, bulk_file_dir)
-        load_bulk_file(file_type, bulk_file_dir)
-
-
-def load_test_cards():
-    try:
-        with open("./data/test/power9.jsonl") as cards_file:
-            print("Inserting test cards into the database...")
-            json_list = list(cards_file)
-            cards = [CardModelIn(**json.loads(card_json)) for card_json in json_list]
-            asyncio.run(card_db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
-    except OSError as e:
-        print("Encountered an error while trying to load test cards")
-        raise e
-
-
+# TODO(#145): Can remove this once the command uses ScoozeApi
 def load_all_decks(decks_dir: str):
     files = os.listdir(decks_dir)
     try:
@@ -163,7 +129,7 @@ def load_all_decks(decks_dir: str):
             with open(file_path, "r", encoding="utf8") as deck_file:
                 print(f"Inserting {file_path.split('/')[-1]} file into the database...")
                 decks = [
-                    DeckModelIn(**deck_json)
+                    DeckModelIn.model_validate(deck_json)
                     for deck_json in ijson.items(
                         deck_file,
                         "item",
@@ -175,12 +141,13 @@ def load_all_decks(decks_dir: str):
         raise e
 
 
+# TODO(#145): Can remove this once the command uses ScoozeApi
 def load_test_decks():
     try:
         with open("./data/test/pioneer_decks.jsonl") as decks_file:
             print("Inserting test decks into the database...")
             json_list = list(decks_file)
-            decks = [DeckModelIn(**json.loads(deck_json)) for deck_json in json_list]
+            decks = [DeckModelIn.model_validate(json.loads(deck_json)) for deck_json in json_list]
             asyncio.run(deck_db.add_decks(decks))  # TODO(#7): this need async for now, replace with Python API
     except OSError as e:
         print("Encountered an error while trying to load test decks")
@@ -193,6 +160,8 @@ def delete_collection(coll: DbCollection):
         print(f"Deleting all {coll} from your local database...")
         match coll:
             case DbCollection.CARDS:
-                card_db.delete_cards_all()
+                with ScoozeApi() as s:
+                    s.delete_cards_all()
             case DbCollection.DECKS:
+                # TODO(#145): Use the ScoozeApi for this
                 deck_db.delete_decks_all()
