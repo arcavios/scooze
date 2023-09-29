@@ -67,7 +67,7 @@
 - N/A
 
 
-## [1.0.0] - 2023-09-29
+## [1.0.2] - 2023-09-29
 
 ### Added
 
@@ -85,6 +85,7 @@
 
 ### Fixed
 
+- Fixes the README.md
 - Rename `Cardartist_id` to `Card.artist_ids` to match Scryfall ([#85](https://github.com/arcavios/scooze/pull/85), [#86](https://github.com/arcavios/scooze/pull/86))
 
 ### Docs
