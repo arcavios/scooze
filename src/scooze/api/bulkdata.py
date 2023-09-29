@@ -5,6 +5,7 @@ import scooze.database.card as db
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModelIn
+from pydantic_core import ValidationError
 
 
 def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
@@ -23,11 +24,12 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
         with open(file_path, "rb") as cards_file:
             print(f"Loading {file_type} file into the database...")
             cards = [
-                CardModelIn.model_validate(card_json)
+                c
                 for card_json in ijson.items(
                     cards_file,
                     "item",
                 )
+                if (c := try_validate_card(card_json)) is not None
             ]
             results = asyncio.run(db.add_cards(cards))
             if results is not None:
@@ -43,3 +45,14 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
             return
         download_bulk_data_file_by_type(file_type, bulk_file_dir)
         load_card_file(file_type, bulk_file_dir)
+
+
+def try_validate_card(card_json) -> CardModelIn | None:
+    try:
+        card = CardModelIn.model_validate(card_json)
+        return card
+
+    except ValidationError as e:
+        print(f"Card with name {card_json['name']} not added due to validation error: \n{e}")
+
+        return

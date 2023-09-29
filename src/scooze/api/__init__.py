@@ -17,12 +17,12 @@ def _check_for_safe_context(func):
     context.
     """
 
-    def wrapper(self, *args, **kwargs):
+    def wrapper_safe_context(self, *args, **kwargs):
         if not self.safe_context:
             raise RuntimeError("ScoozeApi used outside of 'with' context")
         return func(self, *args, **kwargs)
 
-    return wrapper
+    return wrapper_safe_context
 
 
 class ScoozeApi(AbstractContextManager):
