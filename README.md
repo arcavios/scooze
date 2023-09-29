@@ -56,7 +56,6 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
     ```
     from scooze.api import ScoozeApi
-    from scooze.catalogs import Format
 
     with ScoozeApi() as s:
       green_cards = s.get_cards_by("colors", [Color.GREEN])
