@@ -44,7 +44,7 @@ class ScoozeApi(AbstractContextManager):
         def wrapper(self, *args, **kwargs):
             if not self.safe_context:
                 raise RuntimeError("ScoozeApi used outside of 'with' context")
-            return func(self, args, kwargs)
+            return func(self, *args, **kwargs)
 
         return wrapper
 
