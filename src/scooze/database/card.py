@@ -134,7 +134,7 @@ async def get_cards_random(limit: int) -> list[CardModelOut]:
 
 
 async def get_cards_by_property(
-    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str, values: list[Any], paginated: bool = False, page: int = 1, page_size: int = 10
 ) -> list[CardModelOut]:
     """
     Search the database for cards matching the given criteria, with options for
