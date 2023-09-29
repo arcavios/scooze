@@ -1,6 +1,24 @@
 # Change Log
 
 
+## [1.0.0] - 2023-09-29
+
+### Added
+
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Docs
+
+- N/A
+
+
 ## [0.1.0] - 2023-07-31
 
 ### Added
