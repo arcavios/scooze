@@ -17,7 +17,7 @@ class ScoozeApi(AbstractContextManager):
 
     Sample usage:
         >>> with ScoozeApi as s:
-                pioneer_cards = s.get_cards_by_format(Format.PIONEER)
+                green_cards = s.get_cards_by("colors", [Color.GREEN])
                 woe_cards = s.get_cards_by_set("woe")
                 black_lotus = s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
     """
@@ -154,7 +154,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return card_api.get_card_by(
-            property_name="_id",
+            property_name="scryfall_id",
             value=scryfall_id,
             card_class=self.card_class,
         )
