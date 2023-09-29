@@ -1,6 +1,7 @@
 from typing import Any
 
 import scooze.database.core as db_core
+from bson import ObjectId
 from scooze.catalogs import DbCollection
 from scooze.models.card import CardModelIn, CardModelOut
 
@@ -25,8 +26,8 @@ async def add_card(card: CardModelIn) -> CardModelOut:
             by_alias=True,
         ),
     )
-    if new_card:
-        return CardModelOut(**new_card)
+    if new_card is not None:
+        return CardModelOut.model_validate(new_card)
 
 
 async def get_card_by_property(property_name: str, value) -> CardModelOut:
@@ -42,8 +43,8 @@ async def get_card_by_property(property_name: str, value) -> CardModelOut:
     """
 
     card = await db_core.get_document_by_property(DbCollection.CARDS, property_name, value)
-    if card:
-        return CardModelOut(**card)
+    if card is not None:
+        return CardModelOut.model_validate(card)
 
 
 async def update_card(id: str, card: CardModelIn) -> CardModelOut:
@@ -66,8 +67,8 @@ async def update_card(id: str, card: CardModelIn) -> CardModelOut:
             include=card.model_fields_set,
         ),
     )
-    if updated_card:
-        return CardModelOut(**updated_card)
+    if updated_card is not None:
+        return CardModelOut.model_validate(updated_card)
 
 
 async def delete_card(id: str) -> CardModelOut:
@@ -83,8 +84,8 @@ async def delete_card(id: str) -> CardModelOut:
 
     deleted_card = await db_core.delete_document(DbCollection.CARDS, id)
 
-    if deleted_card:
-        return CardModelOut(**deleted_card)
+    if deleted_card is not None:
+        return CardModelOut.model_validate(deleted_card)
 
 
 # endregion
@@ -93,7 +94,7 @@ async def delete_card(id: str) -> CardModelOut:
 # region Cards
 
 
-async def add_cards(cards: list[CardModelIn]) -> list[str]:
+async def add_cards(cards: list[CardModelIn]) -> list[ObjectId]:
     """
     Add a list of cards to the database.
 
@@ -101,7 +102,7 @@ async def add_cards(cards: list[CardModelIn]) -> list[str]:
         cards: The list of card to insert.
 
     Returns:
-        The list of IDs for cards that were inserted, or None if unable.
+        The list of IDs for cards that were inserted, or empty list if unable.
     """
 
     insert_many_result = await db_core.insert_many_documents(
@@ -114,8 +115,7 @@ async def add_cards(cards: list[CardModelIn]) -> list[str]:
             for card in cards
         ],
     )
-    if insert_many_result:
-        return insert_many_result.inserted_ids
+    return insert_many_result.inserted_ids if insert_many_result is not None else []
 
 
 async def get_cards_random(limit: int) -> list[CardModelOut]:
@@ -126,19 +126,19 @@ async def get_cards_random(limit: int) -> list[CardModelOut]:
         limit: The number of cards to return.
 
     Returns:
-        A random list of cards, or None if none were found.
+        A random list of cards, or empty list if none were found.
     """
 
     cards = await db_core.get_random_documents(DbCollection.CARDS, limit)
-    if len(cards) > 0:
-        return [CardModelOut(**card) for card in cards]
+    return [CardModelOut.model_validate(card) for card in cards]
 
 
 async def get_cards_by_property(
     property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ) -> list[CardModelOut]:
     """
-    Search the database for cards matching the given criteria, with options for pagination.
+    Search the database for cards matching the given criteria, with options for
+    pagination.
 
     Args:
         property_name: The property to check.
@@ -148,15 +148,15 @@ async def get_cards_by_property(
         page_size: The size of each page, if paginated.
 
     Returns:
-        A list of cards matching the search criteria, or None if none were found.
+        A list of cards matching the search criteria, or empty list if none
+        were found.
     """
 
     cards = await db_core.get_documents_by_property(
         DbCollection.CARDS, property_name, values, paginated, page, page_size
     )
 
-    if len(cards) > 0:
-        return [CardModelOut(**card) for card in cards]
+    return [CardModelOut.model_validate(card) for card in cards]
 
 
 async def delete_cards_all() -> int:
@@ -168,7 +168,7 @@ async def delete_cards_all() -> int:
     """
 
     delete_many_result = await db_core.delete_documents(DbCollection.CARDS)
-    if delete_many_result:
+    if delete_many_result is not None:
         return delete_many_result.deleted_count
 
 

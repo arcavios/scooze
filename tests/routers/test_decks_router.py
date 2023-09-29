@@ -12,7 +12,7 @@ from scooze.models.deck import DeckModelOut
 @pytest.fixture
 def modern_4c(mock_decks_collection: Collection) -> DeckModelOut:
     db_4c = mock_decks_collection.find_one({"archetype": "Four-color Control"})
-    return DeckModelOut(**db_4c)
+    return DeckModelOut.model_validate(db_4c)
 
 
 # endregion

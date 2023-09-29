@@ -21,7 +21,7 @@ async def decks_root(limit: int = 3):
     """
 
     decks = await db.get_decks_random(limit=limit)
-    if decks:
+    if decks is not None:
         return JSONResponse([deck.model_dump(mode="json") for deck in decks], status_code=200)
     else:
         return JSONResponse({"message": "No decks found in the database."}, status_code=404)
@@ -33,7 +33,7 @@ async def decks_root(limit: int = 3):
 @router.post("/add", summary="Create new decks")
 async def add_decks(decks: list[DeckModelIn]):
     inserted_ids = await db.add_decks(decks=decks)
-    if inserted_ids:
+    if inserted_ids is not None:
         return JSONResponse({"message": f"Created {len(inserted_ids)} deck(s)."}, status_code=200)
     else:
         return JSONResponse({"message": "Failed to create any new decks."}, status_code=400)
@@ -57,7 +57,7 @@ async def get_decks_by(
     decks = await db.get_decks_by_property(
         property_name=property_name, values=values, paginated=paginated, page=page, page_size=page_size
     )
-    if decks:
+    if decks is not None:
         return JSONResponse([deck.model_dump(mode="json") for deck in decks], status_code=200)
     else:
         return JSONResponse({"message": "Decks not found."}, status_code=404)
@@ -70,7 +70,7 @@ async def get_decks_by(
 async def delete_decks_all():
     deleted_count = await db.delete_decks_all()
 
-    if deleted_count:
+    if deleted_count is not None:
         return JSONResponse({"message": f"Deleted {deleted_count} deck(s)."}, status_code=200)
     else:
         return JSONResponse({"message": "No decks deleted."}, status_code=404)
