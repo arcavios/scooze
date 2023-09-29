@@ -41,7 +41,7 @@ async def add_decks(decks: list[DeckModelIn]):
 
 @router.post("/by", summary="Get decks by property")
 async def get_decks_by(
-    property_name: str, values: list[Any], paginated: bool = False, page: int = 1, page_size: int = 10
+    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
 ):
     """
     Get decks where the given property matches any of the given values.
