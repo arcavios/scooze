@@ -1,12 +1,12 @@
 [tool.poetry]
+name = "scooze"
+version = "1.0.0"
+description = "A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments."
 authors = [
     "Alexander Gimmi <iambroadband@gmail.com>",
     "Ben Horkley <ben.horkley@gmail.com>",
     "Jacob Ginsparg <jacobginsparg@gmail.com>",
 ]
-name = "scooze"
-version = "1.0.0"
-description = "A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments."
 readme = "README.md"
 packages = [{ include = "scooze", from = "src" }]
 
