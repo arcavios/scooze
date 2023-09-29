@@ -3,9 +3,9 @@ name = "scooze"
 version = "1.0.0"
 description = "A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments."
 authors = [
-    "Alex Gimmi <iambroadband@gmail.com>",
-    "Ben Horkley <ben.horkley@gmail.com>",
-    "Jacob Ginsparg <jacobginsparg@gmail.com>",
+    {name="Alex Gimmi", email="iambroadband@gmail.com>"},
+    {name="Ben Horkley", email="ben.horkley@gmail.com"},
+    {name="Jacob Ginsparg", email="jacobginsparg@gmail.com"},
 ]
 readme = "README.md"
 packages = [{ include = "scooze", from = "src" }]
