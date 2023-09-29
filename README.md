@@ -50,23 +50,36 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     ```
     scooze -h
     scooze load-cards oracle
+    scooze run
     ```
 
 5. Use scooze in your application code!
 
     ```
     from scooze.api import ScoozeApi
+    from scooze.catalogs import Color
 
     with ScoozeApi() as s:
+      # get 10 arbitrary green cards
+      green_cards = s.get_cards_by("colors", [Color.GREEN], paginated=True, page_size=10)
+      # get _all_ green cards
       green_cards = s.get_cards_by("colors", [Color.GREEN])
+   
+      # get all cards from a particular set
       woe_cards = s.get_cards_by_set("woe")
+   
+      # get a specific card
       black_lotus = s.get_card_by_name("Black Lotus")
       print(black_lotus.total_words())
+   
+      # and more!
     ```
 
 ## Contributing
 
-If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/scooze/issues/new?assignees=&labels=bug&template=bug_report.md&title=). If you have an idea for an improvement or new feature 🚀, please open a [feature request](https://github.com/arcavios/scooze/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=). If it is a security vulnerability, **DO NOT** create an issue. Please reach out to one of the team members directly.
+If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/scooze/issues/new?assignees=&labels=bug&template=bug_report.md&title=). If you have an idea for an improvement or new feature 🚀, please open a [feature request](https://github.com/arcavios/scooze/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=).
+
+If you find a security vulnerability, please follow the instructions [here](./SECURITY.md).
 
 ### Developer setup
 
