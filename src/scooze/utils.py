@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os.path
 from datetime import date, datetime
@@ -7,7 +8,8 @@ from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 from frozendict import frozendict
 from scooze.catalogs import ExtendedEnum, Format
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk"  # TODO(#99) - Change DEFAULT_BULK_FILE_DIR to work when called from anywhere.
+DEFAULT_BULK_FILE_DIR = "./data/bulk"
+DEFAULT_DECKS_DIR = "./data/decks"
 
 ## Generic Types
 T = TypeVar("T")  # generic type
@@ -60,6 +62,14 @@ def get_logger(
     logger.addHandler(ch)
 
     return logger
+
+
+class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
+    def _split_lines(self, text, width):
+        if text.startswith("R|"):
+            return text[2:].splitlines()
+        # this is the RawTextHelpFormatter._split_lines
+        return argparse.HelpFormatter._split_lines(self, text, width)
 
 
 # region Deck Format Helpers

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "scooze"
 version = "0.1.0"
-description = "Tools for interacting with Magic: the Gathering tournaments, decklists, and cards."
+description = "A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments."
 authors = [
     "Alex Gimmi <iambroadband@gmail.com>",
     "Ben Horkley <ben.horkley@gmail.com>",
@@ -36,6 +36,9 @@ httpx = "^0.24.1"
 black = "^23.7.0"
 isort = "^5.12.0"
 mongomock = "^4.1.2"
+
+[tool.poetry.scripts]
+scooze = "scooze.cli:run_cli"
 
 [tool.pytest.ini_options]
 # addopts = "-m 'not slow'"
