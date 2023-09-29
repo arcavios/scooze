@@ -46,7 +46,7 @@ async def add_cards(cards: list[CardModelIn]):
 async def get_cards_by(
     property_name: str,
     values: list[Any],
-    paginated: bool = True,
+    paginated: bool = False,
     page: int = 1,
     page_size: int = 10,
 ):

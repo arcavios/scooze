@@ -136,7 +136,7 @@ async def get_decks_random(limit: int) -> list[DeckModelOut]:
 
 
 async def get_decks_by_property(
-    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str, values: list[Any], paginated: bool = False, page: int = 1, page_size: int = 10
 ) -> list[DeckModelOut]:
     """
     Search the database for decks matching the given criteria, with options for
