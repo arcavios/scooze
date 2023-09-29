@@ -5,14 +5,21 @@
 
 ### Added
 
+- Create a model for representing Magic: the Gathering decks ([#20](https://github.com/arcavios/scooze/pull/20), [#31](https://github.com/arcavios/scooze/pull/31))
+- Add support for downloading bulk data files from Scryfall ([#44](https://github.com/arcavios/scooze/pull/44), [#73](https://github.com/arcavios/scooze/pull/73))
+- Create helpers for converting between Cards and CardModels (from the database) ([#80](https://github.com/arcavios/scooze/pull/80))
+- Create enums for miscellaneous card parts (e.g. Color, Frame, etc) ([#87](https://github.com/arcavios/scooze/pull/87))
+- Create a CRUD API for decks and ([#98](https://github.com/arcavios/scooze/pull/98), [#108](https://github.com/arcavios/scooze/pull/108))
+- Create a CLI for users to manage their local database from the command line ([#104](https://github.com/arcavios/scooze/pull/104), [#143](https://github.com/arcavios/scooze/pull/143))
 
 ### Changed
 
-- N/A
+- Update docstrings according to Google's style guide ([#89](https://github.com/arcavios/scooze/pull/89))
+- Update Card Hashing ([#96](https://github.com/arcavios/scooze/pull/96))
 
 ### Fixed
 
-- N/A
+- Rename `Cardartist_id` to `Card.artist_ids` to match Scryfall ([#85](https://github.com/arcavios/scooze/pull/85), [#86](https://github.com/arcavios/scooze/pull/86))
 
 ### Docs
 
@@ -23,8 +30,8 @@
 
 ### Added
 
-- Create a setup.py for local DB use ([#8](https://github.com/arcavios/scooze/pull/8)).
-- Create a CRUD API for card and cards ([#8](https://github.com/arcavios/scooze/pull/8)).
+- Create a setup.py for local DB use ([#8](https://github.com/arcavios/scooze/pull/8))
+- Create a CRUD API for card and cards ([#8](https://github.com/arcavios/scooze/pull/8))
 
 ### Changed
 

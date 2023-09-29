@@ -1,12 +1,12 @@
 [tool.poetry]
+authors = [
+    "Alexander Gimmi <iambroadband@gmail.com>",
+    "Ben Horkley <ben.horkley@gmail.com>",
+    "Jacob Ginsparg <jacobginsparg@gmail.com>",
+]
 name = "scooze"
 version = "1.0.0"
 description = "A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments."
-authors = [
-    {name="Alex Gimmi", email="iambroadband@gmail.com>"},
-    {name="Ben Horkley", email="ben.horkley@gmail.com"},
-    {name="Jacob Ginsparg", email="jacobginsparg@gmail.com"},
-]
 readme = "README.md"
 packages = [{ include = "scooze", from = "src" }]
 
@@ -20,6 +20,10 @@ line-length = 120
 [tool.isort]
 profile = "black"
 src_paths = ["scooze", "tests"]
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/arcavios/scooze"
+"Bug Tracker" = "https://github.com/arcavios/scooze/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.11, <3.12"
