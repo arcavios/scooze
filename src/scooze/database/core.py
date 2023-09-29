@@ -20,8 +20,15 @@ async def insert_document(col_type: DbCollection, document: dict[str, Any]):
         The inserted document, or None if unable to insert.
     """
 
-    insert_result = await db.client.scooze[col_type].insert_one(document)
-    return await db.client.scooze[col_type].find_one({"_id": insert_result.inserted_id})
+    # Here we find and update with upsert=True instead of inserting to avoid
+    # creating duplicates in the database. This creates less headaches if you
+    # doubleclick in the Swagger UI or similar.
+    return await db.client.scooze[col_type].find_one_and_update(
+        document,
+        {"$set": document},
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
 
 
 async def get_document_by_property(col_type: DbCollection, property_name: str, value):
