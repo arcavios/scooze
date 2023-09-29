@@ -55,12 +55,13 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 5. Use scooze in your application code!
 
     ```
-    from scooze.api import scooze_api
-    from scooze.catalogs import Format
+    from scooze.api import ScoozeApi
 
-    deck = scooze_api.get_deck() # gets a random deck from your local database
-    print(deck.export())
-    print(f"Legal in Explorer? {deck.is_legal(Format.EXPLORER)}")
+    with ScoozeApi() as s:
+      green_cards = s.get_cards_by("colors", [Color.GREEN])
+      woe_cards = s.get_cards_by_set("woe")
+      black_lotus = s.get_card_by_name("Black Lotus")
+      print(black_lotus.total_words())
     ```
 
 ## Contributing

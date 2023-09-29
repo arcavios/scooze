@@ -1,13 +1,8 @@
 import argparse
-import asyncio
-import json
 
-import ijson
-import scooze.database.card as card_db
-from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
-from scooze.database import mongo
 from scooze.models.card import CardModelIn
+from scooze.api import ScoozeApi
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
 
@@ -74,88 +69,64 @@ def print_error(e: Exception, txt: str):
     raise e
 
 
-def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str):
-    file_path = f"{bulk_file_dir}/{file_type}.json"
-    try:
-        with open(file_path, "r", encoding="utf8") as cards_file:
-            print(f"Inserting {file_type} file into the database...")
-            cards = [
-                CardModelIn(**card_json)
-                for card_json in ijson.items(
-                    cards_file,
-                    "item",
-                )
-            ]
-            asyncio.run(card_db.add_cards(cards))
-    except FileNotFoundError:
-        print(file_path)
-        download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
-        if not download_now:
-            print("No cards loaded into database.")
-            return
-        download_bulk_data_file_by_type(file_type, bulk_file_dir)
-        load_card_file(file_type, bulk_file_dir)
-
-
 def main():
-    args = parse_args()
+    with ScoozeApi() as scooze:
+        args = parse_args()
 
-    if args.clean_cards:
-        clean = input("Delete existing cards before importing? [y/n] ") in "yY"
-        if clean:
-            print("Deleting all cards from your local database...")
-            asyncio.run(card_db.delete_cards_all())  # TODO(#7): this need async for now, replace with Python API
+        if args.clean_cards:
+            clean = input("Delete existing cards before importing? [y/n] ") in "yY"
+            if clean:
+                print("Deleting all cards from your local database...")
+                scooze.delete_cards_all()
 
-    if args.clean_decks:
-        clean = input("Delete existing decks before importing? [y/n] ") in "yY"
-        if clean:
-            print("Deleting all decks from your local database...")
-            # TODO(#30): needs deck endpoints
+        if args.clean_decks:
+            clean = input("Delete existing decks before importing? [y/n] ") in "yY"
+            if clean:
+                print("Deleting all decks from your local database...")
+                # TODO(#30): needs deck endpoints
 
-    # Add specified card file to DB
-    match args.cards:
-        case "test":
-            try:
-                with open("./data/test/power9.jsonl") as cards_file:
-                    print("Inserting test cards into the database...")
-                    json_list = list(cards_file)
-                    cards = [CardModelIn(**json.loads(card_json)) for card_json in json_list]
-                    asyncio.run(card_db.add_cards(cards))  # TODO(#7): this need async for now, replace with Python API
-            except OSError as e:
-                print_error(e, "test cards")
-        case "oracle":
-            load_card_file(
-                ScryfallBulkFile.ORACLE,
-                args.bulk_data_dir,
-            )
-        case "artwork":
-            load_card_file(
-                ScryfallBulkFile.ARTWORK,
-                args.bulk_data_dir,
-            )
-        case "prints":
-            load_card_file(
-                ScryfallBulkFile.DEFAULT,
-                args.bulk_data_dir,
-            )
-        case "all":
-            load_card_file(
-                ScryfallBulkFile.ALL,
-                args.bulk_data_dir,
-            )
-        case _:
-            print("No cards imported.")
+        # Add specified card file to DB
+        match args.cards:
+            case "test":
+                try:
+                    with open("./data/test/power9.jsonl") as cards_file:
+                        print("Inserting test cards into the database...")
+                        json_list = list(cards_file)
+                        cards = [CardModelIn.model_validate_json(card_json) for card_json in json_list]
+                        scooze.add_cards(cards)
+                except OSError as e:
+                    print_error(e, "test cards")
+            case "oracle":
+                scooze.load_card_file(
+                    ScryfallBulkFile.ORACLE,
+                    args.bulk_data_dir,
+                )
+            case "artwork":
+                scooze.load_card_file(
+                    ScryfallBulkFile.ARTWORK,
+                    args.bulk_data_dir,
+                )
+            case "prints":
+                scooze.load_card_file(
+                    ScryfallBulkFile.DEFAULT,
+                    args.bulk_data_dir,
+                )
+            case "all":
+                scooze.load_card_file(
+                    ScryfallBulkFile.ALL,
+                    args.bulk_data_dir,
+                )
+            case _:
+                print("No cards imported.")
 
-    match args.decks:
-        case "test":
-            print("test decks imported")
-        case _:
-            print("No decks imported.")
+        match args.decks:
+            case "test":
+                print("test decks imported")
+            case _:
+                print("No decks imported.")
 
     input("Press Enter to exit...")
 
 
 if __name__ == "__main__":
-    asyncio.run(mongo.mongo_connect())
     main()
-    asyncio.run(mongo.mongo_close())
