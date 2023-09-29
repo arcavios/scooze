@@ -54,6 +54,9 @@ class Color(ExtendedEnum, StrEnum):
     RED = "R"
     GREEN = "G"
 
+    # Not a color, but Scryfall uses this in `produced_mana` as a type that can be produced.
+    COLORLESS = "C"
+
 
 class Component(ExtendedEnum, StrEnum):
     """
@@ -132,6 +135,7 @@ class FrameEffect(ExtendedEnum, StrEnum):
     DRAFT = auto()
     ETCHED = auto()
     EXTENDEDART = auto()
+    FULLART = auto()
     INVERTED = auto()
     LEGENDARY = auto()
     LESSON = auto()
@@ -140,6 +144,7 @@ class FrameEffect(ExtendedEnum, StrEnum):
     SHATTEREDGLASS = auto()
     SHOWCASE = auto()
     SNOW = auto()
+    TEXTLESS = auto()
     TOMBSTONE = auto()
 
     # Double-faced card marks
@@ -161,6 +166,8 @@ class Game(ExtendedEnum, StrEnum):
     PAPER = auto()
     ARENA = auto()
     MTGO = auto()
+    ASTRAL = auto()
+    SEGA = auto()
 
 
 class ImageStatus(ExtendedEnum, StrEnum):

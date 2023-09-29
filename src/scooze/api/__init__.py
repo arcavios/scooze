@@ -11,6 +11,20 @@ from scooze.card import CardT, FullCard
 from scooze.catalogs import ScryfallBulkFile
 
 
+def _check_for_safe_context(func):
+    """
+    Wrapper to ensure an instance method of ScoozeApi is called in a safe
+    context.
+    """
+
+    def wrapper_safe_context(self, *args, **kwargs):
+        if not self.safe_context:
+            raise RuntimeError("ScoozeApi used outside of 'with' context")
+        return func(self, *args, **kwargs)
+
+    return wrapper_safe_context
+
+
 class ScoozeApi(AbstractContextManager):
     """
     Context manager object for doing I/O from a Mongo database.
@@ -35,19 +49,6 @@ class ScoozeApi(AbstractContextManager):
     def __exit__(self, exc_type, exc_val, exc_tb):
         asyncio.run(mongo.mongo_close())
 
-    def _check_for_safe_context(func):
-        """
-        Wrapper to ensure an instance method of ScoozeApi is called in a safe
-        context.
-        """
-
-        def wrapper(self, *args, **kwargs):
-            if not self.safe_context:
-                raise RuntimeError("ScoozeApi used outside of 'with' context")
-            return func(self, *args, **kwargs)
-
-        return wrapper
-
     # region Card endpoints
 
     @cache
@@ -59,7 +60,6 @@ class ScoozeApi(AbstractContextManager):
         Args:
             property_name: The property to check.
             value: The value to match on.
-            card_class: The type of card to return.
 
         Returns:
             The first matching card, or None if none were found.

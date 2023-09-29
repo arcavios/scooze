@@ -2,6 +2,7 @@ import asyncio
 
 import ijson
 import scooze.database.card as db
+from pydantic_core import ValidationError
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModelIn
@@ -22,18 +23,32 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
     try:
         with open(file_path, "rb") as cards_file:
             print(f"Loading {file_type} file into the database...")
-            cards = [
-                CardModelIn.model_validate(card_json)
-                for card_json in ijson.items(
-                    cards_file,
-                    "item",
-                )
-            ]
-            results = asyncio.run(db.add_cards(cards))
-            if results is not None:
-                print(f"Loaded {len(results)} cards to the database.")
-            else:
-                print(f"No cards loaded into database.")
+
+            batch_size = 5000
+            current_batch_count = 0
+            results_count = 0
+            current_batch = []
+            card_jsons = ijson.items(cards_file, "item")
+            with asyncio.Runner() as runner:
+
+                def load_batch(batch) -> int:
+                    batch_results = runner.run(db.add_cards(batch))
+                    if batch_results is not None:
+                        return len(batch_results)
+                    return 0
+
+                for card_json in card_jsons:
+                    if (validated_card := _try_validate_card(card_json)) is not None:
+                        current_batch.append(validated_card)
+                        current_batch_count += 1
+                        if current_batch_count >= batch_size:
+                            results_count += load_batch(current_batch)
+                            current_batch = []
+                            current_batch_count = 0
+                            print(f"Finished processing {results_count} cards...", end="\r")
+                results_count += load_batch(current_batch)
+
+            print(f"Loaded {results_count} cards to the database.")
 
     except FileNotFoundError:
         print(file_path)
@@ -43,3 +58,25 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
             return
         download_bulk_data_file_by_type(file_type, bulk_file_dir)
         load_card_file(file_type, bulk_file_dir)
+
+
+def _try_validate_card(card_json) -> CardModelIn | None:
+    """
+    Attempt to convert a single card's JSON to a model for DB import, and
+    report validation errors that arise in conversion.
+
+    Args:
+        card_json: JSON representation of a single card object.
+
+    Returns:
+        A validated model, or None if validation failed.
+
+    """
+    try:
+        card = CardModelIn.model_validate(card_json)
+        return card
+
+    except ValidationError as e:
+        print(f"Card with name {card_json['name']} not added due to validation error: \n{e}")
+
+        return
