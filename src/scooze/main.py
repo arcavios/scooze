@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -36,4 +37,6 @@ app.include_router(DeckRouter)
 app.include_router(DecksRouter)
 
 # Mount index.html
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app_dir = os.path.dirname(__file__)
+static_dir = os.path.join(app_dir, "static/")
+app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")

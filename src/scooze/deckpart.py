@@ -43,7 +43,7 @@ class DeckPart(ComparableObject, Generic[CardT]):
     A class to represent a part of a deck.
 
     Attributes:
-        cards (Counter[CardT]): The cards in this DeckPart.
+        cards: The cards in this DeckPart.
     """
 
     def __init__(self, cards: Counter[CardT] = Counter()):
@@ -73,47 +73,46 @@ class DeckPart(ComparableObject, Generic[CardT]):
 
     def diff(self, other: Self) -> DictDiff:
         """
-        Generates a diff between this DeckPart and another.
+        Generate a diff between this DeckPart and another.
 
         Args:
-            other (DeckPart): The other DeckPart.
+            other: The other DeckPart.
 
         Returns:
-            diff (DictDiff): Returns a DictDiff with every card in both
-              DeckParts and their counts.
+            A DictDiff with every card in both DeckParts and their counts.
         """
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
 
     def add_card(self, card: CardT, quantity: int = 1) -> None:
         """
-        Adds a given quantity of a given card to this DeckPart.
+        Add a given quantity of a given card to this DeckPart.
 
         Args:
-            card (CardT): The card to add.
-            quantity (int): The number of copies of the card to be added.
+            card: The card to add.
+            quantity: The number of copies of the card to be added.
         """
 
         self.cards.update({card: quantity})
 
     def add_cards(self, cards: Counter[CardT]) -> None:
         """
-        Adds the given cards to this DeckPart.
+        Add the given cards to this DeckPart.
 
         Args:
-            cards (Counter[CardT]): The cards to add.
+            cards: The cards to add.
         """
 
         self.cards.update(cards)
 
     def remove_card(self, card: CardT, quantity: int = maxsize) -> None:
         """
-        Removes a given quantity of a given card from this Deck. If quantity is
+        Remove a given quantity of a given card from this Deck. If quantity is
         not provided, removes all copies.
 
         Args:
-            card (CardT): The card to remove.
-            quantity (int): The number of copies of the card to be removed.
+            card: The card to remove.
+            quantity: The number of copies of the card to be removed.
         """
 
         # using counterA - counterB results in a new Counter with only positive results
@@ -121,10 +120,10 @@ class DeckPart(ComparableObject, Generic[CardT]):
 
     def remove_cards(self, cards: Counter[CardT]) -> None:
         """
-        Removes the given cards from this DeckPart.
+        Remove the given cards from this DeckPart.
 
         Args:
-            cards (Counter[CardT]): The cards to remove.
+            cards: The cards to remove.
         """
 
         # using counterA - counterB results in a new Counter with only positive results

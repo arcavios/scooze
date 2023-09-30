@@ -2,18 +2,13 @@ import json
 from collections import Counter
 from datetime import datetime, timezone
 
-import mongomock
 import pytest
-from bson import ObjectId
 from fastapi.testclient import TestClient
-from mongomock import Collection, Database, MongoClient
 from scooze.card import OracleCard
+from scooze.catalogs import Format, Legality
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
-from scooze.enums import DbCollection, Format, Legality
 from scooze.main import app
-from scooze.models.card import CardModelIn
-from scooze.models.deck import DeckModelIn
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
@@ -43,10 +38,10 @@ def today() -> datetime:
 def cards_json() -> list[str]:
     json_list = []
 
-    with open("./data/test/test_cards.jsonl", "r") as json_file:
+    with open("./data/test/test_cards.jsonl", "r", encoding="utf8") as json_file:
         json_list.extend(list(json_file))
 
-    with open("./data/test/4c_cards.jsonl", "r") as json_file:
+    with open("./data/test/4c_cards.jsonl", "r", encoding="utf8") as json_file:
         json_list.extend(list(json_file))
 
     return json_list
@@ -753,70 +748,6 @@ def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck[
     return Deck[OracleCard](
         archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c
     )
-
-
-# endregion
-
-
-# region Deck Router
-
-
-@pytest.fixture(scope="session")
-def mock_scooze_client():
-    return mongomock.MongoClient()
-
-
-@pytest.fixture(scope="session")
-def mock_cards_collection(mock_scooze_client: MongoClient, cards_json: list[str]) -> Collection:
-    cards_collection = mock_scooze_client.scooze[DbCollection.CARDS]
-    for card in cards_json:
-        cards_collection.insert_one(
-            CardModelIn(**json.loads(card)).model_dump(
-                mode="json",
-                by_alias=True,
-            )
-        )
-    return cards_collection
-
-
-@pytest.fixture()
-def mock_decks_collection(mock_scooze_client: MongoClient, deck_model_modern_4c: DeckModelIn) -> Collection:
-    decks_collection = mock_scooze_client.scooze[DbCollection.DECKS]
-    decks_collection.insert_one(
-        deck_model_modern_4c.model_dump(
-            mode="json",
-            by_alias=True,
-        )
-    )
-    return decks_collection
-
-
-@pytest.fixture
-def deck_model_modern_4c(
-    archetype_modern_4c: str,
-    main_modern_4c_dict: dict[ObjectId, int],
-    side_modern_4c_dict: dict[ObjectId, int],
-    today: datetime,
-) -> DeckModelIn:
-    return DeckModelIn.model_validate(
-        {
-            "archetype": archetype_modern_4c,
-            "format": "modern",
-            "date_played": today,
-            "main": main_modern_4c_dict,
-            "side": side_modern_4c_dict,
-        }
-    )
-
-
-@pytest.fixture
-def main_modern_4c_dict(main_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
-    return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in main_modern_4c.cards.items()}
-
-
-@pytest.fixture
-def side_modern_4c_dict(side_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
-    return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in side_modern_4c.cards.items()}
 
 
 # endregion

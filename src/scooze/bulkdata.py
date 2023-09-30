@@ -1,7 +1,7 @@
 import os
 
 import requests
-from scooze.enums import ScryfallBulkFile
+from scooze.catalogs import ScryfallBulkFile
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
 SCRYFALL_BULK_INFO_ENDPOINT = "https://api.scryfall.com/bulk-data"

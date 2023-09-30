@@ -5,8 +5,6 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from scooze.models.deck import DeckModelIn
 
-# TODO(#118): deck router docstrings
-
 router = APIRouter(
     prefix="/decks",
     tags=["decks"],
@@ -23,7 +21,7 @@ async def decks_root(limit: int = 3):
     """
 
     decks = await db.get_decks_random(limit=limit)
-    if decks:
+    if decks is not None:
         return JSONResponse([deck.model_dump(mode="json") for deck in decks], status_code=200)
     else:
         return JSONResponse({"message": "No decks found in the database."}, status_code=404)
@@ -35,15 +33,15 @@ async def decks_root(limit: int = 3):
 @router.post("/add", summary="Create new decks")
 async def add_decks(decks: list[DeckModelIn]):
     inserted_ids = await db.add_decks(decks=decks)
-    if inserted_ids:
-        return JSONResponse({"message": f"Created {len(inserted_ids)} decks."}, status_code=200)
+    if inserted_ids is not None:
+        return JSONResponse({"message": f"Created {len(inserted_ids)} deck(s)."}, status_code=200)
     else:
-        return JSONResponse({"message": f"Failed to create a new deck."}, status_code=400)
+        return JSONResponse({"message": "Failed to create any new decks."}, status_code=400)
 
 
 @router.post("/by", summary="Get decks by property")
 async def get_decks_by(
-    property_name: str, values: list[Any], paginated: bool = True, page: int = 1, page_size: int = 10
+    property_name: str, values: list[Any], paginated: bool = False, page: int = 1, page_size: int = 10
 ):
     """
     Get decks where the given property matches any of the given values.
@@ -59,20 +57,20 @@ async def get_decks_by(
     decks = await db.get_decks_by_property(
         property_name=property_name, values=values, paginated=paginated, page=page, page_size=page_size
     )
-    if decks:
+    if decks is not None:
         return JSONResponse([deck.model_dump(mode="json") for deck in decks], status_code=200)
     else:
-        return JSONResponse({"message": f"Decks not found."}, status_code=404)
+        return JSONResponse({"message": "Decks not found."}, status_code=404)
 
 
 # Delete
 
 
-@router.delete("/delete/all/", summary="Delete all decks")
+@router.delete("/delete/all", summary="Delete all decks")
 async def delete_decks_all():
     deleted_count = await db.delete_decks_all()
 
-    if deleted_count:
-        return JSONResponse({"message": f"Deleted {deleted_count} decks."}, status_code=200)
+    if deleted_count is not None:
+        return JSONResponse({"message": f"Deleted {deleted_count} deck(s)."}, status_code=200)
     else:
-        return JSONResponse({"message": f"No decks deleted."}, status_code=404)
+        return JSONResponse({"message": "No decks deleted."}, status_code=404)

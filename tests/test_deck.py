@@ -5,9 +5,9 @@ from copy import deepcopy
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
+from scooze.catalogs import DecklistFormatter, Format, InThe
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart
-from scooze.enums import DecklistFormatter, Format, InThe
 from scooze.utils import DictDiff
 
 # region Fixtures

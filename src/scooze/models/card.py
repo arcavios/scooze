@@ -1,7 +1,17 @@
 from datetime import date
 
-from pydantic import Field
-from scooze.enums import (
+from pydantic import Field, field_validator
+from scooze.cardparts import (
+    CardFace,
+    FullCardFace,
+    ImageUris,
+    Preview,
+    Prices,
+    PurchaseUris,
+    RelatedCard,
+    RelatedUris,
+)
+from scooze.catalogs import (
     BorderColor,
     Color,
     Finish,
@@ -542,6 +552,59 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Watermark printed on this card, if any.",
     )
+
+    # endregion
+
+    # region Validators
+
+    @field_validator("all_parts", mode="before")
+    @classmethod
+    def all_parts_validator(cls, vals):
+        if vals is not None and all(isinstance(v, RelatedCard) for v in vals):
+            vals = [RelatedCardModel.model_validate(v.__dict__) for v in vals]
+        return vals
+
+    @field_validator("card_faces", mode="before")
+    @classmethod
+    def card_faces_validator(cls, vals):
+        if vals is not None and all(isinstance(v, CardFace | FullCardFace) for v in vals):
+            vals = [CardFaceModel.model_validate(v.__dict__) for v in vals]
+        return vals
+
+    @field_validator("image_uris", mode="before")
+    @classmethod
+    def image_uris_validator(cls, v):
+        if isinstance(v, ImageUris):
+            v = ImageUrisModel.model_validate(v.__dict__)
+        return v
+
+    @field_validator("preview", mode="before")
+    @classmethod
+    def preview_validator(cls, v):
+        if isinstance(v, Preview):
+            v = PreviewModel.model_validate(v.__dict__)
+        return v
+
+    @field_validator("prices", mode="before")
+    @classmethod
+    def prices_validator(cls, v):
+        if isinstance(v, Prices):
+            v = PricesModel.model_validate(v.__dict__)
+        return v
+
+    @field_validator("purchase_uris", mode="before")
+    @classmethod
+    def purchase_uris_validator(cls, v):
+        if isinstance(v, PurchaseUris):
+            v = PurchaseUrisModel.model_validate(v.__dict__)
+        return v
+
+    @field_validator("related_uris", mode="before")
+    @classmethod
+    def related_uris_validator(cls, v):
+        if isinstance(v, RelatedUris):
+            v = RelatedUrisModel.model_validate(v.__dict__)
+        return v
 
     # endregion
 

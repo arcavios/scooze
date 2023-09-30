@@ -1,9 +1,8 @@
-from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
-from mongomock import Collection, Database
+from mongomock import Collection
 from scooze.models.deck import DeckModelIn, DeckModelOut
 
 # region Fixtures
@@ -17,7 +16,9 @@ from scooze.models.deck import DeckModelIn, DeckModelOut
 def test_deck_root(
     mock_get_random: MagicMock, client: TestClient, mock_decks_collection: Collection, deck_model_modern_4c: DeckModelIn
 ):
-    mock_get_random.return_value = [DeckModelOut(**mock_decks_collection.find_one({"archetype": "Four-color Control"}))]
+    mock_get_random.return_value = [
+        DeckModelOut.model_validate(mock_decks_collection.find_one({"archetype": "Four-color Control"}))
+    ]
     response = client.get("/deck/")
     assert response.status_code == 200
     response_json = response.json()
@@ -32,7 +33,7 @@ def test_deck_root(
 @patch("scooze.database.deck.add_deck")
 def test_add_deck(mock_add: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn):
     deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
-    mock_add.return_value: DeckModelOut = DeckModelOut(**deck_json)
+    mock_add.return_value: DeckModelOut = DeckModelOut.model_validate(deck_json)
     response = client.post("/deck/add", json={"deck": deck_json})
     assert response.status_code == 200
     response_json = response.json()
@@ -62,7 +63,8 @@ def test_get_deck_by_id(
 ):
     db_4c_id = mock_decks_collection.find_one({"archetype": "Four-color Control"})["_id"]
     deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
-    mock_get.return_value: DeckModelOut = DeckModelOut(**deck_json, _id=db_4c_id)
+    deck_json["_id"] = db_4c_id
+    mock_get.return_value: DeckModelOut = DeckModelOut.model_validate(deck_json)
     response = client.get(f"/deck/id/{str(db_4c_id)}")
     assert response.status_code == 200
     response_json = response.json()
@@ -94,7 +96,7 @@ def test_update_deck(
     deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
     updated_deck_json = deck_json.copy()
     updated_deck_json.update({"side": {}})
-    mock_update.return_value: DeckModelOut = DeckModelOut(**updated_deck_json, _id=db_4c_id)
+    mock_update.return_value: DeckModelOut = DeckModelOut.model_validate(updated_deck_json)
     response = client.patch(f"/deck/update/{str(db_4c_id)}", json={"deck": {"side": {}}})
     assert response.status_code == 200
     response_json = response.json()
@@ -125,7 +127,8 @@ def test_delete_deck(
 ):
     db_4c_id = mock_decks_collection.find_one({"archetype": "Four-color Control"})["_id"]
     deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
-    mock_delete.return_value: DeckModelOut = DeckModelOut(**deck_json, _id=db_4c_id)
+    deck_json["_id"] = db_4c_id
+    mock_delete.return_value: DeckModelOut = DeckModelOut.model_validate(deck_json)
     response = client.delete(f"/deck/delete/{str(db_4c_id)}")
     assert response.status_code == 200
     assert response.json()["message"] == f"Deck with id {db_4c_id} deleted."

@@ -2,26 +2,68 @@ from typing import Any
 
 from bson import ObjectId
 from pymongo import ReturnDocument
+from scooze.catalogs import DbCollection
 from scooze.database.mongo import db
-from scooze.enums import DbCollection
-
-# TODO(#119): database docstrings
 
 # region Single document
 
 
 async def insert_document(col_type: DbCollection, document: dict[str, Any]):
-    insert_result = await db.client.scooze[col_type].insert_one(document)
-    return await db.client.scooze[col_type].find_one({"_id": insert_result.inserted_id})
+    """
+    Insert a document into a collection in the database.
+
+    Args:
+        col_type: The collection to insert into.
+        document: The document to insert.
+
+    Returns:
+        The inserted document, or None if unable to insert.
+    """
+
+    # Here we find and update with upsert=True instead of inserting to avoid creating duplicates in the database. This
+    # creates less headaches if you doubleclick in the Swagger UI or similar.
+    return await db.client.scooze[col_type].find_one_and_update(
+        document,
+        {"$setOnInsert": document},
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
 
 
 async def get_document_by_property(col_type: DbCollection, property_name: str, value):
+    """
+    Search a collection in the database for the first document matching the given criteria.
+
+    Args:
+        col_type: The collection to search.
+        property_name: The property to check.
+        value: The value to match on.
+
+    Returns:
+        The first matching document, or None if none were found.
+    """
+
     if property_name == "_id":
         value = ObjectId(value)
     return await db.client.scooze[col_type].find_one({property_name: value})
 
 
 async def update_document(col_type: DbCollection, id: str, document: dict[str, Any]):
+    """
+    Update a document in a collection with new values.
+
+    Args:
+        col_type: The collection containing the document to update.
+        id: The ID of the document to update.
+        document: The properties to update and their new values.
+
+    Returns:
+        The updated document, or None if it was unable to update or find it.
+
+    Raises:
+        ValueError: No data was given to update.
+    """
+
     if len(document) == 0:
         raise ValueError(f"No data given, skipping update for {col_type.title} with id: {id}")
     return await db.client.scooze[col_type].find_one_and_update(
@@ -32,6 +74,16 @@ async def update_document(col_type: DbCollection, id: str, document: dict[str, A
 
 
 async def delete_document(col_type: DbCollection, id: str):
+    """
+    Delete a document from the database.
+
+    Args:
+        col_type: The collection to delete from.
+        id: The ID of the document to delete.
+
+    Returns:
+        The deleted document, or None if unable to delete.
+    """
     return await db.client.scooze[col_type].find_one_and_delete({"_id": ObjectId(id)})
 
 
@@ -41,10 +93,32 @@ async def delete_document(col_type: DbCollection, id: str):
 
 
 async def insert_many_documents(col_type: DbCollection, documents: list[dict[str, Any]]):
+    """
+    Insert a list of documents into the database.
+
+    Args:
+        col_type: The collection to insert into.
+        documents: The list of documents to insert.
+
+    Returns:
+        A PyMongo InsertManyResult.
+    """
+
     return await db.client.scooze[col_type].insert_many(documents)
 
 
 async def get_random_documents(col_type: DbCollection, limit: int):
+    """
+    Get a random sample of documents from a single collection in the database.
+
+    Args:
+        col_type: The desired collection.
+        limit: The number of documents to return.
+
+    Returns:
+        The list of random documents.
+    """
+
     pipeline = [{"$sample": {"size": limit}}]
     return await db.client.scooze[col_type].aggregate(pipeline).to_list(limit)
 
@@ -53,10 +127,23 @@ async def get_documents_by_property(
     col_type: DbCollection,
     property_name: str,
     values: list[Any],
-    paginated: bool = True,
+    paginated: bool = False,
     page: int = 1,
     page_size: int = 10,
 ):
+    """
+    Search the database for documents matching the given criteria, with options for pagination.
+
+    Args:
+        property_name: The property to check.
+        values: A list of values to match on.
+        paginated: Whether to paginate the results.
+        page: The page to look at, if paginated.
+        page_size: The size of each page, if paginated.
+
+    Returns:
+        A list of matching documents, or None if none were found.
+    """
     match property_name:
         case "_id":
             vals = [ObjectId(i) for i in values]  # Handle ObjectIds
@@ -72,6 +159,16 @@ async def get_documents_by_property(
 
 
 async def delete_documents(col_type: DbCollection):
+    """
+    Delete all documents in a single collection from the database.
+
+    Args:
+        col_type: The collection to delete from.
+
+    Returns:
+        A PyMongo DeleteResult.
+    """
+
     return await db.client.scooze[col_type].delete_many({})  # NOTE: This deletes the entire collection.
 
 

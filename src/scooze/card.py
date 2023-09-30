@@ -14,7 +14,7 @@ from scooze.cardparts import (
     RelatedCard,
     RelatedUris,
 )
-from scooze.enums import (
+from scooze.catalogs import (
     BorderColor,
     Color,
     Finish,
@@ -192,10 +192,10 @@ class OracleCard(Card):
     @classmethod
     def oracle_text_without_reminder(cls, oracle_text: str) -> str:
         """
-        Provides the given oracle text with reminder text removed.
+        Provide the given oracle text with reminder text removed.
 
         Args:
-            oracle_text (str): The oracle text of a card.
+            oracle_text: The oracle text of a card.
         """
 
         pattern_reminder = r" ?\([^()]+\) ?"  # text between parens ()
@@ -203,7 +203,7 @@ class OracleCard(Card):
 
     def is_double_sided(self) -> bool:
         """
-        Determines if this is a double-sided card.
+        Determine if this is a double-sided card.
         """
 
         return self.card_faces is not None
@@ -401,7 +401,7 @@ class FullCard(OracleCard):
         border_color: BorderColor | None = None,
         card_back_id: str | None = None,
         collector_number: str | None = None,
-        content_warning: bool | None = None,
+        content_warning: bool = False,
         digital: bool | None = None,
         finishes: Iterable[Finish] | None = None,
         flavor_name: str | None = None,

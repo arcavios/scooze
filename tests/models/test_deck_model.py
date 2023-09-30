@@ -2,7 +2,7 @@ from collections import Counter
 
 import pytest
 from bson import ObjectId
-from scooze.enums import Format
+from scooze.catalogs import Format
 from scooze.models.deck import DeckModel
 from scooze.models.utils import ObjectIdT
 
