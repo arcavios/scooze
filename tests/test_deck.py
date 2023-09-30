@@ -54,15 +54,15 @@ def dictdiff_empty() -> DictDiff:
 def power9_object_ids() -> Counter[ObjectId]:
     return Counter(
         {
-            ObjectId("6517e3abf15f7b84861971c9"): 1,
-            ObjectId("6517e3abf15f7b84861971ca"): 1,
-            ObjectId("6517e3abf15f7b84861971cb"): 1,
-            ObjectId("6517e3abf15f7b84861971cc"): 1,
-            ObjectId("6517e3abf15f7b84861971cd"): 1,
-            ObjectId("6517e3abf15f7b84861971ce"): 1,
-            ObjectId("6517e3abf15f7b84861971cf"): 1,
-            ObjectId("6517e3abf15f7b84861971d0"): 1,
-            ObjectId("6517e3abf15f7b84861971d1"): 1,
+            ObjectId("6517efe89aa2d3dabbd23258"): 1,
+            ObjectId("6517efe89aa2d3dabbd23259"): 1,
+            ObjectId("6517efe89aa2d3dabbd2325a"): 1,
+            ObjectId("6517efe89aa2d3dabbd2325b"): 1,
+            ObjectId("6517efe89aa2d3dabbd2325c"): 1,
+            ObjectId("6517efe89aa2d3dabbd2325d"): 1,
+            ObjectId("6517efe89aa2d3dabbd2325e"): 1,
+            ObjectId("6517efe89aa2d3dabbd2325f"): 1,
+            ObjectId("6517efe89aa2d3dabbd23260"): 1,
         }
     )
 
