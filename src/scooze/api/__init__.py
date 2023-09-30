@@ -66,7 +66,9 @@ class ScoozeApi(AbstractContextManager):
             The first matching card, or None if none were found.
         """
 
-        return card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
+        return card_api.get_card_by(
+            runner=self.runner, property_name=property_name, value=value, card_class=self.card_class
+        )
 
     @_check_for_safe_context
     def get_cards_by(
