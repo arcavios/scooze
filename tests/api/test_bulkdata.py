@@ -20,7 +20,7 @@ def bulk_file_dir() -> str:
 def test_load_card_file(mock_add: MagicMock, cards_full, file_type, bulk_file_dir, asyncio_runner, capfd):
     ids = [ObjectId() for _ in cards_full]
     mock_add.return_value: list[ObjectId] = ids
-    bulk_api.load_card_file(runner=asyncio_runner, file_type=file_type, bulk_file_dir=bulk_file_dir)
+    asyncio_runner.run(bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir))
     captured = capfd.readouterr()
     expected = f"Loading {file_type} file into the database...\nLoaded {len(ids)} cards to the database.\n"
     assert captured.out == expected
@@ -29,7 +29,7 @@ def test_load_card_file(mock_add: MagicMock, cards_full, file_type, bulk_file_di
 @patch("scooze.database.card.add_cards")
 def test_load_card_file_bad(mock_add: MagicMock, file_type, bulk_file_dir, asyncio_runner, capfd):
     mock_add.return_value = None
-    bulk_api.load_card_file(runner=asyncio_runner, file_type=file_type, bulk_file_dir=bulk_file_dir)
+    asyncio_runner.run(bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir))
     captured = capfd.readouterr()
     expected = f"Loading {file_type} file into the database...\nNo cards loaded into database.\n"
     assert captured.out == expected
