@@ -349,4 +349,4 @@ class DeckNormalizer(utils.JsonNormalizer):
             return DeckPart[CardT](cards={ObjectId(card_id): q for card_id, q in deck_part.items()})
         elif all(isinstance(card, ObjectId) for card in deck_part.keys()):
             with ScoozeApi() as api:
-                return DeckPart[CardT](cards={api.get_card_by("_id", card_id): q for card_id, q in deck_part.items()})
+                return DeckPart[CardT](cards={api.get_card_by(property="_id", value=card_id): q for card_id, q in deck_part.items()})
