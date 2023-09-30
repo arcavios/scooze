@@ -4,7 +4,7 @@ from typing import Any, List
 import scooze.database.card as db
 from bson import ObjectId
 from scooze.card import CardT, FullCard
-from scooze.models.card import CardModelIn, CardModelOut
+from scooze.models.card import CardModelIn
 
 
 def get_card_by(runner: asyncio.Runner, property_name: str, value, card_class: CardT = FullCard) -> CardT:

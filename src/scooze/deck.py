@@ -2,7 +2,7 @@ import json
 from collections import Counter
 from datetime import date
 from sys import maxsize
-from typing import Generic, Iterable, Mapping, Self
+from typing import Generic, Mapping, Self
 
 import scooze.utils as utils
 from bson import ObjectId

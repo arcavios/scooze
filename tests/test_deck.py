@@ -5,7 +5,7 @@ from copy import deepcopy
 
 import pytest
 from bson import ObjectId
-from scooze.card import Card, FullCard, OracleCard
+from scooze.card import OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart
