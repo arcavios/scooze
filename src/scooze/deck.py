@@ -6,11 +6,11 @@ from typing import Generic, Iterable, Mapping, Self
 
 import scooze.utils as utils
 from bson import ObjectId
+from scooze.api import ScoozeApi
 from scooze.card import CardT, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
-from scooze.api import ScoozeApi
 
 
 class Deck(utils.ComparableObject, Generic[CardT]):
@@ -338,7 +338,6 @@ class DeckNormalizer(utils.JsonNormalizer):
             An instance of DeckPart containing the given cards.
         """
 
-
         # TODO: write objectid code such that it works correctly and types are inherited correctly
 
         if deck_part is None or isinstance(deck_part, DeckPart):
@@ -349,4 +348,6 @@ class DeckNormalizer(utils.JsonNormalizer):
             return DeckPart[CardT](cards={ObjectId(card_id): q for card_id, q in deck_part.items()})
         elif all(isinstance(card, ObjectId) for card in deck_part.keys()):
             with ScoozeApi() as api:
-                return DeckPart[CardT](cards={api.get_card_by(property="_id", value=card_id): q for card_id, q in deck_part.items()})
+                return DeckPart[CardT](
+                    cards={api.get_card_by(property="_id", value=card_id): q for card_id, q in deck_part.items()}
+                )
