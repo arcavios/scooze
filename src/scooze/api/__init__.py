@@ -66,8 +66,9 @@ class ScoozeApi(AbstractContextManager):
             The first matching card, or None if none were found.
         """
 
-        return self.runner.run(card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class
-        ))
+        return self.runner.run(
+            card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
+        )
 
     @_check_for_safe_context
     def get_cards_by(
@@ -94,14 +95,16 @@ class ScoozeApi(AbstractContextManager):
             were found.
         """
 
-        return self.runner.run(card_api.get_cards_by(
-            property_name=property_name,
-            values=values,
-            card_class=self.card_class,
-            paginated=paginated,
-            page=page,
-            page_size=page_size,
-        ))
+        return self.runner.run(
+            card_api.get_cards_by(
+                property_name=property_name,
+                values=values,
+                card_class=self.card_class,
+                paginated=paginated,
+                page=page,
+                page_size=page_size,
+            )
+        )
 
     # region Convenience methods for single-card lookup
 
@@ -118,11 +121,13 @@ class ScoozeApi(AbstractContextManager):
             A card with the given name if found, or None if none were found.
         """
 
-        return self.runner.run(card_api.get_card_by(
-            property_name="name",
-            value=name,
-            card_class=self.card_class,
-        ))
+        return self.runner.run(
+            card_api.get_card_by(
+                property_name="name",
+                value=name,
+                card_class=self.card_class,
+            )
+        )
 
     @cache
     @_check_for_safe_context
@@ -137,11 +142,13 @@ class ScoozeApi(AbstractContextManager):
             A card with the given Oracle ID if found, or None if none were found.
         """
 
-        return self.runner(card_api.get_card_by(
-            property_name="oracle_id",
-            value=oracle_id,
-            card_class=self.card_class,
-        ))
+        return self.runner(
+            card_api.get_card_by(
+                property_name="oracle_id",
+                value=oracle_id,
+                card_class=self.card_class,
+            )
+        )
 
     @cache
     @_check_for_safe_context
@@ -156,11 +163,13 @@ class ScoozeApi(AbstractContextManager):
             A card with the given Scryfall ID if found, or None if none were found.
         """
 
-        return self.runner.run(card_api.get_card_by(
-            property_name="scryfall_id",
-            value=scryfall_id,
-            card_class=self.card_class,
-        ))
+        return self.runner.run(
+            card_api.get_card_by(
+                property_name="scryfall_id",
+                value=scryfall_id,
+                card_class=self.card_class,
+            )
+        )
 
     # endregion
 
@@ -180,11 +189,13 @@ class ScoozeApi(AbstractContextManager):
            A list of cards from the given set, or empty list if none were found.
         """
 
-        return self.runner.run(card_api.get_cards_by(
-            property_name="set",
-            values=[set_code],
-            card_class=self.card_class,
-        ))
+        return self.runner.run(
+            card_api.get_cards_by(
+                property_name="set",
+                values=[set_code],
+                card_class=self.card_class,
+            )
+        )
 
     # TODO(#146): add function get_cards_by_format (format, legality)
 
@@ -265,9 +276,11 @@ class ScoozeApi(AbstractContextManager):
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
         """
 
-        return self.runner.run(bulkdata_api.load_card_file(
-            file_type=file_type,
-            bulk_file_dir=bulk_file_dir,
-        ))
+        return self.runner.run(
+            bulkdata_api.load_card_file(
+                file_type=file_type,
+                bulk_file_dir=bulk_file_dir,
+            )
+        )
 
     # endregion
