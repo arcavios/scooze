@@ -1,16 +1,16 @@
 import json
 from collections import Counter
+from datetime import date
 from sys import maxsize
 from typing import Generic, Iterable, Mapping, Self
 
-import scooze.api.card as card_api
 import scooze.utils as utils
-from scooze.card import CardT
+from bson import ObjectId
+from scooze.card import CardT, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
-from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.models.deck import DeckModel
-from bson import ObjectId
+from scooze.api import ScoozeApi
 
 
 class Deck(utils.ComparableObject, Generic[CardT]):
@@ -28,13 +28,16 @@ class Deck(utils.ComparableObject, Generic[CardT]):
     def __init__(
         self,
         archetype: str | None = None,
+        date_played: date | None = None,
         format: Format = Format.NONE,
         main: DeckPart[CardT] = DeckPart(),
         side: DeckPart[CardT] = DeckPart(),
         cmdr: DeckPart[CardT] = DeckPart(),
     ):
         self.archetype = archetype
+        self.date_played = DeckNormalizer.to_date(date_played)
         self.format = format
+
         self.main = DeckNormalizer.to_deck_part(main)
         self.side = DeckNormalizer.to_deck_part(side)
         self.cmdr = DeckNormalizer.to_deck_part(cmdr)
@@ -320,7 +323,11 @@ class DeckNormalizer(utils.JsonNormalizer):
     """
 
     @classmethod
-    def to_deck_part(cls, deck_part: DeckPart[CardT] | Mapping[CardT | ObjectId | str, int] | None) -> DeckPart[CardT]:
+    def to_deck_part(
+        cls,
+        deck_part: DeckPart[CardT] | Mapping[CardT | ObjectId | str, int] | None,
+        card_class: type[CardT] = OracleCard,
+    ) -> DeckPart[CardT]:
         """
         Normalize DeckPart from JSON.
 
@@ -331,15 +338,15 @@ class DeckNormalizer(utils.JsonNormalizer):
             An instance of DeckPart containing the given cards.
         """
 
-        if deck_part is None or isinstance(deck_part, DeckPart[CardT]):
-            return deck_part
-        elif all(isinstance(card, CardT) for card in deck_part.keys()):
-            return DeckPart(cards=deck_part)
-        else:
-            if all(isinstance(card, str) for card in deck_part.keys()):
-                deck_part = {ObjectId(card_id): q for card_id, q in deck_part.items()}
 
-            # TODO: write objectid code
-            return DeckPart(
-                cards=Counter({card_api.get_card_by("_id", card_id): q for card_id, q in deck_part.items()})
-            )
+        # TODO: write objectid code such that it works correctly and types are inherited correctly
+
+        if deck_part is None or isinstance(deck_part, DeckPart):
+            return deck_part
+        elif all(isinstance(card, card_class) for card in deck_part.keys()):
+            return DeckPart[CardT](cards=deck_part)
+        elif all(isinstance(card, str) for card in deck_part.keys()):
+            return DeckPart[CardT](cards={ObjectId(card_id): q for card_id, q in deck_part.items()})
+        elif all(isinstance(card, ObjectId) for card in deck_part.keys()):
+            with ScoozeApi() as api:
+                return DeckPart[CardT](cards={api.get_card_by("_id", card_id): q for card_id, q in deck_part.items()})

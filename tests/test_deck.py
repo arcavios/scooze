@@ -4,10 +4,12 @@ from collections import Counter
 from copy import deepcopy
 
 import pytest
+from bson import ObjectId
 from scooze.card import Card, FullCard, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart
+from scooze.models.deck import DeckModel
 from scooze.utils import DictDiff
 
 # region Fixtures
@@ -48,7 +50,42 @@ def dictdiff_empty() -> DictDiff:
     return DictDiff(contents={})
 
 
+@pytest.fixture
+def power9_object_ids() -> Counter[ObjectId]:
+    return Counter(
+        {
+            ObjectId("65165c13068505e89c7d34fa"): 1,
+            ObjectId("65165c13068505e89c7d34fb"): 1,
+            ObjectId("65165c13068505e89c7d34fc"): 1,
+            ObjectId("65165c13068505e89c7d34fd"): 1,
+            ObjectId("65165c13068505e89c7d34fe"): 1,
+            ObjectId("65165c13068505e89c7d34ff"): 1,
+            ObjectId("65165c13068505e89c7d3500"): 1,
+            ObjectId("65165c13068505e89c7d3501"): 1,
+            ObjectId("65165c13068505e89c7d3502"): 1,
+            ObjectId("651700d5be809beaea9588ab"): 1,
+            ObjectId("651700d5be809beaea9588ac"): 1,
+            ObjectId("651700d5be809beaea9588ad"): 1,
+            ObjectId("651700d5be809beaea9588ae"): 1,
+            ObjectId("651700d5be809beaea9588af"): 1,
+            ObjectId("651700d5be809beaea9588b0"): 1,
+            ObjectId("651700d5be809beaea9588b1"): 1,
+            ObjectId("651700d5be809beaea9588b2"): 1,
+            ObjectId("651700d5be809beaea9588b3"): 1,
+        }
+    )
+
+
 # endregion
+
+
+# TODO: testing normalizers and lookups on ID this has to be mocked before this can be merged.
+def test_card_lookup_by_id(power9_object_ids):
+    model = DeckModel(main=power9_object_ids)
+    print(model.model_dump())
+    deck = Deck.from_model(model)
+    print(deck.export())
+
 
 # region Magic Methods
 
