@@ -54,24 +54,15 @@ def dictdiff_empty() -> DictDiff:
 def power9_object_ids() -> Counter[ObjectId]:
     return Counter(
         {
-            ObjectId("65165c13068505e89c7d34fa"): 1,
-            ObjectId("65165c13068505e89c7d34fb"): 1,
-            ObjectId("65165c13068505e89c7d34fc"): 1,
-            ObjectId("65165c13068505e89c7d34fd"): 1,
-            ObjectId("65165c13068505e89c7d34fe"): 1,
-            ObjectId("65165c13068505e89c7d34ff"): 1,
-            ObjectId("65165c13068505e89c7d3500"): 1,
-            ObjectId("65165c13068505e89c7d3501"): 1,
-            ObjectId("65165c13068505e89c7d3502"): 1,
-            ObjectId("651700d5be809beaea9588ab"): 1,
-            ObjectId("651700d5be809beaea9588ac"): 1,
-            ObjectId("651700d5be809beaea9588ad"): 1,
-            ObjectId("651700d5be809beaea9588ae"): 1,
-            ObjectId("651700d5be809beaea9588af"): 1,
-            ObjectId("651700d5be809beaea9588b0"): 1,
-            ObjectId("651700d5be809beaea9588b1"): 1,
-            ObjectId("651700d5be809beaea9588b2"): 1,
-            ObjectId("651700d5be809beaea9588b3"): 1,
+            ObjectId("6517e3abf15f7b84861971c9"): 1,
+            ObjectId("6517e3abf15f7b84861971ca"): 1,
+            ObjectId("6517e3abf15f7b84861971cb"): 1,
+            ObjectId("6517e3abf15f7b84861971cc"): 1,
+            ObjectId("6517e3abf15f7b84861971cd"): 1,
+            ObjectId("6517e3abf15f7b84861971ce"): 1,
+            ObjectId("6517e3abf15f7b84861971cf"): 1,
+            ObjectId("6517e3abf15f7b84861971d0"): 1,
+            ObjectId("6517e3abf15f7b84861971d1"): 1,
         }
     )
 
