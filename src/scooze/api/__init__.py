@@ -41,13 +41,14 @@ class ScoozeApi(AbstractContextManager):
         self.safe_context = False
 
     def __enter__(self):
-        asyncio.run(mongo.mongo_connect())
         self.safe_context = True
+        self.runner = asyncio.Runner()
+        self.runner.run(mongo.mongo_connect())
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        asyncio.run(mongo.mongo_close())
+        self.runner.run(mongo.mongo_close())
 
     # region Card endpoints
 
@@ -93,6 +94,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return card_api.get_cards_by(
+            runner=self.runner,
             property_name=property_name,
             values=values,
             card_class=self.card_class,
@@ -117,6 +119,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return card_api.get_card_by(
+            runner=self.runner,
             property_name="name",
             value=name,
             card_class=self.card_class,
@@ -136,6 +139,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return card_api.get_card_by(
+            runner=self.runner,
             property_name="oracle_id",
             value=oracle_id,
             card_class=self.card_class,
@@ -155,6 +159,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return card_api.get_card_by(
+            runner=self.runner,
             property_name="scryfall_id",
             value=scryfall_id,
             card_class=self.card_class,
@@ -179,6 +184,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return card_api.get_cards_by(
+            runner=self.runner,
             property_name="set",
             values=[set_code],
             card_class=self.card_class,
@@ -200,7 +206,7 @@ class ScoozeApi(AbstractContextManager):
             The ID of the inserted card, or None if it was unable.
         """
 
-        return card_api.add_card(card=card)
+        return card_api.add_card(runner=self.runner, card=card)
 
     @_check_for_safe_context
     def add_cards(self, cards: List[CardT]) -> List[ObjectId]:
@@ -214,7 +220,7 @@ class ScoozeApi(AbstractContextManager):
             The IDs of the inserted cards, or empty list if unable.
         """
 
-        return card_api.add_cards(cards=cards)
+        return card_api.add_cards(runner=self.runner, cards=cards)
 
     @_check_for_safe_context
     def delete_card(self, id: str) -> bool:
@@ -228,7 +234,7 @@ class ScoozeApi(AbstractContextManager):
             True if the card is deleted, False otherwise.
         """
 
-        return card_api.delete_card(id=id)
+        return card_api.delete_card(runner=self.runner, id=id)
 
     @_check_for_safe_context
     def delete_cards_all(self) -> int:
@@ -239,7 +245,7 @@ class ScoozeApi(AbstractContextManager):
             The number of cards deleted, or None if none could be deleted.
         """
 
-        return card_api.delete_cards_all()
+        return card_api.delete_cards_all(runner=self.runner)
 
     # endregion
 
@@ -264,6 +270,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return bulkdata_api.load_card_file(
+            runner=self.runner,
             file_type=file_type,
             bulk_file_dir=bulk_file_dir,
         )

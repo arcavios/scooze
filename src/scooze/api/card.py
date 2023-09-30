@@ -7,7 +7,7 @@ from scooze.card import CardT, FullCard
 from scooze.models.card import CardModelIn, CardModelOut
 
 
-def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> CardT:
+def get_card_by(runner: asyncio.Runner, property_name: str, value, card_class: CardT = FullCard) -> CardT:
     """
     Search the database for the first card that matches the given criteria.
 
@@ -20,7 +20,7 @@ def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> Card
         The first matching card, or None if none were found.
     """
 
-    card_model = asyncio.run(
+    card_model = runner.run(
         db.get_card_by_property(
             property_name=property_name,
             value=value,
@@ -31,6 +31,7 @@ def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> Card
 
 
 def get_cards_by(
+    runner: asyncio.Runner,
     property_name: str,
     values: list[Any],
     card_class: CardT = FullCard,
@@ -54,7 +55,7 @@ def get_cards_by(
         were found.
     """
 
-    card_models = asyncio.run(
+    card_models = runner.run(
         db.get_cards_by_property(
             property_name=property_name,
             values=values,
@@ -66,7 +67,7 @@ def get_cards_by(
     return [card_class.from_model(m) for m in card_models]
 
 
-def add_card(card: CardT) -> ObjectId:
+def add_card(runner: asyncio.Runner, card: CardT) -> ObjectId:
     """
     Add a card to the database.
 
@@ -78,12 +79,12 @@ def add_card(card: CardT) -> ObjectId:
     """
 
     card_model = CardModelIn.model_validate(card.__dict__)
-    model = asyncio.run(db.add_card(card=card_model))
+    model = runner.run(db.add_card(card=card_model))
     if model is not None:
         return model.id
 
 
-def add_cards(cards: List[CardT]) -> List[ObjectId]:
+def add_cards(runner: asyncio.Runner, cards: List[CardT]) -> List[ObjectId]:
     """
     Add a list of cards to the database.
 
@@ -95,10 +96,10 @@ def add_cards(cards: List[CardT]) -> List[ObjectId]:
     """
 
     card_models = [CardModelIn.model_validate(card.__dict__) for card in cards]
-    return asyncio.run(db.add_cards(cards=card_models))
+    return runner.run(db.add_cards(cards=card_models))
 
 
-def delete_card(id: str) -> bool:
+def delete_card(runner: asyncio.Runner, id: str) -> bool:
     """
     Delete a card from the database.
 
@@ -109,10 +110,10 @@ def delete_card(id: str) -> bool:
         True if the card is deleted, False otherwise.
     """
 
-    return asyncio.run(db.delete_card(id=id)) is not None
+    return runner.run(db.delete_card(id=id)) is not None
 
 
-def delete_cards_all() -> int:
+def delete_cards_all(runner: asyncio.Runner) -> int:
     """
     Delete all cards in the database.
 
@@ -120,4 +121,4 @@ def delete_cards_all() -> int:
         The number of cards deleted, or None if none could be deleted.
     """
 
-    return asyncio.run(db.delete_cards_all())
+    return runner.run(db.delete_cards_all())
