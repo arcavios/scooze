@@ -70,8 +70,9 @@ def test_get_full_cards(mock_get: MagicMock, cards_full, asyncio_runner):
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_cards_bad(mock_get: MagicMock, cards_base, asyncio_runner):
     mock_get.return_value = []
-    results = asyncio_runner.run(card_api.get_cards_by(property_name="id", values=[ObjectId() for _ in cards_base], card_class=Card
-    ))
+    results = asyncio_runner.run(
+        card_api.get_cards_by(property_name="id", values=[ObjectId() for _ in cards_base], card_class=Card)
+    )
     assert results == []
 
 
