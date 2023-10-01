@@ -73,7 +73,7 @@ def power9_object_ids() -> Counter[ObjectId]:
 # TODO: testing normalizers and lookups on ID this has to be mocked before this can be merged.
 # TODO: write tests for date_played
 def test_card_lookup_by_id(power9_object_ids):
-    model = DeckModel(main=power9_object_ids)
+    model = DeckModel(main=power9_object_ids, side=power9_object_ids, cmdr=power9_object_ids)
     print(model.model_dump())
     deck = Deck.from_model(model)
     print(deck.export())
