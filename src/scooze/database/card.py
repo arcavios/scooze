@@ -133,6 +133,18 @@ async def get_cards_random(limit: int) -> list[CardModelOut]:
     return [CardModelOut.model_validate(card) for card in cards]
 
 
+async def get_cards_all() -> list[CardModelOut]:
+    """
+    Get all cards from the database. WARNING: may be extremely large.
+
+    Returns:
+        A list of all cards in the database.
+    """
+
+    cards = await db_core.get_all_documents(DbCollection.CARDS)
+    return [CardModelOut.model_validate(card) for card in cards]
+
+
 async def get_cards_by_property(
     property_name: str, values: list[Any], paginated: bool = False, page: int = 1, page_size: int = 10
 ) -> list[CardModelOut]:

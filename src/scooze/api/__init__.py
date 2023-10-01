@@ -197,6 +197,16 @@ class ScoozeApi(AbstractContextManager):
             )
         )
 
+    @_check_for_safe_context
+    def get_cards_all(self) -> List[CardT]:
+        """
+        Get all cards from the database. WARNING: may be extremely large.
+
+        Returns:
+            A list of all cards in the database.
+        """
+        return self.runner.run(card_api.get_cards_all(self.card_class))
+
     # TODO(#146): add function get_cards_by_format (format, legality)
 
     # endregion
