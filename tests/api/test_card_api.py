@@ -86,11 +86,11 @@ def test_add_base_card(mock_add: MagicMock, recall_base, asyncio_runner):
 
 
 @patch("scooze.database.card.add_card")
-def test_add_oracle_card(mock_add: MagicMock, recall_full, asyncio_runner):
-    model = CardModelOut.model_validate(recall_full.__dict__)
+def test_add_oracle_card(mock_add: MagicMock, recall_oracle, asyncio_runner):
+    model = CardModelOut.model_validate(recall_oracle.__dict__)
     model.id = ObjectId()
     mock_add.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.add_card(card=recall_full))
+    result = asyncio_runner.run(card_api.add_card(card=recall_oracle))
     assert result == model.id
 
 
