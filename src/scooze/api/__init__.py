@@ -41,13 +41,14 @@ class ScoozeApi(AbstractContextManager):
         self.safe_context = False
 
     def __enter__(self):
-        asyncio.run(mongo.mongo_connect())
         self.safe_context = True
+        self.runner = asyncio.Runner()
+        self.runner.run(mongo.mongo_connect())
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        asyncio.run(mongo.mongo_close())
+        self.runner.run(mongo.mongo_close())
 
     # region Card endpoints
 
@@ -65,7 +66,9 @@ class ScoozeApi(AbstractContextManager):
             The first matching card, or None if none were found.
         """
 
-        return card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
+        return self.runner.run(
+            card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
+        )
 
     @_check_for_safe_context
     def get_cards_by(
@@ -92,13 +95,15 @@ class ScoozeApi(AbstractContextManager):
             were found.
         """
 
-        return card_api.get_cards_by(
-            property_name=property_name,
-            values=values,
-            card_class=self.card_class,
-            paginated=paginated,
-            page=page,
-            page_size=page_size,
+        return self.runner.run(
+            card_api.get_cards_by(
+                property_name=property_name,
+                values=values,
+                card_class=self.card_class,
+                paginated=paginated,
+                page=page,
+                page_size=page_size,
+            )
         )
 
     # region Convenience methods for single-card lookup
@@ -116,10 +121,12 @@ class ScoozeApi(AbstractContextManager):
             A card with the given name if found, or None if none were found.
         """
 
-        return card_api.get_card_by(
-            property_name="name",
-            value=name,
-            card_class=self.card_class,
+        return self.runner.run(
+            card_api.get_card_by(
+                property_name="name",
+                value=name,
+                card_class=self.card_class,
+            )
         )
 
     @cache
@@ -135,10 +142,12 @@ class ScoozeApi(AbstractContextManager):
             A card with the given Oracle ID if found, or None if none were found.
         """
 
-        return card_api.get_card_by(
-            property_name="oracle_id",
-            value=oracle_id,
-            card_class=self.card_class,
+        return self.runner(
+            card_api.get_card_by(
+                property_name="oracle_id",
+                value=oracle_id,
+                card_class=self.card_class,
+            )
         )
 
     @cache
@@ -154,10 +163,12 @@ class ScoozeApi(AbstractContextManager):
             A card with the given Scryfall ID if found, or None if none were found.
         """
 
-        return card_api.get_card_by(
-            property_name="scryfall_id",
-            value=scryfall_id,
-            card_class=self.card_class,
+        return self.runner.run(
+            card_api.get_card_by(
+                property_name="scryfall_id",
+                value=scryfall_id,
+                card_class=self.card_class,
+            )
         )
 
     # endregion
@@ -178,10 +189,12 @@ class ScoozeApi(AbstractContextManager):
            A list of cards from the given set, or empty list if none were found.
         """
 
-        return card_api.get_cards_by(
-            property_name="set",
-            values=[set_code],
-            card_class=self.card_class,
+        return self.runner.run(
+            card_api.get_cards_by(
+                property_name="set",
+                values=[set_code],
+                card_class=self.card_class,
+            )
         )
 
     # TODO(#146): add function get_cards_by_format (format, legality)
@@ -200,7 +213,7 @@ class ScoozeApi(AbstractContextManager):
             The ID of the inserted card, or None if it was unable.
         """
 
-        return card_api.add_card(card=card)
+        return self.runner.run(card_api.add_card(card=card))
 
     @_check_for_safe_context
     def add_cards(self, cards: List[CardT]) -> List[ObjectId]:
@@ -214,7 +227,7 @@ class ScoozeApi(AbstractContextManager):
             The IDs of the inserted cards, or empty list if unable.
         """
 
-        return card_api.add_cards(cards=cards)
+        return self.runner.run(card_api.add_cards(cards=cards))
 
     @_check_for_safe_context
     def delete_card(self, id: str) -> bool:
@@ -228,7 +241,7 @@ class ScoozeApi(AbstractContextManager):
             True if the card is deleted, False otherwise.
         """
 
-        return card_api.delete_card(id=id)
+        return self.runner.run(card_api.delete_card(id=id))
 
     @_check_for_safe_context
     def delete_cards_all(self) -> int:
@@ -239,7 +252,7 @@ class ScoozeApi(AbstractContextManager):
             The number of cards deleted, or None if none could be deleted.
         """
 
-        return card_api.delete_cards_all()
+        return self.runner.run(card_api.delete_cards_all())
 
     # endregion
 
@@ -263,9 +276,11 @@ class ScoozeApi(AbstractContextManager):
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
         """
 
-        return bulkdata_api.load_card_file(
-            file_type=file_type,
-            bulk_file_dir=bulk_file_dir,
+        return self.runner.run(
+            bulkdata_api.load_card_file(
+                file_type=file_type,
+                bulk_file_dir=bulk_file_dir,
+            )
         )
 
     # endregion
