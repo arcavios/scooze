@@ -67,6 +67,33 @@ def test_get_full_cards(mock_get: MagicMock, cards_full, asyncio_runner):
     assert results == cards_full
 
 
+@patch("scooze.database.card.get_cards_all")
+def test_get_all_cards_base(mock_get: MagicMock, cards_base, asyncio_runner):
+    models = [CardModelOut.model_validate(card.__dict__) for card in cards_base]
+    ids = [model.id for model in models]
+    mock_get.return_value: list[CardModelOut] = models
+    results = asyncio_runner.run(card_api.get_cards_all(card_class=Card))
+    assert results == cards_base
+
+
+@patch("scooze.database.card.get_cards_all")
+def test_get_all_cards_oracle(mock_get: MagicMock, cards_oracle, asyncio_runner):
+    models = [CardModelOut.model_validate(card.__dict__) for card in cards_oracle]
+    ids = [model.id for model in models]
+    mock_get.return_value: list[CardModelOut] = models
+    results = asyncio_runner.run(card_api.get_cards_all(card_class=OracleCard))
+    assert results == cards_oracle
+
+
+@patch("scooze.database.card.get_cards_all")
+def test_get_all_cards_full(mock_get: MagicMock, cards_full, asyncio_runner):
+    models = [CardModelOut.model_validate(card.__dict__) for card in cards_full]
+    ids = [model.id for model in models]
+    mock_get.return_value: list[CardModelOut] = models
+    results = asyncio_runner.run(card_api.get_cards_all(card_class=FullCard))
+    assert results == cards_full
+
+
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_cards_bad(mock_get: MagicMock, cards_base, asyncio_runner):
     mock_get.return_value = []

@@ -135,7 +135,7 @@ async def get_all_documents(col_type: DbCollection):
         The list of random documents.
     """
 
-    return await db.client.scooze[col_type].find({}).to_list()
+    return await db.client.scooze[col_type].find().to_list(None)
 
 
 async def get_documents_by_property(
