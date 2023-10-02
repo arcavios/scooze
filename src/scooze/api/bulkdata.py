@@ -8,7 +8,7 @@ from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModelIn
 
 
-def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
+async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
     """
     Loads the desired file from the given directory into a local Mongo
     database. Attempts to download it from Scryfall if it isn't found.
@@ -29,24 +29,23 @@ def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
             results_count = 0
             current_batch = []
             card_jsons = ijson.items(cards_file, "item")
-            with asyncio.Runner() as runner:
 
-                def load_batch(batch) -> int:
-                    batch_results = runner.run(db.add_cards(batch))
-                    if batch_results is not None:
-                        return len(batch_results)
-                    return 0
+            async def load_batch(batch) -> int:
+                batch_results = await db.add_cards(batch)
+                if batch_results is not None:
+                    return len(batch_results)
+                return 0
 
-                for card_json in card_jsons:
-                    if (validated_card := _try_validate_card(card_json)) is not None:
-                        current_batch.append(validated_card)
-                        current_batch_count += 1
-                        if current_batch_count >= batch_size:
-                            results_count += load_batch(current_batch)
-                            current_batch = []
-                            current_batch_count = 0
-                            print(f"Finished processing {results_count} cards...", end="\r")
-                results_count += load_batch(current_batch)
+            for card_json in card_jsons:
+                if (validated_card := _try_validate_card(card_json)) is not None:
+                    current_batch.append(validated_card)
+                    current_batch_count += 1
+                    if current_batch_count >= batch_size:
+                        results_count += await load_batch(current_batch)
+                        current_batch = []
+                        current_batch_count = 0
+                        print(f"Finished processing {results_count} cards...", end="\r")
+            results_count += await load_batch(current_batch)
 
             print(f"Loaded {results_count} cards to the database.")
 
