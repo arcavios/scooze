@@ -62,7 +62,6 @@ def test_format(main_cards):
     assert deck.format is Format.MODERN
 
 
-@pytest.mark.deck_validation
 def test_format_validation():
     with pytest.raises(ValueError) as _:
         DeckModel.model_validate({"archetype": "test_format_validation", "format": "not a real format"})
@@ -78,7 +77,6 @@ def test_main(main_cards):
     assert deck.main == main_cards
 
 
-@pytest.mark.deck_validation
 def test_main_validation(main_cards):
     with pytest.raises(ValueError) as _:
         DeckModel.model_validate({"archetype": "test_main_validation", "format": Format.MODERN, "main": main_cards})
@@ -89,7 +87,6 @@ def test_side(side_cards):
     assert deck.side == side_cards
 
 
-@pytest.mark.deck_validation
 def test_side_validation(side_cards):
     with pytest.raises(ValueError) as _:
         DeckModel.model_validate({"archetype": "test_side_validation", "format": Format.COMMANDER, "side": side_cards})
@@ -100,7 +97,6 @@ def test_cmdr(cmdr_cards):
     assert deck.cmdr == cmdr_cards
 
 
-@pytest.mark.deck_validation
 def test_cmdr_validation(cmdr_cards):
     with pytest.raises(ValueError) as _:
         DeckModel.model_validate({"archetype": "test_cmdr_validation", "format": Format.COMMANDER, "cmdr": cmdr_cards})

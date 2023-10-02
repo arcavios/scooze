@@ -163,14 +163,12 @@ def test_average_words(deck_modern_4c):
     assert math.isclose(deck_modern_4c.average_words(), 28.24)
 
 
-@pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
     assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(
         main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty
     )
 
 
-@pytest.mark.deck_diff
 def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
     other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.MAIN)
@@ -181,7 +179,6 @@ def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
     )
 
 
-@pytest.mark.deck_diff
 def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
     other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.SIDE)
@@ -192,7 +189,6 @@ def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
     )
 
 
-@pytest.mark.deck_diff
 def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, card_supreme_verdict, dictdiff_empty):
     other = Deck[OracleCard](
         archetype=deck_modern_4c.archetype,
@@ -296,7 +292,6 @@ def test_total_words(deck_modern_4c):
 # region Mutating Methods
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_main_one(main_modern_4c, card_boseiju_who_endures):
     deck = Deck[OracleCard](archetype="test_add_card_main_one", main=main_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=1, in_the=InThe.MAIN)
@@ -304,7 +299,6 @@ def test_add_card_main_one(main_modern_4c, card_boseiju_who_endures):
     assert deck.main == main_modern_4c
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_main_many(main_modern_4c, card_boseiju_who_endures):
     deck = Deck[OracleCard](archetype="test_add_card_main_many", main=main_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=2, in_the=InThe.MAIN)
@@ -312,7 +306,6 @@ def test_add_card_main_many(main_modern_4c, card_boseiju_who_endures):
     assert deck.main == main_modern_4c
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_side_one(side_modern_4c, card_boseiju_who_endures):
     deck = Deck[OracleCard](archetype="test_add_card_side_one", side=side_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=1, in_the=InThe.SIDE)
@@ -320,7 +313,6 @@ def test_add_card_side_one(side_modern_4c, card_boseiju_who_endures):
     assert deck.side == side_modern_4c
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_side_many(side_modern_4c, card_boseiju_who_endures):
     deck = Deck[OracleCard](archetype="test_add_card_side_many", side=side_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=2, in_the=InThe.SIDE)
@@ -328,7 +320,6 @@ def test_add_card_side_many(side_modern_4c, card_boseiju_who_endures):
     assert deck.side == side_modern_4c
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_cmdr_one(cmdr_part, card_omnath_locus_of_creation):
     deck = Deck[OracleCard](archetype="test_add_card_cmdr_one", cmdr=cmdr_part)
     deck.add_card(card=card_omnath_locus_of_creation, quantity=1, in_the=InThe.CMDR)
@@ -336,7 +327,6 @@ def test_add_card_cmdr_one(cmdr_part, card_omnath_locus_of_creation):
     assert deck.cmdr == cmdr_part
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_cmdr_many(cmdr_part, card_omnath_locus_of_creation):
     deck = Deck[OracleCard](archetype="test_add_card_cmdr_many", cmdr=cmdr_part)
     deck.add_card(card=card_omnath_locus_of_creation, quantity=2, in_the=InThe.CMDR)
@@ -344,7 +334,6 @@ def test_add_card_cmdr_many(cmdr_part, card_omnath_locus_of_creation):
     assert deck.cmdr == cmdr_part
 
 
-@pytest.mark.deck_add_cards
 def test_add_cards_main(main_modern_4c, cards):
     deck = Deck[OracleCard](archetype="test_add_cards_main", main=main_modern_4c)
     deck.add_cards(cards=cards, in_the=InThe.MAIN)
@@ -352,7 +341,6 @@ def test_add_cards_main(main_modern_4c, cards):
     assert deck.main == main_modern_4c
 
 
-@pytest.mark.deck_add_cards
 def test_add_cards_side(side_modern_4c, cards):
     deck = Deck[OracleCard](archetype="test_add_cards_side", side=side_modern_4c)
     deck.add_cards(cards=cards, in_the=InThe.SIDE)
@@ -360,7 +348,6 @@ def test_add_cards_side(side_modern_4c, cards):
     assert deck.side == side_modern_4c
 
 
-@pytest.mark.deck_add_cards
 def test_add_cards_cmdr(cmdr_part, cards):
     deck = Deck[OracleCard](archetype="test_add_cards_cmdr", cmdr=cmdr_part)
     deck.add_cards(cards=cards, in_the=InThe.CMDR)
@@ -368,7 +355,6 @@ def test_add_cards_cmdr(cmdr_part, cards):
     assert deck.cmdr == cmdr_part
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_main_one(main_modern_4c, card_boseiju_who_endures):
     deck = Deck[OracleCard](archetype="test_remove_card_main_one", main=main_modern_4c)
     deck.remove_card(card=card_boseiju_who_endures, quantity=1, in_the=InThe.MAIN)
@@ -376,7 +362,6 @@ def test_remove_card_main_one(main_modern_4c, card_boseiju_who_endures):
     assert deck.main == main_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_main_many(main_modern_4c, card_omnath_locus_of_creation):
     deck = Deck[OracleCard](archetype="test_remove_card_main_many", main=main_modern_4c)
     deck.remove_card(card=card_omnath_locus_of_creation, quantity=2, in_the=InThe.MAIN)
@@ -384,7 +369,6 @@ def test_remove_card_main_many(main_modern_4c, card_omnath_locus_of_creation):
     assert deck.main == main_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_main_all(main_modern_4c, card_omnath_locus_of_creation):
     deck = Deck[OracleCard](archetype="test_remove_card_main_all", main=main_modern_4c)
     deck.remove_card(card=card_omnath_locus_of_creation, in_the=InThe.MAIN)
@@ -392,7 +376,6 @@ def test_remove_card_main_all(main_modern_4c, card_omnath_locus_of_creation):
     assert deck.main == main_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_side_one(side_modern_4c, card_chalice_of_the_void):
     deck = Deck[OracleCard](archetype="test_remove_card_side_one", side=side_modern_4c)
     deck.remove_card(card=card_chalice_of_the_void, quantity=1, in_the=InThe.SIDE)
@@ -400,7 +383,6 @@ def test_remove_card_side_one(side_modern_4c, card_chalice_of_the_void):
     assert deck.side == side_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_side_many(side_modern_4c, card_chalice_of_the_void):
     deck = Deck[OracleCard](archetype="test_remove_card_side_many", side=side_modern_4c)
     deck.remove_card(card=card_chalice_of_the_void, quantity=2, in_the=InThe.SIDE)
@@ -408,7 +390,6 @@ def test_remove_card_side_many(side_modern_4c, card_chalice_of_the_void):
     assert deck.side == side_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_side_all(side_modern_4c, card_chalice_of_the_void):
     deck = Deck[OracleCard](archetype="test_remove_card_side_all", side=side_modern_4c)
     deck.remove_card(card=card_chalice_of_the_void, in_the=InThe.SIDE)
@@ -416,7 +397,6 @@ def test_remove_card_side_all(side_modern_4c, card_chalice_of_the_void):
     assert deck.side == side_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_cmdr(cmdr_part, card_omnath_locus_of_creation):
     deck = Deck[OracleCard](archetype="test_remove_card_cmdr", cmdr=cmdr_part)
     deck.remove_card(card=card_omnath_locus_of_creation, quantity=1, in_the=InThe.CMDR)
@@ -424,7 +404,6 @@ def test_remove_card_cmdr(cmdr_part, card_omnath_locus_of_creation):
     assert deck.cmdr == cmdr_part
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_cards_main(main_modern_4c, cards):
     deck = Deck[OracleCard](archetype="test_remove_cards_main", main=main_modern_4c)
     deck.remove_cards(cards=cards, in_the=InThe.MAIN)
@@ -432,7 +411,6 @@ def test_remove_cards_main(main_modern_4c, cards):
     assert deck.main == main_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_cards_side(side_modern_4c, cards):
     deck = Deck[OracleCard](archetype="test_remove_cards_side", side=side_modern_4c)
     deck.remove_cards(cards=cards, in_the=InThe.SIDE)
@@ -440,7 +418,6 @@ def test_remove_cards_side(side_modern_4c, cards):
     assert deck.side == side_modern_4c
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_cards_cmdr(cmdr_part, cmdr_cards):
     deck = Deck[OracleCard](archetype="test_remove_cards_cmdr", cmdr=cmdr_part)
     deck.remove_cards(cards=cmdr_cards, in_the=InThe.CMDR)

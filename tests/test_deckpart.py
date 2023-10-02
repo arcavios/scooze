@@ -54,7 +54,6 @@ def test_total(main_modern_4c):
     assert main_modern_4c.total() == 60
 
 
-@pytest.mark.deck_diff
 def test_diff(
     side_modern_4c,
     some_cards,
@@ -90,7 +89,6 @@ def test_diff(
     )
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_one(some_cards, card_veil_of_summer):
     part = DeckPart(cards=some_cards)
     part.add_card(card=card_veil_of_summer)
@@ -98,7 +96,6 @@ def test_add_card_one(some_cards, card_veil_of_summer):
     assert part.cards == some_cards
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_many(some_cards, card_veil_of_summer):
     part = DeckPart(cards=some_cards)
     part.add_card(card=card_veil_of_summer, quantity=3)
@@ -106,7 +103,6 @@ def test_add_card_many(some_cards, card_veil_of_summer):
     assert part.cards == some_cards
 
 
-@pytest.mark.deck_add_cards
 def test_add_cards(some_cards):
     part = DeckPart(cards=some_cards)
     part.add_cards(some_cards)
@@ -114,7 +110,6 @@ def test_add_cards(some_cards):
     assert part.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_one(some_cards, card_chalice_of_the_void):
     part = DeckPart(cards=some_cards)
     part.remove_card(card=card_chalice_of_the_void, quantity=1)
@@ -122,7 +117,6 @@ def test_remove_card_one(some_cards, card_chalice_of_the_void):
     assert part.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_many(some_cards, card_chalice_of_the_void):
     part = DeckPart(cards=some_cards)
     part.remove_card(card=card_chalice_of_the_void, quantity=3)
@@ -130,7 +124,6 @@ def test_remove_card_many(some_cards, card_chalice_of_the_void):
     assert part.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_all(some_cards, card_chalice_of_the_void):
     part = DeckPart(cards=some_cards)
     part.remove_card(card=card_chalice_of_the_void)
@@ -138,7 +131,6 @@ def test_remove_card_all(some_cards, card_chalice_of_the_void):
     assert part.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_cards(some_cards):
     part = DeckPart(cards=some_cards)
     part.remove_cards(some_cards)

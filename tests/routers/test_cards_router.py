@@ -29,7 +29,6 @@ def boseiju(mock_cards_collection: Collection) -> CardModelOut:
 # endregion
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.get_cards_random")
 def test_cards_root(
     mock_get: MagicMock, client: TestClient, omnath: CardModelOut, chalice: CardModelOut, boseiju: CardModelOut
@@ -44,7 +43,6 @@ def test_cards_root(
         assert card.model_dump(mode="json") in response_json
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.get_cards_random")
 def test_cards_root_no_cards(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
@@ -56,7 +54,6 @@ def test_cards_root_no_cards(mock_get: MagicMock, client: TestClient):
 # region Create
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.add_cards")
 def test_add_cards(
     mock_add: MagicMock, client: TestClient, omnath: CardModelOut, chalice: CardModelOut, boseiju: CardModelOut
@@ -68,7 +65,6 @@ def test_add_cards(
     assert response.json()["message"] == f"Created {len(cards_to_add)} card(s)."
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.add_cards")
 def test_add_cards_bad(mock_add: MagicMock, client: TestClient):
     mock_add.return_value = None
@@ -82,7 +78,6 @@ def test_add_cards_bad(mock_add: MagicMock, client: TestClient):
 # region Read
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_cards_by_cmc(mock_get: MagicMock, client: TestClient, chalice: CardModelOut, boseiju: CardModelOut):
     zero_drops = [chalice, boseiju]
@@ -94,7 +89,6 @@ def test_get_cards_by_cmc(mock_get: MagicMock, client: TestClient, chalice: Card
         assert card.model_dump(mode="json") in response_json
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_carsd_by_cmc_none_found(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
@@ -109,7 +103,6 @@ def test_get_carsd_by_cmc_none_found(mock_get: MagicMock, client: TestClient):
 # region Delete
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.delete_cards_all")
 def test_delete_cards(mock_update: MagicMock, client: TestClient, omnath: CardModelOut, chalice: CardModelOut):
     # Acting as though the db is set up with just Omnath and Chalice for purposes of this test
@@ -119,7 +112,6 @@ def test_delete_cards(mock_update: MagicMock, client: TestClient, omnath: CardMo
     assert response.json()["message"] == "Deleted 2 card(s)."
 
 
-@pytest.mark.router_cards
 @patch("scooze.database.card.delete_cards_all")
 def test_delete_cards_bad(mock_update: MagicMock, client: TestClient):
     mock_update.return_value = None

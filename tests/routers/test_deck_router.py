@@ -11,7 +11,6 @@ from scooze.models.deck import DeckModelIn, DeckModelOut
 # endregion
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.get_decks_random")
 def test_deck_root(
     mock_get_random: MagicMock, client: TestClient, mock_decks_collection: Collection, deck_model_modern_4c: DeckModelIn
@@ -29,7 +28,6 @@ def test_deck_root(
 # region Create
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.add_deck")
 def test_add_deck(mock_add: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn):
     deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
@@ -41,7 +39,6 @@ def test_add_deck(mock_add: MagicMock, client: TestClient, deck_model_modern_4c:
         assert response_json[k] == v
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.add_deck")
 def test_add_deck_bad(mock_add: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn):
     deck_json = deck_model_modern_4c.model_dump(mode="json", by_alias=True)
@@ -56,7 +53,6 @@ def test_add_deck_bad(mock_add: MagicMock, client: TestClient, deck_model_modern
 # region Read
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.get_deck_by_property")
 def test_get_deck_by_id(
     mock_get: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn, mock_decks_collection: Collection
@@ -72,7 +68,6 @@ def test_get_deck_by_id(
         assert response_json[k] == v
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.get_deck_by_property")
 def test_get_deck_by_id_bad_id(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
@@ -87,7 +82,6 @@ def test_get_deck_by_id_bad_id(mock_get: MagicMock, client: TestClient):
 # region Update
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.update_deck")
 def test_update_deck(
     mock_update: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn, mock_decks_collection: Collection
@@ -105,7 +99,6 @@ def test_update_deck(
         assert response_json[k] == v
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.update_deck")
 def test_update_deck_bad_id(mock_update: MagicMock, client: TestClient):
     mock_update.return_value = None
@@ -120,7 +113,6 @@ def test_update_deck_bad_id(mock_update: MagicMock, client: TestClient):
 # region Delete
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.delete_deck")
 def test_delete_deck(
     mock_delete: MagicMock, client: TestClient, deck_model_modern_4c: DeckModelIn, mock_decks_collection: Collection
@@ -134,7 +126,6 @@ def test_delete_deck(
     assert response.json()["message"] == f"Deck with id {db_4c_id} deleted."
 
 
-@pytest.mark.router_deck
 @patch("scooze.database.deck.delete_deck")
 def test_delete_deck_bad_id(mock_delete: MagicMock, client: TestClient):
     mock_delete.return_value = None

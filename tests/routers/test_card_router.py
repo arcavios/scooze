@@ -17,7 +17,6 @@ def omnath(mock_cards_collection: Collection) -> CardModelOut:
 # endregion
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.get_cards_random")
 def test_card_root(mock_get: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_get.return_value: list[CardModelOut] = [omnath]
@@ -28,7 +27,6 @@ def test_card_root(mock_get: MagicMock, client: TestClient, omnath: CardModelOut
         assert response_json[k] == v
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.get_cards_random")
 def test_card_root_no_cards(mock_get: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_get.return_value = None
@@ -40,7 +38,6 @@ def test_card_root_no_cards(mock_get: MagicMock, client: TestClient, omnath: Car
 # region Create
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.add_card")
 def test_add_card(mock_add: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_add.return_value: CardModelOut = omnath
@@ -51,7 +48,6 @@ def test_add_card(mock_add: MagicMock, client: TestClient, omnath: CardModelOut)
         assert response_json[k] == v
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.add_card")
 def test_add_card_bad(mock_add: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_add.return_value = None
@@ -65,7 +61,6 @@ def test_add_card_bad(mock_add: MagicMock, client: TestClient, omnath: CardModel
 # region Read
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.get_card_by_property")
 def test_get_card_by_id(mock_get: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_get.return_value: CardModelOut = omnath
@@ -76,7 +71,6 @@ def test_get_card_by_id(mock_get: MagicMock, client: TestClient, omnath: CardMod
         assert response_json[k] == v
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.get_card_by_property")
 def test_get_card_by_id_bad_id(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
@@ -85,7 +79,6 @@ def test_get_card_by_id_bad_id(mock_get: MagicMock, client: TestClient):
     assert response.json()["message"] == "Card with id blarghl not found."
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.get_card_by_property")
 def test_get_card_by_name(mock_get: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_get.return_value: CardModelOut = omnath
@@ -96,7 +89,6 @@ def test_get_card_by_name(mock_get: MagicMock, client: TestClient, omnath: CardM
         assert response_json[k] == v
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.get_card_by_property")
 def test_get_card_by_name_bad_name(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
@@ -110,7 +102,6 @@ def test_get_card_by_name_bad_name(mock_get: MagicMock, client: TestClient):
 # region Update
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.update_card")
 def test_update_card(mock_update: MagicMock, client: TestClient, omnath: CardModelOut):
     omnath_dump = omnath.model_dump(mode="json", by_alias=True)
@@ -125,7 +116,6 @@ def test_update_card(mock_update: MagicMock, client: TestClient, omnath: CardMod
         assert response_json[k] == v
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.update_card")
 def test_update_card_bad_id(mock_update: MagicMock, client: TestClient):
     mock_update.return_value = None
@@ -140,7 +130,6 @@ def test_update_card_bad_id(mock_update: MagicMock, client: TestClient):
 # region Delete
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.delete_card")
 def test_delete_card(mock_update: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_update.return_value: CardModelOut = omnath
@@ -149,7 +138,6 @@ def test_delete_card(mock_update: MagicMock, client: TestClient, omnath: CardMod
     assert response.json()["message"] == f"Card with id {omnath.id} deleted."
 
 
-@pytest.mark.router_card
 @patch("scooze.database.card.delete_card")
 def test_delete_card_bad_id(mock_update: MagicMock, client: TestClient):
     mock_update.return_value = None
