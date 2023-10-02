@@ -1,5 +1,24 @@
 # Change Log
 
+## [dev]
+
+### Added
+
+- N/A
+
+### Changed
+
+- N/A
+- 
+### Fixed
+
+- N/A
+
+### Docs
+
+- N/A
+
+
 ## [1.0.4] - 2023-10-02
 
 ### Added
