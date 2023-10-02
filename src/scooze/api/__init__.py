@@ -205,6 +205,7 @@ class ScoozeApi(AbstractContextManager):
         Returns:
             A list of all cards in the database.
         """
+
         return self.runner.run(card_api.get_cards_all(self.card_class))
 
     # TODO(#146): add function get_cards_by_format (format, legality)

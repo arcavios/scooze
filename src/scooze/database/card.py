@@ -58,6 +58,7 @@ async def update_card(id: str, card: CardModelIn) -> CardModelOut:
     Returns:
         The updated card, or None if it was unable to update or find it.
     """
+
     updated_card = await db_core.update_document(
         DbCollection.CARDS,
         id,

@@ -84,6 +84,7 @@ async def delete_document(col_type: DbCollection, id: str):
     Returns:
         The deleted document, or None if unable to delete.
     """
+
     return await db.client.scooze[col_type].find_one_and_delete({"_id": ObjectId(id)})
 
 
@@ -159,6 +160,7 @@ async def get_documents_by_property(
     Returns:
         A list of matching documents, or None if none were found.
     """
+
     match property_name:
         case "_id":
             vals = [ObjectId(i) for i in values]  # Handle ObjectIds

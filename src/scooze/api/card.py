@@ -71,6 +71,7 @@ async def get_cards_all(
     Returns:
         A list of all cards in the database.
     """
+
     card_models = await db.get_cards_all()
     return [card_class.from_model(m) for m in card_models]
 
