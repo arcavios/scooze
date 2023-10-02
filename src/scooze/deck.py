@@ -338,8 +338,6 @@ class DeckNormalizer(utils.JsonNormalizer):
             An instance of DeckPart containing the given cards.
         """
 
-        # TODO: write objectid code such that it works correctly and types are inherited correctly
-
         if deck_part is None or isinstance(deck_part, DeckPart):
             return deck_part
         elif all(isinstance(card, card_class) for card in deck_part.keys()):
@@ -349,5 +347,7 @@ class DeckNormalizer(utils.JsonNormalizer):
         elif all(isinstance(card, ObjectId) for card in deck_part.keys()):
             with ScoozeApi() as api:
                 return DeckPart[CardT](
-                    cards=Counter({api.get_card_by(property_name="_id", value=card_id): q for card_id, q in deck_part.items()})
+                    cards=Counter(
+                        {api.get_card_by(property_name="_id", value=card_id): q for card_id, q in deck_part.items()}
+                    )
                 )

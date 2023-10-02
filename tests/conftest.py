@@ -1,11 +1,11 @@
 import json
 from collections import Counter
 from datetime import datetime, timezone
-from bson import ObjectId
-from mongomock import Collection, MongoClient
 
 import pytest
+from bson import ObjectId
 from fastapi.testclient import TestClient
+from mongomock import Collection, MongoClient
 from scooze.card import OracleCard
 from scooze.catalogs import DbCollection, Format, Legality
 from scooze.deck import Deck
@@ -758,6 +758,7 @@ def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck[
 
 # region Mock Collection
 
+
 @pytest.fixture(scope="session")
 def mock_scooze_client():
     return MongoClient()
@@ -789,6 +790,16 @@ def mock_decks_collection(mock_scooze_client: MongoClient, deck_model_modern_4c:
 
 
 @pytest.fixture
+def main_modern_4c_dict(main_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
+    return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in main_modern_4c.cards.items()}
+
+
+@pytest.fixture
+def side_modern_4c_dict(side_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
+    return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in side_modern_4c.cards.items()}
+
+
+@pytest.fixture
 def deck_model_modern_4c(
     archetype_modern_4c: str,
     main_modern_4c_dict: dict[ObjectId, int],
@@ -805,14 +816,5 @@ def deck_model_modern_4c(
         }
     )
 
-
-@pytest.fixture
-def main_modern_4c_dict(main_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
-    return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in main_modern_4c.cards.items()}
-
-
-@pytest.fixture
-def side_modern_4c_dict(side_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
-    return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in side_modern_4c.cards.items()}
 
 # endregion

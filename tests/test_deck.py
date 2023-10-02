@@ -2,6 +2,7 @@ import math
 import re
 from collections import Counter
 from copy import deepcopy
+from unittest.mock import MagicMock, patch
 
 import pytest
 from bson import ObjectId
@@ -9,6 +10,7 @@ from scooze.card import OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart
+from scooze.models.card import CardModelOut
 from scooze.models.deck import DeckModel
 from scooze.utils import DictDiff
 
@@ -89,6 +91,11 @@ def test_archetype(archetype_modern_4c):
     assert deck.archetype == archetype_modern_4c
 
 
+def test_date(today):
+    deck = Deck[OracleCard](date_played=today)
+    assert deck.date_played == today
+
+
 def test_format():
     deck = Deck[OracleCard](archetype="test_format", format=Format.MODERN)
     assert deck.format is Format.MODERN
@@ -109,6 +116,37 @@ def test_cmdr(cmdr_part):
     assert deck.cmdr == cmdr_part
 
 
+def test_cards(main_modern_4c, side_modern_4c, cmdr_part):
+    deck = Deck[OracleCard](main=main_modern_4c, side=side_modern_4c, cmdr=cmdr_part)
+    assert deck.cards == main_modern_4c.cards + side_modern_4c.cards + cmdr_part.cards
+
+
+def test_normalize_deckpart_from_cards(main_modern_4c, side_modern_4c, cmdr_part):
+    deck = Deck[OracleCard](main=main_modern_4c.cards, side=side_modern_4c.cards, cmdr=cmdr_part.cards)
+    assert deck.cards == main_modern_4c.cards + side_modern_4c.cards + cmdr_part.cards
+
+
+@patch("scooze.api.card.get_card_by")
+def test_normalize_deckpart_from_objectids(
+    mock_get_card: MagicMock,
+    mock_cards_collection,
+    main_modern_4c_dict,
+    main_modern_4c,
+    side_modern_4c_dict,
+    side_modern_4c,
+):
+    def mock_get_card_by(property_name, value, card_class):
+        result = mock_cards_collection.find_one({property_name: value})
+        model = CardModelOut.model_validate(result)
+        return OracleCard.from_model(model)
+
+    mock_get_card.side_effect = mock_get_card_by
+
+    deck = Deck[OracleCard](main=main_modern_4c_dict, side=side_modern_4c_dict)
+
+    assert deck.cards == main_modern_4c.cards + side_modern_4c.cards
+
+
 # endregion
 
 
@@ -125,6 +163,13 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 
 # endregion
+
+
+# region Class Methods
+
+# endregion
+
+# region Instance Methods
 
 
 def test_average_cmc(deck_modern_4c):
@@ -421,5 +466,7 @@ def test_remove_cards_cmdr(cmdr_part, cmdr_cards):
     cmdr_part.remove_cards(cards=cmdr_cards)
     assert deck.cmdr == cmdr_part
 
+
+# endregion
 
 # endregion
