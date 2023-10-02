@@ -16,7 +16,7 @@
 
 ### Docs
 
-- N/A
+- Add dev section to changelog ([#178](https://github.com/arcavios/scooze/pull/178))
 
 
 ## [1.0.3] - 2023-09-29
