@@ -1,5 +1,23 @@
 # Change Log
 
+## [dev]
+
+### Added
+
+- Add DB/API methods for retrieving all cards at once ([#172](https://github.com/arcavios/scooze/pull/172))
+
+### Changed
+
+- Rename `col_type` to `coll_type` ([#176](https://github.com/arcavios/scooze/pull/176))
+
+### Fixed
+
+- Fix "Event Loop Closed" error on multiple API calls ([#169](https://github.com/arcavios/scooze/pull/169))
+
+### Docs
+
+- N/A
+
 
 ## [1.0.3] - 2023-09-29
 
