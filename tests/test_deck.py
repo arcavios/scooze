@@ -52,34 +52,7 @@ def dictdiff_empty() -> DictDiff:
     return DictDiff(contents={})
 
 
-@pytest.fixture
-def power9_object_ids() -> Counter[ObjectId]:
-    return Counter(
-        {
-            ObjectId("6517efe89aa2d3dabbd23258"): 1,
-            ObjectId("6517efe89aa2d3dabbd23259"): 1,
-            ObjectId("6517efe89aa2d3dabbd2325a"): 1,
-            ObjectId("6517efe89aa2d3dabbd2325b"): 1,
-            ObjectId("6517efe89aa2d3dabbd2325c"): 1,
-            ObjectId("6517efe89aa2d3dabbd2325d"): 1,
-            ObjectId("6517efe89aa2d3dabbd2325e"): 1,
-            ObjectId("6517efe89aa2d3dabbd2325f"): 1,
-            ObjectId("6517efe89aa2d3dabbd23260"): 1,
-        }
-    )
-
-
 # endregion
-
-
-# TODO: testing normalizers and lookups on ID this has to be mocked before this can be merged.
-# TODO: write tests for date_played
-def test_card_lookup_by_id(power9_object_ids):
-    model = DeckModel(main=power9_object_ids, side=power9_object_ids, cmdr=power9_object_ids)
-    print(model.model_dump())
-    deck = Deck.from_model(model)
-    print(deck.export())
-
 
 # region Magic Methods
 
