@@ -124,19 +124,18 @@ async def get_random_documents(coll_type: DbCollection, limit: int):
     return await db.client.scooze[coll_type].aggregate(pipeline).to_list(limit)
 
 
-async def get_all_documents(col_type: DbCollection):
+async def get_all_documents(coll_type: DbCollection):
     """
     Get a random sample of documents from a single collection in the database.
 
     Args:
-        col_type: The desired collection.
-        limit: The number of documents to return.
+        coll_type: The desired collection.
 
     Returns:
         The list of random documents.
     """
 
-    return await db.client.scooze[col_type].find().to_list(None)
+    return await db.client.scooze[coll_type].find().to_list(None)
 
 
 async def get_documents_by_property(
