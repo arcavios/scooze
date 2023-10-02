@@ -9,6 +9,7 @@
 ### Changed
 
 - Rename `col_type` to `coll_type` ([#176](https://github.com/arcavios/scooze/pull/176))
+- Update fastapi requirement to allow versions before 1.0.0 ([#179](https://github.com/arcavios/scooze/pull/179))
 
 ### Fixed
 
