@@ -58,6 +58,7 @@ async def update_card(id: str, card: CardModelIn) -> CardModelOut:
     Returns:
         The updated card, or None if it was unable to update or find it.
     """
+
     updated_card = await db_core.update_document(
         DbCollection.CARDS,
         id,
@@ -130,6 +131,18 @@ async def get_cards_random(limit: int) -> list[CardModelOut]:
     """
 
     cards = await db_core.get_random_documents(DbCollection.CARDS, limit)
+    return [CardModelOut.model_validate(card) for card in cards]
+
+
+async def get_cards_all() -> list[CardModelOut]:
+    """
+    Get all cards from the database. WARNING: may be extremely large.
+
+    Returns:
+        A list of all cards in the database.
+    """
+
+    cards = await db_core.get_all_documents(DbCollection.CARDS)
     return [CardModelOut.model_validate(card) for card in cards]
 
 
