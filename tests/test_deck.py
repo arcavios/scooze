@@ -140,6 +140,14 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 # region Class Methods
 
+# region
+
+def test_deck_from_model():
+    # TODO:
+    pass
+
+# endregion
+
 # endregion
 
 # region Instance Methods
