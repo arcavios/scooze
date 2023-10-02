@@ -67,6 +67,7 @@ def download_all_bulk_data_files(
         bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
           not specified.
     """
+
     with requests.get(SCRYFALL_BULK_INFO_ENDPOINT) as bulk_metadata_request:
         bulk_metadata_request.raise_for_status()
         bulk_metadata = bulk_metadata_request.json()["data"]
