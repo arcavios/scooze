@@ -46,19 +46,4 @@ scooze = "scooze.cli:run_cli"
 
 [tool.pytest.ini_options]
 # addopts = "-m 'not slow'"
-markers = [
-    "slow: expected to be slow",
-    "card_quantity: related to card max quantity allowed per format",
-    "dict_diff: related to DictDiff in utils",
-    "deck_diff: related to Deck.diff()",
-    "deck_size: related to deck size per format",
-    "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
-    "deck_remove_cards: related to Deck.remove_card() and Deck.remove_cards()",
-    "deck_count: related to Deck.count()",
-    "deck_export: related to exporting a Deck as text or some other format",
-    "deck_validation: related to forcing ValidationErrors from Pydantic",
-    "router_card: related to /card routes",
-    "router_cards: related to /cards routes",
-    "router_deck: related to /deck routes",
-    "router_decks: related to /decks routes",
-]
+markers = ["slow: expected to be slow"]

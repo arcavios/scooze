@@ -142,9 +142,11 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 # region
 
+
 def test_deck_from_model():
     # TODO:
     pass
+
 
 # endregion
 
