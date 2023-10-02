@@ -84,7 +84,9 @@ async def delete_document(coll_type: DbCollection, id: str):
     Returns:
         The deleted document, or None if unable to delete.
     """
-    return await db.client.scooze[coll_type].find_one_and_delete({"_id": ObjectId(id)})
+
+
+    return await db.client.scooze[col_type].find_one_and_delete({"_id": ObjectId(id)})
 
 
 # endregion
@@ -123,6 +125,21 @@ async def get_random_documents(coll_type: DbCollection, limit: int):
     return await db.client.scooze[coll_type].aggregate(pipeline).to_list(limit)
 
 
+async def get_all_documents(col_type: DbCollection):
+    """
+    Get a random sample of documents from a single collection in the database.
+
+    Args:
+        col_type: The desired collection.
+        limit: The number of documents to return.
+
+    Returns:
+        The list of random documents.
+    """
+
+    return await db.client.scooze[col_type].find().to_list(None)
+
+
 async def get_documents_by_property(
     coll_type: DbCollection,
     property_name: str,
@@ -144,6 +161,7 @@ async def get_documents_by_property(
     Returns:
         A list of matching documents, or None if none were found.
     """
+
     match property_name:
         case "_id":
             vals = [ObjectId(i) for i in values]  # Handle ObjectIds
