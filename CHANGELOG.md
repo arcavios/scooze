@@ -4,6 +4,25 @@
 
 ### Added
 
+- N/A
+
+### Changed
+
+- N/A
+- 
+### Fixed
+
+- N/A
+
+### Docs
+
+- N/A
+
+
+## [1.0.4] - 2023-10-02
+
+### Added
+
 - Add DB/API methods for retrieving all cards at once ([#172](https://github.com/arcavios/scooze/pull/172))
 
 ### Changed
