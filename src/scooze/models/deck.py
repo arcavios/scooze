@@ -13,8 +13,8 @@ class DeckModel(ScoozeBaseModel):
 
     Attributes:
         archetype: The archetype of this DeckModel.
-        format: The format legality of the cards in this DeckModel.
         date_played: The date this DeckModel was played.
+        format: The format legality of the cards in this DeckModel.
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
@@ -41,13 +41,13 @@ class DeckModel(ScoozeBaseModel):
         default="",
         description="The archetype of this Deck.",
     )
-    format: Format = Field(
-        default=Format.NONE,
-        description="The format of the tournament where this Deck was played.",
-    )
     date_played: date = Field(
         default=None,
         description="The date this Deck was played.",
+    )
+    format: Format = Field(
+        default=Format.NONE,
+        description="The format of the tournament where this Deck was played.",
     )
     main: Counter[ObjectIdT] = Field(
         default=Counter(),
