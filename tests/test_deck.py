@@ -170,8 +170,9 @@ def test_deck_from_model(
         }
     )
     deck = Deck[OracleCard].from_model(model)
-    print(deck.archetype)
 
+    # TODO: debuggings
+    print(deck.archetype)
     print(deck._card_class)
 
     assert deck.archetype == model.archetype

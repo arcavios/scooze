@@ -1,9 +1,11 @@
-from functools import cached_property
 import json
 from collections import Counter
+from dataclasses import dataclass, field
 from datetime import date
+from functools import cached_property
+from inspect import ismethod
 from sys import maxsize
-from typing import Generic, Mapping, Self
+from typing import Generic, Mapping, Self, _is_dunder
 
 import scooze.utils as utils
 from bson import ObjectId
@@ -12,40 +14,45 @@ from scooze.card import CardT, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
-from typing import _is_dunder
-from inspect import ismethod
-from dataclasses import dataclass, field
+
+# region TODO: move the Proxy and RuntimeGeneric to new names / utils
+
 
 class Proxy:
-  def __init__(self, generic):
-    object.__setattr__(self, '_generic', generic)
+    def __init__(self, generic):
+        object.__setattr__(self, "_generic", generic)
 
-  def __getattr__(self, name):
-    if _is_dunder(name):
-      return getattr(self._generic, name)
-    origin = self._generic.__origin__
-    obj = getattr(origin, name)
-    if ismethod(obj) and isinstance(obj.__self__, type):
-      return lambda *a, **kw: obj.__func__(self, *a, *kw)
-    else:
-      return obj
+    def __getattr__(self, name):
+        if _is_dunder(name):
+            return getattr(self._generic, name)
+        origin = self._generic.__origin__
+        obj = getattr(origin, name)
+        if ismethod(obj) and isinstance(obj.__self__, type):
+            return lambda *a, **kw: obj.__func__(self, *a, *kw)
+        else:
+            return obj
 
-  def __setattr__(self, name, value):
-    return setattr(self._generic, name, value)
+    def __setattr__(self, name, value):
+        return setattr(self._generic, name, value)
 
-  def __call__(self, *args, **kwargs):
-    return self._generic.__call__(*args, **kwargs)
+    def __call__(self, *args, **kwargs):
+        return self._generic.__call__(*args, **kwargs)
 
-  def __repr__(self):
-    return f'<{self.__class__.__name__} of {self._generic!r}>'
+    def __repr__(self):
+        return f"<{self.__class__.__name__} of {self._generic!r}>"
+
 
 class RuntimeGeneric:
-  def __class_getitem__(cls, key):
-    generic = super().__class_getitem__(key)
-    if getattr(generic, '__origin__', None):
-      return Proxy(generic)
-    else:
-      return generic
+    def __class_getitem__(cls, key):
+        generic = super().__class_getitem__(key)
+        if getattr(generic, "__origin__", None):
+            return Proxy(generic)
+        else:
+            return generic
+
+
+# endregion
+
 
 @dataclass
 class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT]):
