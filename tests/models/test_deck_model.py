@@ -123,6 +123,7 @@ def test_eq(archetype, today, main_cards, side_cards):
     )
     assert deckA == deckB
 
+
 def test_model_from_deck():
     # TODO:
     pass

@@ -5,7 +5,6 @@ from copy import deepcopy
 from unittest.mock import MagicMock, patch
 
 import pytest
-from bson import ObjectId
 from scooze.card import OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe
 from scooze.deck import Deck
@@ -142,9 +141,45 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 # region
 
-def test_deck_from_model():
-    # TODO:
-    pass
+
+@patch("scooze.api.card.get_card_by")
+def test_deck_from_model(
+    mock_get_card: MagicMock,
+    mock_cards_collection,
+    archetype_modern_4c,
+    today,
+    main_modern_4c,
+    main_modern_4c_dict,
+    side_modern_4c,
+    side_modern_4c_dict,
+):
+    def mock_get_card_by(property_name, value, card_class):
+        result = mock_cards_collection.find_one({property_name: value})
+        model = CardModelOut.model_validate(result)
+        return OracleCard.from_model(model)
+
+    mock_get_card.side_effect = mock_get_card_by
+
+    model = DeckModel.model_validate(
+        {
+            "archetype": archetype_modern_4c,
+            "date_played": today,
+            "format": Format.MODERN,
+            "main": main_modern_4c_dict,
+            "side": side_modern_4c_dict,
+        }
+    )
+    deck = Deck[OracleCard].from_model(model)
+    print(deck.archetype)
+
+    print(deck._card_class)
+
+    assert deck.archetype == model.archetype
+    assert deck.date_played == model.date_played
+    assert deck.format == model.format
+    assert deck.main == main_modern_4c
+    assert deck.side == side_modern_4c
+
 
 # endregion
 

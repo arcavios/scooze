@@ -1,3 +1,4 @@
+from functools import cached_property
 import json
 from collections import Counter
 from datetime import date
@@ -11,9 +12,43 @@ from scooze.card import CardT, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
+from typing import _is_dunder
+from inspect import ismethod
+from dataclasses import dataclass, field
 
+class Proxy:
+  def __init__(self, generic):
+    object.__setattr__(self, '_generic', generic)
 
-class Deck(utils.ComparableObject, Generic[CardT]):
+  def __getattr__(self, name):
+    if _is_dunder(name):
+      return getattr(self._generic, name)
+    origin = self._generic.__origin__
+    obj = getattr(origin, name)
+    if ismethod(obj) and isinstance(obj.__self__, type):
+      return lambda *a, **kw: obj.__func__(self, *a, *kw)
+    else:
+      return obj
+
+  def __setattr__(self, name, value):
+    return setattr(self._generic, name, value)
+
+  def __call__(self, *args, **kwargs):
+    return self._generic.__call__(*args, **kwargs)
+
+  def __repr__(self):
+    return f'<{self.__class__.__name__} of {self._generic!r}>'
+
+class RuntimeGeneric:
+  def __class_getitem__(cls, key):
+    generic = super().__class_getitem__(key)
+    if getattr(generic, '__origin__', None):
+      return Proxy(generic)
+    else:
+      return generic
+
+@dataclass
+class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -33,14 +68,21 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         main: DeckPart[CardT] = DeckPart(),
         side: DeckPart[CardT] = DeckPart(),
         cmdr: DeckPart[CardT] = DeckPart(),
+        **kwargs,
     ):
         self.archetype = archetype
         self.date_played = DeckNormalizer.to_date(date_played)
         self.format = format
 
+        # TODO: add a post_init function that is called after _new_ and _init_ are over that does the normalization
+        # we want it to be post init because then we can use self._card_class in .to_deck_part(...)
         self.main = DeckNormalizer.to_deck_part(main)
         self.side = DeckNormalizer.to_deck_part(side)
         self.cmdr = DeckNormalizer.to_deck_part(cmdr)
+
+    @cached_property
+    def _card_class(self) -> type[CardT]:
+        return self.__orig_class__.__args__[0]
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -341,12 +383,12 @@ class DeckNormalizer(utils.JsonNormalizer):
         if deck_part is None or isinstance(deck_part, DeckPart):
             return deck_part
         elif all(isinstance(card, card_class) for card in deck_part.keys()):
-            return DeckPart[CardT](cards=deck_part)
+            return DeckPart[card_class](cards=deck_part)
         elif all(isinstance(card, str) for card in deck_part.keys()):
-            return DeckPart[CardT](Counter(cards={ObjectId(card_id): q for card_id, q in deck_part.items()}))
+            return DeckPart[card_class](Counter(cards={ObjectId(card_id): q for card_id, q in deck_part.items()}))
         elif all(isinstance(card, ObjectId) for card in deck_part.keys()):
             with ScoozeApi() as api:
-                return DeckPart[CardT](
+                return DeckPart[card_class](
                     cards=Counter(
                         {api.get_card_by(property_name="_id", value=card_id): q for card_id, q in deck_part.items()}
                     )
