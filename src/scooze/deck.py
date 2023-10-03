@@ -34,20 +34,20 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         archetype: str | None = None,
         date_played: date | None = None,
         format: Format = Format.NONE,
+        card_class: type[CardT] = OracleCard,
         main: DeckPart[CardT] = DeckPart(),
         side: DeckPart[CardT] = DeckPart(),
         cmdr: DeckPart[CardT] = DeckPart(),
-        card_class: type[CardT] = OracleCard,
         **kwargs,
     ):
         self.archetype = archetype
         self.date_played = DeckNormalizer.to_date(date_played)
         self.format = format
+        self.card_class = card_class
 
         self.main = DeckNormalizer.to_deck_part(deck_part=main, card_class=card_class)
         self.side = DeckNormalizer.to_deck_part(deck_part=side, card_class=card_class)
         self.cmdr = DeckNormalizer.to_deck_part(deck_part=cmdr, card_class=card_class)
-
 
     @property
     def cards(self) -> Counter[CardT]:
