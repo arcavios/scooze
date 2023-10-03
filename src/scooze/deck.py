@@ -57,10 +57,11 @@ class RuntimeGeneric:
 class PostInit(type):  # deriving from type is what makes a metaclass
     def __call__(cls, *args, **kwargs):
         # print(f"{cls.__class__}.__call__({args}, {kwargs})")
-        instance = super().__call__(*args, **kwargs)
-        if getattr(cls, "__post_init__", None):
-            instance.__post_init__(*args, **kwargs)
-        return instance
+        # TODO: note that the args does not contain any information about Deck[OracleCard], etc
+        instance = super().__call__(*args, **kwargs)  # create and instance
+        if getattr(cls, "__post_init__", None):  # check if it has a post_init function
+            instance.__post_init__(*args, **kwargs)  # call post init since the instance has been created
+        return instance  # return the instance
 
 
 class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT], metaclass=PostInit):
