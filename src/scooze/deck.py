@@ -54,8 +54,16 @@ class RuntimeGeneric:
 # endregion
 
 
-@dataclass
-class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT]):
+class PostInit(type):  # deriving from type is what makes a metaclass
+    def __call__(cls, *args, **kwargs):
+        # print(f"{cls.__class__}.__call__({args}, {kwargs})")
+        instance = super().__call__(*args, **kwargs)
+        if getattr(cls, "__post_init__", None):
+            instance.__post_init__(*args, **kwargs)
+        return instance
+
+
+class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT], metaclass=PostInit):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -86,6 +94,21 @@ class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT]):
         self.main = DeckNormalizer.to_deck_part(main)
         self.side = DeckNormalizer.to_deck_part(side)
         self.cmdr = DeckNormalizer.to_deck_part(cmdr)
+
+    def __post_init__(
+        self,
+        archetype: str | None = None,
+        date_played: date | None = None,
+        format: Format = Format.NONE,
+        main: DeckPart[CardT] = DeckPart(),
+        side: DeckPart[CardT] = DeckPart(),
+        cmdr: DeckPart[CardT] = DeckPart(),
+        **kwargs,
+    ):
+        # TODO: post init seems to be working, but I _think_ the type for the Generic
+        # like Deck[OracleCard] isn't getting passed along
+        # print("post init")
+        pass
 
     @cached_property
     def _card_class(self) -> type[CardT]:
