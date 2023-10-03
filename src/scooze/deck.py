@@ -387,6 +387,7 @@ class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT], metaclass=Pos
     # endregion
 
 
+# TODO: need to note that this requires access to a local mongo db (or eventually the internet)
 class DeckNormalizer(utils.JsonNormalizer):
     """
     A simple class to use when normalizing non-serializable data from JSON.
