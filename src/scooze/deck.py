@@ -15,56 +15,8 @@ from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
 
-# region TODO: move the Proxy and RuntimeGeneric to new names / utils
 
-
-class Proxy:
-    def __init__(self, generic):
-        object.__setattr__(self, "_generic", generic)
-
-    def __getattr__(self, name):
-        if _is_dunder(name):
-            return getattr(self._generic, name)
-        origin = self._generic.__origin__
-        obj = getattr(origin, name)
-        if ismethod(obj) and isinstance(obj.__self__, type):
-            return lambda *a, **kw: obj.__func__(self, *a, *kw)
-        else:
-            return obj
-
-    def __setattr__(self, name, value):
-        return setattr(self._generic, name, value)
-
-    def __call__(self, *args, **kwargs):
-        return self._generic.__call__(*args, **kwargs)
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} of {self._generic!r}>"
-
-
-class RuntimeGeneric:
-    def __class_getitem__(cls, key):
-        generic = super().__class_getitem__(key)
-        if getattr(generic, "__origin__", None):
-            return Proxy(generic)
-        else:
-            return generic
-
-
-# endregion
-
-
-class PostInit(type):  # deriving from type is what makes a metaclass
-    def __call__(cls, *args, **kwargs):
-        # print(f"{cls.__class__}.__call__({args}, {kwargs})")
-        # TODO: note that the args does not contain any information about Deck[OracleCard], etc
-        instance = super().__call__(*args, **kwargs)  # create and instance
-        if getattr(cls, "__post_init__", None):  # check if it has a post_init function
-            instance.__post_init__(*args, **kwargs)  # call post init since the instance has been created
-        return instance  # return the instance
-
-
-class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT], metaclass=PostInit):
+class Deck(utils.ComparableObject, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -74,6 +26,7 @@ class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT], metaclass=Pos
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
+        card_class: The kind of Cards this Deck contains. Should match CardT.
     """
 
     def __init__(
@@ -81,6 +34,7 @@ class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT], metaclass=Pos
         archetype: str | None = None,
         date_played: date | None = None,
         format: Format = Format.NONE,
+        card_class: type[CardT] = OracleCard,
         main: DeckPart[CardT] = DeckPart(),
         side: DeckPart[CardT] = DeckPart(),
         cmdr: DeckPart[CardT] = DeckPart(),
@@ -89,31 +43,11 @@ class Deck(utils.ComparableObject, RuntimeGeneric, Generic[CardT], metaclass=Pos
         self.archetype = archetype
         self.date_played = DeckNormalizer.to_date(date_played)
         self.format = format
+        self.card_class = card_class
 
-        # TODO: add a post_init function that is called after _new_ and _init_ are over that does the normalization
-        # we want it to be post init because then we can use self._card_class in .to_deck_part(...)
-        self.main = DeckNormalizer.to_deck_part(main)
-        self.side = DeckNormalizer.to_deck_part(side)
-        self.cmdr = DeckNormalizer.to_deck_part(cmdr)
-
-    def __post_init__(
-        self,
-        archetype: str | None = None,
-        date_played: date | None = None,
-        format: Format = Format.NONE,
-        main: DeckPart[CardT] = DeckPart(),
-        side: DeckPart[CardT] = DeckPart(),
-        cmdr: DeckPart[CardT] = DeckPart(),
-        **kwargs,
-    ):
-        # TODO: post init seems to be working, but I _think_ the type for the Generic
-        # like Deck[OracleCard] isn't getting passed along
-        # print("post init")
-        pass
-
-    @cached_property
-    def _card_class(self) -> type[CardT]:
-        return self.__orig_class__.__args__[0]
+        self.main = DeckNormalizer.to_deck_part(deck_part=main, card_class=card_class)
+        self.side = DeckNormalizer.to_deck_part(deck_part=side, card_class=card_class)
+        self.cmdr = DeckNormalizer.to_deck_part(deck_part=cmdr, card_class=card_class)
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -407,6 +341,8 @@ class DeckNormalizer(utils.JsonNormalizer):
 
         Args:
             cards: A list of cards or scooze IDs of cards to normalize.
+            card_class: The kind of Cards the resulting DeckPart will contain.
+            Should match CardT
 
         Returns:
             An instance of DeckPart containing the given cards.
