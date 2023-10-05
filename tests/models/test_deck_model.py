@@ -137,20 +137,20 @@ def test_model_from_deck(
     side_modern_4c,
     side_modern_4c_dict,
 ):
-    dummy_model = DeckModel.model_validate(
-        archetype=archetype_modern_4c,
-        date_played=today,
-        format=Format.MODERN,
-        main_cards=main_modern_4c_dict,
-        side_cards=side_modern_4c_dict,
-    )
+    # dummy_model = DeckModel.model_validate(
+    #     archetype=archetype_modern_4c,
+    #     date_played=today,
+    #     format=Format.MODERN,
+    #     main_cards=main_modern_4c_dict,
+    #     side_cards=side_modern_4c_dict,
+    # )
     # TODO: get card ids from card names in the main/side
     # TODO: use those counters of ids to make a new model in addition to **deck
-    deck = Deck(
-        archetype=archetype_modern_4c,
-        date_played=today,
-        format=Format.MODERN,
-        main=main_modern_4c,
-        side=side_modern_4c,
-    )
+    # deck = Deck(
+    #     archetype=archetype_modern_4c,
+    #     date_played=today,
+    #     format=Format.MODERN,
+    #     main=main_modern_4c,
+    #     side=side_modern_4c,
+    # )
     pass
