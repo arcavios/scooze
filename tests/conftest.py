@@ -3,6 +3,7 @@ from collections import Counter
 from datetime import datetime, timezone
 
 import pytest
+from bson import ObjectId
 from fastapi.testclient import TestClient
 from scooze.card import OracleCard
 from scooze.catalogs import Format, Legality

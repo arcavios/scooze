@@ -770,7 +770,7 @@ def test_oraclecard_from_cardmodel_transform_saga(json_tales_of_master_seshiro, 
 
 def test_fullcard_from_cardmodel_instant(model_ancestral_recall, legalities_ancestral_recall):
     card = FullCard.from_model(model_ancestral_recall)
-    assert card._scooze_id == model_ancestral_recall.scooze_id
+    assert card.scooze_id == model_ancestral_recall.scooze_id
 
     assert card.all_parts is None
     assert card.arena_id is None
