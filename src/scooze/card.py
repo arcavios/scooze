@@ -31,8 +31,8 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.models.card import CardModelOut
-from scooze.utils import FloatableT, HashableObject
 from scooze.models.utils import ObjectIdT
+from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
 CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type
@@ -72,7 +72,7 @@ class Card(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self._scooze_id = None
+        self.scooze_id = None
 
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
@@ -91,6 +91,10 @@ class Card(HashableObject):
 
     @classmethod
     def from_json(cls, data: dict | str) -> Self:
+        """
+        TODO: docstring - mention what this is for
+        """
+
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
@@ -103,7 +107,7 @@ class Card(HashableObject):
         """
 
         card = cls(**model.model_dump())
-        card._scooze_id = model.scooze_id
+        card.scooze_id = model.scooze_id
         return card
 
 

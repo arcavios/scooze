@@ -90,8 +90,8 @@ async def add_card(card: CardT) -> ObjectId:
     card_model = CardModelIn.model_validate(card.__dict__)
     model = await db.add_card(card=card_model)
     if model is not None:
-        card.scooze_id = model.id
-        return model.id
+        # TODO: update card scooze id here?
+        return model.scooze_id
 
 
 async def add_cards(cards: List[CardT]) -> List[ObjectId]:
@@ -106,6 +106,7 @@ async def add_cards(cards: List[CardT]) -> List[ObjectId]:
     """
 
     card_models = [CardModelIn.model_validate(card.__dict__) for card in cards]
+    # TODO: update card scooze id here?
     return await db.add_cards(cards=card_models)
 
 
