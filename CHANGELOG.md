@@ -8,11 +8,12 @@
 
 ### Changed
 
-- N/A
+- Added `None` as valid return type in normalizers ([#190](https://github.com/arcavios/scooze/pull/190))
 - 
 ### Fixed
 
-- N/A
+- Fixed improper runner call in API init ([#190](https://github.com/arcavios/scooze/pull/190))
+- Fixed missing `await` call ([#190](https://github.com/arcavios/scooze/pull/190))
 
 ### Docs
 

@@ -1,10 +1,9 @@
-import asyncio
 from typing import Any, List
 
 import scooze.database.card as db
 from bson import ObjectId
 from scooze.card import CardT, FullCard
-from scooze.models.card import CardModelIn, CardModelOut
+from scooze.models.card import CardModelIn
 
 
 async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> CardT:
@@ -43,6 +42,7 @@ async def get_cards_by(
     Args:
         property_name: The property to check.
         values: A list of values to match on.
+        card_class: The type of card object to return.
         paginated: Whether to paginate the results.
         page: The page to look at, if paginated.
         page_size: The size of each page, if paginated.

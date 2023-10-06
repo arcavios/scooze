@@ -142,7 +142,7 @@ class ScoozeApi(AbstractContextManager):
             A card with the given Oracle ID if found, or None if none were found.
         """
 
-        return self.runner(
+        return self.runner.run(
             card_api.get_card_by(
                 property_name="oracle_id",
                 value=oracle_id,
@@ -179,7 +179,7 @@ class ScoozeApi(AbstractContextManager):
     def get_cards_by_set(self, set_code: str) -> List[CardT]:
         """
         Search the database for all cards in the given set.
-        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)]
+        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
         for a set (e.g. "CMD")
 
         Args:
