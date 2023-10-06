@@ -72,7 +72,7 @@ class Card(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.scooze_id = None
+        self.scooze_id = kwargs.get("scooze_id")
 
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
@@ -107,7 +107,6 @@ class Card(HashableObject):
         """
 
         card = cls(**model.model_dump())
-        card.scooze_id = model.scooze_id
         return card
 
 
@@ -177,6 +176,8 @@ class OracleCard(Card):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        self.scooze_id = kwargs.get("scooze_id")
+
         self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=CardFace)
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
@@ -457,6 +458,8 @@ class FullCard(OracleCard):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        self.scooze_id = kwargs.get("scooze_id")
+
         # region Core Fields
 
         self.arena_id = arena_id
