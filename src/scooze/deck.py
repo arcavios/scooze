@@ -24,15 +24,16 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart[CardT] = DeckPart(),
-        side: DeckPart[CardT] = DeckPart(),
-        cmdr: DeckPart[CardT] = DeckPart(),
+        main: DeckPart[CardT] = None,
+        side: DeckPart[CardT] = None,
+        cmdr: DeckPart[CardT] = None,
     ):
         self.archetype = archetype
         self.format = format
-        self.main = main
-        self.side = side
-        self.cmdr = cmdr
+
+        self.main = main if main is not None else DeckPart()
+        self.side = side if side is not None else DeckPart()
+        self.cmdr = cmdr if cmdr is not None else DeckPart()
 
     @property
     def cards(self) -> Counter[CardT]:

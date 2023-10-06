@@ -348,7 +348,10 @@ class CardPartsNormalizer(JsonNormalizer):
         Returns:
              An instance of PurchaseUris.
         """
-        if purchase_uris is None or isinstance(purchase_uris, PurchaseUris):
+
+        if purchase_uris is None:
+            return PurchaseUris()
+        elif isinstance(purchase_uris, PurchaseUris):
             return purchase_uris
 
         return PurchaseUris(**purchase_uris)
@@ -363,7 +366,10 @@ class CardPartsNormalizer(JsonNormalizer):
         Returns:
              An instance of RelatedUris.
         """
-        if related_uris is None or isinstance(related_uris, RelatedUris):
+
+        if related_uris is None:
+            return RelatedUris()
+        elif isinstance(related_uris, RelatedUris):
             return related_uris
 
         return RelatedUris(**related_uris)
