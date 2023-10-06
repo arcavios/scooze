@@ -76,7 +76,7 @@ async def get_cards_all(
     return [card_class.from_model(m) for m in card_models]
 
 
-async def add_card(card: CardT) -> ObjectId:
+async def add_card(card: CardT) -> CardT:
     """
     Add a card to the database.
 
@@ -89,6 +89,7 @@ async def add_card(card: CardT) -> ObjectId:
 
     card_model = CardModelIn.model_validate(card.__dict__)
     model = await db.add_card(card=card_model)
+
     if model is not None:
         # TODO: update card scooze id here?
         return model.scooze_id

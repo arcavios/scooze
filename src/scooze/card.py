@@ -91,10 +91,6 @@ class Card(HashableObject):
 
     @classmethod
     def from_json(cls, data: dict | str) -> Self:
-        """
-        TODO: docstring - mention what this is for
-        """
-
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
@@ -102,12 +98,7 @@ class Card(HashableObject):
 
     @classmethod
     def from_model(cls, model: CardModelOut) -> Self:
-        """
-        TODO: docstring - mention that this updates the scoozeid?
-        """
-
-        card = cls(**model.model_dump())
-        return card
+        return cls(**model.model_dump())
 
 
 class OracleCard(Card):
@@ -116,6 +107,7 @@ class OracleCard(Card):
     All information in this class is print-agnostic.
 
     Attributes:
+        scooze_id: A unique identifier for a document in a scooze database.
         card_faces: All component CardFace objects of this card, for multifaced
           cards.
         cmc: This card's mana value/converted mana cost.
@@ -249,6 +241,8 @@ class FullCard(OracleCard):
     Scryfall documentation: https://scryfall.com/docs/api/cards
 
     Attributes:
+    scooze_id: A unique identifier for a document in a scooze database.
+
     Core fields
         arena_id: This card's Arena ID, if applicable.
         scryfall_id: Scryfall's unique ID for this card.
