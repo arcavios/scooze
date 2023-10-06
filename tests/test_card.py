@@ -20,6 +20,14 @@ from scooze.models.card import CardModel, FullCardModel
 
 # region Magic Methods
 
+
+def test_no_mutable_defaults():
+    full_card_1 = FullCard()
+    full_card_2 = FullCard()
+    assert id(full_card_1.purchase_uris) != id(full_card_2.purchase_uris)
+    assert id(full_card_1.related_uris) != id(full_card_2.related_uris)
+
+
 # region eq and ne
 
 

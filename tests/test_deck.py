@@ -55,6 +55,14 @@ def dictdiff_empty() -> DictDiff:
 # region Init
 
 
+def test_no_mutable_defaults():
+    deck_1 = Deck()
+    deck_2 = Deck()
+    assert id(deck_1.main) != id(deck_2.main)
+    assert id(deck_1.side) != id(deck_2.side)
+    assert id(deck_1.cmdr) != id(deck_2.cmdr)
+
+
 def test_archetype(archetype_modern_4c):
     deck = Deck[OracleCard](archetype=archetype_modern_4c)
     assert deck.archetype == archetype_modern_4c
