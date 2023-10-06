@@ -24,6 +24,12 @@ def some_cards(card_chalice_of_the_void, card_hallowed_moonlight, card_veil_of_s
 # endregion
 
 
+def test_no_mutable_defaults():
+    deck_part_1 = DeckPart()
+    deck_part_2 = DeckPart()
+    assert id(deck_part_1.cards) != id(deck_part_2.cards)
+
+
 def test_cards(some_cards):
     part = DeckPart(cards=some_cards)
     assert part.cards == some_cards
