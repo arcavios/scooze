@@ -46,8 +46,8 @@ class DeckPart(ComparableObject, Generic[CardT]):
         cards: The cards in this DeckPart.
     """
 
-    def __init__(self, cards: Counter[CardT] = Counter()):
-        self.cards = cards
+    def __init__(self, cards: Counter[CardT] = None):
+        self.cards = cards if cards is not None else Counter()
 
     def __getitem__(self, key: CardT):
         return self.cards[key]

@@ -1,4 +1,3 @@
-import asyncio
 from typing import Any, List
 
 import scooze.database.card as db
@@ -43,6 +42,7 @@ async def get_cards_by(
     Args:
         property_name: The property to check.
         values: A list of values to match on.
+        card_class: The type of card object to return.
         paginated: Whether to paginate the results.
         page: The page to look at, if paginated.
         page_size: The size of each page, if paginated.
@@ -59,6 +59,20 @@ async def get_cards_by(
         page=page,
         page_size=page_size,
     )
+    return [card_class.from_model(m) for m in card_models]
+
+
+async def get_cards_all(
+    card_class: CardT = FullCard,
+) -> List[CardT]:
+    """
+    Get all cards from the database. WARNING: may be extremely large.
+
+    Returns:
+        A list of all cards in the database.
+    """
+
+    card_models = await db.get_cards_all()
     return [card_class.from_model(m) for m in card_models]
 
 

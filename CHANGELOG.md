@@ -1,5 +1,45 @@
 # Change Log
 
+## [dev]
+
+### Added
+
+- N/A
+
+### Changed
+
+- Added `None` as valid return type in normalizers ([#190](https://github.com/arcavios/scooze/pull/190))
+-
+### Fixed
+
+- Fixed the use of mutable default arguments ([#188](https://github.com/arcavios/scooze/pull/188))
+- Fixed improper runner call in API init ([#190](https://github.com/arcavios/scooze/pull/190))
+- Fixed missing `await` call ([#190](https://github.com/arcavios/scooze/pull/190))
+
+### Docs
+
+- N/A
+
+
+## [1.0.4] - 2023-10-02
+
+### Added
+
+- Add DB/API methods for retrieving all cards at once ([#172](https://github.com/arcavios/scooze/pull/172))
+
+### Changed
+
+- Rename `col_type` to `coll_type` ([#176](https://github.com/arcavios/scooze/pull/176))
+- Update fastapi requirement to allow versions before 1.0.0 ([#179](https://github.com/arcavios/scooze/pull/179))
+
+### Fixed
+
+- Fix "Event Loop Closed" error on multiple API calls ([#169](https://github.com/arcavios/scooze/pull/169))
+
+### Docs
+
+- Add dev section to changelog ([#178](https://github.com/arcavios/scooze/pull/178))
+
 
 ## [1.0.3] - 2023-09-29
 

@@ -14,7 +14,9 @@ from scooze.card import CardT, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
+from typing import TypeVar
 
+DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
 
 class Deck(utils.ComparableObject, Generic[CardT]):
     """
@@ -34,11 +36,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         archetype: str | None = None,
         date_played: date | None = None,
         format: Format = Format.NONE,
-        card_class: type[CardT] = OracleCard,
-        main: DeckPart[CardT] = DeckPart(),
-        side: DeckPart[CardT] = DeckPart(),
-        cmdr: DeckPart[CardT] = DeckPart(),
-        **kwargs,
+        card_class: CardT = OracleCard,
+        main: DeckPartT | None = None,
+        side: DeckPartT | None = None,
+        cmdr: DeckPartT | None = None,
     ):
         self.archetype = archetype
         self.date_played = DeckNormalizer.to_date(date_played)
@@ -183,7 +184,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         throughout all deck parts where N is determined by the max quantity of
         a single cards allowed by the given format.
         - For cards with `Legality.BANNED` or `Legality.NOT_LEGAL`, none may be
-        present throught all deck parts.
+        present throughout all deck parts.
 
         Args:
             format: The format to check against.
@@ -246,7 +247,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Args:
             card: The card to add.
             quantity: The number of copies of the card to be added.
-            in_the: Where to add the card (main, side, etc)
+            in_the: Where to add the card (main, side, etc.)
         """
 
         match in_the:
@@ -265,7 +266,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         Args:
             cards: The cards to add.
-            in_the: Where to add the cards (main, side, etc)
+            in_the: Where to add the cards (main, side, etc.)
         """
 
         match in_the:
@@ -284,7 +285,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Args:
             card: The card to remove.
             quantity: The number of copies of the card to be removed.
-            in_the: Where to remove the cards from (main, side, etc)
+            in_the: Where to remove the cards from (main, side, etc.)
         """
 
         # using counterA - counterB results in a new Counter with only positive results
@@ -304,7 +305,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         Args:
             cards: The cards to remove.
-            in_the: Where to remove the cards from (main, side, etc)
+            in_the: Where to remove the cards from (main, side, etc.)
         """
 
         # using counterA - counterB results in a new Counter with only positive results
@@ -348,7 +349,9 @@ class DeckNormalizer(utils.JsonNormalizer):
             An instance of DeckPart containing the given cards.
         """
 
-        if deck_part is None or isinstance(deck_part, DeckPart):
+        if deck_part is None:
+            return DeckPart()
+        elif isinstance(deck_part, DeckPart):
             return deck_part
         elif all(isinstance(card, card_class) for card in deck_part.keys()):
             return DeckPart[card_class](cards=deck_part)
