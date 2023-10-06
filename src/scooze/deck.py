@@ -2,10 +2,8 @@ import json
 from collections import Counter
 from dataclasses import dataclass, field
 from datetime import date
-from functools import cached_property
-from inspect import ismethod
 from sys import maxsize
-from typing import Generic, Mapping, Self, _is_dunder
+from typing import Generic, Mapping, Self
 
 import scooze.utils as utils
 from bson import ObjectId
@@ -15,24 +13,61 @@ from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
 from typing import TypeVar
+from scooze.models.utils import ObjectIdT
 
+
+## Generic Types
 DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
 
-class Deck(utils.ComparableObject, Generic[CardT]):
+# class Proxy:
+#     def __init__(self, generic):
+#         object.__setattr__(self, "_generic", generic)
+
+#     def __getattr__(self, name):
+#         if _is_dunder(name):
+#             return getattr(self._generic, name)
+#         origin = self._generic.__origin__
+#         obj = getattr(origin, name)
+#         if ismethod(obj) and isinstance(obj.__self__, type):
+#             return lambda *a, **kw: obj.__func__(self, *a, *kw)
+#         else:
+#             return obj
+
+#     def __setattr__(self, name, value):
+#         return setattr(self._generic, name, value)
+
+#     def __call__(self, *args, **kwargs):
+#         return self._generic.__call__(*args, **kwargs)
+
+#     def __repr__(self):
+#         return f"<{self.__class__.__name__} of {self._generic!r}>"
+
+
+# class RuntimeGeneric:
+#     def __class_getitem__(cls, key):
+#         generic = super().__class_getitem__(key)
+#         if getattr(generic, "__origin__", None):
+#             return Proxy(generic)
+#         else:
+#             return generic
+
+class Deck(utils.ComparableObject, Generic[CardT]): # TODO: do we want this to be a RuntimeGeneric?
     """
     A class to represent a deck of Magic: the Gathering cards.
 
     Attributes:
+        scooze_id: A unique identifier for a document in a scooze database.
         archetype: The archetype of this Deck.
         format: The format legality of the cards in this Deck.
+        card_class: The kind of Cards this Deck contains. Should match CardT.
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
-        card_class: The kind of Cards this Deck contains. Should match CardT.
     """
 
     def __init__(
         self,
+        scooze_id: ObjectIdT | None = None,
         archetype: str | None = None,
         date_played: date | None = None,
         format: Format = Format.NONE,
@@ -49,6 +84,11 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         self.main = DeckNormalizer.to_deck_part(deck_part=main, card_class=card_class)
         self.side = DeckNormalizer.to_deck_part(deck_part=side, card_class=card_class)
         self.cmdr = DeckNormalizer.to_deck_part(deck_part=cmdr, card_class=card_class)
+
+    # TODO: do we want this?
+    # @cached_property
+    # def _card_class(self) -> type[CardT]:
+    #     return self.__orig_class__.__args__[0]
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -334,7 +374,7 @@ class DeckNormalizer(utils.JsonNormalizer):
     @classmethod
     def to_deck_part(
         cls,
-        deck_part: DeckPart[CardT] | Mapping[CardT | ObjectId | str, int] | None,
+        deck_part: DeckPartT | None,
         card_class: type[CardT] = OracleCard,
     ) -> DeckPart[CardT]:
         """
