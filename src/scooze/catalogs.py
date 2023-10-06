@@ -5,7 +5,7 @@ from enum import Enum, EnumMeta, StrEnum, auto
 
 class CaseInsensitiveEnumMeta(EnumMeta):
     """
-    An extension of the classic Python EnumMeta to support case insensitive
+    An extension of the classic Python EnumMeta to support case-insensitive
     fields.
     """
 
