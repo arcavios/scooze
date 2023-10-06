@@ -51,7 +51,8 @@ DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
 #         else:
 #             return generic
 
-class Deck(utils.ComparableObject, Generic[CardT]): # TODO: do we want this to be a RuntimeGeneric?
+
+class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to be a RuntimeGeneric?
     """
     A class to represent a deck of Magic: the Gathering cards.
 
