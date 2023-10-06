@@ -157,7 +157,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         throughout all deck parts where N is determined by the max quantity of
         a single cards allowed by the given format.
         - For cards with `Legality.BANNED` or `Legality.NOT_LEGAL`, none may be
-        present throught all deck parts.
+        present throughout all deck parts.
 
         Args:
             format: The format to check against.
@@ -220,7 +220,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Args:
             card: The card to add.
             quantity: The number of copies of the card to be added.
-            in_the: Where to add the card (main, side, etc)
+            in_the: Where to add the card (main, side, etc.)
         """
 
         match in_the:
@@ -239,7 +239,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         Args:
             cards: The cards to add.
-            in_the: Where to add the cards (main, side, etc)
+            in_the: Where to add the cards (main, side, etc.)
         """
 
         match in_the:
@@ -258,7 +258,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         Args:
             card: The card to remove.
             quantity: The number of copies of the card to be removed.
-            in_the: Where to remove the cards from (main, side, etc)
+            in_the: Where to remove the cards from (main, side, etc.)
         """
 
         # using counterA - counterB results in a new Counter with only positive results
@@ -278,7 +278,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         Args:
             cards: The cards to remove.
-            in_the: Where to remove the cards from (main, side, etc)
+            in_the: Where to remove the cards from (main, side, etc.)
         """
 
         # using counterA - counterB results in a new Counter with only positive results

@@ -333,7 +333,7 @@ class JsonNormalizer:
         return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
 
     @classmethod
-    def to_enum(cls, e: Type[E], v) -> E:
+    def to_enum(cls, e: Type[E], v) -> E | None:
         """
         Normalize an Enum.
 
@@ -353,7 +353,7 @@ class JsonNormalizer:
         return e[v]
 
     @classmethod
-    def to_float(cls, f: FloatableT | None) -> float:
+    def to_float(cls, f: FloatableT | None) -> float | None:
         """
         Normalize a float.
 
@@ -372,7 +372,7 @@ class JsonNormalizer:
     @classmethod
     def to_frozendict(
         cls, d: Mapping[T, V] | None, convert_key_to_enum: E = None, convert_value_to_enum: N = None
-    ) -> frozendict[T | E, V | N]:
+    ) -> frozendict[T | E, V | N] | None:
         """
         Normalize a frozendict.
 
@@ -400,7 +400,7 @@ class JsonNormalizer:
         )
 
     @classmethod
-    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: E = None) -> frozenset[T | E]:
+    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: E = None) -> frozenset[T | E] | None:
         """
         Normalize a frozenset.
 
@@ -418,7 +418,7 @@ class JsonNormalizer:
         return frozenset({JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in s})
 
     @classmethod
-    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: E = None) -> tuple[T | E]:
+    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: E = None) -> tuple[T | E] | None:
         """
         Normalize a tuple.
 

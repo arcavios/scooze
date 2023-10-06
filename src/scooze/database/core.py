@@ -21,7 +21,7 @@ async def insert_document(coll_type: DbCollection, document: dict[str, Any]):
     """
 
     # Here we find and update with upsert=True instead of inserting to avoid creating duplicates in the database. This
-    # creates less headaches if you doubleclick in the Swagger UI or similar.
+    # creates fewer headaches if you doubleclick in the Swagger UI or similar.
     return await db.client.scooze[coll_type].find_one_and_update(
         document,
         {"$setOnInsert": document},
@@ -150,6 +150,7 @@ async def get_documents_by_property(
     Search the database for documents matching the given criteria, with options for pagination.
 
     Args:
+        coll_type: The collection to read from.
         property_name: The property to check.
         values: A list of values to match on.
         paginated: Whether to paginate the results.
