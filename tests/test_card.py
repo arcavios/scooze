@@ -16,7 +16,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.models.card import CardModel, FullCardModel
+from scooze.models.card import CardModelOut
 
 # region Magic Methods
 
@@ -674,7 +674,7 @@ def test_fullcard_from_json_variation(json_anaconda_portal):
 
 
 def test_card_from_cardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
-    model = CardModel.model_validate(json_ancestral_recall)
+    model = CardModelOut.model_validate(json_ancestral_recall)
     card = Card.from_model(model)
     assert card.cmc == 1.0
     assert card.color_identity == {Color.BLUE}
@@ -688,7 +688,7 @@ def test_card_from_cardmodel_instant(json_ancestral_recall, legalities_ancestral
 
 
 def test_card_from_cardmodel_creature(json_mystic_snake):
-    model = CardModel.model_validate(json_mystic_snake)
+    model = CardModelOut.model_validate(json_mystic_snake)
     card = Card.from_model(model)
     assert card.color_identity == {Color.BLUE, Color.GREEN}
     assert card.colors == {Color.BLUE, Color.GREEN}
@@ -697,28 +697,13 @@ def test_card_from_cardmodel_creature(json_mystic_snake):
     assert card.type_line == "Creature — Snake"
 
 
-# NOTE: just to see if going from FullCardModel -> Card works alright
-def test_card_from_fullcardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
-    model = FullCardModel.model_validate(json_ancestral_recall)
-    card = Card.from_model(model)
-    assert card.cmc == 1.0
-    assert card.color_identity == {Color.BLUE}
-    assert card.colors == {Color.BLUE}
-    assert card.legalities == legalities_ancestral_recall
-    assert card.mana_cost == "{U}"
-    assert card.name == "Ancestral Recall"
-    assert card.power is None
-    assert card.toughness is None
-    assert card.type_line == "Instant"
-
-
 # endregion
 
 # region FullCardModel -> OracleCard
 
 
-def test_oraclecard_from_fullcardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
-    model = FullCardModel.model_validate(json_ancestral_recall)
+def test_oraclecard_from_cardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
+    model = CardModelOut.model_validate(json_ancestral_recall)
     card = OracleCard.from_model(model)
     assert card.card_faces is None
     assert card.cmc == 1.0
@@ -745,8 +730,8 @@ def test_oraclecard_from_fullcardmodel_instant(json_ancestral_recall, legalities
     assert card.type_line == "Instant"
 
 
-def test_oraclecard_from_fullcardmodel_transform_saga(json_tales_of_master_seshiro, oracle_tales_of_master_seshiro):
-    model = FullCardModel.model_validate(json_tales_of_master_seshiro)
+def test_oraclecard_from_cardmodel_transform_saga(json_tales_of_master_seshiro, oracle_tales_of_master_seshiro):
+    model = CardModelOut.model_validate(json_tales_of_master_seshiro)
     card = OracleCard.from_model(model)
     assert len(card.card_faces) == 2
     front, back = card.card_faces
@@ -783,9 +768,10 @@ def test_oraclecard_from_fullcardmodel_transform_saga(json_tales_of_master_seshi
 # region FullCardModel -> FullCard
 
 
-def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
-    model = FullCardModel.model_validate(json_ancestral_recall)
-    card = FullCard.from_model(model)
+def test_fullcard_from_cardmodel_instant(model_ancestral_recall, legalities_ancestral_recall):
+    card = FullCard.from_model(model_ancestral_recall)
+    assert card._scooze_id == model_ancestral_recall.scooze_id
+
     assert card.all_parts is None
     assert card.arena_id is None
     assert card.artist == "Ryan Pancoast"
@@ -900,7 +886,7 @@ def test_fullcard_from_fullcardmodel_instant(json_ancestral_recall, legalities_a
 def test_fullcard_from_fullcardmodel_transform_planeswalker(
     json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury
 ):
-    model = FullCardModel.model_validate(json_arlinn_the_packs_hope)
+    model = CardModelOut.model_validate(json_arlinn_the_packs_hope)
     card = FullCard.from_model(model)
     assert len(card.card_faces) == 2
     front, back = card.card_faces
@@ -970,7 +956,7 @@ def test_fullcard_from_fullcardmodel_transform_planeswalker(
 def test_fullcard_from_fullcardmodel_reversible(
     json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
 ):
-    model = FullCardModel.model_validate(json_zndrsplt_eye_of_wisdom)
+    model = CardModelOut.model_validate(json_zndrsplt_eye_of_wisdom)
     card = FullCard.from_model(model)
 
     # all_parts (RelatedCards)
@@ -1154,19 +1140,19 @@ def test_fullcard_from_fullcardmodel_reversible(
 
 
 def test_fullcard_from_fullcardmodel_watermark(json_anaconda_7ed_foil):
-    model = FullCardModel.model_validate(json_anaconda_7ed_foil)
+    model = CardModelOut.model_validate(json_anaconda_7ed_foil)
     card = FullCard.from_model(model)
     assert card.watermark == "wotc"
 
 
 def test_fullcard_from_fullcardmodel_non_english(json_python_spanish):
-    model = FullCardModel.model_validate(json_python_spanish)
+    model = CardModelOut.model_validate(json_python_spanish)
     card = FullCard.from_model(model)
     assert card.printed_name == "Pitón"
 
 
 def test_fullcard_from_fullcardmodel_flavor(json_elessar_the_elfstone):
-    model = FullCardModel.model_validate(json_elessar_the_elfstone)
+    model = CardModelOut.model_validate(json_elessar_the_elfstone)
     card = FullCard.from_model(model)
     assert card.flavor_name == "Elessar, the Elfstone"
     assert card.flavor_text == "Aragorn took the green stone and held it up, and there came a green fire from his hand."
@@ -1174,13 +1160,13 @@ def test_fullcard_from_fullcardmodel_flavor(json_elessar_the_elfstone):
 
 
 def test_fullcard_from_fullcardmodel_attraction(json_trash_bin):
-    model = FullCardModel.model_validate(json_trash_bin)
+    model = CardModelOut.model_validate(json_trash_bin)
     card = FullCard.from_model(model)
     assert card.attraction_lights == {2, 6}
 
 
 def test_fullcard_from_fullcardmodel_variation(json_anaconda_portal):
-    model = FullCardModel.model_validate(json_anaconda_portal)
+    model = CardModelOut.model_validate(json_anaconda_portal)
     card = FullCard.from_model(model)
     assert card.variation is True
     assert card.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda

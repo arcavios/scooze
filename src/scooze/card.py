@@ -30,8 +30,9 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.models.card import CardModel
+from scooze.models.card import CardModelOut
 from scooze.utils import FloatableT, HashableObject
+from scooze.models.utils import ObjectIdT
 
 ## Generic Types
 CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type
@@ -43,6 +44,7 @@ class Card(HashableObject):
     use to sort a decklist.
 
     Attributes:
+        scooze_id: A unique identifier for a document in a scooze database.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
           deckbuilding.
@@ -70,6 +72,8 @@ class Card(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        self._scooze_id = None
+
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
         self.colors = CardNormalizer.to_frozenset(colors, convert_to_enum=Color)
@@ -93,8 +97,14 @@ class Card(HashableObject):
             return cls(**json.loads(data))
 
     @classmethod
-    def from_model(cls, model: CardModel) -> Self:
-        return cls(**model.model_dump())
+    def from_model(cls, model: CardModelOut) -> Self:
+        """
+        TODO: docstring - mention that this updates the scoozeid?
+        """
+
+        card = cls(**model.model_dump())
+        card._scooze_id = model.scooze_id
+        return card
 
 
 class OracleCard(Card):

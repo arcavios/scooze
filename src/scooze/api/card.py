@@ -90,6 +90,7 @@ async def add_card(card: CardT) -> ObjectId:
     card_model = CardModelIn.model_validate(card.__dict__)
     model = await db.add_card(card=card_model)
     if model is not None:
+        card.scooze_id = model.id
         return model.id
 
 

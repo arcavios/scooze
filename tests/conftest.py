@@ -9,6 +9,7 @@ from scooze.catalogs import Format, Legality
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.main import app
+from scooze.models.card import CardModelOut
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
@@ -58,6 +59,16 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
             return card_json
 
 
+def get_cardmodelout_from_json(card_json: dict) -> CardModelOut:
+    """
+    Helper to get a CardModelOut from some JSON.
+    """
+
+    model = CardModelOut.model_validate(card_json)
+    model.scooze_id = str(ObjectId())
+    return model
+
+
 # endregion
 
 
@@ -68,6 +79,11 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
 @pytest.fixture(scope="session")
 def json_ancestral_recall(cards_json) -> dict:
     return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
+
+
+@pytest.fixture(scope="session")
+def model_ancestral_recall(json_ancestral_recall) -> CardModelOut:
+    return get_cardmodelout_from_json(json_ancestral_recall)
 
 
 # Creature
