@@ -1,5 +1,5 @@
 import asyncio
-from contextlib import AbstractContextManager
+from contextlib import AbstractContextManager, AbstractAsyncContextManager
 from functools import cache
 from typing import Any, List
 
@@ -295,3 +295,39 @@ class ScoozeApi(AbstractContextManager):
         )
 
     # endregion
+
+class AsyncScoozeApi(AbstractAsyncContextManager):
+    def __init__(self, card_class: type[CardT] = FullCard):
+        self.card_class = card_class
+        self.safe_context = False
+
+    async def __aenter__(self):
+        self.safe_context = True
+        self.runner = None
+        await mongo.mongo_connect()
+
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await mongo.mongo_close()
+
+        return None
+    
+    @cache
+    @_check_for_safe_context
+    async def get_card_by_name(self, name: str) -> CardT:
+        """
+        Search the database for a card with the given name.
+
+        Args:
+            name: The card name to search for.
+
+        Returns:
+            A card with the given name if found, or None if none were found.
+        """
+
+        return await card_api.get_card_by(
+                property_name="name",
+                value=name,
+                card_class=self.card_class,
+            )
