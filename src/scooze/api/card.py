@@ -76,7 +76,7 @@ async def get_cards_all(
     return [card_class.from_model(m) for m in card_models]
 
 
-async def add_card(card: CardT) -> CardT:
+async def add_card(card: CardT) -> ObjectId:
     """
     Add a card to the database.
 
