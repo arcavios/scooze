@@ -2,6 +2,7 @@ from typing import Any
 
 from bson import ObjectId
 from pymongo import ReturnDocument
+from pymongo.results import DeleteResult
 from scooze.catalogs import DbCollection
 from scooze.database.mongo import db
 
@@ -175,7 +176,21 @@ async def get_documents_by_property(
     )
 
 
-async def delete_documents(coll_type: DbCollection):
+async def delete_documents_by_id(coll_type: DbCollection, ids: list[ObjectId]) -> DeleteResult:
+    """
+    Deletes multiple documents from the database with the given IDs.
+
+    Args:
+        ids: The IDs of the documents to delete.
+
+    Returns:
+        A PyMongo DeleteResult.
+    """
+
+    return await db.client.scooze[coll_type].delete_many({"_id": {"$in": ids}})
+
+
+async def delete_documents(coll_type: DbCollection) -> DeleteResult:
     """
     Delete all documents in a single collection from the database.
 

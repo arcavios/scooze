@@ -1,0 +1,2 @@
+class BulkAddError(BaseException):
+    pass

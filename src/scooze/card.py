@@ -30,7 +30,8 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.models.card import CardModel
+from scooze.models.card import CardModelOut
+from scooze.models.utils import ObjectIdT
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
@@ -43,6 +44,7 @@ class Card(HashableObject):
     use to sort a decklist.
 
     Attributes:
+        scooze_id: A unique identifier for a document in a scooze database.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
           deckbuilding.
@@ -70,6 +72,8 @@ class Card(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        self.scooze_id = kwargs.get("scooze_id")
+
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
         self.colors = CardNormalizer.to_frozenset(colors, convert_to_enum=Color)
@@ -93,7 +97,7 @@ class Card(HashableObject):
             return cls(**json.loads(data))
 
     @classmethod
-    def from_model(cls, model: CardModel) -> Self:
+    def from_model(cls, model: CardModelOut) -> Self:
         return cls(**model.model_dump())
 
 
@@ -103,6 +107,7 @@ class OracleCard(Card):
     All information in this class is print-agnostic.
 
     Attributes:
+        scooze_id: A unique identifier for a document in a scooze database.
         card_faces: All component CardFace objects of this card, for multifaced
           cards.
         cmc: This card's mana value/converted mana cost.
@@ -163,6 +168,8 @@ class OracleCard(Card):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        self.scooze_id = kwargs.get("scooze_id")
+
         self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=CardFace)
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
@@ -234,6 +241,8 @@ class FullCard(OracleCard):
     Scryfall documentation: https://scryfall.com/docs/api/cards
 
     Attributes:
+    scooze_id: A unique identifier for a document in a scooze database.
+
     Core fields
         arena_id: This card's Arena ID, if applicable.
         scryfall_id: Scryfall's unique ID for this card.
@@ -443,6 +452,8 @@ class FullCard(OracleCard):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        self.scooze_id = kwargs.get("scooze_id")
+
         # region Core Fields
 
         self.arena_id = arena_id
