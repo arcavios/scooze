@@ -34,6 +34,8 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 2. Setup the database
     - Using Docker:
 
+        *Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is running.*
+
          ```
          scooze setup docker
          ```
