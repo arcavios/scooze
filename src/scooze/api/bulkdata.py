@@ -1,5 +1,3 @@
-import os
-
 import ijson
 import scooze.database.card as db
 from pydantic_core import ValidationError
