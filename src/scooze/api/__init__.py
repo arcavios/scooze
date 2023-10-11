@@ -2,6 +2,7 @@ import asyncio
 from contextlib import AbstractContextManager
 from functools import cache
 from typing import Any, List
+from scooze.asyncio_utils import Runner
 
 import scooze.api.bulkdata as bulkdata_api
 import scooze.api.card as card_api
@@ -42,7 +43,7 @@ class ScoozeApi(AbstractContextManager):
 
     def __enter__(self):
         self.safe_context = True
-        self.runner = asyncio.Runner()
+        self.runner = Runner()
         self.runner.run(mongo.mongo_connect())
 
         return self

@@ -1,4 +1,4 @@
-import asyncio
+from scooze.asyncio_utils import Runner
 
 import pytest
 from scooze.card import Card, FullCard, OracleCard
@@ -6,7 +6,7 @@ from scooze.card import Card, FullCard, OracleCard
 
 @pytest.fixture(scope="session")
 def asyncio_runner():
-    with asyncio.Runner() as runner:
+    with Runner() as runner:
         yield runner
 
 

@@ -3,7 +3,8 @@ import logging
 import os.path
 from datetime import date, datetime
 from sys import maxsize, stdout
-from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, Type, TypeVar
+from typing_extensions import Self
 
 from frozendict import frozendict
 from scooze.catalogs import ExtendedEnum, Format

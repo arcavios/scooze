@@ -1,7 +1,8 @@
 import json
 import re
 from datetime import date
-from typing import Iterable, Mapping, Self, TypeVar
+from typing import Iterable, Mapping, TypeVar
+from typing_extensions import Self
 
 from scooze.cardparts import (
     CardFace,

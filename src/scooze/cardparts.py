@@ -1,6 +1,7 @@
 import json
 from datetime import date
-from typing import Iterable, Mapping, Self
+from typing import Iterable, Mapping
+from typing_extensions import Self
 
 from scooze.catalogs import Color, Component, Layout
 from scooze.utils import FloatableT, HashableObject, JsonNormalizer

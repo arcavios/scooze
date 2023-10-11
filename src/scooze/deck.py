@@ -1,6 +1,7 @@
 from collections import Counter
 from sys import maxsize
-from typing import Generic, Self
+from typing import Generic
+from typing_extensions import Self
 
 import scooze.utils as utils
 from scooze.card import CardT
