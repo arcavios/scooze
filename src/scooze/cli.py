@@ -2,8 +2,11 @@ import argparse
 import asyncio
 import json
 import os
+import subprocess
 
+import docker
 import ijson
+import pkg_resources
 import scooze.database.deck as deck_db
 import uvicorn
 from scooze.api import ScoozeApi
@@ -26,6 +29,12 @@ def parse_args():
         f"""deck data to test with, or to run the scooze Swagger UI/ReDocs.\n"""
         f"""You can use the following commands:\n\n"""
         f"""    run             Run the Swagger UI/ReDocs.\n\n"""
+        f"""    setup           Setup MongoDB.\n"""
+        f"""        docker      Setup MongoDB in a Docker container.\n"""
+        f"""        local       Setup MongoDB locally.\n\n"""
+        f"""    teardown        Teardown MongoDB.\n"""
+        f"""        docker      Teardown MongoDB Docker container.\n"""
+        f"""        local       Teardown local Mongo database.\n\n"""
         f"""    load-cards      Choose one:\n"""
         f"""        test        The Power 9, for testing purposes.\n"""
         f"""        oracle      One version of each card ever printed.\n"""
@@ -39,6 +48,7 @@ def parse_args():
         f"""        cards       Remove all cards from the database.\n"""
         f"""        decks       Remove all decks from the database.\n"""
         f"""        all         Delete everything.\n\n"""
+        f"""    version         Shows the current installed version of Scooze.\n\n"""
         f"""Use -h, --help for more information."""
     )
     parser = argparse.ArgumentParser(description=arg_desc, formatter_class=SmartFormatter)
@@ -63,6 +73,9 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
     command = commands[0]
     subcommands = commands[1:]
     match command:
+        case "version":
+            pkg_name = "scooze"
+            print(f"{pkg_name} {pkg_resources.get_distribution(pkg_name).version}")
         case "run":
             # TODO(6): Replace localhost with wherever we're hosting
             uvicorn.run("scooze.main:app", host="127.0.0.1", port=8000, reload=True)
@@ -92,6 +105,46 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                     s.load_card_file(bulk_file, bulk_dir)
                 if load_test:
                     s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
+        case "setup":
+            if "docker" in subcommands:
+                # Check if Docker is installed and running
+                p = subprocess.run(
+                    "docker stats --no-stream",
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.STDOUT,
+                    shell=True,
+                )
+                if not p.returncode:
+                    client = docker.from_env()
+                    # Check if Docker container is already running
+                    containers = client.containers.list(all=True)
+                    if "scooze-mongodb" in [container.name for container in containers]:
+                        print("Scooze mongodb container already exists! Exiting.")
+                    else:
+                        print("Setting up latest MongoDB Docker container as scooze-mongodb...")
+                        # Start Docker container
+                        client.containers.run(
+                            "mongo:latest", detach=True, ports=({"27017/tcp": 27017}), name="scooze-mongodb"
+                        )
+                        print("Done. MongoDB running on localhost:27017.")
+                else:
+                    print("Cannot connect to Docker daemon -- Is docker installed and running?")
+            else:
+                # TODO(#201) - Add local MongoDB built-in support
+                print("Usage: `scooze setup docker` or `scooze setup local`")
+        case "teardown":
+            if "docker" in subcommands:
+                print("Tearing down Docker container scooze-mongodb...")
+                p = subprocess.run(
+                    "docker kill scooze-mongodb && docker rm scooze-mongodb && docker image rm mongo:latest",
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.STDOUT,
+                    shell=True,
+                )
+                print("Done.")
+            else:
+                # TODO(#201) - Add local MongoDB built-in support
+                print("Usage: `scooze teardown docker` or `scooze teardown local`")
         case "load-decks":
             # TODO(#145): Use ScoozeApi to load decks via API
             if "all" in subcommands:

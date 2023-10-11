@@ -26,7 +26,7 @@ def download_bulk_data_file(
     # TODO(#74): flag for check vs existing file; don't overwrite with same file or older version
     with requests.get(uri, stream=True) as r:
         r.raise_for_status()
-        os.makedirs(os.path.dirname(bulk_file_dir), exist_ok=True)
+        os.makedirs(bulk_file_dir, exist_ok=True)
         file_name = f"{bulk_file_dir}/{bulk_file_type}.json"
         with open(file_name, "wb") as f:
             for chunk in r.iter_content(chunk_size=None):
