@@ -174,7 +174,13 @@ async def get_cards_by_property(
 
 async def delete_cards_by_id(card_ids: list[ObjectId]) -> int:
     """
-    TODO: docstring
+    Deletes multiple cards from the database with the given IDs.
+
+    Args:
+        card_ids: The IDs of the cards to delete.
+
+    Returns:
+        The number of cards deleted, or None if none could be deleted.
     """
 
     delete_many_result = await db_core.delete_documents_by_id(DbCollection.CARDS, card_ids)
