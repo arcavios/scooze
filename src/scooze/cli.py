@@ -6,13 +6,13 @@ import subprocess
 
 import docker
 import ijson
+import pkg_resources
 import scooze.database.deck as deck_db
 import uvicorn
 from scooze.api import ScoozeApi
 from scooze.catalogs import DbCollection, ScryfallBulkFile
 from scooze.models.deck import DeckModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR, DEFAULT_DECKS_DIR, SmartFormatter
-import pkg_resources
 
 
 def run_cli():
@@ -73,7 +73,7 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
     subcommands = commands[1:]
     match command:
         case "version":
-            print(pkg_resources.get_distribution('scooze').version)
+            print(pkg_resources.get_distribution("scooze").version)
         case "run":
             # TODO(6): Replace localhost with wherever we're hosting
             uvicorn.run("scooze.main:app", host="127.0.0.1", port=8000, reload=True)
