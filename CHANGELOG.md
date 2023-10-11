@@ -9,7 +9,8 @@
 ### Changed
 
 - Added `None` as valid return type in normalizers ([#190](https://github.com/arcavios/scooze/pull/190))
--
+- Added AsyncScoozeApi as a way to use API endpoints in an async context (fixes Jupyter compatability) ([#199](https://github.com/arcavios/scooze/pull/199))
+
 ### Fixed
 
 - Fixed the use of mutable default arguments ([#188](https://github.com/arcavios/scooze/pull/188))
