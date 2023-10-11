@@ -32,7 +32,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     ```
 
 2. Setup the database
-    1. Using Docker:
+    - Using Docker:
 
          ```
          scooze setup docker
@@ -40,7 +40,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
          * This will pull the latest MongoDB issued image for your machine's distribution, and spin up the container with port 27017 bound to the host's port 27017.
          * After this, you can continue to (4) below.
 
-    2. Running MongoDB locally:
+    - Running MongoDB locally:
 
          Scooze depends on MongoDB to run your local database.
          Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
