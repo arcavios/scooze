@@ -369,13 +369,13 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         """
 
         return await card_api.get_cards_by(
-                property_name=property_name,
-                values=values,
-                card_class=self.card_class,
-                paginated=paginated,
-                page=page,
-                page_size=page_size,
-            )
+            property_name=property_name,
+            values=values,
+            card_class=self.card_class,
+            paginated=paginated,
+            page=page,
+            page_size=page_size,
+        )
 
     # region Convenience methods for single-card lookup
 
@@ -393,10 +393,10 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         """
 
         return await card_api.get_card_by(
-                property_name="name",
-                value=name,
-                card_class=self.card_class,
-            )
+            property_name="name",
+            value=name,
+            card_class=self.card_class,
+        )
 
     @cache
     @_check_for_safe_context
@@ -412,10 +412,10 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         """
 
         return await card_api.get_card_by(
-                property_name="oracle_id",
-                value=oracle_id,
-                card_class=self.card_class,
-            )
+            property_name="oracle_id",
+            value=oracle_id,
+            card_class=self.card_class,
+        )
 
     @cache
     @_check_for_safe_context
@@ -431,10 +431,10 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         """
 
         return await card_api.get_card_by(
-                property_name="scryfall_id",
-                value=scryfall_id,
-                card_class=self.card_class,
-            )
+            property_name="scryfall_id",
+            value=scryfall_id,
+            card_class=self.card_class,
+        )
 
     # endregion
 
@@ -455,10 +455,10 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         """
 
         return await card_api.get_cards_by(
-                property_name="set",
-                values=[set_code],
-                card_class=self.card_class,
-            )
+            property_name="set",
+            values=[set_code],
+            card_class=self.card_class,
+        )
 
     @_check_for_safe_context
     async def get_cards_all(self) -> List[CardT]:
@@ -551,8 +551,8 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         """
 
         return await bulkdata_api.load_card_file(
-                file_type=file_type,
-                bulk_file_dir=bulk_file_dir,
-            )
+            file_type=file_type,
+            bulk_file_dir=bulk_file_dir,
+        )
 
     # endregion

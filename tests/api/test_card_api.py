@@ -1,69 +1,68 @@
 from unittest.mock import MagicMock, patch
 
+import pytest
 import scooze.api.card as card_api
 from bson import ObjectId
 from scooze.card import Card, FullCard, OracleCard
+from scooze.errors import BulkAddError
 from scooze.models.card import CardModelOut
 
 
 @patch("scooze.database.card.get_card_by_property")
 def test_get_base_card(mock_get: MagicMock, recall_base, asyncio_runner):
     model = CardModelOut.model_validate(recall_base.__dict__)
-    model.id = ObjectId()
     mock_get.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.get_card_by(property_name="id", value=model.id, card_class=Card))
+    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=model.scooze_id, card_class=Card))
     assert result == recall_base
 
 
 @patch("scooze.database.card.get_card_by_property")
 def test_get_oracle_card(mock_get: MagicMock, recall_oracle, asyncio_runner):
     model = CardModelOut.model_validate(recall_oracle.__dict__)
-    model.id = ObjectId()
     mock_get.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.get_card_by(property_name="id", value=model.id, card_class=OracleCard))
+    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=model.scooze_id, card_class=OracleCard))
     assert result == recall_oracle
 
 
 @patch("scooze.database.card.get_card_by_property")
 def test_get_full_card(mock_get: MagicMock, recall_full, asyncio_runner):
     model = CardModelOut.model_validate(recall_full.__dict__)
-    model.id = ObjectId()
     mock_get.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.get_card_by(property_name="id", value=model.id, card_class=FullCard))
+    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=model.scooze_id, card_class=FullCard))
     assert result == recall_full
 
 
 @patch("scooze.database.card.get_card_by_property")
 def test_get_card_bad(mock_get: MagicMock, asyncio_runner):
     mock_get.return_value = None
-    result = asyncio_runner.run(card_api.get_card_by(property_name="id", value=ObjectId(), card_class=Card))
+    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=ObjectId(), card_class=Card))
     assert result is None
 
 
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_base_cards(mock_get: MagicMock, cards_base, asyncio_runner):
     models = [CardModelOut.model_validate(card.__dict__) for card in cards_base]
-    ids = [model.id for model in models]
+    ids = [model.scooze_id for model in models]
     mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_by(property_name="id", values=ids, card_class=Card))
+    results = asyncio_runner.run(card_api.get_cards_by(property_name="_id", values=ids, card_class=Card))
     assert results == cards_base
 
 
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_oracle_cards(mock_get: MagicMock, cards_oracle, asyncio_runner):
     models = [CardModelOut.model_validate(card.__dict__) for card in cards_oracle]
-    ids = [model.id for model in models]
+    ids = [model.scooze_id for model in models]
     mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_by(property_name="id", values=ids, card_class=OracleCard))
+    results = asyncio_runner.run(card_api.get_cards_by(property_name="_id", values=ids, card_class=OracleCard))
     assert results == cards_oracle
 
 
 @patch("scooze.database.card.get_cards_by_property")
 def test_get_full_cards(mock_get: MagicMock, cards_full, asyncio_runner):
     models = [CardModelOut.model_validate(card.__dict__) for card in cards_full]
-    ids = [model.id for model in models]
+    ids = [model.scooze_id for model in models]
     mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_by(property_name="id", values=ids, card_class=FullCard))
+    results = asyncio_runner.run(card_api.get_cards_by(property_name="_id", values=ids, card_class=FullCard))
     assert results == cards_full
 
 
@@ -103,28 +102,29 @@ def test_get_cards_bad(mock_get: MagicMock, cards_base, asyncio_runner):
 @patch("scooze.database.card.add_card")
 def test_add_base_card(mock_add: MagicMock, recall_base, asyncio_runner):
     model = CardModelOut.model_validate(recall_base.__dict__)
-    model.id = ObjectId()
+    model.scooze_id = ObjectId()
     mock_add.return_value: CardModelOut = model
     result = asyncio_runner.run(card_api.add_card(card=recall_base))
-    assert result == model.id
+    assert recall_base.scooze_id == model.scooze_id
+    assert result == model.scooze_id
 
 
 @patch("scooze.database.card.add_card")
 def test_add_oracle_card(mock_add: MagicMock, recall_oracle, asyncio_runner):
     model = CardModelOut.model_validate(recall_oracle.__dict__)
-    model.id = ObjectId()
     mock_add.return_value: CardModelOut = model
     result = asyncio_runner.run(card_api.add_card(card=recall_oracle))
-    assert result == model.id
+    assert recall_oracle.scooze_id == model.scooze_id
+    assert result == model.scooze_id
 
 
 @patch("scooze.database.card.add_card")
 def test_add_full_card(mock_add: MagicMock, recall_full, asyncio_runner):
     model = CardModelOut.model_validate(recall_full.__dict__)
-    model.id = ObjectId()
     mock_add.return_value: CardModelOut = model
     result = asyncio_runner.run(card_api.add_card(card=recall_full))
-    assert result == model.id
+    assert recall_full.scooze_id == model.scooze_id
+    assert result == model.scooze_id
 
 
 @patch("scooze.database.card.add_card")
@@ -158,11 +158,14 @@ def test_add_full_cards(mock_add: MagicMock, cards_full, asyncio_runner):
     assert results == ids
 
 
+@patch("scooze.database.card.delete_cards_by_id")
 @patch("scooze.database.card.add_cards")
-def test_add_cards_bad(mock_add: MagicMock, cards_base, asyncio_runner):
+def test_add_cards_bad(mock_add: MagicMock, mock_delete: MagicMock, cards_base, asyncio_runner):
     mock_add.return_value = []
-    results = asyncio_runner.run(card_api.add_cards(cards=cards_base))
-    assert results == []
+    mock_delete.return_value = 0
+
+    with pytest.raises(BulkAddError):
+        asyncio_runner.run(card_api.add_cards(cards=cards_base))
 
 
 @patch("scooze.database.card.delete_cards_all")
