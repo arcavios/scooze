@@ -97,10 +97,12 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                     s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
         case "setup":
             if "docker" in subcommands:
-                # gh - 198
                 # Check if docker is installed and running:
                 p = subprocess.run(
-                    "docker stats --no-stream", stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True
+                    "docker stats --no-stream",
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.STDOUT,
+                    shell=True,
                 )
                 if not p.returncode:
                     client = docker.from_env()
@@ -119,6 +121,17 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                     print("Cannot connect to Docker daemon -- Is docker installed and running?")
             else:
                 print("Usage: `scooze setup docker` or `scooze setup local`")
+        case "teardown":
+            if "docker" in subcommands:
+                print("Tearing down Docker container scooze-mongodb...")
+                p = subprocess.run(
+                    "docker kill scooze-mongodb && docker rm scooze-mongodb && docker image rm mongo:latest",
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.STDOUT,
+                    shell=True,
+                )
+                print("Done.")
+
         case "load-decks":
             # TODO(#145): Use ScoozeApi to load decks via API
             if "all" in subcommands:
