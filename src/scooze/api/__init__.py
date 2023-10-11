@@ -300,7 +300,9 @@ class ScoozeApi(AbstractContextManager):
 
 class AsyncScoozeApi(AbstractAsyncContextManager):
     """
-    Context manager object for doing I/O from a Mongo database.
+    Async context manager object for doing I/O from a Mongo database.
+    Most commonly used in asynchronous contexts like Jupyter Notebooks or other
+    web applications.
 
     Sample usage:
         >>> async with AsyncScoozeApi() as s:
