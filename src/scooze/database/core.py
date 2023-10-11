@@ -175,6 +175,14 @@ async def get_documents_by_property(
     )
 
 
+async def delete_documents_by_id(coll_type: DbCollection, ids: list[ObjectId]):
+    """
+    TODO: docstring
+    """
+
+    return await db.client.scooze[coll_type].delete_many({"_id": {"$in": ids}})
+
+
 async def delete_documents(coll_type: DbCollection):
     """
     Delete all documents in a single collection from the database.

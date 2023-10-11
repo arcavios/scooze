@@ -3,6 +3,7 @@ from typing import Any, List
 import scooze.database.card as db
 from bson import ObjectId
 from scooze.card import CardT, FullCard
+from scooze.errors import BulkAddError
 from scooze.models.card import CardModelIn
 
 
@@ -80,6 +81,8 @@ async def add_card(card: CardT) -> ObjectId:
     """
     Add a card to the database.
 
+    Assign the resulting database ID to the given Card.
+
     Args:
         card: The card to insert.
 
@@ -91,13 +94,15 @@ async def add_card(card: CardT) -> ObjectId:
     model = await db.add_card(card=card_model)
 
     if model is not None:
-        # TODO: update card scooze id here?
+        card.scooze_id = model.scooze_id
         return model.scooze_id
 
 
 async def add_cards(cards: List[CardT]) -> List[ObjectId]:
     """
     Add a list of cards to the database.
+
+    Assign the resulting database IDs to the given Cards.
 
     Args:
         cards: The list of cards to insert.
@@ -106,9 +111,21 @@ async def add_cards(cards: List[CardT]) -> List[ObjectId]:
         The IDs of the inserted cards, or empty list if unable.
     """
 
+    if not cards:
+        return []
+
     card_models = [CardModelIn.model_validate(card.__dict__) for card in cards]
-    # TODO: update card scooze id here?
-    return await db.add_cards(cards=card_models)
+    card_ids = await db.add_cards(cards=card_models)
+
+    if len(card_ids) != len(cards):
+        # TODO(#202): Perform card lookups to get the ids of the cards that were successfully added.
+        await db.delete_cards_by_id(card_ids)
+        raise BulkAddError("Failed to add all cards to the database.")
+    else:
+        for i in range(len(card_ids)):
+            cards[i].scooze_id = card_ids[i]
+
+    return card_ids
 
 
 async def delete_card(id: str) -> bool:

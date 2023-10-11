@@ -172,6 +172,16 @@ async def get_cards_by_property(
     return [CardModelOut.model_validate(card) for card in cards]
 
 
+async def delete_cards_by_id(card_ids: list[ObjectId]) -> int:
+    """
+    TODO: docstring
+    """
+
+    delete_many_result = await db_core.delete_documents_by_id(DbCollection.CARDS, card_ids)
+    if delete_many_result is not None:
+        return delete_many_result.deleted_count
+
+
 async def delete_cards_all() -> int:
     """
     Delete all cards in the database.
