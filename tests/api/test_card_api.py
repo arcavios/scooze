@@ -105,6 +105,7 @@ def test_add_base_card(mock_add: MagicMock, recall_base, asyncio_runner):
     model.scooze_id = ObjectId()
     mock_add.return_value: CardModelOut = model
     result = asyncio_runner.run(card_api.add_card(card=recall_base))
+    assert recall_base.scooze_id == model.scooze_id
     assert result == model.scooze_id
 
 
@@ -113,6 +114,7 @@ def test_add_oracle_card(mock_add: MagicMock, recall_oracle, asyncio_runner):
     model = CardModelOut.model_validate(recall_oracle.__dict__)
     mock_add.return_value: CardModelOut = model
     result = asyncio_runner.run(card_api.add_card(card=recall_oracle))
+    assert recall_oracle.scooze_id == model.scooze_id
     assert result == model.scooze_id
 
 
@@ -121,6 +123,7 @@ def test_add_full_card(mock_add: MagicMock, recall_full, asyncio_runner):
     model = CardModelOut.model_validate(recall_full.__dict__)
     mock_add.return_value: CardModelOut = model
     result = asyncio_runner.run(card_api.add_card(card=recall_full))
+    assert recall_full.scooze_id == model.scooze_id
     assert result == model.scooze_id
 
 
