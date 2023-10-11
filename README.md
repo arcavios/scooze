@@ -32,28 +32,27 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     ```
 
 2. Setup the database
-  1. Using Docker: 
+    1. Using Docker: 
 
-      ```
-      scooze setup docker
-      ```
-      * This will pull the latest MongoDB issued image for your machine's distribution, and spin up the container with port 27017 bound to the host's port 27017.
-      * After this, you can continue to (4) below.
-  2. Running MongoDB locally:
+         ```
+         scooze setup docker
+         ```
+         * This will pull the latest MongoDB issued image for your machine's distribution, and spin up the container with port 27017 bound to the host's port 27017.
+         * After this, you can continue to (4) below.
 
-     Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
+    2. Running MongoDB locally:
 
-     Scooze depends on MongoDB to run your local database.
+         Scooze depends on MongoDB to run your local database.
+         Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
 
-     *You can use scooze without MongoDB if you don't intend to use any of its database-related features.*
+         *You can use scooze without MongoDB if you don't intend to use any of its database-related features.*
+         *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
 
-     Run the MongoDB server with
+         Run the MongoDB server with
   
-     ```
-     mongod --dbpath path/to/db/
-     ```
-
-     *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
+         ```
+         mongod --dbpath path/to/db/
+         ```
 
 4. Run the scooze CLI tool (installed with pip install) to add some data to your local database.
 
