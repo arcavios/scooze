@@ -26,6 +26,7 @@
 ### Added
 
 - Add DB/API methods for retrieving all cards at once ([#172](https://github.com/arcavios/scooze/pull/172))
+- Add Docker support for starting MongoDB via the CLI ([#200](https://github.com/arcavios/scooze/pull/200))
 
 ### Changed
 
