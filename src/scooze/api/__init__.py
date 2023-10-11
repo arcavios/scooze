@@ -499,7 +499,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
             The IDs of the inserted cards, or empty list if unable.
         """
 
-        return card_api.add_cards(cards=cards)
+        return await card_api.add_cards(cards=cards)
 
     @_check_for_safe_context
     async def delete_card(self, id: str) -> bool:
