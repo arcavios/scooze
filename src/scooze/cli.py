@@ -2,6 +2,8 @@ import argparse
 import asyncio
 import json
 import os
+import docker
+import subprocess
 
 import ijson
 import scooze.database.deck as deck_db
@@ -26,6 +28,7 @@ def parse_args():
         f"""deck data to test with, or to run the scooze Swagger UI/ReDocs.\n"""
         f"""You can use the following commands:\n\n"""
         f"""    run             Run the Swagger UI/ReDocs.\n\n"""
+        f"""    setup           Setup mongodb dataset/ReDocs.\n\n"""
         f"""    load-cards      Choose one:\n"""
         f"""        test        The Power 9, for testing purposes.\n"""
         f"""        oracle      One version of each card ever printed.\n"""
@@ -92,6 +95,31 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                     s.load_card_file(bulk_file, bulk_dir)
                 if load_test:
                     s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
+        case "setup":
+            if "docker" in subcommands:
+              # gh - 198
+              # Check if docker is installed and running:
+              p = subprocess.run(
+                "docker stats --no-stream",
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+                shell=True)
+              if not p.returncode:
+                client = docker.from_env()
+                # Check if docker container is already running
+                containers=client.containers.list(all=True)
+                if "scooze-mongodb" in containers:
+                  print("Scooze mongodb container already exists! exiting.")
+                else:
+                  # Start docker container 
+                  client.containers.run("mongo:latest",
+                  detach=True,
+                  ports=({'27017/tcp':27017}),
+                  name="scooze-mongodb")
+              else: 
+                print("Cannot connect to Docker daemon -- Is docker installed and running?")
+            else:
+              print("Usage: `scooze setup docker` or `scooze setup local`")
         case "load-decks":
             # TODO(#145): Use ScoozeApi to load decks via API
             if "all" in subcommands:
