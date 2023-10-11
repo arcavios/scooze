@@ -1,5 +1,3 @@
-import os
-
 import requests
 from scooze.catalogs import ScryfallBulkFile
 from scooze.utils import DEFAULT_BULK_FILE_DIR
