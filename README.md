@@ -32,7 +32,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     ```
 
 2. Setup the database
-    1. Using Docker: 
+    1. Using Docker:
 
          ```
          scooze setup docker
@@ -50,7 +50,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
          *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
 
          Run the MongoDB server with
-  
+
          ```
          mongod --dbpath path/to/db/
          ```

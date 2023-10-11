@@ -16,10 +16,10 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
         to insert into the database.
         bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
     """
-    
+
     file_path = f"{bulk_file_dir}/{file_type}.json"
     if not os.path.exists(bulk_file_dir):
-      os.makedirs(bulk_file_dir)
+        os.makedirs(bulk_file_dir)
     try:
         with open(file_path, "rb") as cards_file:
             print(f"Loading {file_type} file into the database...")

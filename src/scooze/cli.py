@@ -2,9 +2,9 @@ import argparse
 import asyncio
 import json
 import os
-import docker
 import subprocess
 
+import docker
 import ijson
 import scooze.database.deck as deck_db
 import uvicorn
@@ -97,29 +97,28 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                     s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
         case "setup":
             if "docker" in subcommands:
-              # gh - 198
-              # Check if docker is installed and running:
-              p = subprocess.run(
-                "docker stats --no-stream",
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.STDOUT,
-                shell=True)
-              if not p.returncode:
-                client = docker.from_env()
-                # Check if docker container is already running
-                containers=client.containers.list(all=True)
-                if "scooze-mongodb" in containers:
-                  print("Scooze mongodb container already exists! exiting.")
+                # gh - 198
+                # Check if docker is installed and running:
+                p = subprocess.run(
+                    "docker stats --no-stream", stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True
+                )
+                if not p.returncode:
+                    client = docker.from_env()
+                    # Check if docker container is already running
+                    containers = client.containers.list(all=True)
+                    if "scooze-mongodb" in [container.name for container in containers]:
+                        print("Scooze mongodb container already exists! Exiting.")
+                    else:
+                        print("Setting up latest MongoDB Docker container as scooze-mongodb...")
+                        # Start docker container
+                        client.containers.run(
+                            "mongo:latest", detach=True, ports=({"27017/tcp": 27017}), name="scooze-mongodb"
+                        )
+                        print("Done. MongoDB running on localhost:27017.")
                 else:
-                  # Start docker container 
-                  client.containers.run("mongo:latest",
-                  detach=True,
-                  ports=({'27017/tcp':27017}),
-                  name="scooze-mongodb")
-              else: 
-                print("Cannot connect to Docker daemon -- Is docker installed and running?")
+                    print("Cannot connect to Docker daemon -- Is docker installed and running?")
             else:
-              print("Usage: `scooze setup docker` or `scooze setup local`")
+                print("Usage: `scooze setup docker` or `scooze setup local`")
         case "load-decks":
             # TODO(#145): Use ScoozeApi to load decks via API
             if "all" in subcommands:
