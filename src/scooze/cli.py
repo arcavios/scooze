@@ -107,7 +107,7 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                     s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
         case "setup":
             if "docker" in subcommands:
-                # Check if docker is installed and running:
+                # Check if Docker is installed and running
                 p = subprocess.run(
                     "docker stats --no-stream",
                     stdout=subprocess.DEVNULL,
@@ -116,13 +116,13 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                 )
                 if not p.returncode:
                     client = docker.from_env()
-                    # Check if docker container is already running
+                    # Check if Docker container is already running
                     containers = client.containers.list(all=True)
                     if "scooze-mongodb" in [container.name for container in containers]:
                         print("Scooze mongodb container already exists! Exiting.")
                     else:
                         print("Setting up latest MongoDB Docker container as scooze-mongodb...")
-                        # Start docker container
+                        # Start Docker container
                         client.containers.run(
                             "mongo:latest", detach=True, ports=({"27017/tcp": 27017}), name="scooze-mongodb"
                         )
