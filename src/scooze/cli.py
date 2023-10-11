@@ -12,6 +12,7 @@ from scooze.api import ScoozeApi
 from scooze.catalogs import DbCollection, ScryfallBulkFile
 from scooze.models.deck import DeckModelIn
 from scooze.utils import DEFAULT_BULK_FILE_DIR, DEFAULT_DECKS_DIR, SmartFormatter
+import pkg_resources
 
 
 def run_cli():
@@ -28,7 +29,12 @@ def parse_args():
         f"""deck data to test with, or to run the scooze Swagger UI/ReDocs.\n"""
         f"""You can use the following commands:\n\n"""
         f"""    run             Run the Swagger UI/ReDocs.\n\n"""
-        f"""    setup           Setup mongodb dataset/ReDocs.\n\n"""
+        f"""    setup           Setup MongoDB.\n\n"""
+        f"""        docker      Setup MongoDB in a Docker container.\n"""
+        f"""        local       Setup MongoDB locally.\n"""
+        f"""    teardown        Teardown MongoDB.\n\n"""
+        f"""        docker      Teardown MongoDB Docker container.\n"""
+        f"""        local       Teardown local Mongo database.\n"""
         f"""    load-cards      Choose one:\n"""
         f"""        test        The Power 9, for testing purposes.\n"""
         f"""        oracle      One version of each card ever printed.\n"""
@@ -66,6 +72,8 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
     command = commands[0]
     subcommands = commands[1:]
     match command:
+        case "version":
+            print(pkg_resources.get_distribution('scooze').version)
         case "run":
             # TODO(6): Replace localhost with wherever we're hosting
             uvicorn.run("scooze.main:app", host="127.0.0.1", port=8000, reload=True)
@@ -120,6 +128,7 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                 else:
                     print("Cannot connect to Docker daemon -- Is docker installed and running?")
             else:
+                # TODO(#201) - Add local MongoDB built-in support
                 print("Usage: `scooze setup docker` or `scooze setup local`")
         case "teardown":
             if "docker" in subcommands:
@@ -131,7 +140,9 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
                     shell=True,
                 )
                 print("Done.")
-
+            else:
+                # TODO(#201) - Add local MongoDB built-in support
+                print("Usage: `scooze teardown docker` or `scooze teardown local`")
         case "load-decks":
             # TODO(#145): Use ScoozeApi to load decks via API
             if "all" in subcommands:
