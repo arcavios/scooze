@@ -73,7 +73,8 @@ def run_scooze_commands(commands: list[str], bulk_dir: str, decks_dir: str):
     subcommands = commands[1:]
     match command:
         case "version":
-            print(pkg_resources.get_distribution("scooze").version)
+            pkg_name = "scooze"
+            print(f"{pkg_name} {pkg_resources.get_distribution(pkg_name).version}")
         case "run":
             # TODO(6): Replace localhost with wherever we're hosting
             uvicorn.run("scooze.main:app", host="127.0.0.1", port=8000, reload=True)
