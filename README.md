@@ -46,6 +46,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
          Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
 
          *You can use scooze without MongoDB if you don't intend to use any of its database-related features.*
+
          *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
 
          Run the MongoDB server with
