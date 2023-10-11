@@ -1,3 +1,5 @@
+import os
+
 import ijson
 import scooze.database.card as db
 from pydantic_core import ValidationError
@@ -18,8 +20,6 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
     """
 
     file_path = f"{bulk_file_dir}/{file_type}.json"
-    if not os.path.exists(bulk_file_dir):
-        os.makedirs(bulk_file_dir)
     try:
         with open(file_path, "rb") as cards_file:
             print(f"Loading {file_type} file into the database...")

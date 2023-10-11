@@ -40,7 +40,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
          scooze setup docker
          ```
          * This will pull the latest MongoDB issued image for your machine's distribution, and spin up the container with port 27017 bound to the host's port 27017.
-         * After this, you can continue to (4) below.
+         * After this, you can continue to (3) below.
 
     - Running MongoDB locally:
 
@@ -57,7 +57,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
          mongod --dbpath path/to/db/
          ```
 
-4. Run the scooze CLI tool (installed with pip install) to add some data to your local database.
+3. Run the scooze CLI tool (installed with pip install) to add some data to your local database.
 
     ```
     scooze -h
@@ -65,7 +65,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     scooze run
     ```
 
-5. Use scooze in your application code!
+4. Use scooze in your application code!
 
     ```
     from scooze.api import ScoozeApi
