@@ -3,6 +3,7 @@ from __future__ import annotations
 from importlib import import_module
 from typing import TYPE_CHECKING
 
+import pkg_resources
 from cleo.application import Application
 from cleo.loaders.factory_command_loader import FactoryCommandLoader
 
@@ -36,7 +37,8 @@ def load_scooze_command(name: str) -> Callable[[], Command]:
 
 class ScoozeApplication(Application):
     def __init__(self):
-        super().__init__("scooze", "1.0.4")
+        pkg_name = "scooze"
+        super().__init__(pkg_name, f"{pkg_resources.get_distribution(pkg_name).version}")
 
         command_loader = FactoryCommandLoader({name: load_scooze_command(name) for name in COMMANDS})
         self.set_command_loader(command_loader)
