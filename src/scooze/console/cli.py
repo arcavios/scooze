@@ -17,6 +17,9 @@ COMMANDS = [
     # Setup commands
     "setup docker",
     "setup local",
+    # Teardown commands
+    "teardown docker",
+    "teardown local",
 ]
 
 
