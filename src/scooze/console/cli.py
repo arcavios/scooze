@@ -14,6 +14,9 @@ if TYPE_CHECKING:
 # Accepted scooze CLI commands
 COMMANDS = [
     "run",
+    # Setup commands
+    "setup docker",
+    "setup local",
 ]
 
 
