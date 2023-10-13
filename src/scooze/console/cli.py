@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 # Accepted scooze CLI commands
 COMMANDS = [
+    "delete",
     "run",
     # Load commands
     "load cards",
