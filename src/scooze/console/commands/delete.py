@@ -37,7 +37,7 @@ class DeleteCommand(Command):
 
 
 def delete_collection(coll: DbCollection):
-    clean = input(f"Delete existing {coll}? [y/n] ") in "yY"
+    clean = input(f"Delete existing {coll}? [y/N] ") in "yY"
     if clean:
         print(f"Deleting all {coll} from your local database...")
         match coll:
