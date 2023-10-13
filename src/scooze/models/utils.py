@@ -9,9 +9,13 @@ from pydantic_core import CoreSchema, core_schema
 
 
 def _to_lower_camel(string: str) -> str:
-    upper_camel = "".join(word.capitalize() for word in string.split("_"))
-    return upper_camel[0].lower() + upper_camel[1:]
+    words = string.split("_")
 
+    if len(words) > 1:
+        upper_camel = "".join(word.capitalize() for word in words)
+        return upper_camel[0].lower() + upper_camel[1:]
+
+    return words[0]
 
 # endregion
 
