@@ -1,6 +1,6 @@
 import scooze.database.deck as deck_db
 from cleo.commands.command import Command
-from cleo.helpers import option
+from cleo.helpers import argument
 from scooze.api import ScoozeApi
 from scooze.catalogs import DbCollection
 
@@ -9,25 +9,28 @@ class DeleteCommand(Command):
     name = "delete"
     description = "Delete collections from the database."
 
-    options = [
-        option("all", description="Delete everything."),
-        option("cards", description="Remove all cards from the database."),
-        option("decks", description="Remove all decks from the database."),
+    arguments = [
+        argument(
+            "collections",
+            f"Which collections to remove from the database. Can be any of: <fg=cyan>all, cards, decks</>",
+            multiple=True,
+        )
     ]
 
     def handle(self):
         to_delete: list[DbCollection] = []
+        delete_args = self.argument("collections")
 
-        if self.option("all"):
+        if "all" in delete_args:
             to_delete.extend(DbCollection.list())
         else:
-            if self.option("cards"):
+            if "cards" in delete_args:
                 to_delete.append(DbCollection.CARDS)
-            if self.option("decks"):
+            if "decks" in delete_args:
                 to_delete.append(DbCollection.DECKS)
 
         if len(to_delete) == 0:
-            print("No collections were given to delete.")
+            print("No valid collections were given to delete.")
 
         for collection in to_delete:
             delete_collection(collection)
