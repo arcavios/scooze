@@ -40,7 +40,7 @@ class LoadCardsCommand(Command):
                 to_load.append(ScryfallBulkFile.DEFAULT)
 
         if len(to_load) == 0 and not load_test:
-            print("No files were selected to load.")
+            self.line("No files were selected to load.")
 
         with ScoozeApi() as s:
             for bulk_file in to_load:

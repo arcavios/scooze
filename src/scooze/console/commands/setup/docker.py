@@ -21,11 +21,11 @@ class SetupDockerCommand(Command):
             # Check if Docker container is already running
             containers = client.containers.list(all=True)
             if "scooze-mongodb" in [container.name for container in containers]:
-                print("Scooze mongodb container already exists! Exiting.")
+                self.line("Scooze mongodb container already exists! Exiting.")
             else:
-                print("Setting up latest MongoDB Docker container as scooze-mongodb...")
+                self.line("Setting up latest MongoDB Docker container as scooze-mongodb...")
                 # Start Docker container
                 client.containers.run("mongo:latest", detach=True, ports=({"27017/tcp": 27017}), name="scooze-mongodb")
-                print("Done. MongoDB running on localhost:27017.")
+                self.line("Done. MongoDB running on localhost:27017.")
         else:
-            print("Cannot connect to Docker daemon -- Is docker installed and running?")
+            self.line("Cannot connect to Docker daemon -- Is docker installed and running?")

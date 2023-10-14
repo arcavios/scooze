@@ -8,11 +8,11 @@ class TeardownDockerCommand(Command):
     description = "Teardown MongoDB Docker container."
 
     def handle(self):
-        print("Tearing down Docker container scooze-mongodb...")
+        self.line("Tearing down Docker container scooze-mongodb...")
         p = subprocess.run(
             "docker kill scooze-mongodb && docker rm scooze-mongodb && docker image rm mongo:latest",
             stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT,
             shell=True,
         )
-        print("Done.")
+        self.line("Done.")

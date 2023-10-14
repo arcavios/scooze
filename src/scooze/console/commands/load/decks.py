@@ -33,7 +33,7 @@ class LoadDecksCommand(Command):
         elif self.option("test"):
             load_test_decks()
         else:
-            print("No files were selected to load.")
+            self.line("No files were selected to load.")
 
 
 # TODO(#145): Can remove this once the command uses ScoozeApi

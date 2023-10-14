@@ -7,4 +7,6 @@ class SetupLocalCommand(Command):
 
     def handle(self):
         # TODO(#201) - Add local MongoDB built-in support
-        print("Usage: `scooze setup docker` or `scooze setup local`. Local support coming soon.")
+        self.line(
+            "Usage: <fg=cyan>scooze setup docker</> or <fg=cyan>scooze setup local</>. Local support coming soon."
+        )

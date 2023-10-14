@@ -9,4 +9,6 @@ class TeardownLocalCommand(Command):
 
     def handle(self):
         # TODO(#201) - Add local MongoDB built-in support
-        print("Usage: `scooze teardown docker` or `scooze teardown local`. Local support coming soon.")
+        self.line(
+            "Usage: <fg=cyan>scooze teardown docker</> or <fg=cyan>scooze teardown local</>. Local support coming soon."
+        )
