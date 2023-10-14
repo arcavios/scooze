@@ -122,8 +122,8 @@ async def add_cards(cards: List[CardT]) -> List[ObjectId]:
         await db.delete_cards_by_id(card_ids)
         raise BulkAddError("Failed to add all cards to the database.")
     else:
-        for i in range(len(card_ids)):
-            cards[i].scooze_id = card_ids[i]
+        for card, card_id in zip(cards, card_ids):
+            card.scooze_id = card_id
 
     return card_ids
 
