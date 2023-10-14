@@ -4,6 +4,12 @@ from cleo.helpers import argument
 from scooze.api import ScoozeApi
 from scooze.catalogs import DbCollection
 
+ACCEPTED_DELETE_ARGS = {
+    "all",
+    "cards",
+    "decks",
+}
+
 
 class DeleteCommand(Command):
     name = "delete"
@@ -19,7 +25,7 @@ class DeleteCommand(Command):
 
     def handle(self):
         to_delete: list[DbCollection] = []
-        delete_args = self.argument("collections")
+        delete_args = set(self.argument("collections"))
 
         if "all" in delete_args:
             to_delete.extend(DbCollection.list())
@@ -30,7 +36,8 @@ class DeleteCommand(Command):
                 to_delete.append(DbCollection.DECKS)
 
         if len(to_delete) == 0:
-            print("No valid collections were given to delete.")
+            extra_args = " ".join(delete_args - ACCEPTED_DELETE_ARGS)
+            self.line(f"No valid collections were given. Ignored the following: <fg=cyan>{extra_args}</>")
 
         for collection in to_delete:
             delete_collection(collection)
