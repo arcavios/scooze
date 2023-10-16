@@ -49,7 +49,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
 
     except FileNotFoundError:
         print(file_path)
-        download_now = input(f"{file_type} file not found; would you like to download it now? [y/n] ") in "yY"
+        download_now = input(f"{file_type} file not found; would you like to download it now? [y/N] ") in "yY"
         if not download_now:
             print("No cards loaded into database.")
             return
