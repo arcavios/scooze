@@ -21,6 +21,8 @@ def download_bulk_data_file(
         bulk_file_type: Type of bulk file, used to set filename.
         bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
           not specified.
+
+    TODO(#208): document exceptions
     """
 
     # TODO(#74): flag for check vs existing file; don't overwrite with same file or older version
@@ -44,6 +46,8 @@ def download_bulk_data_file_by_type(
         bulk_file_type: Type of bulk file, used to set filename.
         bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
           not specified.
+
+    TODO(#208): document exceptions
     """
 
     # get URI from Scryfall bulk endpoint
@@ -66,6 +70,8 @@ def download_all_bulk_data_files(
     Args:
         bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
           not specified.
+
+    TODO(#208): document exceptions
     """
 
     with requests.get(SCRYFALL_BULK_INFO_ENDPOINT) as bulk_metadata_request:

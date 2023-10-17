@@ -15,11 +15,14 @@ def _check_for_safe_context(func):
     """
     Wrapper to ensure an instance method of ScoozeApi is called in a safe
     context.
+
+    Raises:
+        RuntimeError: If decorated function is called outside a context.
     """
 
     def wrapper_safe_context(self, *args, **kwargs):
         if not self.safe_context:
-            raise RuntimeError("ScoozeApi used outside of 'with' context")
+            raise RuntimeError("ScoozeApi used outside 'with' context")
         return func(self, *args, **kwargs)
 
     return wrapper_safe_context
@@ -65,6 +68,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             The first matching card, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(
@@ -94,6 +100,9 @@ class ScoozeApi(AbstractContextManager):
         Returns:
             A list of cards matching the search criteria, or empty list if none
             were found.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(
@@ -120,6 +129,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             A card with the given name if found, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(
@@ -141,6 +153,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             A card with the given Oracle ID if found, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(
@@ -162,6 +177,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             A card with the given Scryfall ID if found, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(
@@ -179,15 +197,18 @@ class ScoozeApi(AbstractContextManager):
     @_check_for_safe_context
     def get_cards_by_set(self, set_code: str) -> List[CardT]:
         """
-        Search the database for all cards in the given set.
-        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
-        for a set (e.g. "CMD")
+         Search the database for all cards in the given set.
+         Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
+         for a set (e.g. "CMD")
 
-        Args:
-            set_code: The set code to search for.
+         Args:
+             set_code: The set code to search for.
 
-        Returns:
-           A list of cards from the given set, or empty list if none were found.
+         Returns:
+            A list of cards from the given set, or empty list if none were found.
+
+        Raises:
+             RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(
@@ -205,6 +226,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             A list of all cards in the database.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(card_api.get_cards_all(self.card_class))
@@ -223,6 +247,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             The ID of the inserted card, or None if it was unable.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(card_api.add_card(card=card))
@@ -237,6 +264,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             The IDs of the inserted cards, or empty list if unable.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(card_api.add_cards(cards=cards))
@@ -251,6 +281,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             True if the card is deleted, False otherwise.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(card_api.delete_card(id=id))
@@ -262,6 +295,9 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             The number of cards deleted, or None if none could be deleted.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(card_api.delete_cards_all())
@@ -286,6 +322,9 @@ class ScoozeApi(AbstractContextManager):
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
             to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
+
+        Raises:
+            RuntimeError: If used outside a `with` context.
         """
 
         return self.runner.run(
@@ -339,6 +378,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             The first matching card, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
@@ -366,6 +408,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         Returns:
             A list of cards matching the search criteria, or empty list if none
             were found.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_cards_by(
@@ -390,6 +435,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             A card with the given name if found, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_card_by(
@@ -409,6 +457,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             A card with the given Oracle ID if found, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_card_by(
@@ -428,6 +479,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             A card with the given Scryfall ID if found, or None if none were found.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_card_by(
@@ -443,15 +497,18 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     @_check_for_safe_context
     async def get_cards_by_set(self, set_code: str) -> List[CardT]:
         """
-        Search the database for all cards in the given set.
-        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
-        for a set (e.g. "CMD")
+         Search the database for all cards in the given set.
+         Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
+         for a set (e.g. "CMD")
 
-        Args:
-            set_code: The set code to search for.
+         Args:
+             set_code: The set code to search for.
 
-        Returns:
-           A list of cards from the given set, or empty list if none were found.
+         Returns:
+            A list of cards from the given set, or empty list if none were found.
+
+        Raises:
+             RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_cards_by(
@@ -467,6 +524,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             A list of all cards in the database.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_cards_all(self.card_class)
@@ -485,6 +545,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             The ID of the inserted card, or None if it was unable.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.add_card(card=card)
@@ -499,6 +562,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             The IDs of the inserted cards, or empty list if unable.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.add_cards(cards=cards)
@@ -513,6 +579,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             True if the card is deleted, False otherwise.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.delete_card(id=id)
@@ -524,6 +593,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             The number of cards deleted, or None if none could be deleted.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.delete_cards_all()
@@ -548,6 +620,9 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
             to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
+
+        Raises:
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await bulkdata_api.load_card_file(
