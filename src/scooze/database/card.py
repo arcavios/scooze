@@ -42,9 +42,7 @@ async def get_card_by_property(property_name: str, value) -> CardModelOut:
         The first matching card, or None if none were found.
     """
 
-    card = await db_core.get_document_by_property(
-        coll_type=DbCollection.CARDS, property_name=property_name, value=value
-    )
+    card = await db_core.get_document_by_property(DbCollection.CARDS, property_name, value)
     if card is not None:
         return CardModelOut.model_validate(card)
 
