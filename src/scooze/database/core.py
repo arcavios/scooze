@@ -7,28 +7,6 @@ from scooze.catalogs import DbCollection
 from scooze.database.mongo import db
 from scooze.models.utils import _to_lower_camel
 
-
-def _alias_property_name(function):
-    """
-    TODO: write a wrapper to alias property_name to propertyName among other things like "scooze_id" to "id"
-    """
-
-    def wrapper_alias_property_name(*args, **kwargs):
-        # Alias scooze_id to _id
-        if kwargs["property_name"] == "scooze_id":
-            kwargs["property_name"] = "_id"
-
-        # Handle _id as ObjectId
-        if kwargs["property_name"] == "_id":
-            kwargs["value"] = ObjectId(kwargs["value"])
-        else:
-            kwargs["property_name"] = _to_lower_camel(kwargs["property_name"])
-
-        return function(*args, **kwargs)
-
-    return wrapper_alias_property_name
-
-
 # region Single document
 
 
@@ -53,7 +31,7 @@ async def insert_document(coll_type: DbCollection, document: dict[str, Any]):
         return_document=ReturnDocument.AFTER,
     )
 
-@_alias_property_name
+
 async def get_document_by_property(coll_type: DbCollection, property_name: str, value):
     """
     Search a collection in the database for the first document matching the given criteria.
@@ -66,6 +44,14 @@ async def get_document_by_property(coll_type: DbCollection, property_name: str, 
     Returns:
         The first matching document, or None if none were found.
     """
+
+    # Alias scooze_id to _id
+    match property_name:
+        case "_id" | "scooze_id":
+            property_name = "_id"
+            value = ObjectId(value)
+        case _:
+            property_name = _to_lower_camel(property_name)
 
     return await db.client.scooze[coll_type].find_one({property_name: value})
 
@@ -183,10 +169,13 @@ async def get_documents_by_property(
         A list of matching documents, or None if none were found.
     """
 
+    # Alias scooze_id to _id
     match property_name:
-        case "_id":
+        case "_id" | "scooze_id":
+            property_name = "_id"
             vals = [ObjectId(i) for i in values]  # Handle ObjectIds
         case _:
+            property_name = _to_lower_camel(property_name)
             vals = values
 
     return (

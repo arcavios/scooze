@@ -17,6 +17,7 @@ def _to_lower_camel(string: str) -> str:
 
     return words[0]
 
+
 # endregion
 
 

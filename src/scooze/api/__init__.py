@@ -1,53 +1,15 @@
 import asyncio
 from contextlib import AbstractAsyncContextManager, AbstractContextManager
-from functools import cache as _cache
+from functools import cache
 from typing import Any, List
 
 import scooze.api.bulkdata as bulkdata_api
 import scooze.api.card as card_api
 import scooze.database.mongo as mongo
 from bson import ObjectId
+from scooze.api.utils import _check_for_safe_context, _safe_cache
 from scooze.card import CardT, FullCard
 from scooze.catalogs import ScryfallBulkFile
-
-
-def _check_for_safe_context(function):
-    """
-    Wrapper to ensure an instance method of ScoozeApi is called in a safe
-    context.
-    """
-
-    def wrapper_safe_context(self, *args, **kwargs):
-        if not self.safe_context:
-            raise RuntimeError("ScoozeApi used outside of 'with' context")
-        return function(self, *args, **kwargs)
-
-    return wrapper_safe_context
-
-
-def _list_args_to_tuple(function):
-    """
-    Wrapper to ensure incoming list arguments are converted to hashable tuples.
-    """
-
-    def wrapper(*args, **kwargs):
-        args = [tuple(x) if type(x) == list else x for x in args]
-        kwargs = {k: tuple(x) if type(x) == list else x for k, x in kwargs.items()}
-        result = function(*args, **kwargs)
-        result = tuple(result) if type(result) == list else result
-        return result
-
-    return wrapper
-
-@_list_args_to_tuple
-@_cache
-def cache(function):
-    """
-    Lightweight wrapper for cache to ensure incoming arguments are hashable.
-    """
-
-    return function
-
 
 
 class ScoozeApi(AbstractContextManager):
@@ -78,7 +40,7 @@ class ScoozeApi(AbstractContextManager):
 
     # region Card endpoints
 
-    @cache
+    @_safe_cache
     @_check_for_safe_context
     def get_card_by(self, property_name: str, value) -> CardT:
         """
@@ -352,7 +314,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
     # region Card endpoints
 
-    @cache
+    @_safe_cache
     @_check_for_safe_context
     async def get_card_by(self, property_name: str, value) -> CardT:
         """
