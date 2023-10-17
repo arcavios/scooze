@@ -13,6 +13,8 @@ def test_get_card_by(mock_get: MagicMock, recall_base):
     mock_get.return_value: CardModelOut = model
 
     with ScoozeApi(card_class=Card) as s:
+        card = s.get_card_by(property_name="scooze_id", value=model.scooze_id)
+        assert card == recall_base
         card = s.get_card_by(property_name="colors", value=[Color.BLUE])
         assert card == recall_base
         card = s.get_card_by(property_name="produced_mana", value=[])
