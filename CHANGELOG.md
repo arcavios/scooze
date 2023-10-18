@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added Deck.from_model() and Deck.from_json() support. ([#186](https://github.com/arcavios/scooze/pull/186))
 - Added scooze_id to CardModel and Card. Changed the MongoDB _id to scooze_id. ([#193](https://github.com/arcavios/scooze/pull/193))
 - Added AsyncScoozeApi as a way to use API endpoints in an async context (fixes Jupyter compatability) ([#199](https://github.com/arcavios/scooze/pull/199))
 - Add Docker support for starting MongoDB via the CLI ([#200](https://github.com/arcavios/scooze/pull/200))

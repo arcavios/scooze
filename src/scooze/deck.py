@@ -18,7 +18,7 @@ from scooze.models.utils import ObjectIdT
 DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
 
 
-class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to be a RuntimeGeneric?
+class Deck(utils.ComparableObject, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
@@ -74,17 +74,18 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
     def from_model(cls, model: DeckModel, card_class: CardT = OracleCard) -> Self:
         return cls(**model.model_dump(), card_class=card_class)
 
+    # TODO(#210): Implement Deck.to_model()
     def to_model(self) -> DeckModel:
         if self.card_class == Card:
             # with asyncio.Runner() as runner:
             #     runner.run(card_api.get_card_by_name(card_name))
-            # TODO: return a deckmodel where the cards are looked up by name
+            # return a deckmodel where the cards are looked up by name
             pass
         elif self.card_class == OracleCard:
-            # TODO: return a deckmodel where the cards are looked up by oracle_id
+            # return a deckmodel where the cards are looked up by oracle_id
             pass
         elif self.card_class == FullCard:
-            # TODO: return a deckmodel where the cards are looked up by scryfall_id
+            # return a deckmodel where the cards are looked up by scryfall_id
             pass
         else:
             pass
@@ -344,7 +345,6 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
     # endregion
 
 
-# TODO: need to note that this requires access to a local mongo db (or eventually the internet)
 class DeckNormalizer(utils.JsonNormalizer):
     """
     A simple class to use when normalizing non-serializable data from JSON.
