@@ -51,6 +51,52 @@ def dictdiff_empty() -> DictDiff:
     return DictDiff(contents={})
 
 
+@pytest.fixture
+def enigmatic_json() -> dict:
+    return {
+        "archetype": "Enigmatic Fires",
+        "format": "Pioneer",
+        "main": {
+            "Bonecrusher Giant // Stomp": 3,
+            "Kenrith, the Returned King": 1,
+            "Elesh Norn, Mother of Machines": 1,
+            "Koma, Cosmos Serpent": 1,
+            "Heliod, the Radiant Dawn // Heliod, the Warped Eclipse": 1,
+            "Atraxa, Grand Unifier": 1,
+            "Dragonlord Atarka": 1,
+            "Sheoldred, the Apocalypse": 1,
+            "Tolsimir, Friend to Wolves": 1,
+            "Enigmatic Incarnation": 4,
+            "Fires of Invention": 4,
+            "Leyline Binding": 4,
+            "Fable of the Mirror-Breaker // Reflection of Kiki-Jiki": 4,
+            "Touch the Spirit Realm": 3,
+            "Temporary Lockdown": 2,
+            "Savai Triome": 4,
+            "Breeding Pool": 4,
+            "Sacred Foundry": 4,
+            "Ketria Triome": 3,
+            "Sunpetal Grove": 3,
+            "Glacial Fortress": 3,
+            "Boseiju, Who Endures": 1,
+            "Otawara, Soaring City": 1,
+            "Stomping Ground": 1,
+            "Raffine's Tower": 1,
+            "Plains": 1,
+            "Zagoth Triome": 1,
+            "Indatha Triome": 1,
+        },
+        "side": {
+            "Mystical Dispute": 4,
+            "Leyline of the Void": 4,
+            "Temporary Lockdown": 2,
+            "Radiant Flames": 2,
+            "Thought Distortion": 2,
+            "Keruga, the Macrosage": 1,
+        },
+    }
+
+
 # endregion
 
 # region Magic Methods
@@ -148,6 +194,13 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 # region Class Methods
 
 # region
+
+@pytest.mark.database
+def test_deck_from_json(enigmatic_json):
+    deck = Deck.from_json(enigmatic_json)
+    assert deck.archetype == "Enigmatic Fires"
+    assert deck.main.total() == 60
+    assert deck.side.total() == 15
 
 
 @patch("scooze.api.card.get_card_by")

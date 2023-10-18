@@ -17,6 +17,7 @@ from scooze.models.utils import ObjectIdT
 ## Generic Types
 DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
 
+
 class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to be a RuntimeGeneric?
     """
     A class to represent a deck of Magic: the Gathering cards.
@@ -369,11 +370,9 @@ class DeckNormalizer(utils.JsonNormalizer):
             # Incoming strs are Card names, lookup by Card name
             if not lookup_by_id:
                 with ScoozeApi() as api:
-                    return DeckPart[card_class](cards=Counter({
-                        api.get_card_by_name(card_name): q
-                        for card_name, q in deck_part.items()
-                    }))
-
+                    return DeckPart[card_class](
+                        cards=Counter({api.get_card_by_name(card_name): q for card_name, q in deck_part.items()})
+                    )
 
         if lookup_by_id or all(isinstance(card, ObjectId) for card in deck_part.keys()):
             with ScoozeApi() as api:

@@ -47,9 +47,10 @@ mongomock = "^4.1.2"
 scooze = "scooze.console.cli:run_cli"
 
 [tool.pytest.ini_options]
-# addopts = "-m 'not slow'"
+addopts = "-m 'not database'"
 markers = [
     "slow: expected to be slow",
+    "database: requires a populated database",
     "card_quantity: related to card max quantity allowed per format",
     "dict_diff: related to DictDiff in utils",
     "deck_diff: related to Deck.diff()",
