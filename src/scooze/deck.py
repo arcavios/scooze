@@ -90,7 +90,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         else:
             pass
 
-        return
+        raise NotImplementedError()
 
     def average_cmc(self) -> float:
         """
