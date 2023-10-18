@@ -17,39 +17,6 @@ from scooze.models.utils import ObjectIdT
 ## Generic Types
 DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
 
-# class Proxy:
-#     def __init__(self, generic):
-#         object.__setattr__(self, "_generic", generic)
-
-#     def __getattr__(self, name):
-#         if _is_dunder(name):
-#             return getattr(self._generic, name)
-#         origin = self._generic.__origin__
-#         obj = getattr(origin, name)
-#         if ismethod(obj) and isinstance(obj.__self__, type):
-#             return lambda *a, **kw: obj.__func__(self, *a, *kw)
-#         else:
-#             return obj
-
-#     def __setattr__(self, name, value):
-#         return setattr(self._generic, name, value)
-
-#     def __call__(self, *args, **kwargs):
-#         return self._generic.__call__(*args, **kwargs)
-
-#     def __repr__(self):
-#         return f"<{self.__class__.__name__} of {self._generic!r}>"
-
-
-# class RuntimeGeneric:
-#     def __class_getitem__(cls, key):
-#         generic = super().__class_getitem__(key)
-#         if getattr(generic, "__origin__", None):
-#             return Proxy(generic)
-#         else:
-#             return generic
-
-
 class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to be a RuntimeGeneric?
     """
     A class to represent a deck of Magic: the Gathering cards.
@@ -83,11 +50,6 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
         self.main = DeckNormalizer.to_deck_part(deck_part=main, card_class=card_class)
         self.side = DeckNormalizer.to_deck_part(deck_part=side, card_class=card_class)
         self.cmdr = DeckNormalizer.to_deck_part(deck_part=cmdr, card_class=card_class)
-
-    # TODO: do we want this?
-    # @cached_property
-    # def _card_class(self) -> type[CardT]:
-    #     return self.__orig_class__.__args__[0]
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -388,19 +350,32 @@ class DeckNormalizer(utils.JsonNormalizer):
             An instance of DeckPart containing the given cards.
         """
 
+        lookup_by_id = False
+
+        # Missing or empty incoming DeckPart, returns new empty DeckPart
         if deck_part is None:
             return DeckPart()
+        # Incoming DeckPart, returns same DeckPart
         elif isinstance(deck_part, DeckPart):
             return deck_part
+        # Mapping of Cards to quantities, returns DeckPart wrapping them.
         elif all(isinstance(card, card_class) for card in deck_part.keys()):
             return DeckPart[card_class](cards=deck_part)
-        # strings that are card names ->
-        elif all(True):
-            pass
-        # strings that are ObjectIds ->
+        # Mapping of str to quantities
         elif all(isinstance(card, str) for card in deck_part.keys()):
-            pass
-        elif all(isinstance(card, ObjectId) for card in deck_part.keys()):
+            # Incoming strs are ObjectIds, lookup Cards by id
+            lookup_by_id = ObjectId.is_valid(next(iter(deck_part.keys())))
+
+            # Incoming strs are Card names, lookup by Card name
+            if not lookup_by_id:
+                with ScoozeApi() as api:
+                    return DeckPart[card_class](cards=Counter({
+                        api.get_card_by_name(card_name): q
+                        for card_name, q in deck_part.items()
+                    }))
+
+
+        if lookup_by_id or all(isinstance(card, ObjectId) for card in deck_part.keys()):
             with ScoozeApi() as api:
                 return DeckPart[card_class](
                     cards=Counter(
