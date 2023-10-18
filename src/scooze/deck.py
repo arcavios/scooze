@@ -48,9 +48,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
         self.format = format
         self.card_class = card_class
 
-        self.main = DeckNormalizer.to_deck_part(deck_part=main, card_class=card_class)
-        self.side = DeckNormalizer.to_deck_part(deck_part=side, card_class=card_class)
-        self.cmdr = DeckNormalizer.to_deck_part(deck_part=cmdr, card_class=card_class)
+        self.main: DeckPart[CardT] = DeckNormalizer.to_deck_part(deck_part=main, card_class=card_class)
+        self.side: DeckPart[CardT] = DeckNormalizer.to_deck_part(deck_part=side, card_class=card_class)
+        self.cmdr: DeckPart[CardT] = DeckNormalizer.to_deck_part(deck_part=cmdr, card_class=card_class)
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -61,15 +61,15 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
     @classmethod
-    def from_json(cls, data: dict | str) -> Self:
+    def from_json(cls, data: dict | str, card_class: CardT = OracleCard) -> Self:
         if isinstance(data, dict):
-            return cls(**data)
+            return cls(**data, card_class=card_class)
         elif isinstance(data, str):
-            return cls(**json.loads(data))
+            return cls(**json.loads(data), card_class=card_class)
 
     @classmethod
-    def from_model(cls, model: DeckModel) -> Self:
-        return cls(**model.model_dump())
+    def from_model(cls, model: DeckModel, card_class: CardT = OracleCard) -> Self:
+        return cls(**model.model_dump(), card_class=card_class)
 
     def average_cmc(self) -> float:
         """

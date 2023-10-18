@@ -31,7 +31,6 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.models.card import CardModelOut
-from scooze.models.utils import ObjectIdT
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
