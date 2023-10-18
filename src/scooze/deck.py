@@ -8,7 +8,7 @@ from typing import Generic, Mapping, Self, TypeVar
 import scooze.utils as utils
 from bson import ObjectId
 from scooze.api import ScoozeApi
-from scooze.card import CardT, OracleCard
+from scooze.card import CardT, OracleCard, Card, FullCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
@@ -34,7 +34,6 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
 
     def __init__(
         self,
-        scooze_id: ObjectIdT | None = None,
         archetype: str | None = None,
         date_played: date | None = None,
         format: Format = Format.NONE,
@@ -42,7 +41,11 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
         main: DeckPartT | None = None,
         side: DeckPartT | None = None,
         cmdr: DeckPartT | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
+        self.scooze_id = kwargs.get("scooze_id")
+
         self.archetype = archetype
         self.date_played = DeckNormalizer.to_date(date_played)
         self.format = format
@@ -70,6 +73,23 @@ class Deck(utils.ComparableObject, Generic[CardT]):  # TODO: do we want this to 
     @classmethod
     def from_model(cls, model: DeckModel, card_class: CardT = OracleCard) -> Self:
         return cls(**model.model_dump(), card_class=card_class)
+
+    def to_model(self) -> DeckModel:
+        if self.card_class == Card:
+            # with asyncio.Runner() as runner:
+            #     runner.run(card_api.get_card_by_name(card_name))
+            # TODO: return a deckmodel where the cards are looked up by name
+            pass
+        elif self.card_class == OracleCard:
+            # TODO: return a deckmodel where the cards are looked up by oracle_id
+            pass
+        elif self.card_class == FullCard:
+            # TODO: return a deckmodel where the cards are looked up by scryfall_id
+            pass
+        else:
+            pass
+
+        return
 
     def average_cmc(self) -> float:
         """
