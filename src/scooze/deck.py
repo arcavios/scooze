@@ -23,8 +23,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
     A class to represent a deck of Magic: the Gathering cards.
 
     Attributes:
-        scooze_id: A unique identifier for a document in a scooze database.
         archetype: The archetype of this Deck.
+        date_played: The date this Deck was played.
         format: The format legality of the cards in this Deck.
         card_class: The kind of Cards this Deck contains. Should match CardT.
         main: The main deck. Typically 60 cards minimum.
@@ -365,7 +365,7 @@ class DeckNormalizer(utils.JsonNormalizer):
         Args:
             cards: A list of cards or scooze IDs of cards to normalize.
             card_class: The kind of Cards the resulting DeckPart will contain.
-            Should match CardT
+            Should match CardT.
 
         Returns:
             An instance of DeckPart containing the given cards.
