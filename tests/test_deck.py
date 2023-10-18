@@ -133,7 +133,7 @@ def test_main(main_modern_4c):
 
 
 def test_side(side_modern_4c):
-    deck = Deck[OracleCard](archetype="test_main", side=side_modern_4c)
+    deck = Deck[OracleCard](archetype="test_side", side=side_modern_4c)
     assert deck.side == side_modern_4c
 
 
@@ -195,13 +195,13 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 # region
 
+
 @pytest.mark.database
 def test_deck_from_json(enigmatic_json):
     deck = Deck.from_json(enigmatic_json)
     assert deck.archetype == "Enigmatic Fires"
     assert deck.main.total() == 60
     assert deck.side.total() == 15
-
 
 @patch("scooze.api.card.get_card_by")
 def test_deck_from_model(
@@ -230,7 +230,7 @@ def test_deck_from_model(
             "side": side_modern_4c_dict,
         }
     )
-    deck = Deck[OracleCard].from_model(model)
+    deck = Deck[OracleCard].from_model(model, card_class=OracleCard)
 
     assert deck.archetype == model.archetype
     assert deck.date_played == model.date_played

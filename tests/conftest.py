@@ -62,14 +62,9 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
             return card_json
 
 
-def get_cardmodelout_from_json(card_json: dict) -> CardModelOut:
-    """
-    Helper to get a CardModelOut from some JSON.
-    """
-
-    model = CardModelOut.model_validate(card_json)
-    model.scooze_id = str(ObjectId())
-    return model
+def get_oraclecard_by_scryfall_id(mock_cards_collection, scryfall_id: str) -> OracleCard:
+    model = CardModelOut.model_validate(mock_cards_collection.find_one({"scryfall_id": scryfall_id}))
+    return OracleCard.from_model(model)
 
 
 # endregion
@@ -85,8 +80,10 @@ def json_ancestral_recall(cards_json) -> dict:
 
 
 @pytest.fixture(scope="session")
-def model_ancestral_recall(json_ancestral_recall) -> CardModelOut:
-    return get_cardmodelout_from_json(json_ancestral_recall)
+def model_ancestral_recall(mock_cards_collection) -> CardModelOut:
+    return CardModelOut.model_validate(
+        mock_cards_collection.find_one({"scryfall_id": "2398892d-28e9-4009-81ec-0d544af79d2b"})
+    )
 
 
 # Creature
@@ -304,231 +301,193 @@ def oracle_zndrsplt_eye_of_wisdom() -> str:
 
 
 @pytest.fixture(scope="session")
-def card_aether_gust(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "783da808-6698-4e55-9fac-430a6effe2b1")
-    return OracleCard.from_json(card_json)
+def card_aether_gust(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "783da808-6698-4e55-9fac-430a6effe2b1")
 
 
 @pytest.fixture(scope="session")
-def card_boseiju_who_endures(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
-    return OracleCard.from_json(card_json)
+def card_boseiju_who_endures(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
 
 
 @pytest.fixture(scope="session")
-def card_breeding_pool(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "bb54233c-0844-4965-9cde-e8a4ef3e11b8")
-    return OracleCard.from_json(card_json)
+def card_breeding_pool(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "bb54233c-0844-4965-9cde-e8a4ef3e11b8")
 
 
 @pytest.fixture(scope="session")
-def card_chalice_of_the_void(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
-    return OracleCard.from_json(card_json)
+def card_chalice_of_the_void(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
 
 
 @pytest.fixture(scope="session")
-def card_counterspell(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "8493131c-0a7b-4be6-a8a2-0b425f4f67fb")
-    return OracleCard.from_json(card_json)
+def card_counterspell(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "8493131c-0a7b-4be6-a8a2-0b425f4f67fb")
 
 
 @pytest.fixture(scope="session")
-def card_dovins_veto(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "5d6b5054-2224-4f68-9d82-3ed17c5dacc4")
-    return OracleCard.from_json(card_json)
+def card_dovins_veto(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "5d6b5054-2224-4f68-9d82-3ed17c5dacc4")
 
 
 @pytest.fixture(scope="session")
-def card_dress_down(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "04f9f061-67b8-4427-9fcb-b3ccfee8fc5d")
-    return OracleCard.from_json(card_json)
+def card_dress_down(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "04f9f061-67b8-4427-9fcb-b3ccfee8fc5d")
 
 
 @pytest.fixture(scope="session")
-def card_flooded_strand(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "8c2996d9-3287-4480-8c04-7a378e37e3cf")
-    return OracleCard.from_json(card_json)
+def card_flooded_strand(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "8c2996d9-3287-4480-8c04-7a378e37e3cf")
 
 
 @pytest.fixture(scope="session")
-def card_flusterstorm(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "f900eeb7-7c45-44bc-ad3a-0bbe594ecf50")
-    return OracleCard.from_json(card_json)
+def card_flusterstorm(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "f900eeb7-7c45-44bc-ad3a-0bbe594ecf50")
 
 
 @pytest.fixture(scope="session")
-def card_force_of_negation(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "1825a719-1b2a-4af9-9cd2-7cb497cd0317")
-    return OracleCard.from_json(card_json)
+def card_force_of_negation(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "1825a719-1b2a-4af9-9cd2-7cb497cd0317")
 
 
 @pytest.fixture(scope="session")
-def card_forest(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "ecd6d8fb-780c-446c-a8bf-93386b22fe95")
-    return OracleCard.from_json(card_json)
+def card_forest(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "ecd6d8fb-780c-446c-a8bf-93386b22fe95")
 
 
 @pytest.fixture(scope="session")
-def card_hallowed_fountain(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "f97a6d34-03ab-49f1-b02e-405b733f8843")
-    return OracleCard.from_json(card_json)
+def card_hallowed_fountain(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "f97a6d34-03ab-49f1-b02e-405b733f8843")
 
 
 @pytest.fixture(scope="session")
-def card_hallowed_moonlight(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "94fd0c0f-4a6a-47cf-9f50-df0bbf19aae4")
-    return OracleCard.from_json(card_json)
+def card_hallowed_moonlight(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "94fd0c0f-4a6a-47cf-9f50-df0bbf19aae4")
 
 
 @pytest.fixture(scope="session")
-def card_island(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "bd4b4da4-83f6-4280-880b-b6033308f2a2")
-    return OracleCard.from_json(card_json)
+def card_island(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "bd4b4da4-83f6-4280-880b-b6033308f2a2")
 
 
 @pytest.fixture(scope="session")
-def card_kaheera_the_orphanguard(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "d4ebed0b-8060-4a7b-a060-5cfcd2172b16")
-    return OracleCard.from_json(card_json)
+def card_kaheera_the_orphanguard(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "d4ebed0b-8060-4a7b-a060-5cfcd2172b16")
 
 
 @pytest.fixture(scope="session")
-def card_leyline_binding(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "3c3ac3dd-35db-447f-8674-37b4680a1ef7")
-    return OracleCard.from_json(card_json)
+def card_leyline_binding(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "3c3ac3dd-35db-447f-8674-37b4680a1ef7")
 
 
 @pytest.fixture(scope="session")
-def card_minamo_school_at_waters_edge(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "7536292c-da25-41c8-ba28-1e35758a7f3d")
-    return OracleCard.from_json(card_json)
+def card_minamo_school_at_waters_edge(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "7536292c-da25-41c8-ba28-1e35758a7f3d")
 
 
 @pytest.fixture(scope="session")
-def card_misty_rainforest(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "88231c0d-0cc8-44ec-bf95-81d1710ac141")
-    return OracleCard.from_json(card_json)
+def card_misty_rainforest(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "88231c0d-0cc8-44ec-bf95-81d1710ac141")
 
 
 @pytest.fixture(scope="session")
-def card_omnath_locus_of_creation(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
-    return OracleCard.from_json(card_json)
+def card_omnath_locus_of_creation(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
 
 
 @pytest.fixture(scope="session")
-def card_otawara_soaring_city(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "486d7edc-d983-41f0-8b78-c99aecd72996")
-    return OracleCard.from_json(card_json)
+def card_otawara_soaring_city(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "486d7edc-d983-41f0-8b78-c99aecd72996")
 
 
 @pytest.fixture(scope="session")
-def card_plains(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "c9cd4d57-8c51-4fcf-8a9f-5d6a61c33e3d")
-    return OracleCard.from_json(card_json)
+def card_plains(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "c9cd4d57-8c51-4fcf-8a9f-5d6a61c33e3d")
 
 
 @pytest.fixture(scope="session")
-def card_prismatic_ending(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "825969b9-3c70-4fca-8cab-696e9ca7cdb2")
-    return OracleCard.from_json(card_json)
+def card_prismatic_ending(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "825969b9-3c70-4fca-8cab-696e9ca7cdb2")
 
 
 @pytest.fixture(scope="session")
-def card_raugrin_triome(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "02138fbb-3962-4348-8d31-faaefba0b8b2")
-    return OracleCard.from_json(card_json)
+def card_raugrin_triome(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "02138fbb-3962-4348-8d31-faaefba0b8b2")
 
 
 @pytest.fixture(scope="session")
-def card_sacred_foundry(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "b7b598d0-535d-477d-a33d-d6a10ff5439a")
-    return OracleCard.from_json(card_json)
+def card_sacred_foundry(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "b7b598d0-535d-477d-a33d-d6a10ff5439a")
 
 
 @pytest.fixture(scope="session")
-def card_solitude(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "47a6234f-309f-4e03-9263-66da48b57153")
-    return OracleCard.from_json(card_json)
+def card_solitude(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "47a6234f-309f-4e03-9263-66da48b57153")
 
 
 @pytest.fixture(scope="session")
-def card_spell_pierce(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "35b8a9db-d126-4038-abb1-74dcc5b36136")
-    return OracleCard.from_json(card_json)
+def card_spell_pierce(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "35b8a9db-d126-4038-abb1-74dcc5b36136")
 
 
 @pytest.fixture(scope="session")
-def card_steam_vents(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "b8ebe3cf-7143-453a-b0ef-2f5bdaac3185")
-    return OracleCard.from_json(card_json)
+def card_steam_vents(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "b8ebe3cf-7143-453a-b0ef-2f5bdaac3185")
 
 
 @pytest.fixture(scope="session")
-def card_stern_scolding(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "3ca1e1de-b916-445f-b3b2-0f4d0cc7ceeb")
-    return OracleCard.from_json(card_json)
+def card_stern_scolding(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "3ca1e1de-b916-445f-b3b2-0f4d0cc7ceeb")
 
 
 @pytest.fixture(scope="session")
-def card_subtlety(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "701256d5-1389-48b7-9581-d6037209bd06")
-    return OracleCard.from_json(card_json)
+def card_subtlety(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "701256d5-1389-48b7-9581-d6037209bd06")
 
 
 @pytest.fixture(scope="session")
-def card_supreme_verdict(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "20b5fe42-929c-406d-9377-40b49f9d2e2c")
-    return OracleCard.from_json(card_json)
+def card_supreme_verdict(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "20b5fe42-929c-406d-9377-40b49f9d2e2c")
 
 
 @pytest.fixture(scope="session")
-def card_teferi_time_raveler(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "5cb76266-ae50-4bbc-8f96-d98f309b02d3")
-    return OracleCard.from_json(card_json)
+def card_teferi_time_raveler(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "5cb76266-ae50-4bbc-8f96-d98f309b02d3")
 
 
 @pytest.fixture(scope="session")
-def card_temple_garden(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "2b9b0195-beda-403e-bc27-7ae3be9f318c")
-    return OracleCard.from_json(card_json)
+def card_temple_garden(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "2b9b0195-beda-403e-bc27-7ae3be9f318c")
 
 
 @pytest.fixture(scope="session")
-def card_the_one_ring(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "d5806e68-1054-458e-866d-1f2470f682b2")
-    return OracleCard.from_json(card_json)
+def card_the_one_ring(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "d5806e68-1054-458e-866d-1f2470f682b2")
 
 
 @pytest.fixture(scope="session")
-def card_veil_of_summer(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "aa686c34-1c11-469f-93c2-f9891aea521f")
-    return OracleCard.from_json(card_json)
+def card_veil_of_summer(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "aa686c34-1c11-469f-93c2-f9891aea521f")
 
 
 @pytest.fixture(scope="session")
-def card_wear_tear(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "e01cc65a-0e38-4f41-b9ed-796ef0355d0b")
-    return OracleCard.from_json(card_json)
+def card_wear_tear(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "e01cc65a-0e38-4f41-b9ed-796ef0355d0b")
 
 
 @pytest.fixture(scope="session")
-def card_windswept_heath(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "e7b28650-cddc-4878-b1d1-b5a764f4df49")
-    return OracleCard.from_json(card_json)
+def card_windswept_heath(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "e7b28650-cddc-4878-b1d1-b5a764f4df49")
 
 
 @pytest.fixture(scope="session")
-def card_wrenn_and_six(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "5bd498cc-a609-4457-9325-6888d59ca36f")
-    return OracleCard.from_json(card_json)
+def card_wrenn_and_six(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "5bd498cc-a609-4457-9325-6888d59ca36f")
 
 
 @pytest.fixture(scope="session")
-def card_zagoth_triome(cards_json) -> OracleCard:
-    card_json = get_card_json(cards_json, "cc520518-2063-4b57-a0d4-10cf62a7175e")
-    return OracleCard.from_json(card_json)
+def card_zagoth_triome(mock_cards_collection) -> OracleCard:
+    return get_oraclecard_by_scryfall_id(mock_cards_collection, "cc520518-2063-4b57-a0d4-10cf62a7175e")
 
 
 # endregion
