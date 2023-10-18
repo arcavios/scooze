@@ -203,6 +203,7 @@ def test_deck_from_json(enigmatic_json):
     assert deck.main.total() == 60
     assert deck.side.total() == 15
 
+
 @patch("scooze.api.card.get_card_by")
 def test_deck_from_model(
     mock_get_card: MagicMock,
@@ -237,6 +238,7 @@ def test_deck_from_model(
     assert deck.format == model.format
     assert deck.main == main_modern_4c
     assert deck.side == side_modern_4c
+
 
 # TODO(#210): Implement Deck.to_model()
 @patch("scooze.api.card.get_card_by")

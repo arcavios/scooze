@@ -8,7 +8,7 @@ from typing import Generic, Mapping, Self, TypeVar
 import scooze.utils as utils
 from bson import ObjectId
 from scooze.api import ScoozeApi
-from scooze.card import CardT, OracleCard, Card, FullCard
+from scooze.card import Card, CardT, FullCard, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
