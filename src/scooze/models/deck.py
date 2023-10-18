@@ -115,7 +115,7 @@ class DeckModelIn(DeckModel):
 
 
 class DeckModelOut(DeckModel):
-    id: ObjectIdT = Field(
+    scooze_id: ObjectIdT = Field(
         default=None,
         alias="_id",
     )

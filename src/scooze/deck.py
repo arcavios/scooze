@@ -394,12 +394,21 @@ class DeckNormalizer(utils.JsonNormalizer):
             return deck_part
         elif all(isinstance(card, card_class) for card in deck_part.keys()):
             return DeckPart[card_class](cards=deck_part)
+        # strings that are card names ->
+        elif all(True):
+            pass
+        # strings that are ObjectIds ->
         elif all(isinstance(card, str) for card in deck_part.keys()):
-            return DeckPart[card_class](Counter(cards={ObjectId(card_id): q for card_id, q in deck_part.items()}))
-        elif all(isinstance(card, ObjectId) for card in deck_part.keys()):
+            pass
+        elif all(
+            isinstance(card, ObjectId) for card in deck_part.keys()
+        ):
             with ScoozeApi() as api:
                 return DeckPart[card_class](
                     cards=Counter(
-                        {api.get_card_by(property_name="_id", value=card_id): q for card_id, q in deck_part.items()}
+                        {
+                            api.get_card_by(property_name="_id", value=ObjectId(card_id)): q
+                            for card_id, q in deck_part.items()
+                        }
                     )
                 )

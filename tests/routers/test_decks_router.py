@@ -48,7 +48,7 @@ def test_decks_root_no_decks(mock_get: MagicMock, client: TestClient):
 @patch("scooze.database.deck.add_decks")
 def test_add_decks(mock_add: MagicMock, client: TestClient, modern_4c: DeckModelOut):
     decks_to_add = [modern_4c]
-    mock_add.return_value: list[str] = [str(deck.id) for deck in decks_to_add]
+    mock_add.return_value: list[str] = [str(deck.scooze_id) for deck in decks_to_add]
     response = client.post("/decks/add", json=[deck.model_dump(mode="json", by_alias=True) for deck in decks_to_add])
     assert response.status_code == 200
     assert response.json()["message"] == f"Created {len(decks_to_add)} deck(s)."
