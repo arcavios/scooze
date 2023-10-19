@@ -371,7 +371,7 @@ class JsonNormalizer:
 
     @classmethod
     def to_frozendict(
-        cls, d: Mapping[T, V] | None, convert_key_to_enum: E = None, convert_value_to_enum: N = None
+        cls, d: Mapping[T, V] | None, convert_key_to_enum: type(E) = None, convert_value_to_enum: type(N) = None
     ) -> frozendict[T | E, V | N] | None:
         """
         Normalize a frozendict.
@@ -400,7 +400,7 @@ class JsonNormalizer:
         )
 
     @classmethod
-    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: E = None) -> frozenset[T | E] | None:
+    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: type(E) = None) -> frozenset[T | E] | None:
         """
         Normalize a frozenset.
 
@@ -418,7 +418,7 @@ class JsonNormalizer:
         return frozenset({JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in s})
 
     @classmethod
-    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: E = None) -> tuple[T | E] | None:
+    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: type(E) = None) -> tuple[T | E] | None:
         """
         Normalize a tuple.
 

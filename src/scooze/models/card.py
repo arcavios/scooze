@@ -115,6 +115,7 @@ class CardModel(ScoozeBaseModel):
     # TODO(#46): add Card field validators
 
 
+# noinspection PyNestedDecorators
 class FullCardModel(CardModel, validate_assignment=True):
     """
     Card object that supports all fields available from Scryfall's JSON data.
