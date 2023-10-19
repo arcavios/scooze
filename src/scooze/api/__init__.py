@@ -497,18 +497,18 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     @_check_for_safe_context
     async def get_cards_by_set(self, set_code: str) -> List[CardT]:
         """
-         Search the database for all cards in the given set.
-         Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
-         for a set (e.g. "CMD")
+        Search the database for all cards in the given set.
+        Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
+        for a set (e.g. "CMD")
 
-         Args:
-             set_code: The set code to search for.
+        Args:
+            set_code: The set code to search for.
 
-         Returns:
+        Returns:
             A list of cards from the given set, or empty list if none were found.
 
         Raises:
-             RuntimeError: If used outside an `async with` context.
+            RuntimeError: If used outside an `async with` context.
         """
 
         return await card_api.get_cards_by(
