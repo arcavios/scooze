@@ -1,5 +1,4 @@
 import math
-import re
 from collections import Counter
 from copy import deepcopy
 from unittest.mock import MagicMock, patch
@@ -117,11 +116,6 @@ def test_archetype(archetype_modern_4c):
     assert deck.archetype == archetype_modern_4c
 
 
-def test_date(today):
-    deck = Deck[OracleCard](date_played=today)
-    assert deck.date_played == today
-
-
 def test_format():
     deck = Deck[OracleCard](archetype="test_format", format=Format.MODERN)
     assert deck.format is Format.MODERN
@@ -209,7 +203,6 @@ def test_deck_from_model(
     mock_get_card: MagicMock,
     mock_cards_collection,
     archetype_modern_4c,
-    today,
     main_modern_4c,
     main_modern_4c_dict,
     side_modern_4c,
@@ -225,7 +218,6 @@ def test_deck_from_model(
     model = DeckModel.model_validate(
         {
             "archetype": archetype_modern_4c,
-            "date_played": today,
             "format": Format.MODERN,
             "main": main_modern_4c_dict,
             "side": side_modern_4c_dict,
@@ -234,7 +226,6 @@ def test_deck_from_model(
     deck = Deck[OracleCard].from_model(model, card_class=OracleCard)
 
     assert deck.archetype == model.archetype
-    assert deck.date_played == model.date_played
     assert deck.format == model.format
     assert deck.main == main_modern_4c
     assert deck.side == side_modern_4c
@@ -246,7 +237,6 @@ def test_model_from_deck(
     mock_get_card: MagicMock,
     mock_cards_collection,
     archetype_modern_4c,
-    today,
     main_modern_4c,
     main_modern_4c_dict,
     side_modern_4c,
@@ -254,7 +244,6 @@ def test_model_from_deck(
 ):
     # dummy_model = DeckModel.model_validate(
     #     archetype=archetype_modern_4c,
-    #     date_played=today,
     #     format=Format.MODERN,
     #     main_cards=main_modern_4c_dict,
     #     side_cards=side_modern_4c_dict,

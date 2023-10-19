@@ -1,5 +1,4 @@
 from collections import Counter
-from datetime import date
 
 from pydantic import Field, model_validator
 from scooze.catalogs import Format
@@ -13,7 +12,6 @@ class DeckModel(ScoozeBaseModel):
 
     Attributes:
         archetype: The archetype of this DeckModel.
-        date_played: The date this DeckModel was played.
         format: The format legality of the cards in this DeckModel.
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
@@ -40,10 +38,6 @@ class DeckModel(ScoozeBaseModel):
     archetype: str = Field(
         default="",
         description="The archetype of this Deck.",
-    )
-    date_played: date = Field(
-        default=None,
-        description="The date this Deck was played.",
     )
     format: Format = Field(
         default=Format.NONE,

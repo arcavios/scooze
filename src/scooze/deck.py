@@ -1,7 +1,6 @@
 import json
 from collections import Counter
 from dataclasses import dataclass, field
-from datetime import date
 from sys import maxsize
 from typing import Generic, Mapping, Self, TypeVar
 
@@ -24,7 +23,6 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     Attributes:
         archetype: The archetype of this Deck.
-        date_played: The date this Deck was played.
         format: The format legality of the cards in this Deck.
         card_class: The kind of Cards this Deck contains. Should match CardT.
         main: The main deck. Typically 60 cards minimum.
@@ -35,7 +33,6 @@ class Deck(utils.ComparableObject, Generic[CardT]):
     def __init__(
         self,
         archetype: str | None = None,
-        date_played: date | None = None,
         format: Format = Format.NONE,
         card_class: CardT = OracleCard,
         main: DeckPartT | None = None,
@@ -47,7 +44,6 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         self.scooze_id = kwargs.get("scooze_id")
 
         self.archetype = archetype
-        self.date_played = DeckNormalizer.to_date(date_played)
         self.format = format
         self.card_class = card_class
 
