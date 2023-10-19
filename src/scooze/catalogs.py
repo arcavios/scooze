@@ -328,6 +328,105 @@ class SetType(ExtendedEnum, StrEnum):
 
 # endregion
 
+# region Symbology
+
+
+class CostSymbol(ExtendedEnum, StrEnum):
+    """
+    A symbol that can show up in mana cost or oracle text of Magic cards.
+    """
+
+    WHITE = "W"
+    BLUE = "U"
+    BLACK = "B"
+    RED = "R"
+    GREEN = "G"
+
+    COLORLESS = "C"
+
+    GENERIC_0 = "1"
+    GENERIC_1 = "1"
+    GENERIC_2 = "2"
+    GENERIC_3 = "3"
+    GENERIC_4 = "4"
+    GENERIC_5 = "5"
+    GENERIC_6 = "6"
+    GENERIC_7 = "7"
+    GENERIC_8 = "8"
+    GENERIC_9 = "9"
+    GENERIC_10 = "10"
+    GENERIC_11 = "11"
+    GENERIC_12 = "12"
+    GENERIC_13 = "13"
+    GENERIC_14 = "14"
+    GENERIC_15 = "15"
+    GENERIC_16 = "16"
+    GENERIC_17 = "17"
+    GENERIC_18 = "18"
+    GENERIC_19 = "19"
+    GENERIC_20 = "20"
+
+    GENERIC_X = "X"
+    GENERIC_Y = "Y"
+    SNOW = "S"
+
+    HYBRID_WU = "W/U"
+    HYBRID_UB = "U/B"
+    HYBRID_BR = "B/R"
+    HYBRID_RG = "R/G"
+    HYBRID_GW = "G/W"
+    HYBRID_WB = "W/B"
+    HYBRID_UR = "U/R"
+    HYBRID_BG = "B/G"
+    HYBRID_RW = "R/W"
+    HYBRID_GU = "G/U"
+
+    PHYREXIAN_WHITE = "2/P"
+    PHYREXIAN_BLUE = "2/P"
+    PHYREXIAN_BLACK = "2/P"
+    PHYREXIAN_RED = "2/P"
+    PHYREXIAN_GREEN = "2/P"
+    GENERIC_PHYREXIAN = "P"
+
+    HYBRID_PHYREXIAN_WU = "W/U/P"
+    HYBRID_PHYREXIAN_UB = "U/B/P"
+    HYBRID_PHYREXIAN_BR = "B/R/P"
+    HYBRID_PHYREXIAN_RG = "R/G/P"
+    HYBRID_PHYREXIAN_GW = "G/W/P"
+    HYBRID_PHYREXIAN_WB = "W/B/P"
+    HYBRID_PHYREXIAN_UR = "U/R/P"
+    HYBRID_PHYREXIAN_BG = "B/G/P"
+    HYBRID_PHYREXIAN_RW = "R/W/P"
+    HYBRID_PHYREXIAN_GU = "G/U/P"
+
+    TWOBRID_WHITE = "2/W"
+    TWOBRID_BLUE = "2/U"
+    TWOBRID_BLACK = "2/B"
+    TWOBRID_RED = "2/R"
+    TWOBRID_GREEN = "2/G"
+
+    # Non-mana symbols
+    TAP = "T"
+    UNTAP = "Q"
+    ENERGY = "E"
+
+    # specific to un-cards
+    GENERIC_HALF = "½"
+    HALF_WHITE = "HW"
+    HALF_BLUE = "HU"
+    HALF_BLACK = "HB"
+    HALF_RED = "HR"
+    HALF_GREEN = "HG"
+    GENERIC_100 = "100"
+    GENERIC_1000000 = "1000000"
+    GENERIC_INFINITY = "∞"
+    GENERIC_Z = "Z"
+    TICKET = "TK"
+
+
+# endregion
+
+
 # region Deck Enums
 
 
