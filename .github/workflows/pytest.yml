@@ -1,0 +1,19 @@
+name: Pytest
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+      - name: Test with pytest
+        run: |
+          pip install pytest pytest-cov
+          pytest tests/
