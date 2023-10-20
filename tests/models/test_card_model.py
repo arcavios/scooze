@@ -834,7 +834,7 @@ def test_fullcardmodel_from_card_reversible(
     assert back.watermark is None
 
     assert model.cardmarket_id is None
-    assert model.cmc is None
+    assert model.cmc == 5.0
     assert model.collector_number == "379"
     assert model.color_identity == {Color.BLUE}
     assert model.color_indicator is None
