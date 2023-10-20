@@ -1,12 +1,14 @@
 import argparse
 import logging
 import os.path
+import re
+from collections import Counter
 from datetime import date, datetime
 from sys import maxsize, stdout
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
-from scooze.catalogs import ExtendedEnum, Format
+from scooze.catalogs import CostSymbol, ExtendedEnum, Format
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
 DEFAULT_DECKS_DIR = "./data/decks"
@@ -482,6 +484,15 @@ class DictDiff(ComparableObject):
         return DictDiff(diff)
 
     # endregion
+
+
+# endregion
+
+# region Symbology utils
+
+
+def parse_cost(cost: str) -> Counter[CostSymbol]:
+    return Counter([CostSymbol(s) for s in re.findall("{([^}]+)}", cost)])
 
 
 # endregion
