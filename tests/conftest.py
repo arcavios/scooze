@@ -1,6 +1,6 @@
 import json
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 import pytest
 from bson import ObjectId
@@ -26,7 +26,7 @@ def client() -> TestClient:
 
 
 @pytest.fixture(scope="session")
-def today() -> datetime:
+def today() -> date:
     return datetime.now(timezone.utc).date()
 
 

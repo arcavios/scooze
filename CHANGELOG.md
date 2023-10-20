@@ -5,7 +5,7 @@
 ### Added
 
 - Added scooze_id to CardModel and Card. Changed the MongoDB _id to scooze_id. ([#193](https://github.com/arcavios/scooze/pull/193))
-- Added AsyncScoozeApi as a way to use API endpoints in an async context (fixes Jupyter compatability) ([#199](https://github.com/arcavios/scooze/pull/199))
+- Added AsyncScoozeApi as a way to use API endpoints in an async context (fixes Jupyter compatibility) ([#199](https://github.com/arcavios/scooze/pull/199))
 - Add Docker support for starting MongoDB via the CLI ([#200](https://github.com/arcavios/scooze/pull/200))
 - CLI rework to be more robust ([#203](https://github.com/arcavios/scooze/pull/203))
 
@@ -21,7 +21,7 @@
 
 ### Docs
 
-- N/A
+- More completely document possible exceptions ([#209])(https://github.com/arcavios/scooze/pull/209)
 
 
 ## [1.0.4] - 2023-10-02
@@ -51,7 +51,7 @@
 - Create a model for representing Magic: the Gathering decks ([#20](https://github.com/arcavios/scooze/pull/20), [#31](https://github.com/arcavios/scooze/pull/31))
 - Add support for downloading bulk data files from Scryfall ([#44](https://github.com/arcavios/scooze/pull/44), [#73](https://github.com/arcavios/scooze/pull/73))
 - Create helpers for converting between Cards and CardModels (from the database) ([#80](https://github.com/arcavios/scooze/pull/80))
-- Create enums for miscellaneous card parts (e.g. Color, Frame, etc) ([#87](https://github.com/arcavios/scooze/pull/87))
+- Create enums for miscellaneous card parts (e.g. Color, Frame, etc.) ([#87](https://github.com/arcavios/scooze/pull/87))
 - Create a CRUD API for decks and ([#98](https://github.com/arcavios/scooze/pull/98), [#108](https://github.com/arcavios/scooze/pull/108))
 - Create a CLI for users to manage their local database from the command line ([#104](https://github.com/arcavios/scooze/pull/104), [#143](https://github.com/arcavios/scooze/pull/143))
 
