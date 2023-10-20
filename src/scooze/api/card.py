@@ -108,7 +108,10 @@ async def add_cards(cards: List[CardT]) -> List[ObjectId]:
         cards: The list of cards to insert.
 
     Returns:
-        The IDs of the inserted cards, or empty list if unable.
+        The IDs of the inserted cards, or empty list if no cards provided.
+
+    Raises:
+        BulkAddError: If not all IDs are successfully inserted.
     """
 
     if not cards:

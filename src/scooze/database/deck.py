@@ -171,7 +171,7 @@ async def delete_decks_all() -> int:
 
     delete_many_result = await db_core.delete_documents(DbCollection.DECKS)
     if delete_many_result is not None:
-        return delete_many_result
+        return delete_many_result.deleted_count
 
 
 # endregion

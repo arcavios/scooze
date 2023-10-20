@@ -31,7 +31,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     pip install scooze
     ```
 
-2. Setup the database
+2. Set up the database
     - Using Docker:
 
         *Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is running.*

@@ -31,7 +31,6 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.models.card import CardModelOut
-from scooze.models.utils import ObjectIdT
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
@@ -575,7 +574,7 @@ class CardNormalizer(CardPartsNormalizer):
     """
 
     @classmethod
-    def to_all_parts(cls, all_parts: Iterable[RelatedCard] | Iterable[dict] | None) -> tuple[RelatedCard]:
+    def to_all_parts(cls, all_parts: Iterable[RelatedCard] | Iterable[dict] | None) -> tuple[RelatedCard] | None:
         """
         Normalize all_parts from JSON.
 
