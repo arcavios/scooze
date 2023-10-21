@@ -96,7 +96,7 @@ def test_get_cards_by_cmc(mock_get: MagicMock, client: TestClient, chalice: Card
 
 @pytest.mark.router_cards
 @patch("scooze.database.card.get_cards_by_property")
-def test_get_carsd_by_cmc_none_found(mock_get: MagicMock, client: TestClient):
+def test_get_cards_by_cmc_none_found(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
     response = client.post("/cards/by?property_name=cmc", json=[100.0])
     assert response.status_code == 404

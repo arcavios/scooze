@@ -181,6 +181,7 @@ async def delete_documents_by_id(coll_type: DbCollection, ids: list[ObjectId]) -
     Deletes multiple documents from the database with the given IDs.
 
     Args:
+        coll_type: The collection to delete from.
         ids: The IDs of the documents to delete.
 
     Returns:

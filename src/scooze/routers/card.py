@@ -92,7 +92,7 @@ async def update_card(card_id: str, card: CardModelIn):
 # Delete
 
 
-@router.delete("/delete/{card_id}", summary="Delete an exisiting card")
+@router.delete("/delete/{card_id}", summary="Delete an existing card")
 async def delete_card_by_id(card_id: str):
     """
     Delete an existing card with the given scooze ID.

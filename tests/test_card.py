@@ -546,7 +546,7 @@ def test_fullcard_from_json_reversible(
     assert back.watermark is None
 
     assert card.cardmarket_id is None
-    assert card.cmc is None
+    assert card.cmc == 5.0
     assert card.collector_number == "379"
     assert card.color_identity == {Color.BLUE}
     assert card.color_indicator is None
@@ -1049,7 +1049,7 @@ def test_fullcard_from_fullcardmodel_reversible(
     assert back.watermark is None
 
     assert card.cardmarket_id is None
-    assert card.cmc is None
+    assert card.cmc == 5.0
     assert card.collector_number == "379"
     assert card.color_identity == {Color.BLUE}
     assert card.color_indicator is None
