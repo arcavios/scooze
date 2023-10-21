@@ -1,8 +1,10 @@
 from collections import Counter
+from unittest.mock import MagicMock, patch
 
 import pytest
 from bson import ObjectId
 from scooze.catalogs import Format
+from scooze.deck import Deck
 from scooze.models.deck import DeckModel
 from scooze.models.utils import ObjectIdT
 

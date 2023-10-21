@@ -100,7 +100,6 @@ def test_update_deck(
     response = client.patch(f"/deck/update/{str(db_4c_id)}", json={"deck": {"side": {}}})
     assert response.status_code == 200
     response_json = response.json()
-    updated_deck_json["date_played"] = updated_deck_json.pop("datePlayed")
     for k, v in updated_deck_json.items():
         assert response_json[k] == v
 

@@ -1,12 +1,15 @@
 import math
 from collections import Counter
 from copy import deepcopy
+from unittest.mock import MagicMock, patch
 
 import pytest
 from scooze.card import OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart
+from scooze.models.card import CardModelOut
+from scooze.models.deck import DeckModel
 from scooze.utils import DictDiff
 
 # region Fixtures
@@ -47,6 +50,52 @@ def dictdiff_empty() -> DictDiff:
     return DictDiff(contents={})
 
 
+@pytest.fixture
+def enigmatic_json() -> dict:
+    return {
+        "archetype": "Enigmatic Fires",
+        "format": "Pioneer",
+        "main": {
+            "Bonecrusher Giant // Stomp": 3,
+            "Kenrith, the Returned King": 1,
+            "Elesh Norn, Mother of Machines": 1,
+            "Koma, Cosmos Serpent": 1,
+            "Heliod, the Radiant Dawn // Heliod, the Warped Eclipse": 1,
+            "Atraxa, Grand Unifier": 1,
+            "Dragonlord Atarka": 1,
+            "Sheoldred, the Apocalypse": 1,
+            "Tolsimir, Friend to Wolves": 1,
+            "Enigmatic Incarnation": 4,
+            "Fires of Invention": 4,
+            "Leyline Binding": 4,
+            "Fable of the Mirror-Breaker // Reflection of Kiki-Jiki": 4,
+            "Touch the Spirit Realm": 3,
+            "Temporary Lockdown": 2,
+            "Savai Triome": 4,
+            "Breeding Pool": 4,
+            "Sacred Foundry": 4,
+            "Ketria Triome": 3,
+            "Sunpetal Grove": 3,
+            "Glacial Fortress": 3,
+            "Boseiju, Who Endures": 1,
+            "Otawara, Soaring City": 1,
+            "Stomping Ground": 1,
+            "Raffine's Tower": 1,
+            "Plains": 1,
+            "Zagoth Triome": 1,
+            "Indatha Triome": 1,
+        },
+        "side": {
+            "Mystical Dispute": 4,
+            "Leyline of the Void": 4,
+            "Temporary Lockdown": 2,
+            "Radiant Flames": 2,
+            "Thought Distortion": 2,
+            "Keruga, the Macrosage": 1,
+        },
+    }
+
+
 # endregion
 
 # region Magic Methods
@@ -78,13 +127,44 @@ def test_main(main_modern_4c):
 
 
 def test_side(side_modern_4c):
-    deck = Deck[OracleCard](archetype="test_main", side=side_modern_4c)
+    deck = Deck[OracleCard](archetype="test_side", side=side_modern_4c)
     assert deck.side == side_modern_4c
 
 
 def test_cmdr(cmdr_part):
     deck = Deck[OracleCard](archetype="test_cmdr", cmdr=cmdr_part)
     assert deck.cmdr == cmdr_part
+
+
+def test_cards(main_modern_4c, side_modern_4c, cmdr_part):
+    deck = Deck[OracleCard](main=main_modern_4c, side=side_modern_4c, cmdr=cmdr_part)
+    assert deck.cards == main_modern_4c.cards + side_modern_4c.cards + cmdr_part.cards
+
+
+def test_normalize_deckpart_from_cards(main_modern_4c, side_modern_4c, cmdr_part):
+    deck = Deck[OracleCard](main=main_modern_4c.cards, side=side_modern_4c.cards, cmdr=cmdr_part.cards)
+    assert deck.cards == main_modern_4c.cards + side_modern_4c.cards + cmdr_part.cards
+
+
+@patch("scooze.api.card.get_card_by")
+def test_normalize_deckpart_from_objectids(
+    mock_get_card: MagicMock,
+    mock_cards_collection,
+    main_modern_4c_dict,
+    main_modern_4c,
+    side_modern_4c_dict,
+    side_modern_4c,
+):
+    def mock_get_card_by(property_name, value, card_class):
+        result = mock_cards_collection.find_one({property_name: value})
+        model = CardModelOut.model_validate(result)
+        return OracleCard.from_model(model)
+
+    mock_get_card.side_effect = mock_get_card_by
+
+    deck = Deck[OracleCard](main=main_modern_4c_dict, side=side_modern_4c_dict)
+
+    assert deck.cards == main_modern_4c.cards + side_modern_4c.cards
 
 
 # endregion
@@ -103,6 +183,88 @@ def test_eq_after_add_card(deck_modern_4c, card_kaheera_the_orphanguard):
 
 
 # endregion
+
+
+# region Class Methods
+
+# region
+
+
+@pytest.mark.database
+def test_deck_from_json(enigmatic_json):
+    deck = Deck.from_json(enigmatic_json)
+    assert deck.archetype == "Enigmatic Fires"
+    assert deck.main.total() == 60
+    assert deck.side.total() == 15
+
+
+@patch("scooze.api.card.get_card_by")
+def test_deck_from_model(
+    mock_get_card: MagicMock,
+    mock_cards_collection,
+    archetype_modern_4c,
+    main_modern_4c,
+    main_modern_4c_dict,
+    side_modern_4c,
+    side_modern_4c_dict,
+):
+    def mock_get_card_by(property_name, value, card_class):
+        result = mock_cards_collection.find_one({property_name: value})
+        model = CardModelOut.model_validate(result)
+        return OracleCard.from_model(model)
+
+    mock_get_card.side_effect = mock_get_card_by
+
+    model = DeckModel.model_validate(
+        {
+            "archetype": archetype_modern_4c,
+            "format": Format.MODERN,
+            "main": main_modern_4c_dict,
+            "side": side_modern_4c_dict,
+        }
+    )
+    deck = Deck[OracleCard].from_model(model, card_class=OracleCard)
+
+    assert deck.archetype == model.archetype
+    assert deck.format == model.format
+    assert deck.main == main_modern_4c
+    assert deck.side == side_modern_4c
+
+
+# TODO(#210): Implement Deck.to_model()
+@patch("scooze.api.card.get_card_by")
+def test_model_from_deck(
+    mock_get_card: MagicMock,
+    mock_cards_collection,
+    archetype_modern_4c,
+    main_modern_4c,
+    main_modern_4c_dict,
+    side_modern_4c,
+    side_modern_4c_dict,
+):
+    # dummy_model = DeckModel.model_validate(
+    #     archetype=archetype_modern_4c,
+    #     format=Format.MODERN,
+    #     main_cards=main_modern_4c_dict,
+    #     side_cards=side_modern_4c_dict,
+    # )
+    # get card ids from card names in the main/side
+    # use those counters of ids to make a new model in addition to **deck
+    # deck = Deck(
+    #     archetype=archetype_modern_4c,
+    #     date_played=today,
+    #     format=Format.MODERN,
+    #     main=main_modern_4c,
+    #     side=side_modern_4c,
+    # )
+    pass
+
+
+# endregion
+
+# endregion
+
+# region Instance Methods
 
 
 def test_average_cmc(deck_modern_4c):
@@ -399,5 +561,7 @@ def test_remove_cards_cmdr(cmdr_part, cmdr_cards):
     cmdr_part.remove_cards(cards=cmdr_cards)
     assert deck.cmdr == cmdr_part
 
+
+# endregion
 
 # endregion

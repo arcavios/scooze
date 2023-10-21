@@ -1,11 +1,18 @@
+import json
 from collections import Counter
 from sys import maxsize
-from typing import Generic, Self
+from typing import Generic, Mapping, Self, TypeVar
 
 import scooze.utils as utils
-from scooze.card import CardT
+from bson import ObjectId
+from scooze.api import ScoozeApi
+from scooze.card import Card, CardT, FullCard, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
+from scooze.models.deck import DeckModel
+
+## Generic Types
+DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
 
 
 class Deck(utils.ComparableObject, Generic[CardT]):
@@ -15,6 +22,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
     Attributes:
         archetype: The archetype of this Deck.
         format: The format legality of the cards in this Deck.
+        card_class: The kind of Cards this Deck contains. Should match CardT.
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
@@ -24,16 +32,22 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart[CardT] = None,
-        side: DeckPart[CardT] = None,
-        cmdr: DeckPart[CardT] = None,
+        card_class: CardT = OracleCard,
+        main: DeckPartT | None = None,
+        side: DeckPartT | None = None,
+        cmdr: DeckPartT | None = None,
+        # kwargs
+        **kwargs,  # TODO(77): log information about kwargs
     ):
+        self.scooze_id = kwargs.get("scooze_id")
+
         self.archetype = archetype
         self.format = format
+        self.card_class = card_class
 
-        self.main = main if main is not None else DeckPart()
-        self.side = side if side is not None else DeckPart()
-        self.cmdr = cmdr if cmdr is not None else DeckPart()
+        self.main: DeckPart[CardT] = DeckNormalizer.to_deck_part(deck_part=main, card_class=card_class)
+        self.side: DeckPart[CardT] = DeckNormalizer.to_deck_part(deck_part=side, card_class=card_class)
+        self.cmdr: DeckPart[CardT] = DeckNormalizer.to_deck_part(deck_part=cmdr, card_class=card_class)
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -42,6 +56,35 @@ class Deck(utils.ComparableObject, Generic[CardT]):
     def __str__(self):
         decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
+
+    @classmethod
+    def from_json(cls, data: dict | str, card_class: CardT = OracleCard) -> Self:
+        if isinstance(data, dict):
+            return cls(**data, card_class=card_class)
+        elif isinstance(data, str):
+            return cls(**json.loads(data), card_class=card_class)
+
+    @classmethod
+    def from_model(cls, model: DeckModel, card_class: CardT = OracleCard) -> Self:
+        return cls(**model.model_dump(), card_class=card_class)
+
+    # TODO(#210): Implement Deck.to_model()
+    def to_model(self) -> DeckModel:
+        if self.card_class == Card:
+            # with asyncio.Runner() as runner:
+            #     runner.run(card_api.get_card_by_name(card_name))
+            # return a deckmodel where the cards are looked up by name
+            pass
+        elif self.card_class == OracleCard:
+            # return a deckmodel where the cards are looked up by oracle_id
+            pass
+        elif self.card_class == FullCard:
+            # return a deckmodel where the cards are looked up by scryfall_id
+            pass
+        else:
+            pass
+
+        raise NotImplementedError()
 
     def average_cmc(self) -> float:
         """
@@ -294,3 +337,64 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 pass  # TODO(#75): failed to remove cards
 
     # endregion
+
+
+class DeckNormalizer(utils.JsonNormalizer):
+    """
+    A simple class to use when normalizing non-serializable data from JSON.
+
+    Usage:
+        >>> deck.main = DeckNormalizer.deckpart(main_card_ids_json)
+    """
+
+    @classmethod
+    def to_deck_part(
+        cls,
+        deck_part: DeckPartT | None,
+        card_class: type[CardT] = OracleCard,
+    ) -> DeckPart[CardT]:
+        """
+        Normalize DeckPart from JSON.
+
+        Args:
+            cards: A list of cards or scooze IDs of cards to normalize.
+            card_class: The kind of Cards the resulting DeckPart will contain.
+            Should match CardT.
+
+        Returns:
+            An instance of DeckPart containing the given cards.
+        """
+
+        lookup_by_id = False
+
+        # Missing or empty incoming DeckPart, returns new empty DeckPart
+        if deck_part is None:
+            return DeckPart()
+        # Incoming DeckPart, returns same DeckPart
+        elif isinstance(deck_part, DeckPart):
+            return deck_part
+        # Mapping of Cards to quantities, returns DeckPart wrapping them.
+        elif all(isinstance(card, card_class) for card in deck_part.keys()):
+            return DeckPart[card_class](cards=deck_part)
+        # Mapping of str to quantities
+        elif all(isinstance(card, str) for card in deck_part.keys()):
+            # Incoming strs are ObjectIds, lookup Cards by id
+            lookup_by_id = ObjectId.is_valid(next(iter(deck_part.keys())))
+
+            # Incoming strs are Card names, lookup by Card name
+            if not lookup_by_id:
+                with ScoozeApi() as api:
+                    return DeckPart[card_class](
+                        cards=Counter({api.get_card_by_name(card_name): q for card_name, q in deck_part.items()})
+                    )
+
+        if lookup_by_id or all(isinstance(card, ObjectId) for card in deck_part.keys()):
+            with ScoozeApi() as api:
+                return DeckPart[card_class](
+                    cards=Counter(
+                        {
+                            api.get_card_by(property_name="_id", value=ObjectId(card_id)): q
+                            for card_id, q in deck_part.items()
+                        }
+                    )
+                )
