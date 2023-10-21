@@ -1,6 +1,5 @@
 import json
 from collections import Counter
-from dataclasses import dataclass, field
 from sys import maxsize
 from typing import Generic, Mapping, Self, TypeVar
 
@@ -11,7 +10,6 @@ from scooze.card import Card, CardT, FullCard, OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.models.deck import DeckModel
-from scooze.models.utils import ObjectIdT
 
 ## Generic Types
 DeckPartT = TypeVar("DeckPartT", DeckPart, Mapping)
