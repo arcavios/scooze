@@ -7,25 +7,9 @@ import scooze.api.bulkdata as bulkdata_api
 import scooze.api.card as card_api
 import scooze.database.mongo as mongo
 from bson import ObjectId
+from scooze.api.utils import _check_for_safe_context, _safe_cache
 from scooze.card import CardT, FullCard
 from scooze.catalogs import ScryfallBulkFile
-
-
-def _check_for_safe_context(func):
-    """
-    Wrapper to ensure an instance method of ScoozeApi is called in a safe
-    context.
-
-    Raises:
-        RuntimeError: If decorated function is called outside a context.
-    """
-
-    def wrapper_safe_context(self, *args, **kwargs):
-        if not self.safe_context:
-            raise RuntimeError("ScoozeApi used outside 'with' context")
-        return func(self, *args, **kwargs)
-
-    return wrapper_safe_context
 
 
 class ScoozeApi(AbstractContextManager):
@@ -56,7 +40,7 @@ class ScoozeApi(AbstractContextManager):
 
     # region Card endpoints
 
-    @cache
+    @_safe_cache
     @_check_for_safe_context
     def get_card_by(self, property_name: str, value) -> CardT:
         """
@@ -366,7 +350,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
     # region Card endpoints
 
-    @cache
+    @_safe_cache
     @_check_for_safe_context
     async def get_card_by(self, property_name: str, value) -> CardT:
         """
