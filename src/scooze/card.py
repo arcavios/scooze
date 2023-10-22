@@ -168,15 +168,15 @@ class OracleCard(Card):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         super().__init__(
-            cmc,
-            color_identity,
-            colors,
-            legalities,
-            mana_cost,
-            name,
-            power,
-            toughness,
-            type_line,
+            cmc=cmc,
+            color_identity=color_identity,
+            colors=colors,
+            legalities=legalities,
+            mana_cost=mana_cost,
+            name=name,
+            power=power,
+            toughness=toughness,
+            type_line=type_line,
             **kwargs,
         )
         self.scooze_id = kwargs.get("scooze_id")
@@ -453,29 +453,29 @@ class FullCard(OracleCard):
         **kwargs,  # TODO(77): log information about kwargs
     ):
         super().__init__(
-            card_faces,
-            cmc,  # will be overridden with reversible card logic
-            color_identity,
-            color_indicator,
-            colors,
-            edhrec_rank,
-            hand_modifier,
-            keywords,
-            legalities,
-            life_modifier,
-            loyalty,
-            mana_cost,
-            name,
-            oracle_id,
-            oracle_text,
-            penny_rank,
-            power,
-            prints_search_uri,
-            produced_mana,
-            reserved,
-            rulings_uri,
-            toughness,
-            type_line,
+            card_faces=None,  # will be overridden with FullCardFace objects
+            cmc=0,  # will be overridden with reversible card logic
+            color_identity=color_identity,
+            color_indicator=color_indicator,
+            colors=colors,
+            edhrec_rank=edhrec_rank,
+            hand_modifier=hand_modifier,
+            keywords=keywords,
+            legalities=legalities,
+            life_modifier=life_modifier,
+            loyalty=loyalty,
+            mana_cost=mana_cost,
+            name=name,
+            oracle_id=oracle_id,
+            oracle_text=oracle_text,
+            penny_rank=penny_rank,
+            power=power,
+            prints_search_uri=prints_search_uri,
+            produced_mana=produced_mana,
+            reserved=reserved,
+            rulings_uri=rulings_uri,
+            toughness=toughness,
+            type_line=type_line,
             **kwargs,
         )
         self.scooze_id = kwargs.get("scooze_id")
@@ -499,6 +499,7 @@ class FullCard(OracleCard):
         # region Gameplay Fields
 
         self.all_parts = CardNormalizer.to_all_parts(all_parts)
+        self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=FullCardFace)
         # Reversible cards currently have the same oracle card on both sides; will need to change this if this changes.
         if layout == Layout.REVERSIBLE_CARD:
             self.cmc = CardNormalizer.to_float(self.card_faces[0].cmc)
