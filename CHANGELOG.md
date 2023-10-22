@@ -23,8 +23,8 @@
 
 ### Docs
 
-- More completely document possible exceptions ([#209])(https://github.com/arcavios/scooze/pull/209)
-- 
+- More completely document possible exceptions ([#209](https://github.com/arcavios/scooze/pull/209))
+- Change `ScoozeApi() as s` to `as api` for clarity in docs ([#216](https://github.com/arcavios/scooze/pull/216))
 
 ## [1.0.4] - 2023-10-02
 
