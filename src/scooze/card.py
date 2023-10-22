@@ -167,33 +167,34 @@ class OracleCard(Card):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        super().__init__(
+            cmc,
+            color_identity,
+            colors,
+            legalities,
+            mana_cost,
+            name,
+            power,
+            toughness,
+            type_line,
+            **kwargs,
+        )
         self.scooze_id = kwargs.get("scooze_id")
 
         self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=CardFace)
-        self.cmc = CardNormalizer.to_float(cmc)
-        self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
         self.color_indicator = CardNormalizer.to_frozenset(color_indicator, convert_to_enum=Color)
-        self.colors = CardNormalizer.to_frozenset(colors, convert_to_enum=Color)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
         self.keywords = CardNormalizer.to_frozenset(keywords)
-        self.legalities = CardNormalizer.to_frozendict(
-            legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality
-        )
         self.life_modifier = life_modifier
         self.loyalty = loyalty
-        self.mana_cost = mana_cost
-        self.name = name
         self.oracle_id = oracle_id
         self.oracle_text = oracle_text
         self.penny_rank = penny_rank
-        self.power = power
         self.prints_search_uri = prints_search_uri
         self.produced_mana = CardNormalizer.to_frozenset(produced_mana, convert_to_enum=Color)
         self.reserved = reserved
         self.rulings_uri = rulings_uri
-        self.toughness = toughness
-        self.type_line = type_line
 
     @classmethod
     def oracle_text_without_reminder(cls, oracle_text: str) -> str:
@@ -451,6 +452,32 @@ class FullCard(OracleCard):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
+        super().__init__(
+            card_faces,
+            cmc,  # will be overridden with reversible card logic
+            color_identity,
+            color_indicator,
+            colors,
+            edhrec_rank,
+            hand_modifier,
+            keywords,
+            legalities,
+            life_modifier,
+            loyalty,
+            mana_cost,
+            name,
+            oracle_id,
+            oracle_text,
+            penny_rank,
+            power,
+            prints_search_uri,
+            produced_mana,
+            reserved,
+            rulings_uri,
+            toughness,
+            type_line,
+            **kwargs,
+        )
         self.scooze_id = kwargs.get("scooze_id")
 
         # region Core Fields
@@ -464,9 +491,6 @@ class FullCard(OracleCard):
         self.tcgplayer_id = tcgplayer_id
         self.tcgplayer_etched_id = tcgplayer_etched_id
         self.cardmarket_id = cardmarket_id
-        self.oracle_id = oracle_id
-        self.prints_search_uri = prints_search_uri
-        self.rulings_uri = rulings_uri
         self.scryfall_uri = scryfall_uri
         self.uri = uri
 
@@ -475,33 +499,12 @@ class FullCard(OracleCard):
         # region Gameplay Fields
 
         self.all_parts = CardNormalizer.to_all_parts(all_parts)
-        self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=FullCardFace)
         # Reversible cards currently have the same oracle card on both sides; will need to change this if this changes.
         if layout == Layout.REVERSIBLE_CARD:
             self.cmc = CardNormalizer.to_float(self.card_faces[0].cmc)
         else:
             self.cmc = CardNormalizer.to_float(cmc)
-        self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
-        self.color_indicator = CardNormalizer.to_frozenset(color_indicator, convert_to_enum=Color)
-        self.colors = CardNormalizer.to_frozenset(colors, convert_to_enum=Color)
-        self.edhrec_rank = edhrec_rank
-        self.hand_modifier = hand_modifier
-        self.keywords = CardNormalizer.to_frozenset(keywords)
-        self.legalities = CardNormalizer.to_frozendict(
-            legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality
-        )
-        self.life_modifier = life_modifier
-        self.loyalty = loyalty
-        self.mana_cost = mana_cost
-        self.name = name
-        self.oracle_text = oracle_text
         self.oversized = oversized
-        self.penny_rank = penny_rank
-        self.power = power
-        self.produced_mana = CardNormalizer.to_frozenset(produced_mana, convert_to_enum=Color)
-        self.reserved = reserved
-        self.toughness = toughness
-        self.type_line = type_line
 
         # endregion
 
