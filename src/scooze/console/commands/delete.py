@@ -49,8 +49,8 @@ def delete_collection(coll: DbCollection):
         print(f"Deleting all {coll} from your local database...")
         match coll:
             case DbCollection.CARDS:
-                with ScoozeApi() as s:
-                    s.delete_cards_all()
+                with ScoozeApi() as api:
+                    api.delete_cards_all()
             case DbCollection.DECKS:
                 # TODO(#145): Use the ScoozeApi for this
                 deck_db.delete_decks_all()
