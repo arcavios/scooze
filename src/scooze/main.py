@@ -1,26 +1,31 @@
 import os
 from contextlib import asynccontextmanager
 
+from beanie import init_beanie
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from scooze.database.mongo import mongo_close, mongo_connect
+from motor.motor_asyncio import AsyncIOMotorClient
+from scooze.models.card import CardModel
 from scooze.routers.card import router as CardRouter
 from scooze.routers.cards import router as CardsRouter
 from scooze.routers.deck import router as DeckRouter
 from scooze.routers.decks import router as DecksRouter
 
+MONGO_URI = "mongodb://127.0.0.1:27017"
+
 
 # Startup/shutdown
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Setup Mongo
-    await mongo_connect()
+    # Setup Mongo and Beanie
+    scooze_client = AsyncIOMotorClient(MONGO_URI)
+    await init_beanie(database=scooze_client.scooze, document_models=[CardModel])
 
     # Yield to the app
     yield
 
     # Mongo teardown
-    await mongo_close()
+    scooze_client.close()
 
 
 app = FastAPI(

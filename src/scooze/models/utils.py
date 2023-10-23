@@ -1,5 +1,6 @@
 from typing import Annotated, Any, TypeAlias
 
+from beanie import Document
 from bson import ObjectId as BsonObjectId
 from pydantic import BaseModel, ConfigDict, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
@@ -22,6 +23,18 @@ def _to_lower_camel(string: str) -> str:
 
 
 # region Public Utility Classes
+
+
+class ScoozeDocument(Document):
+    """
+    A simple base model class to support models in scooze.
+    """
+
+    model_config = ConfigDict(
+        alias_generator=_to_lower_camel,
+        arbitrary_types_allowed=True,
+        populate_by_name=True,
+    )
 
 
 class ScoozeBaseModel(BaseModel, validate_assignment=True):
