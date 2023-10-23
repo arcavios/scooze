@@ -69,13 +69,13 @@ async def get_card_by_id(card_id: str) -> CardModel:
         The requested card.
 
     Raises:
-        HTTPException: 400 - Bad id given.
         HTTPException: 404 - Card wasn't found.
+        HTTPException: 422 - Bad id given.
     """
     try:
         card_obj_id = PydanticObjectId(card_id)
     except InvalidId:
-        raise HTTPException(status_code=400, detail="Must give a valid id.")
+        raise HTTPException(status_code=422, detail="Must give a valid id.")
 
     card = await CardModel.get(card_obj_id)
 
@@ -129,15 +129,15 @@ async def update_card(card_id: str, card_req: CardModel) -> CardModel:
         The updated card.
 
     Raises:
-        HTTPException: 400 - Bad id given.
         HTTPException: 404 - Card wasn't found, pre-update.
         HTTPException: 404 - Card wasn't found, post-update.
+        HTTPException: 422 - Bad id given.
     """
 
     try:
         card_obj_id = PydanticObjectId(card_id)
     except InvalidId:
-        raise HTTPException(status_code=400, detail="Must give a valid id.")
+        raise HTTPException(status_code=422, detail="Must give a valid id.")
 
     field_updates = {k: v for k, v in card_req.dict().items() if v is not None}
     card = await CardModel.get(card_obj_id)
@@ -171,15 +171,15 @@ async def delete_card_by_id(card_id: str) -> JSONResponse:
         A message that either the card was deleted or not deleted.
 
     Raises:
-        HTTPException: 400 - Bad id given.
         HTTPException: 400 - Card wasn't deleted.
         HTTPException: 404 - Card wasn't found.
+        HTTPException: 422 - Bad id given.
     """
 
     try:
         card_obj_id = PydanticObjectId(card_id)
     except InvalidId:
-        raise HTTPException(status_code=400, detail="Must give a valid id.")
+        raise HTTPException(status_code=422, detail="Must give a valid id.")
 
     card_to_delete = await CardModel.get(card_obj_id)
 

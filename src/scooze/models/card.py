@@ -1,6 +1,7 @@
 from datetime import date
 
-from beanie import Document
+from beanie import Document, PydanticObjectId
+from bson.errors import InvalidId
 from pydantic import ConfigDict, Field, field_validator
 from scooze.cardparts import (
     CardFace,
@@ -187,6 +188,12 @@ class CardModel(ScoozeDocument):
         validate_on_save = True
 
     # region Core fields
+
+    id: PydanticObjectId | None = Field(
+        default=None,
+        description="This is our id",
+        validation_alias="blarghl",
+    )
 
     arena_id: int | None = Field(
         default=None,
@@ -581,6 +588,19 @@ class CardModel(ScoozeDocument):
         if isinstance(v, RelatedUris):
             v = RelatedUrisModel.model_validate(v.__dict__)
         return v
+
+    # @field_validator("scryfall_id", mode="before")
+    # @classmethod
+    # def scryfall_id_validator(cls, v):
+    #     print("Validating scryfall_id")
+    #     if isinstance(v, str):
+    #         try:
+    #             return PydanticObjectId(v)
+    #         except InvalidId:
+    #             print("Non id-like string")
+    #             return v
+    #     print("Not a string")
+    #     return v
 
     # endregion
 
