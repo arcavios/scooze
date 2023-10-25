@@ -1,8 +1,6 @@
 from datetime import date
 
-from beanie import Document, PydanticObjectId
-from bson.errors import InvalidId
-from pydantic import ConfigDict, Field, field_validator
+from pydantic import AliasChoices, ConfigDict, Field, field_validator
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
@@ -42,7 +40,7 @@ from scooze.models.cardparts import (
 from scooze.models.utils import ObjectIdT, ScoozeBaseModel, ScoozeDocument
 
 
-class CardModel(ScoozeDocument):
+class CardModelData(ScoozeBaseModel):
     """
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
@@ -165,35 +163,7 @@ class CardModel(ScoozeDocument):
         watermark: Watermark printed on this card, if any.
     """
 
-    model_config = ConfigDict(
-        json_schema_extra={
-            "examples": [
-                {
-                    "cmc": 2.0,
-                    "colorIdentity": [Color.GREEN],
-                    "colors": [Color.GREEN],
-                    "legalities": {Format.COMMANDER: Legality.LEGAL, Format.PAUPER: Legality.NOT_LEGAL},
-                    "manaCost": "{1}{G}",
-                    "name": "Scavenging Ooze",
-                    "power": "2",
-                    "toughness": "2",
-                    "typeLine": "Creature — Ooze",
-                }
-            ]
-        }
-    )
-
-    class Settings:
-        name = DbCollection.CARDS
-        validate_on_save = True
-
     # region Core fields
-
-    id: PydanticObjectId | None = Field(
-        default=None,
-        description="This is our id",
-        validation_alias="blarghl",
-    )
 
     arena_id: int | None = Field(
         default=None,
@@ -202,7 +172,7 @@ class CardModel(ScoozeDocument):
     scryfall_id: str | None = Field(
         default=None,
         description="Scryfall's unique ID for this card.",
-        validation_alias="id",
+        validation_alias=AliasChoices("scryfall_id", "id"),
     )
     lang: Language | None = Field(
         default=None,
@@ -589,20 +559,35 @@ class CardModel(ScoozeDocument):
             v = RelatedUrisModel.model_validate(v.__dict__)
         return v
 
-    # @field_validator("scryfall_id", mode="before")
-    # @classmethod
-    # def scryfall_id_validator(cls, v):
-    #     print("Validating scryfall_id")
-    #     if isinstance(v, str):
-    #         try:
-    #             return PydanticObjectId(v)
-    #         except InvalidId:
-    #             print("Non id-like string")
-    #             return v
-    #     print("Not a string")
-    #     return v
-
     # endregion
+
+
+class CardModel(ScoozeDocument, CardModelData):
+    """
+    Database representation of a Scooze Card
+    """
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "cmc": 2.0,
+                    "colorIdentity": [Color.GREEN],
+                    "colors": [Color.GREEN],
+                    "legalities": {Format.COMMANDER: Legality.LEGAL, Format.PAUPER: Legality.NOT_LEGAL},
+                    "manaCost": "{1}{G}",
+                    "name": "Scavenging Ooze",
+                    "power": "2",
+                    "toughness": "2",
+                    "typeLine": "Creature — Ooze",
+                }
+            ]
+        }
+    )
+
+    class Settings:
+        name = DbCollection.CARDS
+        validate_on_save = True
 
     # TODO(#46): add Card field validators
 

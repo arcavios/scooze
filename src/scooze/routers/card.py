@@ -3,7 +3,7 @@ from bson.errors import InvalidId
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
-from scooze.models.card import CardModel
+from scooze.models.card import CardModel, CardModelData
 
 router = APIRouter(
     prefix="/card",
@@ -36,7 +36,7 @@ async def card_root() -> CardModel:
 
 
 @router.post("/add", summary="Create a new card")
-async def add_card(card: CardModel) -> CardModel:
+async def add_card(card_data: CardModelData) -> CardModel:
     """
     Add a card to the database.
 
@@ -49,6 +49,7 @@ async def add_card(card: CardModel) -> CardModel:
 
     try:
         # NOTE: would like to add the dupe protection back in
+        card = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
         return await card.create()
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to create a new card. Error: {e}")
