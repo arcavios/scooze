@@ -1,6 +1,6 @@
 from beanie import PydanticObjectId
 from bson.errors import InvalidId
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from scooze.models.card import CardModel, CardModelData
@@ -10,6 +10,26 @@ router = APIRouter(
     tags=["card"],
     responses={404: {"description": "Card Not Found"}},
 )
+
+
+def _validate_card_id(card_id: str) -> PydanticObjectId:
+    """
+    Helper to validate incoming strings as Card IDs
+
+    Args:
+        card_id: Incoming string to test.
+
+    Returns:
+        Valid PydanticObjectId.
+
+    Raises:
+        HTTPException: 422 - String was not a valid id.
+    """
+
+    try:
+        return PydanticObjectId(card_id)
+    except InvalidId:
+        raise HTTPException(status_code=422, detail="Must give a valid id.")
 
 
 @router.get("/", summary="Get a card at random")
@@ -59,7 +79,7 @@ async def add_card(card_data: CardModelData) -> CardModel:
 
 
 @router.get("/id/{card_id}", summary="Get a card by ID")
-async def get_card_by_id(card_id: str) -> CardModel:
+async def get_card_by_id(card_id: PydanticObjectId = Depends(_validate_card_id)) -> CardModel:
     """
     Get the card with the given ID.
 
@@ -73,15 +93,11 @@ async def get_card_by_id(card_id: str) -> CardModel:
         HTTPException: 404 - Card wasn't found.
         HTTPException: 422 - Bad id given.
     """
-    try:
-        card_obj_id = PydanticObjectId(card_id)
-    except InvalidId:
-        raise HTTPException(status_code=422, detail="Must give a valid id.")
 
-    card = await CardModel.get(card_obj_id)
+    card = await CardModel.get(card_id)
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_obj_id} not found.")
+        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found.")
 
     return card
 
@@ -115,7 +131,7 @@ async def get_card_by_name(card_name: str) -> CardModel:
 
 
 @router.patch("/update/{card_id}", summary="Update an existing card")
-async def update_card(card_id: str, card_req: CardModel) -> CardModel:
+async def update_card(card_req: CardModel, card_id: PydanticObjectId = Depends(_validate_card_id)) -> CardModel:
     """
     Update an existing card with the given scooze ID and payload.
 
@@ -135,24 +151,19 @@ async def update_card(card_id: str, card_req: CardModel) -> CardModel:
         HTTPException: 422 - Bad id given.
     """
 
-    try:
-        card_obj_id = PydanticObjectId(card_id)
-    except InvalidId:
-        raise HTTPException(status_code=422, detail="Must give a valid id.")
-
     field_updates = {k: v for k, v in card_req.dict().items() if v is not None}
-    card = await CardModel.get(card_obj_id)
+    card = await CardModel.get(card_id)
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_obj_id} not found.")
+        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found.")
 
     # NOTE: This could be slightly less verbose by chaining a la CardModel.get().update() but
     # the typing gets weird from things on Beanie's end so I broke it up like this
     _ = await card.set(field_updates)
-    updated_card = await CardModel.get(card_obj_id)
+    updated_card = await CardModel.get(card_id)
 
     if updated_card is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_obj_id} not found post-update.")
+        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found post-update.")
 
     return updated_card
 
@@ -161,7 +172,7 @@ async def update_card(card_id: str, card_req: CardModel) -> CardModel:
 
 
 @router.delete("/delete/{card_id}", summary="Delete an existing card")
-async def delete_card_by_id(card_id: str) -> JSONResponse:
+async def delete_card_by_id(card_id: PydanticObjectId = Depends(_validate_card_id)) -> JSONResponse:
     """
     Delete an existing card with the given ID.
 
@@ -177,19 +188,14 @@ async def delete_card_by_id(card_id: str) -> JSONResponse:
         HTTPException: 422 - Bad id given.
     """
 
-    try:
-        card_obj_id = PydanticObjectId(card_id)
-    except InvalidId:
-        raise HTTPException(status_code=422, detail="Must give a valid id.")
-
-    card_to_delete = await CardModel.get(card_obj_id)
+    card_to_delete = await CardModel.get(card_id)
 
     if card_to_delete is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_obj_id} not found.")
+        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found.")
 
     delete_result = await card_to_delete.delete()
 
     if delete_result is None:
-        raise HTTPException(status_code=400, detail=f"Card with id {card_obj_id} not deleted.")
+        raise HTTPException(status_code=400, detail=f"Card with id {card_id} not deleted.")
 
-    return JSONResponse(f"Card with id {card_obj_id} deleted.")
+    return JSONResponse(f"Card with id {card_id} deleted.")
