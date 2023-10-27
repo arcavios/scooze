@@ -1,4 +1,5 @@
 from enum import Enum, EnumMeta, StrEnum, auto
+from functools import cache
 
 # region Enum Extensions
 
@@ -344,7 +345,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
 
     COLORLESS = "C"
 
-    GENERIC_0 = "1"
+    GENERIC_0 = "0"
     GENERIC_1 = "1"
     GENERIC_2 = "2"
     GENERIC_3 = "3"
@@ -422,6 +423,35 @@ class CostSymbol(ExtendedEnum, StrEnum):
     GENERIC_INFINITY = "∞"
     GENERIC_Z = "Z"
     TICKET = "TK"
+
+    @property
+    def generic_amount(self) -> int:
+        if self not in (
+            CostSymbol.GENERIC_1,
+            CostSymbol.GENERIC_2,
+            CostSymbol.GENERIC_3,
+            CostSymbol.GENERIC_4,
+            CostSymbol.GENERIC_5,
+            CostSymbol.GENERIC_6,
+            CostSymbol.GENERIC_7,
+            CostSymbol.GENERIC_8,
+            CostSymbol.GENERIC_9,
+            CostSymbol.GENERIC_10,
+            CostSymbol.GENERIC_11,
+            CostSymbol.GENERIC_12,
+            CostSymbol.GENERIC_13,
+            CostSymbol.GENERIC_14,
+            CostSymbol.GENERIC_15,
+            CostSymbol.GENERIC_16,
+            CostSymbol.GENERIC_17,
+            CostSymbol.GENERIC_18,
+            CostSymbol.GENERIC_19,
+            CostSymbol.GENERIC_20,
+            CostSymbol.GENERIC_100,
+            CostSymbol.GENERIC_1000000,
+        ):
+            return 0
+        return int(self)
 
 
 # endregion

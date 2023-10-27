@@ -1,13 +1,16 @@
+from collections import Counter
 from sys import maxsize
 
 import pytest
 from scooze.catalogs import Format
 from scooze.utils import (
+    CostSymbol,
     DictDiff,
     cmdr_size,
     main_size,
     max_card_quantity,
     max_relentless_quantity,
+    parse_cost,
     side_size,
 )
 
@@ -90,6 +93,21 @@ def main_size_100() -> tuple[int, int]:
 @pytest.fixture
 def main_size_any() -> tuple[int, int]:
     return 0, maxsize
+
+
+@pytest.fixture
+def mana_cost_one_symbol() -> str:
+    return "{W}"
+
+
+@pytest.fixture
+def mana_cost_multiple_symbols() -> str:
+    return "{W}{B}"
+
+
+@pytest.fixture
+def mana_cost_with_generic() -> str:
+    return "{2}{W}{B}"
 
 
 # endregion
@@ -736,6 +754,25 @@ def test_fmt_none_cmdr_size(cmdr_size_any):
 
 
 # endregion
+
+# endregion
+
+# region Mana symbology
+
+
+def test_parse_mana_cost_one_symbol(mana_cost_one_symbol):
+    assert parse_cost(mana_cost_one_symbol) == Counter({CostSymbol.WHITE: 1})
+
+
+def test_parse_mana_cost_multiple_symbols(mana_cost_multiple_symbols):
+    assert parse_cost(mana_cost_multiple_symbols) == Counter({CostSymbol.WHITE: 1, CostSymbol.BLACK: 1})
+
+
+def test_parse_mana_cost_with_generic(mana_cost_with_generic):
+    assert parse_cost(mana_cost_with_generic) == Counter(
+        {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1, CostSymbol.GENERIC_1: 2}
+    )
+
 
 # endregion
 

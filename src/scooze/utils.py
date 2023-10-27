@@ -492,7 +492,14 @@ class DictDiff(ComparableObject):
 
 
 def parse_cost(cost: str) -> Counter[CostSymbol]:
-    return Counter([CostSymbol(s) for s in re.findall("{([^}]+)}", cost)])
+    costs = Counter()
+    symbols = [CostSymbol(s) for s in re.findall("{([^}]+)}", cost)]
+    for s in symbols:
+        if (g := s.generic_amount) == 0:
+            costs[s] += 1
+        else:
+            costs[CostSymbol.GENERIC_1] += g
+    return costs
 
 
 # endregion
