@@ -5,6 +5,7 @@ from beanie import PydanticObjectId
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from mongomock import Collection
+from pydantic.alias_generators import to_camel
 from scooze.models.card import CardModel, CardModelData
 
 # region Fixtures
@@ -20,65 +21,55 @@ from scooze.models.card import CardModel, CardModelData
 #     return None
 
 
-@pytest.fixture(autouse=True)
-async def set_up_modern_4c(cards_json):
-    for card_json in cards_json:
-        card_data = CardModelData.model_validate_json(card_json)
-        card = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
-        await card.create()
-
-
-@pytest.fixture()
-async def clean_cards_db():
-    async def inner():
-        await CardModel.get_motor_collection().delete_many({})
-
-    return inner
-
-
 # endregion
 
 
-@pytest.mark.asyncio
-async def test_card_root(api_client: AsyncClient):
-    response = await api_client.get("/card/")
-    assert response.status_code == 200
-    response_json = response.json()
-    card_id = response_json["_id"]
-    assert PydanticObjectId.is_valid(card_id)
+class TestWithPopulatedDatabase:
+    @pytest.fixture(scope="class", autouse=True)
+    async def populate_db(self, cards_json):
+        for card_json in cards_json:
+            card_data = CardModelData.model_validate_json(card_json)
+            card = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+            await card.create()
+
+        yield
+
+        await CardModel.get_motor_collection().delete_many({})
+
+    async def test_card_root(self, api_client: AsyncClient):
+        response = await api_client.get("/card/")
+        assert response.status_code == 200
+        response_json = response.json()
+        card_id = response_json["_id"]
+        assert PydanticObjectId.is_valid(card_id)
 
 
-async def test_card_root_no_cards(clean_cards_db, api_client: AsyncClient):
-    await clean_cards_db()
-    response = await api_client.get("/card/")
-    assert response.status_code == 404
-    assert response.json()["detail"] == "No cards found in the database."
+class TestWithEmptyDatabase:
+    @pytest.fixture(scope="class", autouse=True)
+    async def clean_db(self):
+        await CardModel.get_motor_collection().delete_many({})
 
+    async def test_card_root_no_cards(self, api_client: AsyncClient):
+        response = await api_client.get("/card/")
+        assert response.status_code == 404
+        assert response.json()["detail"] == "No cards found in the database."
 
-# # region Create
+    async def test_add_card(self, api_client: AsyncClient, omnath_json: dict, omnath_cardmodel: CardModel):
+        response = await api_client.post("/card/add", json=omnath_json)
+        assert response.status_code == 200
+        card = await CardModel.get(response.json()["_id"])
+        assert card.model_dump(mode="json", exclude=["id"]) == omnath_cardmodel.model_dump(mode="json", exclude=["id"])
 
+    @patch("scooze.routers.card.CardModel.create")
+    async def test_add_card_bad(self, mock_create: MagicMock, api_client: AsyncClient, omnath_json: dict):
+        def mock_create_exception():
+            raise Exception("Test card create route error")
 
-# @pytest.mark.router_card
-# @patch("scooze.database.card.add_card")
-# def test_add_card(mock_add: MagicMock, client: TestClient, omnath: CardModel):
-#     mock_add.return_value: CardModel = omnath
-#     response = client.post("/card/add", json={"card": omnath.model_dump(mode="json", by_alias=True)})
-#     assert response.status_code == 200
-#     response_json = response.json()
-#     for k, v in omnath.model_dump(mode="json").items():
-#         assert response_json[k] == v
+        mock_create.side_effect = mock_create_exception
+        response = await api_client.post("/card/add", json=omnath_json)
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Test card create route error"
 
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.add_card")
-# def test_add_card_bad(mock_add: MagicMock, client: TestClient, omnath: CardModel):
-#     mock_add.return_value = None
-#     response = client.post("/card/add", json={"card": omnath.model_dump(mode="json", by_alias=True)})
-#     assert response.status_code == 400
-#     assert response.json()["message"] == "Failed to create a new card."
-
-
-# # endregion
 
 # # region Read
 

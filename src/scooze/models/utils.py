@@ -3,20 +3,11 @@ from typing import Annotated, Any, TypeAlias
 from beanie import Document, PydanticObjectId
 from bson import ObjectId as BsonObjectId
 from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
+from pydantic.alias_generators import to_camel
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
 # region Private Utility Functions
-
-
-def _to_lower_camel(string: str) -> str:
-    words = string.split("_")
-
-    if len(words) > 1:
-        upper_camel = "".join(word.capitalize() for word in words)
-        return upper_camel[0].lower() + upper_camel[1:]
-
-    return words[0]
 
 
 # endregion
@@ -38,8 +29,9 @@ class ScoozeDocument(Document):
     )
 
     model_config = ConfigDict(
-        alias_generator=_to_lower_camel,
+        alias_generator=to_camel,
         arbitrary_types_allowed=True,
+        populate_by_name=True,
     )
 
 
@@ -49,8 +41,9 @@ class ScoozeBaseModel(BaseModel, validate_assignment=True):
     """
 
     model_config = ConfigDict(
-        alias_generator=_to_lower_camel,
+        alias_generator=to_camel,
         arbitrary_types_allowed=True,
+        populate_by_name=True,
     )
 
 
