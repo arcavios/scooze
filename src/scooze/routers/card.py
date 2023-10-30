@@ -60,6 +60,9 @@ async def add_card(card_data: CardModelData) -> CardModel:
     """
     Add a card to the database.
 
+    Args:
+        card_data: A dict conforming to CardModelData's schema.
+
     Returns:
         The created card.
 
