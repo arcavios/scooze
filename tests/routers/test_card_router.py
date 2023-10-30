@@ -57,6 +57,12 @@ class TestWithPopulatedDatabase:
         assert response.status_code == 422
         assert response.json()["detail"] == "Must give a valid id."
 
+    async def test_get_card_fake_id(self, api_client: AsyncClient):
+        fake_id = PydanticObjectId()
+        response = await api_client.get(f"/card/id/{fake_id}")
+        assert response.status_code == 404
+        assert response.json()["detail"] == f"Card with id {fake_id} not found."
+
     async def test_get_card_by_name(self, api_client: AsyncClient):
         first_card = await CardModel.find_one({})
         response = await api_client.get(f"/card/name/{first_card.name}")
@@ -69,6 +75,26 @@ class TestWithPopulatedDatabase:
         response = await api_client.get("/card/name/not a valid magic card name")
         assert response.status_code == 404
         assert response.json()["detail"] == "Card with name 'not a valid magic card name' not found."
+
+    async def test_update_card(self, api_client: AsyncClient):
+        first_card = await CardModel.find_one({})
+        update_data = {"cmc": 5.0}
+        response = await api_client.patch(f"/card/update/{first_card.id}", json=update_data)
+        assert response.status_code == 200
+        assert response.json()["cmc"] == 5.0
+        first_card_post_update = await CardModel.get(first_card.id)
+        assert first_card_post_update.cmc == 5.0
+
+    async def test_update_card_bad_id(self, api_client: AsyncClient):
+        response = await api_client.patch(f"/card/update/blarghl", json={})
+        assert response.status_code == 422
+        assert response.json()["detail"] == "Must give a valid id."
+
+    async def test_update_card_fake_id(self, api_client: AsyncClient):
+        fake_id = PydanticObjectId()
+        response = await api_client.patch(f"/card/update/{fake_id}", json={})
+        assert response.status_code == 404
+        assert response.json()["detail"] == f"Card with id {fake_id} not found."
 
 
 class TestWithEmptyDatabase:
@@ -98,36 +124,6 @@ class TestWithEmptyDatabase:
         response = await api_client.post("/card/add", json=omnath_json)
         assert response.status_code == 400
         assert response.json()["detail"] == f"Failed to create a new card. Error: {error_msg}"
-
-
-# # region Update
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.update_card")
-# def test_update_card(mock_update: MagicMock, client: TestClient, omnath: CardModel):
-#     omnath_dump = omnath.model_dump(mode="json", by_alias=True)
-#     update_data = {"cmc": 5.0}
-#     omnath_dump.update(update_data)
-#     new_omnath = CardModel.model_validate(omnath_dump)
-#     mock_update.return_value: CardModel = new_omnath
-#     response = client.patch(f"/card/update/{omnath.scooze_id}", json={"card": update_data})
-#     assert response.status_code == 200
-#     response_json = response.json()
-#     for k, v in new_omnath.model_dump(mode="json").items():
-#         assert response_json[k] == v
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.update_card")
-# def test_update_card_bad_id(mock_update: MagicMock, client: TestClient):
-#     mock_update.return_value = None
-#     response = client.patch("/card/update/blarghl", json={"card": {}})
-#     assert response.status_code == 404
-#     assert response.json()["message"] == "Card with id blarghl not found."
-
-
-# # endregion
 
 
 # # region Delete
