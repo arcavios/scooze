@@ -96,6 +96,31 @@ class TestWithPopulatedDatabase:
         assert response.status_code == 404
         assert response.json()["detail"] == f"Card with id {fake_id} not found."
 
+    async def test_delete_card(self, api_client: AsyncClient):
+        first_card = await CardModel.find_one({})
+        response = await api_client.delete(f"/card/delete/{first_card.id}")
+        assert response.status_code == 200
+        assert response.json() == f"Card with id {first_card.id} deleted."
+
+    async def test_delete_card_bad_id(self, api_client: AsyncClient):
+        response = await api_client.delete("/card/delete/blarghl")
+        assert response.status_code == 422
+        assert response.json()["detail"] == "Must give a valid id."
+
+    async def test_delete_card_fake_id(self, api_client: AsyncClient):
+        fake_id = PydanticObjectId()
+        response = await api_client.delete(f"/card/delete/{fake_id}")
+        assert response.status_code == 404
+        assert response.json()["detail"] == f"Card with id {fake_id} not found."
+
+    @patch("scooze.routers.card.CardModel.delete")
+    async def test_delete_card_not_deleted(self, mock_delete: MagicMock, api_client: AsyncClient):
+        mock_delete.return_value = None
+        first_card = await CardModel.find_one({})
+        response = await api_client.delete(f"/card/delete/{first_card.id}")
+        assert response.status_code == 400
+        assert response.json()["detail"] == f"Card with id {first_card.id} not deleted."
+
 
 class TestWithEmptyDatabase:
     @pytest.fixture(scope="class", autouse=True)
