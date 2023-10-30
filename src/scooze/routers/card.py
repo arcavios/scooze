@@ -122,7 +122,7 @@ async def get_card_by_name(card_name: str) -> CardModel:
     card = await CardModel.find_one({"name": card_name})
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with name {card_name} not found.")
+        raise HTTPException(status_code=404, detail=f"Card with name '{card_name}' not found.")
 
     return card
 

@@ -19,6 +19,10 @@ N = TypeVar("N", bound=ExtendedEnum)  # generic Enum (for mapping values) type
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
 
 
+## String formatting
+DATE_FORMAT = "%Y-%m-%d"
+
+
 def get_logger(
     filename: str,
     logger_name: str,
@@ -330,7 +334,7 @@ class JsonNormalizer:
         if d is None or isinstance(d, date):
             return d
 
-        return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
+        return datetime.strptime(d, DATE_FORMAT).date()
 
     @classmethod
     def to_enum(cls, e: Type[E], v) -> E | None:

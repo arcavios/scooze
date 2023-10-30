@@ -1,6 +1,6 @@
 from datetime import date
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_serializer, field_validator
 from scooze.cardparts import ImageUris
 from scooze.catalogs import Color, Component, Layout
 from scooze.models.utils import ScoozeBaseModel
@@ -240,6 +240,10 @@ class PreviewModel(ScoozeBaseModel):
         default=None,
         description="Location of preview source.",
     )
+
+    @field_serializer("previewed_at")
+    def serialize_date(self, dt_field: date):
+        return super().serialize_date(dt_field=dt_field)
 
 
 class PurchaseUrisModel(ScoozeBaseModel):

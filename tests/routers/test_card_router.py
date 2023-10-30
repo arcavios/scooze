@@ -1,3 +1,4 @@
+import json
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -43,6 +44,32 @@ class TestWithPopulatedDatabase:
         card_id = response_json["_id"]
         assert PydanticObjectId.is_valid(card_id)
 
+    async def test_get_card_by_id(self, api_client: AsyncClient):
+        first_card = await CardModel.find_one({})
+        response = await api_client.get(f"/card/id/{first_card.id}")
+        assert response.status_code == 200
+        response_json = response.json()
+        for k, v in first_card.model_dump(mode="json", by_alias=True).items():
+            assert response_json[k] == v
+
+    async def test_get_card_bad_id(self, api_client: AsyncClient):
+        response = await api_client.get("/card/id/blarghl")
+        assert response.status_code == 422
+        assert response.json()["detail"] == "Must give a valid id."
+
+    async def test_get_card_by_name(self, api_client: AsyncClient):
+        first_card = await CardModel.find_one({})
+        response = await api_client.get(f"/card/name/{first_card.name}")
+        assert response.status_code == 200
+        response_json = response.json()
+        for k, v in first_card.model_dump(mode="json", by_alias=True).items():
+            assert response_json[k] == v
+
+    async def test_get_card_bad_name(self, api_client: AsyncClient):
+        response = await api_client.get("/card/name/not a valid magic card name")
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Card with name 'not a valid magic card name' not found."
+
 
 class TestWithEmptyDatabase:
     @pytest.fixture(scope="class", autouse=True)
@@ -62,59 +89,16 @@ class TestWithEmptyDatabase:
 
     @patch("scooze.routers.card.CardModel.create")
     async def test_add_card_bad(self, mock_create: MagicMock, api_client: AsyncClient, omnath_json: dict):
+        error_msg = "Test card create route error"
+
         def mock_create_exception():
-            raise Exception("Test card create route error")
+            raise Exception(error_msg)
 
         mock_create.side_effect = mock_create_exception
         response = await api_client.post("/card/add", json=omnath_json)
         assert response.status_code == 400
-        assert response.json()["detail"] == "Test card create route error"
+        assert response.json()["detail"] == f"Failed to create a new card. Error: {error_msg}"
 
-
-# # region Read
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.get_card_by_property")
-# def test_get_card_by_id(mock_get: MagicMock, client: TestClient, omnath: CardModel):
-#     mock_get.return_value: CardModel = omnath
-#     response = client.get(f"/card/id/{str(omnath.scooze_id)}")
-#     assert response.status_code == 200
-#     response_json = response.json()
-#     for k, v in omnath.model_dump(mode="json").items():
-#         assert response_json[k] == v
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.get_card_by_property")
-# def test_get_card_by_id_bad_id(mock_get: MagicMock, client: TestClient):
-#     mock_get.return_value = None
-#     response = client.get("/card/id/blarghl")
-#     assert response.status_code == 404
-#     assert response.json()["message"] == "Card with id blarghl not found."
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.get_card_by_property")
-# def test_get_card_by_name(mock_get: MagicMock, client: TestClient, omnath: CardModel):
-#     mock_get.return_value: CardModel = omnath
-#     response = client.get(f"/card/name/{omnath.name}")
-#     assert response.status_code == 200
-#     response_json = response.json()
-#     for k, v in omnath.model_dump(mode="json").items():
-#         assert response_json[k] == v
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.get_card_by_property")
-# def test_get_card_by_name_bad_name(mock_get: MagicMock, client: TestClient):
-#     mock_get.return_value = None
-#     response = client.get("/card/name/blarghl")
-#     assert response.status_code == 404
-#     assert response.json()["message"] == "Card with name blarghl not found."
-
-
-# # endregion
 
 # # region Update
 

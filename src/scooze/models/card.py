@@ -1,6 +1,7 @@
 from datetime import date
+from typing import Any
 
-from pydantic import AliasChoices, ConfigDict, Field, field_validator
+from pydantic import AliasChoices, ConfigDict, Field, field_serializer, field_validator
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
@@ -38,6 +39,7 @@ from scooze.models.cardparts import (
     RelatedUrisModel,
 )
 from scooze.models.utils import ObjectIdT, ScoozeBaseModel, ScoozeDocument
+from scooze.utils import DATE_FORMAT, JsonNormalizer
 
 
 class CardModelData(ScoozeBaseModel):
@@ -561,11 +563,34 @@ class CardModelData(ScoozeBaseModel):
 
     # endregion
 
+    # region Serializers
+
+    @field_serializer("released_at")
+    def serialize_date(self, dt_field: date):
+        return super().serialize_date(dt_field=dt_field)
+
+    @field_serializer(
+        "attraction_lights",
+        "color_identity",
+        "color_indicator",
+        "colors",
+        "finishes",
+        "frame_effects",
+        "games",
+        "keywords",
+        "produced_mana",
+        "promo_types",
+    )
+    def serialize_set(self, set_field: set[Any]):
+        return super().serialize_set(set_field=set_field)
+
+    # endregion
+
     # TODO(#46): add Card field validators
 
 
 def encode_date(dt: date):
-    return str(dt)
+    return dt.strftime(format=DATE_FORMAT)
 
 
 class CardModel(ScoozeDocument, CardModelData):

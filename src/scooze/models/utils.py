@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Annotated, Any, TypeAlias
 
 from beanie import Document, PydanticObjectId
@@ -6,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
 from pydantic.alias_generators import to_camel
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
+from scooze.utils import DATE_FORMAT
 
 # region Private Utility Functions
 
@@ -45,6 +47,16 @@ class ScoozeBaseModel(BaseModel, validate_assignment=True):
         arbitrary_types_allowed=True,
         populate_by_name=True,
     )
+
+    def serialize_date(self, dt_field: date):
+        if dt_field is None:
+            return dt_field
+        return dt_field.strftime(format=DATE_FORMAT)
+
+    def serialize_set(self, set_field: set[Any]):
+        if set_field is None:
+            return set_field
+        return sorted(list(set_field))
 
 
 # Solution to BSON/MongoDB ObjectId issue, provided by Pydantic author:
