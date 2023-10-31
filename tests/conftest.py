@@ -5,7 +5,6 @@ from datetime import date, datetime, timezone
 
 import pytest
 from asgi_lifespan import LifespanManager
-from bson import ObjectId
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from scooze.card import OracleCard

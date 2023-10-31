@@ -1,22 +1,13 @@
-import asyncio
-from contextlib import asynccontextmanager
 from datetime import datetime
 
 import pytest
-from asgi_lifespan import LifespanManager
-from beanie import init_beanie
 from bson import ObjectId
-from fastapi import FastAPI
-from httpx import AsyncClient
 from mongomock import Collection, MongoClient
-from motor.motor_asyncio import AsyncIOMotorClient
 from scooze.card import OracleCard
 from scooze.catalogs import DbCollection
-from scooze.config import CONFIG
 from scooze.deck import DeckPart
-from scooze.models.card import CardModel, CardModelData
+from scooze.models.card import CardModelData
 from scooze.models.deck import DeckModelIn
-from scooze.mongo import db
 
 
 @pytest.fixture(scope="session")
