@@ -194,6 +194,18 @@ def json_ancestral_visions(cards_json) -> dict:
     return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
 
 
+# Transform (Saga)
+@pytest.fixture(scope="session")
+def json_tales_of_master_seshiro(cards_json) -> dict:
+    return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
+
+
+# Digital
+@pytest.fixture(scope="session")
+def json_urzas_construction_drone(cards_json) -> dict:
+    return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
+
+
 # endregion
 
 # region CardModels
@@ -204,40 +216,60 @@ def cardmodel_omnath(json_omnath_locus_of_creation) -> CardModel:
     return get_cardmodel_from_json(json_omnath_locus_of_creation)
 
 
+@pytest.fixture(scope="session")
+def cardmodel_ancestral_recall(json_ancestral_recall) -> CardModel:
+    return get_cardmodel_from_json(json_ancestral_recall)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_mystic_snake(json_mystic_snake) -> CardModel:
+    return get_cardmodel_from_json(json_mystic_snake)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_tales_of_master_seshiro(json_tales_of_master_seshiro) -> CardModel:
+    return get_cardmodel_from_json(json_tales_of_master_seshiro)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_arlinn_the_packs_hope(json_arlinn_the_packs_hope) -> CardModel:
+    return get_cardmodel_from_json(json_arlinn_the_packs_hope)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_zndrsplt_eye_of_wisdom(json_zndrsplt_eye_of_wisdom) -> CardModel:
+    return get_cardmodel_from_json(json_zndrsplt_eye_of_wisdom)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_anaconda_7ed_foil(json_anaconda_7ed_foil) -> CardModel:
+    return get_cardmodel_from_json(json_anaconda_7ed_foil)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_python_spanish(json_python_spanish) -> CardModel:
+    return get_cardmodel_from_json(json_python_spanish)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_elessar_the_elfstone(json_elessar_the_elfstone) -> CardModel:
+    return get_cardmodel_from_json(json_elessar_the_elfstone)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_trash_bin(json_trash_bin) -> CardModel:
+    return get_cardmodel_from_json(json_trash_bin)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_anaconda_portal(json_anaconda_portal) -> CardModel:
+    return get_cardmodel_from_json(json_anaconda_portal)
+
+
 # endregion
 
-# def get_cardmodelout_from_json(card_json: dict) -> CardModel:
-#     """
-#     Helper to get a CardModel from some JSON.
-#     """
 
-#     model = CardModel.model_validate(card_json)
-#     model.scooze_id = str(ObjectId())
-#     return model
-
-
-# # endregion
-
-
-# # region Test Cards
-
-
-# # Digital
-# @pytest.fixture(scope="session")
-# def json_urzas_construction_drone(cards_json) -> dict:
-#     return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
-
-
-# # Transform (Saga)
-# @pytest.fixture(scope="session")
-# def json_tales_of_master_seshiro(cards_json) -> dict:
-#     return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
-
-
-# # endregion
-
-
-# # region Fixtures for Card and CardModel tests
+# region Legalities
 
 
 @pytest.fixture()
@@ -321,15 +353,20 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
     }
 
 
-# @pytest.fixture(scope="session")
-# def oracle_tales_of_master_seshiro() -> str:
-#     return (
-#         "(As this Saga enters and after your draw step, add a lore counter.)\n"
-#         "I, II — Put a +1/+1 counter on target creature or Vehicle you control. It "
-#         "gains vigilance until end of turn.\n"
-#         "III — Exile this Saga, then return it to the battlefield transformed under "
-#         "your control."
-#     )
+# endregion
+
+# region Oracle text
+
+
+@pytest.fixture(scope="session")
+def oracle_tales_of_master_seshiro() -> str:
+    return (
+        "(As this Saga enters and after your draw step, add a lore counter.)\n"
+        "I, II — Put a +1/+1 counter on target creature or Vehicle you control. It "
+        "gains vigilance until end of turn.\n"
+        "III — Exile this Saga, then return it to the battlefield transformed under "
+        "your control."
+    )
 
 
 @pytest.fixture()
@@ -367,7 +404,7 @@ def oracle_zndrsplt_eye_of_wisdom() -> str:
     )
 
 
-# # endregion
+# endregion
 
 
 # # region Test OracleCards

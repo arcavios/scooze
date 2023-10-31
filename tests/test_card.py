@@ -1,5 +1,7 @@
 from datetime import date
 
+from beanie import PydanticObjectId
+from httpx import AsyncClient
 from scooze.card import Card, FullCard, OracleCard
 from scooze.catalogs import (
     BorderColor,
@@ -16,7 +18,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.models.card import CardModelOut
+from scooze.models.card import CardModel, CardModelData
 
 # region Magic Methods
 
@@ -374,7 +376,7 @@ def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_
 
 
 def test_fullcard_from_json_transform_planeswalker(
-    json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury
+    json_arlinn_the_packs_hope, oracle_arlinn_daybound, oracle_arlinn_nightbound
 ):
     card = FullCard.from_json(json_arlinn_the_packs_hope)
     assert len(card.card_faces) == 2
@@ -402,7 +404,7 @@ def test_fullcard_from_json_transform_planeswalker(
     assert front.mana_cost == "{2}{R}{G}"
     assert front.name == "Arlinn, the Pack's Hope"
     assert front.oracle_id is None
-    assert front.oracle_text == oracle_arlinn_the_packs_hope
+    assert front.oracle_text == oracle_arlinn_daybound
     assert front.power is None
     assert front.printed_name is None
     assert front.printed_text is None
@@ -432,7 +434,7 @@ def test_fullcard_from_json_transform_planeswalker(
     assert back.mana_cost == ""
     assert back.name == "Arlinn, the Moon's Fury"
     assert back.oracle_id is None
-    assert back.oracle_text == oracle_arlinn_the_moons_fury
+    assert back.oracle_text == oracle_arlinn_nightbound
     assert back.power is None
     assert back.printed_name is None
     assert back.printed_text is None
@@ -673,9 +675,11 @@ def test_fullcard_from_json_variation(json_anaconda_portal):
 # region CardModel -> Card
 
 
-def test_card_from_cardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
-    model = CardModelOut.model_validate(json_ancestral_recall)
-    card = Card.from_model(model)
+def test_card_from_cardmodel_instant(api_client, cardmodel_ancestral_recall, legalities_ancestral_recall):
+    fake_id = PydanticObjectId()
+    cardmodel_ancestral_recall.id = fake_id
+    card = Card.from_model(cardmodel_ancestral_recall)
+    assert card.scooze_id == fake_id
     assert card.cmc == 1.0
     assert card.color_identity == {Color.BLUE}
     assert card.colors == {Color.BLUE}
@@ -687,9 +691,11 @@ def test_card_from_cardmodel_instant(json_ancestral_recall, legalities_ancestral
     assert card.type_line == "Instant"
 
 
-def test_card_from_cardmodel_creature(json_mystic_snake):
-    model = CardModelOut.model_validate(json_mystic_snake)
-    card = Card.from_model(model)
+def test_card_from_cardmodel_creature(api_client, cardmodel_mystic_snake):
+    fake_id = PydanticObjectId()
+    cardmodel_mystic_snake.id = fake_id
+    card = Card.from_model(cardmodel_mystic_snake)
+    assert card.scooze_id == fake_id
     assert card.color_identity == {Color.BLUE, Color.GREEN}
     assert card.colors == {Color.BLUE, Color.GREEN}
     assert card.power == "2"
@@ -699,12 +705,14 @@ def test_card_from_cardmodel_creature(json_mystic_snake):
 
 # endregion
 
-# region FullCardModel -> OracleCard
+# region CardModel -> OracleCard
 
 
-def test_oraclecard_from_cardmodel_instant(json_ancestral_recall, legalities_ancestral_recall):
-    model = CardModelOut.model_validate(json_ancestral_recall)
-    card = OracleCard.from_model(model)
+def test_oraclecard_from_cardmodel_instant(api_client, cardmodel_ancestral_recall, legalities_ancestral_recall):
+    fake_id = PydanticObjectId()
+    cardmodel_ancestral_recall.id = fake_id
+    card = OracleCard.from_model(cardmodel_ancestral_recall)
+    assert card.scooze_id == fake_id
     assert card.card_faces is None
     assert card.cmc == 1.0
     assert card.color_identity == {Color.BLUE}
@@ -730,9 +738,13 @@ def test_oraclecard_from_cardmodel_instant(json_ancestral_recall, legalities_anc
     assert card.type_line == "Instant"
 
 
-def test_oraclecard_from_cardmodel_transform_saga(json_tales_of_master_seshiro, oracle_tales_of_master_seshiro):
-    model = CardModelOut.model_validate(json_tales_of_master_seshiro)
-    card = OracleCard.from_model(model)
+def test_oraclecard_from_cardmodel_transform_saga(
+    api_client, cardmodel_tales_of_master_seshiro, oracle_tales_of_master_seshiro
+):
+    fake_id = PydanticObjectId()
+    cardmodel_tales_of_master_seshiro.id = fake_id
+    card = OracleCard.from_model(cardmodel_tales_of_master_seshiro)
+    assert card.scooze_id == fake_id
     assert len(card.card_faces) == 2
     front, back = card.card_faces
 
@@ -765,12 +777,14 @@ def test_oraclecard_from_cardmodel_transform_saga(json_tales_of_master_seshiro, 
 
 # endregion
 
-# region FullCardModel -> FullCard
+# region CardModel -> FullCard
 
 
-def test_fullcard_from_cardmodel_instant(model_ancestral_recall, legalities_ancestral_recall):
-    card = FullCard.from_model(model_ancestral_recall)
-    assert card.scooze_id == model_ancestral_recall.scooze_id
+def test_fullcard_from_cardmodel_instant(api_client, cardmodel_ancestral_recall, legalities_ancestral_recall):
+    fake_id = PydanticObjectId()
+    cardmodel_ancestral_recall.id = fake_id
+    card = FullCard.from_model(cardmodel_ancestral_recall)
+    assert card.scooze_id == fake_id
 
     assert card.all_parts is None
     assert card.arena_id is None
@@ -883,11 +897,13 @@ def test_fullcard_from_cardmodel_instant(model_ancestral_recall, legalities_ance
     assert card.watermark is None
 
 
-def test_fullcard_from_fullcardmodel_transform_planeswalker(
-    json_arlinn_the_packs_hope, oracle_arlinn_the_packs_hope, oracle_arlinn_the_moons_fury
+def test_fullcard_from_cardmodel_transform_planeswalker(
+    api_client, cardmodel_arlinn_the_packs_hope, oracle_arlinn_daybound, oracle_arlinn_nightbound
 ):
-    model = CardModelOut.model_validate(json_arlinn_the_packs_hope)
-    card = FullCard.from_model(model)
+    fake_id = PydanticObjectId()
+    cardmodel_arlinn_the_packs_hope.id = fake_id
+    card = FullCard.from_model(cardmodel_arlinn_the_packs_hope)
+    assert card.scooze_id == fake_id
     assert len(card.card_faces) == 2
     front, back = card.card_faces
 
@@ -913,7 +929,7 @@ def test_fullcard_from_fullcardmodel_transform_planeswalker(
     assert front.mana_cost == "{2}{R}{G}"
     assert front.name == "Arlinn, the Pack's Hope"
     assert front.oracle_id is None
-    assert front.oracle_text == oracle_arlinn_the_packs_hope
+    assert front.oracle_text == oracle_arlinn_daybound
     assert front.power is None
     assert front.printed_name is None
     assert front.printed_text is None
@@ -943,7 +959,7 @@ def test_fullcard_from_fullcardmodel_transform_planeswalker(
     assert back.mana_cost == ""
     assert back.name == "Arlinn, the Moon's Fury"
     assert back.oracle_id is None
-    assert back.oracle_text == oracle_arlinn_the_moons_fury
+    assert back.oracle_text == oracle_arlinn_nightbound
     assert back.power is None
     assert back.printed_name is None
     assert back.printed_text is None
@@ -953,11 +969,13 @@ def test_fullcard_from_fullcardmodel_transform_planeswalker(
     assert back.watermark is None
 
 
-def test_fullcard_from_fullcardmodel_reversible(
-    json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
+def test_fullcard_from_cardmodel_reversible(
+    api_client, cardmodel_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
 ):
-    model = CardModelOut.model_validate(json_zndrsplt_eye_of_wisdom)
-    card = FullCard.from_model(model)
+    fake_id = PydanticObjectId()
+    cardmodel_zndrsplt_eye_of_wisdom.id = fake_id
+    card = FullCard.from_model(cardmodel_zndrsplt_eye_of_wisdom)
+    assert card.scooze_id == fake_id
 
     # all_parts (RelatedCards)
     assert len(card.all_parts) == 2
@@ -1139,35 +1157,45 @@ def test_fullcard_from_fullcardmodel_reversible(
     assert card.watermark is None
 
 
-def test_fullcard_from_fullcardmodel_watermark(json_anaconda_7ed_foil):
-    model = CardModelOut.model_validate(json_anaconda_7ed_foil)
-    card = FullCard.from_model(model)
+def test_fullcard_from_cardmodel_watermark(cardmodel_anaconda_7ed_foil):
+    fake_id = PydanticObjectId()
+    cardmodel_anaconda_7ed_foil.id = fake_id
+    card = FullCard.from_model(cardmodel_anaconda_7ed_foil)
+    assert card.scooze_id == fake_id
     assert card.watermark == "wotc"
 
 
-def test_fullcard_from_fullcardmodel_non_english(json_python_spanish):
-    model = CardModelOut.model_validate(json_python_spanish)
-    card = FullCard.from_model(model)
+def test_fullcard_from_cardmodel_non_english(cardmodel_python_spanish):
+    fake_id = PydanticObjectId()
+    cardmodel_python_spanish.id = fake_id
+    card = FullCard.from_model(cardmodel_python_spanish)
+    assert card.scooze_id == fake_id
     assert card.printed_name == "Pitón"
 
 
-def test_fullcard_from_fullcardmodel_flavor(json_elessar_the_elfstone):
-    model = CardModelOut.model_validate(json_elessar_the_elfstone)
-    card = FullCard.from_model(model)
+def test_fullcard_from_cardmodel_flavor(cardmodel_elessar_the_elfstone):
+    fake_id = PydanticObjectId()
+    cardmodel_elessar_the_elfstone.id = fake_id
+    card = FullCard.from_model(cardmodel_elessar_the_elfstone)
+    assert card.scooze_id == fake_id
     assert card.flavor_name == "Elessar, the Elfstone"
     assert card.flavor_text == "Aragorn took the green stone and held it up, and there came a green fire from his hand."
     assert card.name == "Cloudstone Curio"
 
 
-def test_fullcard_from_fullcardmodel_attraction(json_trash_bin):
-    model = CardModelOut.model_validate(json_trash_bin)
-    card = FullCard.from_model(model)
+def test_fullcard_from_cardmodel_attraction(cardmodel_trash_bin):
+    fake_id = PydanticObjectId()
+    cardmodel_trash_bin.id = fake_id
+    card = FullCard.from_model(cardmodel_trash_bin)
+    assert card.scooze_id == fake_id
     assert card.attraction_lights == {2, 6}
 
 
-def test_fullcard_from_fullcardmodel_variation(json_anaconda_portal):
-    model = CardModelOut.model_validate(json_anaconda_portal)
-    card = FullCard.from_model(model)
+def test_fullcard_from_cardmodel_variation(cardmodel_anaconda_portal):
+    fake_id = PydanticObjectId()
+    cardmodel_anaconda_portal.id = fake_id
+    card = FullCard.from_model(cardmodel_anaconda_portal)
+    assert card.scooze_id == fake_id
     assert card.variation is True
     assert card.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda
 
