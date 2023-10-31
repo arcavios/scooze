@@ -94,11 +94,6 @@ def get_cardmodel_from_json(card_json: dict) -> CardModel:
     return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
 
 
-# endregion
-
-# region Card JSON
-
-
 @pytest.fixture(scope="session")
 def cards_json() -> list[str]:
     json_list = []
@@ -112,16 +107,9 @@ def cards_json() -> list[str]:
     return json_list
 
 
-# Creature
-@pytest.fixture(scope="session")
-def json_omnath_locus_of_creation(cards_json) -> dict:
-    return get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
+# endregion
 
-
-# Snake Creature
-@pytest.fixture(scope="session")
-def json_mystic_snake(cards_json) -> dict:
-    return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
+# region Card JSON
 
 
 # Instant
@@ -130,22 +118,34 @@ def json_ancestral_recall(cards_json) -> dict:
     return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
 
 
-# Land
+# Non-Snake Creature
 @pytest.fixture(scope="session")
-def json_boseiju_who_endures(cards_json) -> dict:
-    return get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
+def json_omnath_locus_of_creation(cards_json) -> dict:
+    return get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
 
 
-# Artifact
+# Creature
 @pytest.fixture(scope="session")
-def json_chalice_of_the_void(cards_json) -> dict:
-    return get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
+def json_mystic_snake(cards_json) -> dict:
+    return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
 
 
-# Token
+# Costless
 @pytest.fixture(scope="session")
-def json_snake_token(cards_json) -> dict:
-    return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
+def json_ancestral_visions(cards_json) -> dict:
+    return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
+
+
+# Digital
+@pytest.fixture(scope="session")
+def json_urzas_construction_drone(cards_json) -> dict:
+    return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
+
+
+# Transform (Saga)
+@pytest.fixture(scope="session")
+def json_tales_of_master_seshiro(cards_json) -> dict:
+    return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
 
 
 # Transforming Planeswalker
@@ -158,6 +158,12 @@ def json_arlinn_the_packs_hope(cards_json) -> dict:
 @pytest.fixture(scope="session")
 def json_zndrsplt_eye_of_wisdom(cards_json) -> dict:
     return get_card_json(cards_json, "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf")
+
+
+# Token
+@pytest.fixture(scope="session")
+def json_snake_token(cards_json) -> dict:
+    return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
 
 
 # Watermark
@@ -190,37 +196,19 @@ def json_anaconda_portal(cards_json) -> dict:
     return get_card_json(cards_json, "6ffba7a5-8845-46f4-bb86-4722d6cbd4c1")
 
 
-# Costless
-@pytest.fixture(scope="session")
-def json_ancestral_visions(cards_json) -> dict:
-    return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
-
-
-# Transform (Saga)
-@pytest.fixture(scope="session")
-def json_tales_of_master_seshiro(cards_json) -> dict:
-    return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
-
-
-# Digital
-@pytest.fixture(scope="session")
-def json_urzas_construction_drone(cards_json) -> dict:
-    return get_card_json(cards_json, "bfa6bfa2-0aee-4623-a17e-a77898deb16d")
-
-
 # endregion
 
 # region CardModels
 
 
 @pytest.fixture(scope="session")
-def cardmodel_omnath(json_omnath_locus_of_creation) -> CardModel:
-    return get_cardmodel_from_json(json_omnath_locus_of_creation)
+def cardmodel_ancestral_recall(json_ancestral_recall) -> CardModel:
+    return get_cardmodel_from_json(json_ancestral_recall)
 
 
 @pytest.fixture(scope="session")
-def cardmodel_ancestral_recall(json_ancestral_recall) -> CardModel:
-    return get_cardmodel_from_json(json_ancestral_recall)
+def cardmodel_omnath(json_omnath_locus_of_creation) -> CardModel:
+    return get_cardmodel_from_json(json_omnath_locus_of_creation)
 
 
 @pytest.fixture(scope="session")
