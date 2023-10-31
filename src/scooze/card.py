@@ -30,7 +30,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.models.card import CardModelOut
+from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
@@ -96,7 +96,7 @@ class Card(HashableObject):
             return cls(**json.loads(data))
 
     @classmethod
-    def from_model(cls, model: CardModelOut) -> Self:
+    def from_model(cls, model: CardModel) -> Self:
         return cls(**model.model_dump())
 
 

@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Any
 
-from pydantic import AliasChoices, ConfigDict, Field, field_serializer, field_validator
+from pydantic import ConfigDict, Field, field_serializer, field_validator
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
@@ -38,8 +38,8 @@ from scooze.models.cardparts import (
     RelatedCardModel,
     RelatedUrisModel,
 )
-from scooze.models.utils import ObjectIdT, ScoozeBaseModel, ScoozeDocument
-from scooze.utils import DATE_FORMAT, JsonNormalizer
+from scooze.models.utils import ScoozeBaseModel, ScoozeDocument
+from scooze.utils import DATE_FORMAT
 
 
 class CardModelData(ScoozeBaseModel):

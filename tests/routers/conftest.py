@@ -18,45 +18,6 @@ from scooze.models.card import CardModel, CardModelData
 from scooze.models.deck import DeckModelIn
 from scooze.mongo import db
 
-# Override config for testing
-CONFIG.testing = True
-CONFIG.mongo_db = "scooze_test"
-
-from scooze.main import app
-
-
-@pytest.fixture(scope="session")
-def cli():
-    return db.client
-
-
-@pytest.fixture(scope="session")
-def scooze_test_db(cli):
-    return cli[CONFIG.mongo_db]
-
-
-@pytest.fixture(scope="session")
-def event_loop():
-    policy = asyncio.get_event_loop_policy()
-    loop = policy.new_event_loop()
-    yield loop
-    loop.close()
-
-
-@pytest.fixture(scope="session", autouse=True)
-async def api_client():
-    """API client fixture."""
-
-    async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
-        server_name = "https://localhost"
-        async with AsyncClient(app=app, base_url=server_name) as ac:
-            # Yield client to tests
-            yield ac
-            # Done testing, clean test db
-            for model in [CardModel]:
-                await model.get_motor_collection().delete_many({})
-
-
 # @pytest.fixture(scope="session")
 # def mock_cards_collection(db, cards_json: list[str]) -> Collection:
 #     # from pprint import pprint

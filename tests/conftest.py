@@ -1,30 +1,65 @@
+import asyncio
 import json
 from collections import Counter
 from datetime import date, datetime, timezone
 
 import pytest
+from asgi_lifespan import LifespanManager
 from bson import ObjectId
 from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from scooze.card import OracleCard
 from scooze.catalogs import Format, Legality
+from scooze.config import CONFIG
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
-from scooze.main import app
 from scooze.models.card import CardModel, CardModelData
+from scooze.mongo import db
+
+# Override config for testing
+CONFIG.testing = True
+CONFIG.mongo_db = "scooze_test"
+
+from scooze.main import app
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
 # It was chosen because it has many colors of cards, lots of words, and many types.
 
 
-# region Common
-
-TEST_MONGO_URI = "mongodb://127.0.0.1:27017"
+# region Database
 
 
-# @pytest.fixture(scope="session")
-# def client() -> TestClient:
-#     return TestClient(app)
+@pytest.fixture(scope="session")
+def cli():
+    return db.client
+
+
+@pytest.fixture(scope="session")
+def scooze_test_db(cli):
+    return cli[CONFIG.mongo_db]
+
+
+@pytest.fixture(scope="session")
+def event_loop():
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
+    yield loop
+    loop.close()
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def api_client():
+    """API client fixture."""
+
+    async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
+        server_name = "https://localhost"
+        async with AsyncClient(app=app, base_url=server_name) as ac:
+            # Yield client to tests
+            yield ac
+            # Done testing, clean test db
+            for model in [CardModel]:
+                await model.get_motor_collection().delete_many({})
 
 
 # @pytest.fixture(scope="session")
@@ -75,24 +110,76 @@ def cards_json() -> list[str]:
     return json_list
 
 
+# Creature
 @pytest.fixture(scope="session")
 def omnath_json(cards_json) -> dict:
     return get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
 
 
+# Instant
 @pytest.fixture(scope="session")
 def recall_json(cards_json) -> dict:
     return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
 
 
+# Land
 @pytest.fixture(scope="session")
 def boseiju_json(cards_json) -> dict:
     return get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
 
 
+# Artifact
 @pytest.fixture(scope="session")
 def chalice_json(cards_json) -> dict:
     return get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
+
+
+# Token
+@pytest.fixture(scope="session")
+def snake_token_json(cards_json) -> dict:
+    return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
+
+
+# Transforming Planeswalker
+@pytest.fixture(scope="session")
+def arlinn_json(cards_json) -> dict:
+    return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
+
+
+# Reversible
+@pytest.fixture(scope="session")
+def zndrsplt_json(cards_json) -> dict:
+    return get_card_json(cards_json, "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf")
+
+
+# Watermark
+@pytest.fixture(scope="session")
+def anaconda_7e_foil_json(cards_json) -> dict:
+    return get_card_json(cards_json, "2dccffce-5ebd-4aaa-be05-1c6537d211f4")
+
+
+# Non-English
+@pytest.fixture(scope="session")
+def python_spanish_json(cards_json) -> dict:
+    return get_card_json(cards_json, "973dbd10-708a-42d5-ba15-615104563f0f")
+
+
+# Flavor Name / Text
+@pytest.fixture(scope="session")
+def elessar_json(cards_json) -> dict:
+    return get_card_json(cards_json, "a1f3fc27-b3ea-476c-be23-f1c30ef27f96")  # Cloudstone Curio
+
+
+# Attraction
+@pytest.fixture(scope="session")
+def trash_json(cards_json) -> dict:
+    return get_card_json(cards_json, "f07c39f7-5c3e-40f6-b584-458b65282a7e")
+
+
+# Variation / Variation Of
+@pytest.fixture(scope="session")
+def anaconda_portal_json(cards_json) -> dict:
+    return get_card_json(cards_json, "6ffba7a5-8845-46f4-bb86-4722d6cbd4c1")
 
 
 # endregion
@@ -173,139 +260,91 @@ def chalice_cardmodel(chalice_json) -> CardModel:
 #     return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
 
 
-# # Transform (Planeswalker)
-# @pytest.fixture(scope="session")
-# def json_arlinn_the_packs_hope(cards_json) -> dict:
-#     return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
-
-
-# # Reversible
-# @pytest.fixture(scope="session")
-# def json_zndrsplt_eye_of_wisdom(cards_json) -> dict:
-#     return get_card_json(cards_json, "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf")
-
-
-# # Token
-# @pytest.fixture(scope="session")
-# def json_snake_token(cards_json) -> dict:
-#     return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
-
-
-# # Watermark
-# @pytest.fixture(scope="session")
-# def json_anaconda_7ed_foil(cards_json) -> dict:
-#     return get_card_json(cards_json, "2dccffce-5ebd-4aaa-be05-1c6537d211f4")
-
-
-# # Non-English
-# @pytest.fixture(scope="session")
-# def json_python_spanish(cards_json) -> dict:
-#     return get_card_json(cards_json, "973dbd10-708a-42d5-ba15-615104563f0f")
-
-
-# # Flavor Name / Text
-# @pytest.fixture(scope="session")
-# def json_elessar_the_elfstone(cards_json) -> dict:
-#     return get_card_json(cards_json, "a1f3fc27-b3ea-476c-be23-f1c30ef27f96")  # Cloudstone Curio
-
-
-# # Attraction
-# @pytest.fixture(scope="session")
-# def json_trash_bin(cards_json) -> dict:
-#     return get_card_json(cards_json, "f07c39f7-5c3e-40f6-b584-458b65282a7e")
-
-
-# # Variation / Variation Of
-# @pytest.fixture(scope="session")
-# def json_anaconda_portal(cards_json) -> dict:
-#     return get_card_json(cards_json, "6ffba7a5-8845-46f4-bb86-4722d6cbd4c1")
-
-
 # # endregion
 
 
 # # region Fixtures for Card and CardModel tests
 
 
-# @pytest.fixture(scope="session")
-# def legalities_ancestral_recall() -> dict[Format, Legality]:
-#     return {
-#         Format.ALCHEMY: Legality.NOT_LEGAL,
-#         Format.BRAWL: Legality.NOT_LEGAL,
-#         Format.COMMANDER: Legality.BANNED,
-#         Format.DUEL: Legality.BANNED,
-#         Format.EXPLORER: Legality.NOT_LEGAL,
-#         Format.FUTURE: Legality.NOT_LEGAL,
-#         Format.GLADIATOR: Legality.NOT_LEGAL,
-#         Format.HISTORIC: Legality.NOT_LEGAL,
-#         Format.HISTORICBRAWL: Legality.NOT_LEGAL,
-#         Format.LEGACY: Legality.BANNED,
-#         Format.MODERN: Legality.NOT_LEGAL,
-#         Format.OATHBREAKER: Legality.BANNED,
-#         Format.OLDSCHOOL: Legality.NOT_LEGAL,
-#         Format.PAUPER: Legality.NOT_LEGAL,
-#         Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
-#         Format.PENNY: Legality.NOT_LEGAL,
-#         Format.PIONEER: Legality.NOT_LEGAL,
-#         Format.PREDH: Legality.BANNED,
-#         Format.PREMODERN: Legality.NOT_LEGAL,
-#         Format.STANDARD: Legality.NOT_LEGAL,
-#         Format.VINTAGE: Legality.RESTRICTED,
-#     }
+@pytest.fixture()
+def recall_legalities() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.BANNED,
+        Format.DUEL: Legality.BANNED,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.BANNED,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.BANNED,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.BANNED,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.RESTRICTED,
+    }
 
 
-# @pytest.fixture(scope="session")
-# def legalities_token() -> dict[Format, Legality]:
-#     return {
-#         Format.ALCHEMY: Legality.NOT_LEGAL,
-#         Format.BRAWL: Legality.NOT_LEGAL,
-#         Format.COMMANDER: Legality.NOT_LEGAL,
-#         Format.DUEL: Legality.NOT_LEGAL,
-#         Format.EXPLORER: Legality.NOT_LEGAL,
-#         Format.FUTURE: Legality.NOT_LEGAL,
-#         Format.GLADIATOR: Legality.NOT_LEGAL,
-#         Format.HISTORIC: Legality.NOT_LEGAL,
-#         Format.HISTORICBRAWL: Legality.NOT_LEGAL,
-#         Format.LEGACY: Legality.NOT_LEGAL,
-#         Format.MODERN: Legality.NOT_LEGAL,
-#         Format.OATHBREAKER: Legality.NOT_LEGAL,
-#         Format.OLDSCHOOL: Legality.NOT_LEGAL,
-#         Format.PAUPER: Legality.NOT_LEGAL,
-#         Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
-#         Format.PENNY: Legality.NOT_LEGAL,
-#         Format.PIONEER: Legality.NOT_LEGAL,
-#         Format.PREDH: Legality.NOT_LEGAL,
-#         Format.PREMODERN: Legality.NOT_LEGAL,
-#         Format.STANDARD: Legality.NOT_LEGAL,
-#         Format.VINTAGE: Legality.NOT_LEGAL,
-#     }
+@pytest.fixture()
+def snake_token_legalities() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.NOT_LEGAL,
+        Format.DUEL: Legality.NOT_LEGAL,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.NOT_LEGAL,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.NOT_LEGAL,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.NOT_LEGAL,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.NOT_LEGAL,
+    }
 
 
-# @pytest.fixture(scope="session")
-# def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
-#     return {
-#         Format.ALCHEMY: Legality.NOT_LEGAL,
-#         Format.BRAWL: Legality.NOT_LEGAL,
-#         Format.COMMANDER: Legality.LEGAL,
-#         Format.DUEL: Legality.LEGAL,
-#         Format.EXPLORER: Legality.NOT_LEGAL,
-#         Format.FUTURE: Legality.NOT_LEGAL,
-#         Format.GLADIATOR: Legality.NOT_LEGAL,
-#         Format.HISTORIC: Legality.NOT_LEGAL,
-#         Format.HISTORICBRAWL: Legality.NOT_LEGAL,
-#         Format.LEGACY: Legality.LEGAL,
-#         Format.MODERN: Legality.NOT_LEGAL,
-#         Format.OATHBREAKER: Legality.LEGAL,
-#         Format.OLDSCHOOL: Legality.NOT_LEGAL,
-#         Format.PAUPER: Legality.NOT_LEGAL,
-#         Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
-#         Format.PENNY: Legality.NOT_LEGAL,
-#         Format.PIONEER: Legality.NOT_LEGAL,
-#         Format.PREDH: Legality.NOT_LEGAL,
-#         Format.PREMODERN: Legality.NOT_LEGAL,
-#         Format.STANDARD: Legality.NOT_LEGAL,
-#         Format.VINTAGE: Legality.LEGAL,
-#     }
+@pytest.fixture()
+def zndrsplt_legalities() -> dict[Format, Legality]:
+    return {
+        Format.ALCHEMY: Legality.NOT_LEGAL,
+        Format.BRAWL: Legality.NOT_LEGAL,
+        Format.COMMANDER: Legality.LEGAL,
+        Format.DUEL: Legality.LEGAL,
+        Format.EXPLORER: Legality.NOT_LEGAL,
+        Format.FUTURE: Legality.NOT_LEGAL,
+        Format.GLADIATOR: Legality.NOT_LEGAL,
+        Format.HISTORIC: Legality.NOT_LEGAL,
+        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
+        Format.LEGACY: Legality.LEGAL,
+        Format.MODERN: Legality.NOT_LEGAL,
+        Format.OATHBREAKER: Legality.LEGAL,
+        Format.OLDSCHOOL: Legality.NOT_LEGAL,
+        Format.PAUPER: Legality.NOT_LEGAL,
+        Format.PAUPERCOMMANDER: Legality.NOT_LEGAL,
+        Format.PENNY: Legality.NOT_LEGAL,
+        Format.PIONEER: Legality.NOT_LEGAL,
+        Format.PREDH: Legality.NOT_LEGAL,
+        Format.PREMODERN: Legality.NOT_LEGAL,
+        Format.STANDARD: Legality.NOT_LEGAL,
+        Format.VINTAGE: Legality.LEGAL,
+    }
 
 
 # @pytest.fixture(scope="session")
@@ -319,39 +358,39 @@ def chalice_cardmodel(chalice_json) -> CardModel:
 #     )
 
 
-# @pytest.fixture(scope="session")
-# def oracle_arlinn_the_packs_hope() -> str:
-#     return (
-#         "Daybound (If a player casts no spells during their own turn, it becomes "
-#         "night next turn.)\n"
-#         "+1: Until your next turn, you may cast creature spells as though they had "
-#         "flash, and each creature you control enters the battlefield with an "
-#         "additional +1/+1 counter on it.\n"
-#         "−3: Create two 2/2 green Wolf creature tokens."
-#     )
+@pytest.fixture()
+def arlinn_daybound_oracle() -> str:
+    return (
+        "Daybound (If a player casts no spells during their own turn, it becomes "
+        "night next turn.)\n"
+        "+1: Until your next turn, you may cast creature spells as though they had "
+        "flash, and each creature you control enters the battlefield with an "
+        "additional +1/+1 counter on it.\n"
+        "−3: Create two 2/2 green Wolf creature tokens."
+    )
 
 
-# @pytest.fixture(scope="session")
-# def oracle_arlinn_the_moons_fury() -> str:
-#     return (
-#         "Nightbound (If a player casts at least two spells during their own turn, it "
-#         "becomes day next turn.)\n"
-#         "+2: Add {R}{G}.\n"
-#         "0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf "
-#         "creature with trample, indestructible, and haste."
-#     )
+@pytest.fixture()
+def arlinn_nightbound_oracle() -> str:
+    return (
+        "Nightbound (If a player casts at least two spells during their own turn, it "
+        "becomes day next turn.)\n"
+        "+2: Add {R}{G}.\n"
+        "0: Until end of turn, Arlinn, the Moon's Fury becomes a 5/5 Werewolf "
+        "creature with trample, indestructible, and haste."
+    )
 
 
-# @pytest.fixture(scope="session")
-# def oracle_zndrsplt_eye_of_wisdom() -> str:
-#     return (
-#         "Partner with Okaun, Eye of Chaos (When this creature enters the "
-#         "battlefield, target player may put Okaun into their hand from their "
-#         "library, then shuffle.)\n"
-#         "At the beginning of combat on your turn, flip a coin until you lose a "
-#         "flip.\n"
-#         "Whenever a player wins a coin flip, draw a card."
-#     )
+@pytest.fixture()
+def zndrsplt_oracle() -> str:
+    return (
+        "Partner with Okaun, Eye of Chaos (When this creature enters the "
+        "battlefield, target player may put Okaun into their hand from their "
+        "library, then shuffle.)\n"
+        "At the beginning of combat on your turn, flip a coin until you lose a "
+        "flip.\n"
+        "Whenever a player wins a coin flip, draw a card."
+    )
 
 
 # # endregion
