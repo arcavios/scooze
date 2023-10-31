@@ -116,6 +116,12 @@ def json_omnath_locus_of_creation(cards_json) -> dict:
     return get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
 
 
+# Snake Creature
+@pytest.fixture(scope="session")
+def json_mystic_snake(cards_json) -> dict:
+    return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
+
+
 # Instant
 @pytest.fixture(scope="session")
 def json_ancestral_recall(cards_json) -> dict:
@@ -182,6 +188,12 @@ def json_anaconda_portal(cards_json) -> dict:
     return get_card_json(cards_json, "6ffba7a5-8845-46f4-bb86-4722d6cbd4c1")
 
 
+# Costless
+@pytest.fixture(scope="session")
+def json_ancestral_visions(cards_json) -> dict:
+    return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
+
+
 # endregion
 
 # region CardModels
@@ -208,29 +220,6 @@ def cardmodel_omnath(json_omnath_locus_of_creation) -> CardModel:
 
 
 # # region Test Cards
-
-
-# # Instant
-# @pytest.fixture(scope="session")
-# def json_ancestral_recall(cards_json) -> dict:
-#     return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
-
-
-# @pytest.fixture(scope="session")
-# def model_ancestral_recall(json_ancestral_recall) -> CardModel:
-#     return get_cardmodelout_from_json(json_ancestral_recall)
-
-
-# # Creature
-# @pytest.fixture(scope="session")
-# def json_mystic_snake(cards_json) -> dict:
-#     return get_card_json(cards_json, "2d4bacd1-b602-4bcc-9aea-1229949a7d20")
-
-
-# # Costless
-# @pytest.fixture(scope="session")
-# def json_ancestral_visions(cards_json) -> dict:
-#     return get_card_json(cards_json, "9079c93e-3da8-442a-89d2-609a3eac83b0")
 
 
 # # Digital
@@ -279,7 +268,7 @@ def legalities_ancestral_recall() -> dict[Format, Legality]:
 
 
 @pytest.fixture()
-def legalities_snake_token() -> dict[Format, Legality]:
+def legalities_token() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
         Format.BRAWL: Legality.NOT_LEGAL,

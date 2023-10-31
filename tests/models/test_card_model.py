@@ -425,22 +425,21 @@ def test_cardmodeldata_from_json_reversible(
     assert model.watermark is None
 
 
-def test_cardmodeldata_from_json_creature(json_omnath_locus_of_creation):
-    model = CardModelData.model_validate(json_omnath_locus_of_creation)
-    assert model.cmc == 4.0
-    assert model.color_identity == {Color.WHITE, Color.BLUE, Color.RED, Color.GREEN}
-    assert model.colors == {Color.WHITE, Color.BLUE, Color.RED, Color.GREEN}
-    assert model.power == "4"
-    assert model.toughness == "4"
-    assert model.type_line == "Legendary Creature — Elemental"
+def test_cardmodeldata_from_json_creature(json_mystic_snake):
+    model = CardModelData.model_validate(json_mystic_snake)
+    assert model.color_identity == {Color.BLUE, Color.GREEN}
+    assert model.colors == {Color.BLUE, Color.GREEN}
+    assert model.power == "2"
+    assert model.toughness == "2"
+    assert model.type_line == "Creature — Snake"
 
 
-def test_cardmodeldata_from_json_token(json_snake_token, legalities_snake_token):
+def test_cardmodeldata_from_json_token(json_snake_token, legalities_token):
     model = CardModelData.model_validate(json_snake_token)
     assert model.cmc == 0.0
     assert model.color_identity == {Color.BLUE, Color.GREEN}
     assert model.colors == {Color.BLUE, Color.GREEN}
-    assert model.legalities == legalities_snake_token
+    assert model.legalities == legalities_token
     assert model.mana_cost == ""
     assert model.name == "Snake"
     assert model.power == "1"
