@@ -77,8 +77,10 @@ class TestCardsRouterWithEmptyDatabase:
         assert response.status_code == 404
         assert response.json()["detail"] == "No cards found in the database."
 
-    async def test_add_cards(self, api_client: AsyncClient, omnath_json: dict, recall_json: dict):
-        response = await api_client.post("/cards/add", json=[omnath_json, recall_json])
+    async def test_add_cards(
+        self, api_client: AsyncClient, json_omnath_locus_of_creation: dict, json_ancestral_recall: dict
+    ):
+        response = await api_client.post("/cards/add", json=[json_omnath_locus_of_creation, json_ancestral_recall])
         assert response.status_code == 200
         assert response.json() == "Created 2 card(s)."
         cards = await CardModel.find({}).to_list()
@@ -89,8 +91,8 @@ class TestCardsRouterWithEmptyDatabase:
         self,
         mock_insert_many: MagicMock,
         api_client: AsyncClient,
-        omnath_json: dict,
-        recall_json: dict,
+        json_omnath_locus_of_creation: dict,
+        json_ancestral_recall: dict,
     ):
         error_msg = "Test card create route error"
 
@@ -98,6 +100,6 @@ class TestCardsRouterWithEmptyDatabase:
             raise Exception(error_msg)
 
         mock_insert_many.side_effect = mock_insert_many_exception
-        response = await api_client.post("/cards/add", json=[omnath_json, recall_json])
+        response = await api_client.post("/cards/add", json=[json_omnath_locus_of_creation, json_ancestral_recall])
         assert response.status_code == 400
         assert response.json()["detail"] == f"Failed to create new cards. Error: {error_msg}"

@@ -57,8 +57,8 @@ def test_cardmodel_beanie(api_client: AsyncClient):
 # region from_json
 
 
-def test_cardmodeldata_from_json_instant(recall_json, recall_legalities):
-    model = CardModelData.model_validate(recall_json)
+def test_cardmodeldata_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
+    model = CardModelData.model_validate(json_ancestral_recall)
     assert model.all_parts is None
     assert model.arena_id is None
     assert model.artist == "Ryan Pancoast"
@@ -100,7 +100,7 @@ def test_cardmodeldata_from_json_instant(recall_json, recall_legalities):
     assert model.keywords == set()
     assert model.lang is Language.ENGLISH
     assert model.layout is Layout.NORMAL
-    assert model.legalities == recall_legalities
+    assert model.legalities == legalities_ancestral_recall
     assert model.life_modifier is None
     assert model.loyalty is None
     assert model.mana_cost == "{U}"
@@ -170,8 +170,10 @@ def test_cardmodeldata_from_json_instant(recall_json, recall_legalities):
     assert model.watermark is None
 
 
-def test_cardmodeldata_from_json_transform_planeswalker(arlinn_json, arlinn_daybound_oracle, arlinn_nightbound_oracle):
-    model = CardModelData.model_validate(arlinn_json)
+def test_cardmodeldata_from_json_transform_planeswalker(
+    json_arlinn_the_packs_hope, oracle_arlinn_daybound, oracle_arlinn_nightbound
+):
+    model = CardModelData.model_validate(json_arlinn_the_packs_hope)
 
     assert len(model.card_faces) == 2
     front, back = model.card_faces
@@ -198,7 +200,7 @@ def test_cardmodeldata_from_json_transform_planeswalker(arlinn_json, arlinn_dayb
     assert front.mana_cost == "{2}{R}{G}"
     assert front.name == "Arlinn, the Pack's Hope"
     assert front.oracle_id is None
-    assert front.oracle_text == arlinn_daybound_oracle
+    assert front.oracle_text == oracle_arlinn_daybound
     assert front.power is None
     assert front.printed_name is None
     assert front.printed_text is None
@@ -228,7 +230,7 @@ def test_cardmodeldata_from_json_transform_planeswalker(arlinn_json, arlinn_dayb
     assert back.mana_cost == ""
     assert back.name == "Arlinn, the Moon's Fury"
     assert back.oracle_id is None
-    assert back.oracle_text == arlinn_nightbound_oracle
+    assert back.oracle_text == oracle_arlinn_nightbound
     assert back.power is None
     assert back.printed_name is None
     assert back.printed_text is None
@@ -238,8 +240,10 @@ def test_cardmodeldata_from_json_transform_planeswalker(arlinn_json, arlinn_dayb
     assert back.watermark is None
 
 
-def test_cardmodeldata_from_json_reversible(zndrsplt_json, zndrsplt_legalities, zndrsplt_oracle):
-    model = CardModelData.model_validate(zndrsplt_json)
+def test_cardmodeldata_from_json_reversible(
+    json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
+):
+    model = CardModelData.model_validate(json_zndrsplt_eye_of_wisdom)
 
     # all_parts (RelatedCards)
     assert len(model.all_parts) == 2
@@ -290,7 +294,7 @@ def test_cardmodeldata_from_json_reversible(zndrsplt_json, zndrsplt_legalities, 
     assert front.mana_cost == "{4}{U}"
     assert front.name == "Zndrsplt, Eye of Wisdom"
     assert front.oracle_id == "502849a6-8e65-40f3-b348-a41c4f939768"
-    assert front.oracle_text == zndrsplt_oracle
+    assert front.oracle_text == oracle_zndrsplt_eye_of_wisdom
     assert front.power == "1"
     assert front.printed_name is None
     assert front.printed_text is None
@@ -321,7 +325,7 @@ def test_cardmodeldata_from_json_reversible(zndrsplt_json, zndrsplt_legalities, 
     assert back.mana_cost == "{4}{U}"
     assert back.name == "Zndrsplt, Eye of Wisdom"
     assert back.oracle_id == "502849a6-8e65-40f3-b348-a41c4f939768"
-    assert back.oracle_text == zndrsplt_oracle
+    assert back.oracle_text == oracle_zndrsplt_eye_of_wisdom
     assert back.power == "1"
     assert back.printed_name is None
     assert back.printed_text is None
@@ -354,7 +358,7 @@ def test_cardmodeldata_from_json_reversible(zndrsplt_json, zndrsplt_legalities, 
     assert model.keywords == {"Partner", "Partner with"}
     assert model.lang is Language.ENGLISH
     assert model.layout is Layout.REVERSIBLE_CARD
-    assert model.legalities == zndrsplt_legalities
+    assert model.legalities == legalities_zndrsplt_eye_of_wisdom
     assert model.life_modifier is None
     assert model.loyalty is None
     assert model.mana_cost is None
@@ -421,8 +425,8 @@ def test_cardmodeldata_from_json_reversible(zndrsplt_json, zndrsplt_legalities, 
     assert model.watermark is None
 
 
-def test_cardmodeldata_from_json_creature(omnath_json):
-    model = CardModelData.model_validate(omnath_json)
+def test_cardmodeldata_from_json_creature(json_omnath_locus_of_creation):
+    model = CardModelData.model_validate(json_omnath_locus_of_creation)
     assert model.cmc == 4.0
     assert model.color_identity == {Color.WHITE, Color.BLUE, Color.RED, Color.GREEN}
     assert model.colors == {Color.WHITE, Color.BLUE, Color.RED, Color.GREEN}
@@ -431,12 +435,12 @@ def test_cardmodeldata_from_json_creature(omnath_json):
     assert model.type_line == "Legendary Creature — Elemental"
 
 
-def test_cardmodeldata_from_json_token(snake_token_json, snake_token_legalities):
-    model = CardModelData.model_validate(snake_token_json)
+def test_cardmodeldata_from_json_token(json_snake_token, legalities_snake_token):
+    model = CardModelData.model_validate(json_snake_token)
     assert model.cmc == 0.0
     assert model.color_identity == {Color.BLUE, Color.GREEN}
     assert model.colors == {Color.BLUE, Color.GREEN}
-    assert model.legalities == snake_token_legalities
+    assert model.legalities == legalities_snake_token
     assert model.mana_cost == ""
     assert model.name == "Snake"
     assert model.power == "1"
@@ -444,18 +448,18 @@ def test_cardmodeldata_from_json_token(snake_token_json, snake_token_legalities)
     assert model.type_line == "Token Creature — Snake"
 
 
-def test_cardmodeldata_from_json_watermark(anaconda_7e_foil_json):
-    model = CardModelData.model_validate(anaconda_7e_foil_json)
+def test_cardmodeldata_from_json_watermark(json_anaconda_7ed_foil):
+    model = CardModelData.model_validate(json_anaconda_7ed_foil)
     assert model.watermark == "wotc"
 
 
-def test_cardmodeldata_from_json_non_english(python_spanish_json):
-    model = CardModelData.model_validate(python_spanish_json)
+def test_cardmodeldata_from_json_non_english(json_python_spanish):
+    model = CardModelData.model_validate(json_python_spanish)
     assert model.printed_name == "Pitón"
 
 
-def test_cardmodeldata_from_json_flavor(elessar_json):
-    model = CardModelData.model_validate(elessar_json)
+def test_cardmodeldata_from_json_flavor(json_elessar_the_elfstone):
+    model = CardModelData.model_validate(json_elessar_the_elfstone)
     assert model.flavor_name == "Elessar, the Elfstone"
     assert (
         model.flavor_text == "Aragorn took the green stone and held it up, and there came a green fire from his hand."
@@ -463,13 +467,13 @@ def test_cardmodeldata_from_json_flavor(elessar_json):
     assert model.name == "Cloudstone Curio"
 
 
-def test_cardmodeldata_from_json_attraction(trash_json):
-    model = CardModelData.model_validate(trash_json)
+def test_cardmodeldata_from_json_attraction(json_trash_bin):
+    model = CardModelData.model_validate(json_trash_bin)
     assert model.attraction_lights == {2, 6}
 
 
-def test_cardmodeldata_from_json_variation(anaconda_portal_json):
-    model = CardModelData.model_validate(anaconda_portal_json)
+def test_cardmodeldata_from_json_variation(json_anaconda_portal):
+    model = CardModelData.model_validate(json_anaconda_portal)
     assert model.variation is True
     assert model.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda
 
@@ -486,48 +490,50 @@ def _test_from_card_helper(input_json):
     assert model_from_card == model_from_json
 
 
-def test_cardmodeldata_from_card_instant(recall_json):
-    _test_from_card_helper(recall_json)
+def test_cardmodeldata_from_card_instant(json_ancestral_recall):
+    _test_from_card_helper(json_ancestral_recall)
 
 
-def test_cardmodeldata_from_card_creature(omnath_json):
-    _test_from_card_helper(omnath_json)
+def test_cardmodeldata_from_card_creature(json_omnath_locus_of_creation):
+    _test_from_card_helper(json_omnath_locus_of_creation)
 
 
-def test_cardmodeldata_from_card_token(snake_token_json):
-    _test_from_card_helper(snake_token_json)
+def test_cardmodeldata_from_card_token(json_snake_token):
+    _test_from_card_helper(json_snake_token)
 
 
-def test_cardmodeldata_from_card_transform_planeswalker(arlinn_json):
-    _test_from_card_helper(arlinn_json)
+def test_cardmodeldata_from_card_transform_planeswalker(json_arlinn_the_packs_hope):
+    _test_from_card_helper(json_arlinn_the_packs_hope)
 
 
-def test_cardmodeldata_from_card_reversible(zndrsplt_json):
-    card = FullCard.from_json(zndrsplt_json)
+def test_cardmodeldata_from_card_reversible(json_zndrsplt_eye_of_wisdom):
+    card = FullCard.from_json(json_zndrsplt_eye_of_wisdom)
     model_from_card = CardModelData.model_validate(card.__dict__)
-    model_from_json = CardModelData.model_validate(zndrsplt_json)
+    model_from_json = CardModelData.model_validate(json_zndrsplt_eye_of_wisdom)
+
+    # NOTE: CMC is not top-level for reversible cards in Scryfall so we add that here for ease of testing
     model_from_json.cmc = model_from_json.card_faces[0].cmc
     assert model_from_card == model_from_json
 
 
-def test_cardmodeldata_from_card_watermark(anaconda_7e_foil_json):
-    _test_from_card_helper(anaconda_7e_foil_json)
+def test_cardmodeldata_from_card_watermark(json_anaconda_7ed_foil):
+    _test_from_card_helper(json_anaconda_7ed_foil)
 
 
-def test_cardmodeldata_from_card_non_english(python_spanish_json):
-    _test_from_card_helper(python_spanish_json)
+def test_cardmodeldata_from_card_non_english(json_python_spanish):
+    _test_from_card_helper(json_python_spanish)
 
 
-def test_cardmodeldata_from_card_flavor(elessar_json):
-    _test_from_card_helper(elessar_json)
+def test_cardmodeldata_from_card_flavor(json_elessar_the_elfstone):
+    _test_from_card_helper(json_elessar_the_elfstone)
 
 
-def test_cardmodeldata_from_card_attraction(trash_json):
-    _test_from_card_helper(trash_json)
+def test_cardmodeldata_from_card_attraction(json_trash_bin):
+    _test_from_card_helper(json_trash_bin)
 
 
-def test_cardmodeldata_from_card_variation(anaconda_portal_json):
-    _test_from_card_helper(anaconda_portal_json)
+def test_cardmodeldata_from_card_variation(json_anaconda_portal):
+    _test_from_card_helper(json_anaconda_portal)
 
 
 # endregion

@@ -112,73 +112,73 @@ def cards_json() -> list[str]:
 
 # Creature
 @pytest.fixture(scope="session")
-def omnath_json(cards_json) -> dict:
+def json_omnath_locus_of_creation(cards_json) -> dict:
     return get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
 
 
 # Instant
 @pytest.fixture(scope="session")
-def recall_json(cards_json) -> dict:
+def json_ancestral_recall(cards_json) -> dict:
     return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
 
 
 # Land
 @pytest.fixture(scope="session")
-def boseiju_json(cards_json) -> dict:
+def json_boseiju_who_endures(cards_json) -> dict:
     return get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
 
 
 # Artifact
 @pytest.fixture(scope="session")
-def chalice_json(cards_json) -> dict:
+def json_chalice_of_the_void(cards_json) -> dict:
     return get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
 
 
 # Token
 @pytest.fixture(scope="session")
-def snake_token_json(cards_json) -> dict:
+def json_snake_token(cards_json) -> dict:
     return get_card_json(cards_json, "153f01ac-8601-488f-8da7-72f392c0a3c6")
 
 
 # Transforming Planeswalker
 @pytest.fixture(scope="session")
-def arlinn_json(cards_json) -> dict:
+def json_arlinn_the_packs_hope(cards_json) -> dict:
     return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
 
 
 # Reversible
 @pytest.fixture(scope="session")
-def zndrsplt_json(cards_json) -> dict:
+def json_zndrsplt_eye_of_wisdom(cards_json) -> dict:
     return get_card_json(cards_json, "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf")
 
 
 # Watermark
 @pytest.fixture(scope="session")
-def anaconda_7e_foil_json(cards_json) -> dict:
+def json_anaconda_7ed_foil(cards_json) -> dict:
     return get_card_json(cards_json, "2dccffce-5ebd-4aaa-be05-1c6537d211f4")
 
 
 # Non-English
 @pytest.fixture(scope="session")
-def python_spanish_json(cards_json) -> dict:
+def json_python_spanish(cards_json) -> dict:
     return get_card_json(cards_json, "973dbd10-708a-42d5-ba15-615104563f0f")
 
 
 # Flavor Name / Text
 @pytest.fixture(scope="session")
-def elessar_json(cards_json) -> dict:
+def json_elessar_the_elfstone(cards_json) -> dict:
     return get_card_json(cards_json, "a1f3fc27-b3ea-476c-be23-f1c30ef27f96")  # Cloudstone Curio
 
 
 # Attraction
 @pytest.fixture(scope="session")
-def trash_json(cards_json) -> dict:
+def json_trash_bin(cards_json) -> dict:
     return get_card_json(cards_json, "f07c39f7-5c3e-40f6-b584-458b65282a7e")
 
 
 # Variation / Variation Of
 @pytest.fixture(scope="session")
-def anaconda_portal_json(cards_json) -> dict:
+def json_anaconda_portal(cards_json) -> dict:
     return get_card_json(cards_json, "6ffba7a5-8845-46f4-bb86-4722d6cbd4c1")
 
 
@@ -188,23 +188,8 @@ def anaconda_portal_json(cards_json) -> dict:
 
 
 @pytest.fixture(scope="session")
-def omnath_cardmodel(omnath_json) -> CardModel:
-    return get_cardmodel_from_json(omnath_json)
-
-
-@pytest.fixture(scope="session")
-def recall_cardmodel(recall_json) -> CardModel:
-    return get_cardmodel_from_json(recall_json)
-
-
-@pytest.fixture(scope="session")
-def boseiju_cardmodel(boseiju_json) -> CardModel:
-    return get_cardmodel_from_json(boseiju_json)
-
-
-@pytest.fixture(scope="session")
-def chalice_cardmodel(chalice_json) -> CardModel:
-    return get_cardmodel_from_json(chalice_json)
+def cardmodel_omnath(json_omnath_locus_of_creation) -> CardModel:
+    return get_cardmodel_from_json(json_omnath_locus_of_creation)
 
 
 # endregion
@@ -267,7 +252,7 @@ def chalice_cardmodel(chalice_json) -> CardModel:
 
 
 @pytest.fixture()
-def recall_legalities() -> dict[Format, Legality]:
+def legalities_ancestral_recall() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
         Format.BRAWL: Legality.NOT_LEGAL,
@@ -294,7 +279,7 @@ def recall_legalities() -> dict[Format, Legality]:
 
 
 @pytest.fixture()
-def snake_token_legalities() -> dict[Format, Legality]:
+def legalities_snake_token() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
         Format.BRAWL: Legality.NOT_LEGAL,
@@ -321,7 +306,7 @@ def snake_token_legalities() -> dict[Format, Legality]:
 
 
 @pytest.fixture()
-def zndrsplt_legalities() -> dict[Format, Legality]:
+def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
         Format.BRAWL: Legality.NOT_LEGAL,
@@ -359,7 +344,7 @@ def zndrsplt_legalities() -> dict[Format, Legality]:
 
 
 @pytest.fixture()
-def arlinn_daybound_oracle() -> str:
+def oracle_arlinn_daybound() -> str:
     return (
         "Daybound (If a player casts no spells during their own turn, it becomes "
         "night next turn.)\n"
@@ -371,7 +356,7 @@ def arlinn_daybound_oracle() -> str:
 
 
 @pytest.fixture()
-def arlinn_nightbound_oracle() -> str:
+def oracle_arlinn_nightbound() -> str:
     return (
         "Nightbound (If a player casts at least two spells during their own turn, it "
         "becomes day next turn.)\n"
@@ -382,7 +367,7 @@ def arlinn_nightbound_oracle() -> str:
 
 
 @pytest.fixture()
-def zndrsplt_oracle() -> str:
+def oracle_zndrsplt_eye_of_wisdom() -> str:
     return (
         "Partner with Okaun, Eye of Chaos (When this creature enters the "
         "battlefield, target player may put Okaun into their hand from their "

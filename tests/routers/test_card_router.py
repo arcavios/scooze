@@ -113,20 +113,24 @@ class TestCardRouterWithEmptyDatabase:
         assert response.status_code == 404
         assert response.json()["detail"] == "No cards found in the database."
 
-    async def test_add_card(self, api_client: AsyncClient, omnath_json: dict, omnath_cardmodel: CardModel):
-        response = await api_client.post("/card/add", json=omnath_json)
+    async def test_add_card(
+        self, api_client: AsyncClient, json_omnath_locus_of_creation: dict, cardmodel_omnath: CardModel
+    ):
+        response = await api_client.post("/card/add", json=json_omnath_locus_of_creation)
         assert response.status_code == 200
         card = await CardModel.get(response.json()["_id"])
-        assert card.model_dump(mode="json", exclude=["id"]) == omnath_cardmodel.model_dump(mode="json", exclude=["id"])
+        assert card.model_dump(mode="json", exclude=["id"]) == cardmodel_omnath.model_dump(mode="json", exclude=["id"])
 
     @patch("scooze.routers.card.CardModel.create")
-    async def test_add_card_bad(self, mock_create: MagicMock, api_client: AsyncClient, omnath_json: dict):
+    async def test_add_card_bad(
+        self, mock_create: MagicMock, api_client: AsyncClient, json_omnath_locus_of_creation: dict
+    ):
         error_msg = "Test card create route error"
 
         def mock_create_exception():
             raise Exception(error_msg)
 
         mock_create.side_effect = mock_create_exception
-        response = await api_client.post("/card/add", json=omnath_json)
+        response = await api_client.post("/card/add", json=json_omnath_locus_of_creation)
         assert response.status_code == 400
         assert response.json()["detail"] == f"Failed to create a new card. Error: {error_msg}"
