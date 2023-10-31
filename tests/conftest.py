@@ -38,17 +38,7 @@ TEST_MONGO_URI = "mongodb://127.0.0.1:27017"
 # # region Card JSON
 
 
-@pytest.fixture(scope="session")
-def cards_json() -> list[str]:
-    json_list = []
-
-    with open("./data/test/test_cards.jsonl", "r", encoding="utf8") as json_file:
-        json_list.extend(list(json_file))
-
-    with open("./data/test/4c_cards.jsonl", "r", encoding="utf8") as json_file:
-        json_list.extend(list(json_file))
-
-    return json_list
+# region Helpers
 
 
 def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
@@ -62,15 +52,32 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
             return card_json
 
 
+def get_cardmodel_from_json(card_json: dict) -> CardModel:
+    card_data = CardModelData.model_validate(card_json)
+    return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+
+
+# endregion
+
+# region Card JSON
+
+
+@pytest.fixture(scope="session")
+def cards_json() -> list[str]:
+    json_list = []
+
+    with open("./data/test/test_cards.jsonl", "r", encoding="utf8") as json_file:
+        json_list.extend(list(json_file))
+
+    with open("./data/test/4c_cards.jsonl", "r", encoding="utf8") as json_file:
+        json_list.extend(list(json_file))
+
+    return json_list
+
+
 @pytest.fixture(scope="session")
 def omnath_json(cards_json) -> dict:
     return get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
-
-
-@pytest.fixture(scope="session")
-def omnath_cardmodel(omnath_json) -> CardModel:
-    card_data = CardModelData.model_validate(omnath_json)
-    return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
 
 
 @pytest.fixture(scope="session")
@@ -79,10 +86,41 @@ def recall_json(cards_json) -> dict:
 
 
 @pytest.fixture(scope="session")
-def recall_cardmodel(recall_json) -> CardModel:
-    card_data = CardModelData.model_validate(recall_json)
-    return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+def boseiju_json(cards_json) -> dict:
+    return get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
 
+
+@pytest.fixture(scope="session")
+def chalice_json(cards_json) -> dict:
+    return get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
+
+
+# endregion
+
+# region CardModels
+
+
+@pytest.fixture(scope="session")
+def omnath_cardmodel(omnath_json) -> CardModel:
+    return get_cardmodel_from_json(omnath_json)
+
+
+@pytest.fixture(scope="session")
+def recall_cardmodel(recall_json) -> CardModel:
+    return get_cardmodel_from_json(recall_json)
+
+
+@pytest.fixture(scope="session")
+def boseiju_cardmodel(boseiju_json) -> CardModel:
+    return get_cardmodel_from_json(boseiju_json)
+
+
+@pytest.fixture(scope="session")
+def chalice_cardmodel(chalice_json) -> CardModel:
+    return get_cardmodel_from_json(chalice_json)
+
+
+# endregion
 
 # def get_cardmodelout_from_json(card_json: dict) -> CardModel:
 #     """

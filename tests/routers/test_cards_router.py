@@ -2,9 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from beanie import PydanticObjectId
-from fastapi.testclient import TestClient
 from httpx import AsyncClient
-from mongomock import Collection
 from scooze.models.card import CardModel, CardModelData
 
 
@@ -33,6 +31,40 @@ class TestCardsRouterWithPopulatedDatabase:
         assert len(response_json) == 2
         for card_resp in response_json:
             assert PydanticObjectId.is_valid(card_resp["_id"])
+
+    async def test_get_cards_by_ids(self, api_client: AsyncClient):
+        cards = await CardModel.find({}, limit=2).to_list()
+        response = await api_client.post("/cards/by?property_name=id", json=[str(card.id) for card in cards])
+        assert response.status_code == 200
+        response_json_ids = [card_obj["_id"] for card_obj in response.json()]
+        for card in cards:
+            assert str(card.id) in response_json_ids
+
+    async def test_get_cards_by_names(self, api_client: AsyncClient):
+        cards = await CardModel.find({}, limit=2).to_list()
+        response = await api_client.post("/cards/by?property_name=name", json=[card.name for card in cards])
+        assert response.status_code == 200
+        response_json_names = [card_obj["name"] for card_obj in response.json()]
+        for card in cards:
+            assert card.name in response_json_names
+
+    async def test_get_cards_by_none_found(self, api_client: AsyncClient):
+        response = await api_client.post("/cards/by?property_name=id", json=[str(PydanticObjectId())])
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Cards not found."
+
+    async def test_delete_cards(self, api_client: AsyncClient):
+        num_cards = await CardModel.find({}).count()
+        response = await api_client.delete("/cards/delete/all")
+        assert response.status_code == 200
+        assert response.json() == f"Deleted {num_cards} card(s)."
+
+    @patch("scooze.routers.cards.CardModel.delete_all")
+    async def test_delete_cards_not_deleted(self, mock_delete_all: MagicMock, api_client: AsyncClient):
+        mock_delete_all.return_value = None
+        response = await api_client.delete(f"/cards/delete/all")
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Cards weren't deleted."
 
 
 class TestCardsRouterWithEmptyDatabase:
@@ -69,79 +101,3 @@ class TestCardsRouterWithEmptyDatabase:
         response = await api_client.post("/cards/add", json=[omnath_json, recall_json])
         assert response.status_code == 400
         assert response.json()["detail"] == f"Failed to create new cards. Error: {error_msg}"
-
-
-# region Fixtures
-
-
-# @pytest.fixture
-# def omnath(mock_cards_collection: Collection) -> CardModel:
-#     db_omnath = mock_cards_collection.find_one({"name": "Omnath, Locus of Creation"})
-#     return CardModel.model_validate(db_omnath)
-
-
-# @pytest.fixture
-# def chalice(mock_cards_collection: Collection) -> CardModel:
-#     db_chalice = mock_cards_collection.find_one({"name": "Chalice of the Void"})
-#     return CardModel.model_validate(db_chalice)
-
-
-# @pytest.fixture
-# def boseiju(mock_cards_collection: Collection) -> CardModel:
-#     db_boseiju = mock_cards_collection.find_one({"name": "Boseiju, Who Endures"})
-#     return CardModel.model_validate(db_boseiju)
-
-
-# endregion
-
-
-# # region Read
-
-
-# @pytest.mark.router_cards
-# @patch("scooze.database.card.get_cards_by_property")
-# def test_get_cards_by_cmc(mock_get: MagicMock, client: TestClient, chalice: CardModel, boseiju: CardModel):
-#     zero_drops = [chalice, boseiju]
-#     mock_get.return_value: list[CardModel] = zero_drops
-#     response = client.post("/cards/by?property_name=cmc", json=[0.0])
-#     assert response.status_code == 200
-#     response_json = response.json()
-#     for card in zero_drops:
-#         assert card.model_dump(mode="json") in response_json
-
-
-# @pytest.mark.router_cards
-# @patch("scooze.database.card.get_cards_by_property")
-# def test_get_cards_by_cmc_none_found(mock_get: MagicMock, client: TestClient):
-#     mock_get.return_value = None
-#     response = client.post("/cards/by?property_name=cmc", json=[100.0])
-#     assert response.status_code == 404
-#     assert response.json()["message"] == "Cards not found."
-
-
-# # endregion
-
-
-# # region Delete
-
-
-# @pytest.mark.router_cards
-# @patch("scooze.database.card.delete_cards_all")
-# def test_delete_cards(mock_update: MagicMock, client: TestClient, omnath: CardModel, chalice: CardModel):
-#     # Acting as though the db is set up with just Omnath and Chalice for purposes of this test
-#     mock_update.return_value = 2
-#     response = client.delete("/cards/delete/all")
-#     assert response.status_code == 200
-#     assert response.json()["message"] == "Deleted 2 card(s)."
-
-
-# @pytest.mark.router_cards
-# @patch("scooze.database.card.delete_cards_all")
-# def test_delete_cards_bad(mock_update: MagicMock, client: TestClient):
-#     mock_update.return_value = None
-#     response = client.delete("/cards/delete/all")
-#     assert response.status_code == 404
-#     assert response.json()["message"] == "No cards deleted."
-
-
-# # endregion
