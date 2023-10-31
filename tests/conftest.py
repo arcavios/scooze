@@ -73,6 +73,17 @@ def omnath_cardmodel(omnath_json) -> CardModel:
     return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
 
 
+@pytest.fixture(scope="session")
+def recall_json(cards_json) -> dict:
+    return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
+
+
+@pytest.fixture(scope="session")
+def recall_cardmodel(recall_json) -> CardModel:
+    card_data = CardModelData.model_validate(recall_json)
+    return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+
+
 # def get_cardmodelout_from_json(card_json: dict) -> CardModel:
 #     """
 #     Helper to get a CardModel from some JSON.

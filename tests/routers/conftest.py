@@ -45,8 +45,8 @@ def event_loop():
 
 @pytest.fixture(scope="session", autouse=True)
 async def api_client():
-    """api client fixture."""
-    # app.dependency_overrides[lifespan] = lifespan_test
+    """API client fixture."""
+
     async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
         server_name = "https://localhost"
         async with AsyncClient(app=app, base_url=server_name) as ac:

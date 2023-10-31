@@ -1,31 +1,12 @@
-import json
 from unittest.mock import MagicMock, patch
 
 import pytest
 from beanie import PydanticObjectId
-from fastapi.testclient import TestClient
 from httpx import AsyncClient
-from mongomock import Collection
-from pydantic.alias_generators import to_camel
 from scooze.models.card import CardModel, CardModelData
 
-# region Fixtures
 
-
-# @pytest.fixture
-# def omnath(mock_cards_collection: Collection) -> CardModel:
-#     # db_omnath = mock_cards_collection.find_one({"name": "Omnath, Locus of Creation"})
-#     # from pprint import pprint
-
-#     # pprint(db_omnath)
-#     # return CardModel.model_validate(db_omnath)
-#     return None
-
-
-# endregion
-
-
-class TestWithPopulatedDatabase:
+class TestCardRouterWithPopulatedDatabase:
     @pytest.fixture(scope="class", autouse=True)
     async def populate_db(self, cards_json):
         for card_json in cards_json:
@@ -122,7 +103,7 @@ class TestWithPopulatedDatabase:
         assert response.json()["detail"] == f"Card with id {first_card.id} not deleted."
 
 
-class TestWithEmptyDatabase:
+class TestCardRouterWithEmptyDatabase:
     @pytest.fixture(scope="class", autouse=True)
     async def clean_db(self):
         await CardModel.get_motor_collection().delete_many({})
@@ -149,27 +130,3 @@ class TestWithEmptyDatabase:
         response = await api_client.post("/card/add", json=omnath_json)
         assert response.status_code == 400
         assert response.json()["detail"] == f"Failed to create a new card. Error: {error_msg}"
-
-
-# # region Delete
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.delete_card")
-# def test_delete_card(mock_update: MagicMock, client: TestClient, omnath: CardModel):
-#     mock_update.return_value: CardModel = omnath
-#     response = client.delete(f"/card/delete/{omnath.scooze_id}")
-#     assert response.status_code == 200
-#     assert response.json()["message"] == f"Card with id {omnath.scooze_id} deleted."
-
-
-# @pytest.mark.router_card
-# @patch("scooze.database.card.delete_card")
-# def test_delete_card_bad_id(mock_update: MagicMock, client: TestClient):
-#     mock_update.return_value = None
-#     response = client.delete("/card/delete/blarghl")
-#     assert response.status_code == 404
-#     assert response.json()["message"] == "Card with id blarghl not deleted."
-
-
-# # endregion

@@ -55,9 +55,9 @@ async def add_cards(cards: list[CardModelData]) -> JSONResponse:
     """
 
     try:
-        cards_to_insert = [CardModel.model_validate(card.model_dump(mode="json", by_alias=True) for card in cards)]
+        cards_to_insert = [CardModel.model_validate(card.model_dump(mode="json", by_alias=True)) for card in cards]
         insert_result = await CardModel.insert_many(cards_to_insert)
-        return JSONResponse(f"Created {len(insert_result.inserted_ids)} cards.")
+        return JSONResponse(f"Created {len(insert_result.inserted_ids)} card(s).")
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to create new cards. Error: {e}")
 
