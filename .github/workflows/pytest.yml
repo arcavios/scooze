@@ -16,7 +16,7 @@ jobs:
         with:
           cache: 'pip'
       - name: Install dependencies
-        run: pip install -r pyproject.yaml
+        run: pip install -r pyproject.toml
       - name: Test with pytest
         run: |
           pip install pytest pytest-cov
