@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PYTHON_VERSION: ["3.11", "3.12"]
+        python-version: ["3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          poetry env use ${{ process.env.PYTHON_VERSION }}
+          poetry env use ${{ steps.full-python-version.outputs.version }}
           poetry install --no-interaction
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
