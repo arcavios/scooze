@@ -382,11 +382,11 @@ class CostSymbol(ExtendedEnum, StrEnum):
     HYBRID_RW = "R/W"
     HYBRID_GU = "G/U"
 
-    PHYREXIAN_WHITE = "2/P"
-    PHYREXIAN_BLUE = "2/P"
-    PHYREXIAN_BLACK = "2/P"
-    PHYREXIAN_RED = "2/P"
-    PHYREXIAN_GREEN = "2/P"
+    PHYREXIAN_WHITE = "W/P"
+    PHYREXIAN_BLUE = "U/P"
+    PHYREXIAN_BLACK = "B/P"
+    PHYREXIAN_RED = "R/P"
+    PHYREXIAN_GREEN = "G/P"
     GENERIC_PHYREXIAN = "P"
 
     HYBRID_PHYREXIAN_WU = "W/U/P"
@@ -424,34 +424,108 @@ class CostSymbol(ExtendedEnum, StrEnum):
     GENERIC_Z = "Z"
     TICKET = "TK"
 
+    # region Symbol groupings
+
+    # TODO(214): does having sets here break things for the str enum?
+
+    GENERIC_SYMBOLS = {
+        GENERIC_0,
+        GENERIC_1,
+        GENERIC_2,
+        GENERIC_3,
+        GENERIC_4,
+        GENERIC_5,
+        GENERIC_6,
+        GENERIC_7,
+        GENERIC_8,
+        GENERIC_9,
+        GENERIC_10,
+        GENERIC_11,
+        GENERIC_12,
+        GENERIC_13,
+        GENERIC_14,
+        GENERIC_15,
+        GENERIC_16,
+        GENERIC_17,
+        GENERIC_18,
+        GENERIC_19,
+        GENERIC_20,
+        GENERIC_100,
+        GENERIC_1000000,
+    }
+
+    # endregion
+
     @property
     def generic_amount(self) -> int:
-        if self not in (
-            CostSymbol.GENERIC_1,
-            CostSymbol.GENERIC_2,
-            CostSymbol.GENERIC_3,
-            CostSymbol.GENERIC_4,
-            CostSymbol.GENERIC_5,
-            CostSymbol.GENERIC_6,
-            CostSymbol.GENERIC_7,
-            CostSymbol.GENERIC_8,
-            CostSymbol.GENERIC_9,
-            CostSymbol.GENERIC_10,
-            CostSymbol.GENERIC_11,
-            CostSymbol.GENERIC_12,
-            CostSymbol.GENERIC_13,
-            CostSymbol.GENERIC_14,
-            CostSymbol.GENERIC_15,
-            CostSymbol.GENERIC_16,
-            CostSymbol.GENERIC_17,
-            CostSymbol.GENERIC_18,
-            CostSymbol.GENERIC_19,
-            CostSymbol.GENERIC_20,
-            CostSymbol.GENERIC_100,
-            CostSymbol.GENERIC_1000000,
-        ):
+        if self not in CostSymbol.GENERIC_SYMBOLS:
             return 0
         return int(self)
+
+    @property
+    def is_hybrid(self) -> bool:
+        # TODO(214)
+        return self in {
+            CostSymbol.HYBRID_WU,
+            CostSymbol.HYBRID_UB,
+            CostSymbol.HYBRID_BR,
+            CostSymbol.HYBRID_RG,
+            CostSymbol.HYBRID_GW,
+            CostSymbol.HYBRID_WB,
+            CostSymbol.HYBRID_UR,
+            CostSymbol.HYBRID_BG,
+            CostSymbol.HYBRID_RW,
+            CostSymbol.HYBRID_GU,
+        }
+
+    @property
+    def is_twobrid(self) -> bool:
+        return self in (
+            CostSymbol.TWOBRID_WHITE,
+            CostSymbol.TWOBRID_BLUE,
+            CostSymbol.TWOBRID_BLACK,
+            CostSymbol.TWOBRID_RED,
+            CostSymbol.TWOBRID_GREEN,
+        )
+
+    @property
+    def is_phyrexian(self) -> bool:
+        # TODO(214)
+        pass
+
+    @property
+    def is_generic(self) -> bool:
+        # TODO(214)
+        pass
+
+    @property
+    def is_nonmana(self) -> bool:
+        # TODO(214)
+        pass
+
+    @property
+    def is_half(self) -> bool:
+        # TODO(214)
+        return self in (
+            CostSymbol.GENERIC_HALF,
+            CostSymbol.HALF_WHITE,
+            CostSymbol.HALF_BLUE,
+            CostSymbol.HALF_BLACK,
+            CostSymbol.HALF_RED,
+            CostSymbol.HALF_GREEN,
+        )
+
+    @property
+    def mana_value_contribution(self) -> float:
+        # TODO(214)
+        if self.is_twobrid:
+            return 2
+        if self.is_half:
+            return 0.5
+        if self.is_nonmana:
+            return 0
+
+        return 1
 
 
 # endregion
