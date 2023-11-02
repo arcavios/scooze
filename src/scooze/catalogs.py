@@ -1,5 +1,6 @@
 from enum import Enum, EnumMeta, StrEnum, auto
 from functools import cache
+from typing import List
 
 # region Enum Extensions
 
@@ -426,46 +427,41 @@ class CostSymbol(ExtendedEnum, StrEnum):
 
     # region Symbol groupings
 
-    # TODO(214): does having sets here break things for the str enum?
+    @classmethod
+    @cache
+    def _generic_symbols(cls) -> List["CostSymbol"]:
+        return [
+            CostSymbol.GENERIC_0,
+            CostSymbol.GENERIC_1,
+            CostSymbol.GENERIC_2,
+            CostSymbol.GENERIC_3,
+            CostSymbol.GENERIC_4,
+            CostSymbol.GENERIC_5,
+            CostSymbol.GENERIC_6,
+            CostSymbol.GENERIC_7,
+            CostSymbol.GENERIC_8,
+            CostSymbol.GENERIC_9,
+            CostSymbol.GENERIC_10,
+            CostSymbol.GENERIC_11,
+            CostSymbol.GENERIC_12,
+            CostSymbol.GENERIC_13,
+            CostSymbol.GENERIC_14,
+            CostSymbol.GENERIC_15,
+            CostSymbol.GENERIC_16,
+            CostSymbol.GENERIC_17,
+            CostSymbol.GENERIC_18,
+            CostSymbol.GENERIC_19,
+            CostSymbol.GENERIC_20,
+            CostSymbol.GENERIC_100,
+            CostSymbol.GENERIC_1000000,
+            CostSymbol.GENERIC_HALF,
+        ]
 
-    GENERIC_SYMBOLS = {
-        GENERIC_0,
-        GENERIC_1,
-        GENERIC_2,
-        GENERIC_3,
-        GENERIC_4,
-        GENERIC_5,
-        GENERIC_6,
-        GENERIC_7,
-        GENERIC_8,
-        GENERIC_9,
-        GENERIC_10,
-        GENERIC_11,
-        GENERIC_12,
-        GENERIC_13,
-        GENERIC_14,
-        GENERIC_15,
-        GENERIC_16,
-        GENERIC_17,
-        GENERIC_18,
-        GENERIC_19,
-        GENERIC_20,
-        GENERIC_100,
-        GENERIC_1000000,
-    }
-
-    # endregion
-
-    @property
-    def generic_amount(self) -> int:
-        if self not in CostSymbol.GENERIC_SYMBOLS:
-            return 0
-        return int(self)
-
-    @property
-    def is_hybrid(self) -> bool:
-        # TODO(214)
-        return self in {
+    @classmethod
+    @cache
+    def _hybrid_symbols(cls) -> List["CostSymbol"]:
+        # TODO(214): include phyrexian hybrid?
+        return [
             CostSymbol.HYBRID_WU,
             CostSymbol.HYBRID_UB,
             CostSymbol.HYBRID_BR,
@@ -476,44 +472,105 @@ class CostSymbol(ExtendedEnum, StrEnum):
             CostSymbol.HYBRID_BG,
             CostSymbol.HYBRID_RW,
             CostSymbol.HYBRID_GU,
-        }
+        ]
 
-    @property
-    def is_twobrid(self) -> bool:
-        return self in (
+    @classmethod
+    @cache
+    def _twobrid_symbols(cls) -> List["CostSymbol"]:
+        return [
             CostSymbol.TWOBRID_WHITE,
             CostSymbol.TWOBRID_BLUE,
             CostSymbol.TWOBRID_BLACK,
             CostSymbol.TWOBRID_RED,
             CostSymbol.TWOBRID_GREEN,
-        )
+        ]
 
-    @property
-    def is_phyrexian(self) -> bool:
-        # TODO(214)
-        pass
+    @classmethod
+    @cache
+    def _phyrexian_symbols(cls) -> List["CostSymbol"]:
+        return [
+            CostSymbol.PHYREXIAN_WHITE,
+            CostSymbol.PHYREXIAN_BLUE,
+            CostSymbol.PHYREXIAN_BLACK,
+            CostSymbol.PHYREXIAN_RED,
+            CostSymbol.PHYREXIAN_GREEN,
+            CostSymbol.GENERIC_PHYREXIAN,
+            CostSymbol.HYBRID_PHYREXIAN_WU,
+            CostSymbol.HYBRID_PHYREXIAN_UB,
+            CostSymbol.HYBRID_PHYREXIAN_BR,
+            CostSymbol.HYBRID_PHYREXIAN_RG,
+            CostSymbol.HYBRID_PHYREXIAN_GW,
+            CostSymbol.HYBRID_PHYREXIAN_WB,
+            CostSymbol.HYBRID_PHYREXIAN_UR,
+            CostSymbol.HYBRID_PHYREXIAN_BG,
+            CostSymbol.HYBRID_PHYREXIAN_RW,
+            CostSymbol.HYBRID_PHYREXIAN_GU,
+        ]
 
-    @property
-    def is_generic(self) -> bool:
-        # TODO(214)
-        pass
-
-    @property
-    def is_nonmana(self) -> bool:
-        # TODO(214)
-        pass
-
-    @property
-    def is_half(self) -> bool:
-        # TODO(214)
-        return self in (
+    @classmethod
+    @cache
+    def _un_symbols(cls) -> List["CostSymbol"]:
+        return [
             CostSymbol.GENERIC_HALF,
             CostSymbol.HALF_WHITE,
             CostSymbol.HALF_BLUE,
             CostSymbol.HALF_BLACK,
             CostSymbol.HALF_RED,
             CostSymbol.HALF_GREEN,
-        )
+            CostSymbol.GENERIC_100,
+            CostSymbol.GENERIC_1000000,
+            CostSymbol.GENERIC_INFINITY,
+            CostSymbol.GENERIC_Z,
+            CostSymbol.TICKET,
+        ]
+
+    @classmethod
+    @cache
+    def _half_symbols(cls) -> List["CostSymbol"]:
+        return [
+            CostSymbol.GENERIC_HALF,
+            CostSymbol.HALF_WHITE,
+            CostSymbol.HALF_BLUE,
+            CostSymbol.HALF_BLACK,
+            CostSymbol.HALF_RED,
+            CostSymbol.HALF_GREEN,
+        ]
+
+    @classmethod
+    @cache
+    def _nonmana_symbols(cls) -> List["CostSymbol"]:
+        return [
+            CostSymbol.TAP,
+            CostSymbol.UNTAP,
+            CostSymbol.ENERGY,
+            CostSymbol.TICKET,
+        ]
+
+    # endregion
+
+    @property
+    def is_hybrid(self) -> bool:
+        return self in CostSymbol._hybrid_symbols
+
+    @property
+    def is_twobrid(self) -> bool:
+        return self in CostSymbol._twobrid_symbols
+
+    @property
+    def is_phyrexian(self) -> bool:
+        return self in CostSymbol._phyrexian_symbols
+
+    @property
+    def is_generic(self) -> bool:
+        return self in CostSymbol._generic_symbols
+
+    @property
+    def is_nonmana(self) -> bool:
+        return self in CostSymbol._nonmana_symbols
+
+    @property
+    def is_half(self) -> bool:
+        return self in CostSymbol._half_symbols
 
     @property
     def mana_value_contribution(self) -> float:
@@ -526,6 +583,17 @@ class CostSymbol(ExtendedEnum, StrEnum):
             return 0
 
         return 1
+
+    @property
+    def generic_amount(self) -> float:
+        # TODO(214)
+        if self.is_nonmana:
+            return 0
+        if self is CostSymbol.GENERIC_HALF:
+            return 0.5
+        if self not in CostSymbol._generic_symbols():
+            return 0
+        return int(self)
 
 
 # endregion
