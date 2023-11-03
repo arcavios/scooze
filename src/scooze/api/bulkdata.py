@@ -4,6 +4,7 @@ from pydantic_core import ValidationError
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModelIn
+from pathlib import Path
 
 
 async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
@@ -17,7 +18,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
         bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
     """
 
-    file_path = f"{bulk_file_dir}/{file_type}.json"
+    file_path = Path(bulk_file_dir) / f"{file_type}.json"
     try:
         with open(file_path, "rb") as cards_file:
             print(f"Loading {file_type} file into the database...")

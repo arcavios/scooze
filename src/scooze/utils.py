@@ -4,12 +4,13 @@ import os.path
 from datetime import date, datetime
 from sys import maxsize, stdout
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
+from pathlib import Path
 
 from frozendict import frozendict
 from scooze.catalogs import ExtendedEnum, Format
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk"
-DEFAULT_DECKS_DIR = "./data/decks"
+DEFAULT_BULK_FILE_DIR = Path(".") / "data" / "bulk"
+DEFAULT_DECKS_DIR = Path(".") / "data" / "decks"
 
 ## Generic Types
 T = TypeVar("T")  # generic type
