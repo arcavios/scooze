@@ -9,6 +9,7 @@
 - Add Docker support for starting MongoDB via the CLI ([#200](https://github.com/arcavios/scooze/pull/200))
 - CLI rework to be more robust ([#203](https://github.com/arcavios/scooze/pull/203))
 - Add `cmc` field to top level for reversible cards ([#212](https://github.com/arcavios/scooze/pull/212))
+- Add support for symbols on cards (mana, energy, tap/untap, etc.) ([#214](https://github.com/arcavios/scooze/pull/214))
 
 ### Changed
 
