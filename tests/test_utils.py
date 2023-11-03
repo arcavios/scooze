@@ -10,7 +10,7 @@ from scooze.utils import (
     main_size,
     max_card_quantity,
     max_relentless_quantity,
-    parse_cost,
+    parse_symbols,
     side_size,
 )
 
@@ -95,21 +95,6 @@ def main_size_any() -> tuple[int, int]:
     return 0, maxsize
 
 
-@pytest.fixture
-def mana_cost_one_symbol() -> str:
-    return "{W}"
-
-
-@pytest.fixture
-def mana_cost_multiple_symbols() -> str:
-    return "{W}{B}"
-
-
-@pytest.fixture
-def mana_cost_with_generic() -> str:
-    return "{2}{W}{B}"
-
-
 # endregion
 
 # region Side Size
@@ -158,6 +143,30 @@ def cmdr_size_2() -> tuple[int, int]:
 @pytest.fixture
 def cmdr_size_any() -> tuple[int, int]:
     return 0, maxsize
+
+
+# endregion
+
+
+# region Mana costs
+@pytest.fixture
+def mana_cost_one_symbol() -> str:
+    return "{W}"
+
+
+@pytest.fixture
+def mana_cost_multiple_symbols() -> str:
+    return "{W}{B}"
+
+
+@pytest.fixture
+def mana_cost_with_generic() -> str:
+    return "{2}{W}{B}"
+
+
+@pytest.fixture
+def mana_cost_with_multiple_generic() -> str:
+    return "{2}{1}{W}{B}"
 
 
 # endregion
@@ -760,18 +769,24 @@ def test_fmt_none_cmdr_size(cmdr_size_any):
 # region Mana symbology
 
 
-def test_parse_mana_cost_one_symbol(mana_cost_one_symbol):
-    assert parse_cost(mana_cost_one_symbol) == Counter({CostSymbol.WHITE: 1})
+def test_parse_symbols_one_symbol(mana_cost_one_symbol):
+    assert parse_symbols(mana_cost_one_symbol) == {CostSymbol.WHITE: 1}
 
 
-def test_parse_mana_cost_multiple_symbols(mana_cost_multiple_symbols):
-    assert parse_cost(mana_cost_multiple_symbols) == Counter({CostSymbol.WHITE: 1, CostSymbol.BLACK: 1})
+def test_parse_symbols_multiple_symbols(mana_cost_multiple_symbols):
+    assert parse_symbols(mana_cost_multiple_symbols) == {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1}
 
 
-def test_parse_mana_cost_with_generic(mana_cost_with_generic):
-    assert parse_cost(mana_cost_with_generic) == Counter(
-        {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1, CostSymbol.GENERIC_1: 2}
-    )
+def test_parse_symbols_with_generic(mana_cost_with_generic):
+    assert parse_symbols(mana_cost_with_generic) == {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1, CostSymbol.GENERIC_1: 2}
+
+
+def test_parse_symbols_with_multiple_generic(mana_cost_with_multiple_generic):
+    assert parse_symbols(mana_cost_with_multiple_generic) == {
+        CostSymbol.WHITE: 1,
+        CostSymbol.BLACK: 1,
+        CostSymbol.GENERIC_1: 3,
+    }
 
 
 # endregion

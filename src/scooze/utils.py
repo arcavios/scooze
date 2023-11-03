@@ -2,10 +2,10 @@ import argparse
 import logging
 import os.path
 import re
-from collections import Counter
+from collections import defaultdict
 from datetime import date, datetime
 from sys import maxsize, stdout
-from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
+from typing import Any, Dict, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
 from scooze.catalogs import CostSymbol, ExtendedEnum, Format
@@ -491,14 +491,25 @@ class DictDiff(ComparableObject):
 # region Symbology utils
 
 
-def parse_cost(cost: str) -> Counter[CostSymbol]:
-    costs = Counter()
+def parse_symbols(cost: str) -> Dict[CostSymbol, float]:
+    """
+    Parse a string containing one or more cost symbols, in standard oracle text form (e.g. "{4}{G}").
+
+    Args:
+        cost: String representing a mana cost, or rules text that may have one or more symbols.
+
+    Returns:
+        A mapping of cost symbols to the number of times they appear in that string. Numbered generic symbols are
+        condensed under CostSymbol.GENERIC_1 with the total generic value.
+    """
+    costs = defaultdict(float)
     symbols = [CostSymbol(s) for s in re.findall("{([^}]+)}", cost)]
     for s in symbols:
-        if (g := s.generic_amount) == 0:
-            costs[s] += 1
+        m = s.mana_value_contribution
+        if s.is_generic:
+            costs[CostSymbol.GENERIC_1] += m
         else:
-            costs[CostSymbol.GENERIC_1] += g
+            costs[s] += m
     return costs
 
 
