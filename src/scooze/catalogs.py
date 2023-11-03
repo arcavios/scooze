@@ -1,6 +1,6 @@
 from enum import Enum, EnumMeta, StrEnum, auto
 from functools import cache
-from typing import List
+from typing import FrozenSet
 
 # region Enum Extensions
 
@@ -429,131 +429,147 @@ class CostSymbol(ExtendedEnum, StrEnum):
 
     @classmethod
     @cache
-    def _generic_symbols(cls) -> List["CostSymbol"]:
-        return [
-            CostSymbol.GENERIC_0,
-            CostSymbol.GENERIC_1,
-            CostSymbol.GENERIC_2,
-            CostSymbol.GENERIC_3,
-            CostSymbol.GENERIC_4,
-            CostSymbol.GENERIC_5,
-            CostSymbol.GENERIC_6,
-            CostSymbol.GENERIC_7,
-            CostSymbol.GENERIC_8,
-            CostSymbol.GENERIC_9,
-            CostSymbol.GENERIC_10,
-            CostSymbol.GENERIC_11,
-            CostSymbol.GENERIC_12,
-            CostSymbol.GENERIC_13,
-            CostSymbol.GENERIC_14,
-            CostSymbol.GENERIC_15,
-            CostSymbol.GENERIC_16,
-            CostSymbol.GENERIC_17,
-            CostSymbol.GENERIC_18,
-            CostSymbol.GENERIC_19,
-            CostSymbol.GENERIC_20,
-            CostSymbol.GENERIC_100,
-            CostSymbol.GENERIC_1000000,
-            CostSymbol.GENERIC_HALF,
-        ]
+    def _generic_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_0,
+                CostSymbol.GENERIC_1,
+                CostSymbol.GENERIC_2,
+                CostSymbol.GENERIC_3,
+                CostSymbol.GENERIC_4,
+                CostSymbol.GENERIC_5,
+                CostSymbol.GENERIC_6,
+                CostSymbol.GENERIC_7,
+                CostSymbol.GENERIC_8,
+                CostSymbol.GENERIC_9,
+                CostSymbol.GENERIC_10,
+                CostSymbol.GENERIC_11,
+                CostSymbol.GENERIC_12,
+                CostSymbol.GENERIC_13,
+                CostSymbol.GENERIC_14,
+                CostSymbol.GENERIC_15,
+                CostSymbol.GENERIC_16,
+                CostSymbol.GENERIC_17,
+                CostSymbol.GENERIC_18,
+                CostSymbol.GENERIC_19,
+                CostSymbol.GENERIC_20,
+                CostSymbol.GENERIC_100,
+                CostSymbol.GENERIC_1000000,
+                CostSymbol.GENERIC_HALF,
+            ]
+        )
 
     @classmethod
     @cache
-    def _half_symbols(cls) -> List["CostSymbol"]:
-        return [
-            CostSymbol.GENERIC_HALF,
-            CostSymbol.HALF_WHITE,
-            CostSymbol.HALF_BLUE,
-            CostSymbol.HALF_BLACK,
-            CostSymbol.HALF_RED,
-            CostSymbol.HALF_GREEN,
-        ]
+    def _half_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_HALF,
+                CostSymbol.HALF_WHITE,
+                CostSymbol.HALF_BLUE,
+                CostSymbol.HALF_BLACK,
+                CostSymbol.HALF_RED,
+                CostSymbol.HALF_GREEN,
+            ]
+        )
 
     @classmethod
     @cache
-    def _hybrid_symbols(cls) -> List["CostSymbol"]:
+    def _hybrid_symbols(cls) -> FrozenSet["CostSymbol"]:
         # TODO(214): include phyrexian hybrid?
-        return [
-            CostSymbol.HYBRID_WU,
-            CostSymbol.HYBRID_UB,
-            CostSymbol.HYBRID_BR,
-            CostSymbol.HYBRID_RG,
-            CostSymbol.HYBRID_GW,
-            CostSymbol.HYBRID_WB,
-            CostSymbol.HYBRID_UR,
-            CostSymbol.HYBRID_BG,
-            CostSymbol.HYBRID_RW,
-            CostSymbol.HYBRID_GU,
-        ]
+        return frozenset(
+            [
+                CostSymbol.HYBRID_WU,
+                CostSymbol.HYBRID_UB,
+                CostSymbol.HYBRID_BR,
+                CostSymbol.HYBRID_RG,
+                CostSymbol.HYBRID_GW,
+                CostSymbol.HYBRID_WB,
+                CostSymbol.HYBRID_UR,
+                CostSymbol.HYBRID_BG,
+                CostSymbol.HYBRID_RW,
+                CostSymbol.HYBRID_GU,
+            ]
+        )
 
     @classmethod
     @cache
-    def _phyrexian_symbols(cls) -> List["CostSymbol"]:
-        return [
-            CostSymbol.PHYREXIAN_WHITE,
-            CostSymbol.PHYREXIAN_BLUE,
-            CostSymbol.PHYREXIAN_BLACK,
-            CostSymbol.PHYREXIAN_RED,
-            CostSymbol.PHYREXIAN_GREEN,
-            CostSymbol.GENERIC_PHYREXIAN,
-            CostSymbol.HYBRID_PHYREXIAN_WU,
-            CostSymbol.HYBRID_PHYREXIAN_UB,
-            CostSymbol.HYBRID_PHYREXIAN_BR,
-            CostSymbol.HYBRID_PHYREXIAN_RG,
-            CostSymbol.HYBRID_PHYREXIAN_GW,
-            CostSymbol.HYBRID_PHYREXIAN_WB,
-            CostSymbol.HYBRID_PHYREXIAN_UR,
-            CostSymbol.HYBRID_PHYREXIAN_BG,
-            CostSymbol.HYBRID_PHYREXIAN_RW,
-            CostSymbol.HYBRID_PHYREXIAN_GU,
-        ]
+    def _phyrexian_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.PHYREXIAN_WHITE,
+                CostSymbol.PHYREXIAN_BLUE,
+                CostSymbol.PHYREXIAN_BLACK,
+                CostSymbol.PHYREXIAN_RED,
+                CostSymbol.PHYREXIAN_GREEN,
+                CostSymbol.GENERIC_PHYREXIAN,
+                CostSymbol.HYBRID_PHYREXIAN_WU,
+                CostSymbol.HYBRID_PHYREXIAN_UB,
+                CostSymbol.HYBRID_PHYREXIAN_BR,
+                CostSymbol.HYBRID_PHYREXIAN_RG,
+                CostSymbol.HYBRID_PHYREXIAN_GW,
+                CostSymbol.HYBRID_PHYREXIAN_WB,
+                CostSymbol.HYBRID_PHYREXIAN_UR,
+                CostSymbol.HYBRID_PHYREXIAN_BG,
+                CostSymbol.HYBRID_PHYREXIAN_RW,
+                CostSymbol.HYBRID_PHYREXIAN_GU,
+            ]
+        )
 
     @classmethod
     @cache
-    def _twobrid_symbols(cls) -> List["CostSymbol"]:
-        return [
-            CostSymbol.TWOBRID_WHITE,
-            CostSymbol.TWOBRID_BLUE,
-            CostSymbol.TWOBRID_BLACK,
-            CostSymbol.TWOBRID_RED,
-            CostSymbol.TWOBRID_GREEN,
-        ]
+    def _twobrid_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.TWOBRID_WHITE,
+                CostSymbol.TWOBRID_BLUE,
+                CostSymbol.TWOBRID_BLACK,
+                CostSymbol.TWOBRID_RED,
+                CostSymbol.TWOBRID_GREEN,
+            ]
+        )
 
     @classmethod
     @cache
-    def _variable_symbols(cls) -> List["CostSymbol"]:
-        return [
-            CostSymbol.GENERIC_X,
-            CostSymbol.GENERIC_Y,
-            CostSymbol.GENERIC_Z,
-        ]
+    def _variable_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_X,
+                CostSymbol.GENERIC_Y,
+                CostSymbol.GENERIC_Z,
+            ]
+        )
 
     @classmethod
     @cache
-    def _nonmana_symbols(cls) -> List["CostSymbol"]:
-        return [
-            CostSymbol.TAP,
-            CostSymbol.UNTAP,
-            CostSymbol.ENERGY,
-            CostSymbol.TICKET,
-        ]
+    def _nonmana_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.TAP,
+                CostSymbol.UNTAP,
+                CostSymbol.ENERGY,
+                CostSymbol.TICKET,
+            ]
+        )
 
     @classmethod
     @cache
-    def _un_symbols(cls) -> List["CostSymbol"]:
-        return [
-            CostSymbol.GENERIC_HALF,
-            CostSymbol.HALF_WHITE,
-            CostSymbol.HALF_BLUE,
-            CostSymbol.HALF_BLACK,
-            CostSymbol.HALF_RED,
-            CostSymbol.HALF_GREEN,
-            CostSymbol.GENERIC_100,
-            CostSymbol.GENERIC_1000000,
-            CostSymbol.GENERIC_INFINITY,
-            CostSymbol.GENERIC_Z,
-            CostSymbol.TICKET,
-        ]
+    def _un_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_HALF,
+                CostSymbol.HALF_WHITE,
+                CostSymbol.HALF_BLUE,
+                CostSymbol.HALF_BLACK,
+                CostSymbol.HALF_RED,
+                CostSymbol.HALF_GREEN,
+                CostSymbol.GENERIC_100,
+                CostSymbol.GENERIC_1000000,
+                CostSymbol.GENERIC_INFINITY,
+                CostSymbol.GENERIC_Z,
+                CostSymbol.TICKET,
+            ]
+        )
 
     # endregion
 
