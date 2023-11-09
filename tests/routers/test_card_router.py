@@ -16,7 +16,7 @@ class TestCardRouterWithPopulatedDatabase:
 
         yield
 
-        await CardModel.get_motor_collection().delete_many({})
+        await CardModel.delete_all()
 
     async def test_card_root(self, api_client: AsyncClient):
         response = await api_client.get("/card/")
@@ -106,7 +106,7 @@ class TestCardRouterWithPopulatedDatabase:
 class TestCardRouterWithEmptyDatabase:
     @pytest.fixture(scope="class", autouse=True)
     async def clean_db(self):
-        await CardModel.get_motor_collection().delete_many({})
+        await CardModel.delete_all()
 
     async def test_card_root_no_cards(self, api_client: AsyncClient):
         response = await api_client.get("/card/")
