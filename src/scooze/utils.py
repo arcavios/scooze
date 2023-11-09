@@ -491,7 +491,7 @@ class DictDiff(ComparableObject):
 # region Symbology utils
 
 
-def parse_symbols(cost: str) -> Dict[CostSymbol, float]:
+def parse_symbols(cost: str) -> Dict[CostSymbol, int]:
     """
     Parse a string containing one or more cost symbols, in standard oracle text form (e.g. "{4}{G}").
 
