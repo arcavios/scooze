@@ -9,5 +9,8 @@ __pycache__/
 # Logs
 *.log
 
+# Test coverage
+*.coverage
+
 # PyCharm
 *.idea
