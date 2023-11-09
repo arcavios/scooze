@@ -1,10 +1,9 @@
 import math
-import re
 from collections import Counter
 from copy import deepcopy
 
 import pytest
-from scooze.card import Card, FullCard, OracleCard
+from scooze.card import OracleCard
 from scooze.catalogs import DecklistFormatter, Format, InThe
 from scooze.deck import Deck
 from scooze.deckpart import DeckDiff, DeckPart

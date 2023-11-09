@@ -59,37 +59,37 @@ def diffAB_str() -> str:
 
 @pytest.fixture
 def main_size_40() -> tuple[int, int]:
-    return (40, maxsize)
+    return 40, maxsize
 
 
 @pytest.fixture
 def main_size_58() -> tuple[int, int]:
-    return (58, 58)
+    return 58, 58
 
 
 @pytest.fixture
 def main_size_60() -> tuple[int, int]:
-    return (60, maxsize)
+    return 60, maxsize
 
 
 @pytest.fixture
 def main_size_98() -> tuple[int, int]:
-    return (98, 99)
+    return 98, 99
 
 
 @pytest.fixture
 def main_size_99() -> tuple[int, int]:
-    return (99, 99)
+    return 99, 99
 
 
 @pytest.fixture
 def main_size_100() -> tuple[int, int]:
-    return (100, 100)
+    return 100, 100
 
 
 @pytest.fixture
 def main_size_any() -> tuple[int, int]:
-    return (0, maxsize)
+    return 0, maxsize
 
 
 # endregion
@@ -99,17 +99,17 @@ def main_size_any() -> tuple[int, int]:
 
 @pytest.fixture
 def side_size_0() -> tuple[int, int]:
-    return (0, 0)
+    return 0, 0
 
 
 @pytest.fixture
 def side_size_15() -> tuple[int, int]:
-    return (0, 15)
+    return 0, 15
 
 
 @pytest.fixture
 def side_size_any() -> tuple[int, int]:
-    return (0, maxsize)
+    return 0, maxsize
 
 
 # endregion
@@ -119,27 +119,27 @@ def side_size_any() -> tuple[int, int]:
 
 @pytest.fixture
 def cmdr_size_0() -> tuple[int, int]:
-    return (0, 0)
+    return 0, 0
 
 
 @pytest.fixture
 def cmdr_size_1() -> tuple[int, int]:
-    return (1, 1)
+    return 1, 1
 
 
 @pytest.fixture
 def cmdr_size_1_or_2() -> tuple[int, int]:
-    return (1, 2)
+    return 1, 2
 
 
 @pytest.fixture
 def cmdr_size_2() -> tuple[int, int]:
-    return (2, 2)
+    return 2, 2
 
 
 @pytest.fixture
 def cmdr_size_any() -> tuple[int, int]:
-    return (0, maxsize)
+    return 0, maxsize
 
 
 # endregion

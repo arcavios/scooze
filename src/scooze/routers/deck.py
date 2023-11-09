@@ -73,7 +73,7 @@ async def update_deck(deck_id: str, deck: DeckModelIn):
 # Delete
 
 
-@router.delete("/delete/{deck_id}", summary="Delete an exisiting deck")
+@router.delete("/delete/{deck_id}", summary="Delete an existing deck")
 async def delete_deck_by_id(deck_id: str):
     """
     Delete an existing deck with the given scooze ID.
