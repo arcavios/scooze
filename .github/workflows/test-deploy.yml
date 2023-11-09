@@ -1,12 +1,11 @@
-name: Deploy to test.pypi.org
+name: Deploy to PyPi
 
 # https://github.com/marketplace/actions/publish-python-poetry-package
-# TODO: this is a test
 
-on: [push]
-  # push:
-  #   tags:
-  #     - "v*.*.*"
+on:
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -17,6 +16,4 @@ jobs:
         uses: JRubics/poetry-publish@v1.17
         with:
           python_version: 3.11
-          pypi_token: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_name: "test.pypi"
-          repository_url: "https://test.pypi.org/legacy/"
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
