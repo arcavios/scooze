@@ -778,14 +778,15 @@ def test_parse_symbols_multiple_symbols(mana_cost_multiple_symbols):
 
 
 def test_parse_symbols_with_generic(mana_cost_with_generic):
-    assert parse_symbols(mana_cost_with_generic) == {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1, CostSymbol.GENERIC_1: 2}
+    assert parse_symbols(mana_cost_with_generic) == {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1, CostSymbol.GENERIC_2: 1}
 
 
 def test_parse_symbols_with_multiple_generic(mana_cost_with_multiple_generic):
     assert parse_symbols(mana_cost_with_multiple_generic) == {
         CostSymbol.WHITE: 1,
         CostSymbol.BLACK: 1,
-        CostSymbol.GENERIC_1: 3,
+        CostSymbol.GENERIC_1: 1,
+        CostSymbol.GENERIC_2: 1,
     }
 
 
