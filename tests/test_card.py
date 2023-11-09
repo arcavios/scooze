@@ -83,6 +83,9 @@ def test_fullcard_ne():
 
 # region Hash
 
+# FIXME
+def test_that_fails_lol():
+    assert False is True
 
 def test_card_hash(json_anaconda_7ed_foil, json_anaconda_portal):
     a7 = Card.from_json(json_anaconda_7ed_foil)
