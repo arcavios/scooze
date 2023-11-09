@@ -8,6 +8,7 @@
 - Added AsyncScoozeApi as a way to use API endpoints in an async context (fixes Jupyter compatability) ([#199](https://github.com/arcavios/scooze/pull/199))
 - Add Docker support for starting MongoDB via the CLI ([#200](https://github.com/arcavios/scooze/pull/200))
 - CLI rework to be more robust ([#203](https://github.com/arcavios/scooze/pull/203))
+- Github Actions to test on push and deploy on tag ([#211](https://github.com/arcavios/scooze/pull/211))
 
 ### Changed
 
