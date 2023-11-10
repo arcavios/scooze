@@ -69,7 +69,7 @@ def test_add_card_bad(mock_add: MagicMock, client: TestClient, omnath: CardModel
 @patch("scooze.database.card.get_card_by_property")
 def test_get_card_by_id(mock_get: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_get.return_value: CardModelOut = omnath
-    response = client.get(f"/card/id/{str(omnath.id)}")
+    response = client.get(f"/card/id/{str(omnath.scooze_id)}")
     assert response.status_code == 200
     response_json = response.json()
     for k, v in omnath.model_dump(mode="json").items():
@@ -118,7 +118,7 @@ def test_update_card(mock_update: MagicMock, client: TestClient, omnath: CardMod
     omnath_dump.update(update_data)
     new_omnath = CardModelOut.model_validate(omnath_dump)
     mock_update.return_value: CardModelOut = new_omnath
-    response = client.patch(f"/card/update/{omnath.id}", json={"card": update_data})
+    response = client.patch(f"/card/update/{omnath.scooze_id}", json={"card": update_data})
     assert response.status_code == 200
     response_json = response.json()
     for k, v in new_omnath.model_dump(mode="json").items():
@@ -144,9 +144,9 @@ def test_update_card_bad_id(mock_update: MagicMock, client: TestClient):
 @patch("scooze.database.card.delete_card")
 def test_delete_card(mock_update: MagicMock, client: TestClient, omnath: CardModelOut):
     mock_update.return_value: CardModelOut = omnath
-    response = client.delete(f"/card/delete/{omnath.id}")
+    response = client.delete(f"/card/delete/{omnath.scooze_id}")
     assert response.status_code == 200
-    assert response.json()["message"] == f"Card with id {omnath.id} deleted."
+    assert response.json()["message"] == f"Card with id {omnath.scooze_id} deleted."
 
 
 @pytest.mark.router_card

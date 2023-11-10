@@ -2,8 +2,10 @@ from typing import Any
 
 from bson import ObjectId
 from pymongo import ReturnDocument
+from pymongo.results import DeleteResult
 from scooze.catalogs import DbCollection
 from scooze.database.mongo import db
+from scooze.models.utils import _to_lower_camel
 
 # region Single document
 
@@ -21,7 +23,7 @@ async def insert_document(coll_type: DbCollection, document: dict[str, Any]):
     """
 
     # Here we find and update with upsert=True instead of inserting to avoid creating duplicates in the database. This
-    # creates less headaches if you doubleclick in the Swagger UI or similar.
+    # creates fewer headaches if you doubleclick in the Swagger UI or similar.
     return await db.client.scooze[coll_type].find_one_and_update(
         document,
         {"$setOnInsert": document},
@@ -43,8 +45,14 @@ async def get_document_by_property(coll_type: DbCollection, property_name: str, 
         The first matching document, or None if none were found.
     """
 
-    if property_name == "_id":
-        value = ObjectId(value)
+    # Alias scooze_id to _id
+    match property_name:
+        case "_id" | "scooze_id":
+            property_name = "_id"
+            value = ObjectId(value)
+        case _:
+            property_name = _to_lower_camel(property_name)
+
     return await db.client.scooze[coll_type].find_one({property_name: value})
 
 
@@ -150,6 +158,7 @@ async def get_documents_by_property(
     Search the database for documents matching the given criteria, with options for pagination.
 
     Args:
+        coll_type: The collection to read from.
         property_name: The property to check.
         values: A list of values to match on.
         paginated: Whether to paginate the results.
@@ -160,10 +169,13 @@ async def get_documents_by_property(
         A list of matching documents, or None if none were found.
     """
 
+    # Alias scooze_id to _id
     match property_name:
-        case "_id":
+        case "_id" | "scooze_id":
+            property_name = "_id"
             vals = [ObjectId(i) for i in values]  # Handle ObjectIds
         case _:
+            property_name = _to_lower_camel(property_name)
             vals = values
 
     return (
@@ -174,7 +186,22 @@ async def get_documents_by_property(
     )
 
 
-async def delete_documents(coll_type: DbCollection):
+async def delete_documents_by_id(coll_type: DbCollection, ids: list[ObjectId]) -> DeleteResult:
+    """
+    Deletes multiple documents from the database with the given IDs.
+
+    Args:
+        coll_type: The collection to delete from.
+        ids: The IDs of the documents to delete.
+
+    Returns:
+        A PyMongo DeleteResult.
+    """
+
+    return await db.client.scooze[coll_type].delete_many({"_id": {"$in": ids}})
+
+
+async def delete_documents(coll_type: DbCollection) -> DeleteResult:
     """
     Delete all documents in a single collection from the database.
 

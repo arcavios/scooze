@@ -62,7 +62,7 @@ def test_add_cards(
     mock_add: MagicMock, client: TestClient, omnath: CardModelOut, chalice: CardModelOut, boseiju: CardModelOut
 ):
     cards_to_add = [omnath, chalice, boseiju]
-    mock_add.return_value: list[str] = [str(card.id) for card in cards_to_add]
+    mock_add.return_value: list[str] = [str(card.scooze_id) for card in cards_to_add]
     response = client.post("/cards/add", json=[card.model_dump(mode="json", by_alias=True) for card in cards_to_add])
     assert response.status_code == 200
     assert response.json()["message"] == f"Created {len(cards_to_add)} card(s)."
@@ -96,7 +96,7 @@ def test_get_cards_by_cmc(mock_get: MagicMock, client: TestClient, chalice: Card
 
 @pytest.mark.router_cards
 @patch("scooze.database.card.get_cards_by_property")
-def test_get_carsd_by_cmc_none_found(mock_get: MagicMock, client: TestClient):
+def test_get_cards_by_cmc_none_found(mock_get: MagicMock, client: TestClient):
     mock_get.return_value = None
     response = client.post("/cards/by?property_name=cmc", json=[100.0])
     assert response.status_code == 404

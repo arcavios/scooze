@@ -3,7 +3,6 @@ from unittest.mock import MagicMock, patch
 import pytest
 import scooze.api.bulkdata as bulk_api
 from bson import ObjectId
-from scooze.card import FullCard
 from scooze.catalogs import ScryfallBulkFile
 
 

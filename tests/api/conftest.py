@@ -1,6 +1,7 @@
 import asyncio
 
 import pytest
+from bson import ObjectId
 from scooze.card import Card, FullCard, OracleCard
 
 
@@ -15,32 +16,44 @@ def asyncio_runner():
 
 @pytest.fixture(scope="module")
 def recall_base(json_ancestral_recall) -> Card:
-    return Card.from_json(json_ancestral_recall)
+    card = Card.from_json(json_ancestral_recall)
+    card.scooze_id = ObjectId()
+    return card
 
 
 @pytest.fixture(scope="module")
 def recall_oracle(json_ancestral_recall) -> OracleCard:
-    return OracleCard.from_json(json_ancestral_recall)
+    card = OracleCard.from_json(json_ancestral_recall)
+    card.scooze_id = ObjectId()
+    return card
 
 
 @pytest.fixture(scope="module")
 def recall_full(json_ancestral_recall) -> FullCard:
-    return FullCard.from_json(json_ancestral_recall)
+    card = FullCard.from_json(json_ancestral_recall)
+    card.scooze_id = ObjectId()
+    return card
 
 
 @pytest.fixture(scope="module")
 def mystic_snake_base(json_mystic_snake) -> Card:
-    return Card.from_json(json_mystic_snake)
+    card = Card.from_json(json_mystic_snake)
+    card.scooze_id = ObjectId()
+    return card
 
 
 @pytest.fixture(scope="module")
 def mystic_snake_oracle(json_mystic_snake) -> OracleCard:
-    return OracleCard.from_json(json_mystic_snake)
+    card = OracleCard.from_json(json_mystic_snake)
+    card.scooze_id = ObjectId()
+    return card
 
 
 @pytest.fixture(scope="module")
 def mystic_snake_full(json_mystic_snake) -> FullCard:
-    return FullCard.from_json(json_mystic_snake)
+    card = FullCard.from_json(json_mystic_snake)
+    card.scooze_id = ObjectId()
+    return card
 
 
 @pytest.fixture(scope="module")

@@ -31,21 +31,33 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     pip install scooze
     ```
 
-2. Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
+2. Set up the database
+    - Using Docker:
 
-    Scooze depends on MongoDB to run your local database.
+        *Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is running.*
 
-    *You can use scooze without MongoDB if you don't intend to use any of its database-related features.*
+         ```
+         scooze setup docker
+         ```
+         * This will pull the latest MongoDB issued image for your machine's distribution, and spin up the container with port 27017 bound to the host's port 27017.
+         * After this, you can continue to (3) below.
 
-3. Run the MongoDB server.
+    - Running MongoDB locally:
 
-    ```
-    mongod --dbpath path/to/db/
-    ```
+         Scooze depends on MongoDB to run your local database.
+         Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
 
-    *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
+         *You can use scooze without MongoDB if you don't intend to use any of its database-related features.*
 
-4. Run the scooze CLI tool (installed with pip install) to add some data to your local database.
+         *Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`*
+
+         Run the MongoDB server with
+
+         ```
+         mongod --dbpath path/to/db/
+         ```
+
+3. Run the scooze CLI tool (installed with pip install) to add some data to your local database.
 
     ```
     scooze -h
@@ -53,7 +65,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     scooze run
     ```
 
-5. Use scooze in your application code!
+4. Use scooze in your application code!
 
     ```
     from scooze.api import ScoozeApi

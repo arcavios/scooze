@@ -614,7 +614,7 @@ class CardModelIn(FullCardModel):
 
 
 class CardModelOut(FullCardModel):
-    id: ObjectIdT = Field(
+    scooze_id: ObjectIdT = Field(
         default=None,
         alias="_id",
     )

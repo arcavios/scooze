@@ -1,9 +1,7 @@
 from datetime import datetime
-from unittest.mock import MagicMock, patch
 
 import pytest
 from bson import ObjectId
-from fastapi.testclient import TestClient
 from mongomock import Collection, MongoClient
 from scooze.card import OracleCard
 from scooze.catalogs import DbCollection
