@@ -58,7 +58,7 @@ async def api_client():
             yield ac
             # Done testing, clean test db
             for model in [CardModel]:
-                await model.get_motor_collection().delete_many({})
+                await model.delete_all()
 
 
 # Old client

@@ -52,10 +52,11 @@ scooze = "scooze.console.cli:run_cli"
 
 [tool.pytest.ini_options]
 # addopts = "-m 'not slow'"
-addopts = "-W ignore::DeprecationWarning"
+addopts = "-W ignore::DeprecationWarning -m 'not context'"
 asyncio_mode = "auto"
 markers = [
     "slow: expected to be slow",
+    "context: related to managed context",
     "card_quantity: related to card max quantity allowed per format",
     "dict_diff: related to DictDiff in utils",
     "deck_diff: related to Deck.diff()",
