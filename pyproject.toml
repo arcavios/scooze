@@ -26,7 +26,7 @@ src_paths = ["scooze", "tests"]
 "Bug Tracker" = "https://github.com/arcavios/scooze/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.11, <4"
+python = ">=3.11, <3.12"
 fastapi = ">=0.100.0, <1.0.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 motor = "^3.2.0"
