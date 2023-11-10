@@ -47,7 +47,7 @@ def event_loop():
     loop.close()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session")
 async def api_client():
     """API client fixture."""
 
