@@ -71,17 +71,17 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
     from scooze.api import ScoozeApi
     from scooze.catalogs import Color
 
-    with ScoozeApi() as s:
+    with ScoozeApi() as api:
       # get 10 arbitrary green cards
-      green_cards = s.get_cards_by("colors", [Color.GREEN], paginated=True, page_size=10)
+      green_cards = api.get_cards_by("colors", [Color.GREEN], paginated=True, page_size=10)
       # get _all_ green cards
-      green_cards = s.get_cards_by("colors", [Color.GREEN])
+      green_cards = api.get_cards_by("colors", [Color.GREEN])
 
       # get all cards from a particular set
-      woe_cards = s.get_cards_by_set("woe")
+      woe_cards = api.get_cards_by_set("woe")
 
       # get a specific card
-      black_lotus = s.get_card_by_name("Black Lotus")
+      black_lotus = api.get_card_by_name("Black Lotus")
       print(black_lotus.total_words())
 
       # and more!

@@ -17,10 +17,10 @@ class ScoozeApi(AbstractContextManager):
     Context manager object for doing I/O from a Mongo database.
 
     Sample usage:
-        >>> with ScoozeApi() as s:
-                green_cards = s.get_cards_by("colors", [Color.GREEN])
-                woe_cards = s.get_cards_by_set("woe")
-                black_lotus = s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
+        >>> with ScoozeApi() as api:
+                green_cards = api.get_cards_by("colors", [Color.GREEN])
+                woe_cards = api.get_cards_by_set("woe")
+                black_lotus = api.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
                 print(black_lotus.total_words())
     """
 
@@ -328,10 +328,10 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     web applications.
 
     Sample usage:
-        >>> async with AsyncScoozeApi() as s:
-                green_cards = await s.get_cards_by("colors", [Color.GREEN])
-                woe_cards = await s.get_cards_by_set("woe")
-                black_lotus = await s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
+        >>> async with AsyncScoozeApi() as api:
+                green_cards = await api.get_cards_by("colors", [Color.GREEN])
+                woe_cards = await api.get_cards_by_set("woe")
+                black_lotus = await api.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
                 print(black_lotus.total_words())
     """
 

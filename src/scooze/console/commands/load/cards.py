@@ -42,8 +42,8 @@ class LoadCardsCommand(Command):
         if len(to_load) == 0 and not load_test:
             self.line("No files were selected to load.")
 
-        with ScoozeApi() as s:
+        with ScoozeApi() as api:
             for bulk_file in to_load:
-                s.load_card_file(bulk_file, self.option("bulk-data-dir"))
+                api.load_card_file(bulk_file, self.option("bulk-data-dir"))
             if load_test:
-                s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
+                api.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
