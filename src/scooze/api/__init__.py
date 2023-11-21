@@ -32,14 +32,15 @@ class ScoozeApi(AbstractContextManager):
 
     def __enter__(self):
         self.safe_context = True
-        self.runner = asyncio.Runner()
-        self.runner.run(mongo_connect())
-        self.runner.run(init_beanie(database=db.client[CONFIG.mongo_db], document_models=[CardModel]))
+        asyncio.get_event_loop().run_until_complete(mongo_connect())
+        asyncio.get_event_loop().run_until_complete(
+            init_beanie(database=db.client[CONFIG.mongo_db], document_models=[CardModel])
+        )
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.runner.run(mongo_close())
+        asyncio.get_event_loop().run_until_complete(mongo_close())
 
     # region Card endpoints
 
@@ -60,7 +61,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(
+        return asyncio.get_event_loop().run_until_complete(
             card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
         )
 
@@ -92,7 +93,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(
+        return asyncio.get_event_loop().run_until_complete(
             card_api.get_cards_by(
                 property_name=property_name,
                 values=values,
@@ -121,7 +122,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(
+        return asyncio.get_event_loop().run_until_complete(
             card_api.get_card_by(
                 property_name="name",
                 value=name,
@@ -145,7 +146,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(
+        return asyncio.get_event_loop().run_until_complete(
             card_api.get_card_by(
                 property_name="oracle_id",
                 value=oracle_id,
@@ -169,7 +170,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(
+        return asyncio.get_event_loop().run_until_complete(
             card_api.get_card_by(
                 property_name="scryfall_id",
                 value=scryfall_id,
@@ -198,7 +199,7 @@ class ScoozeApi(AbstractContextManager):
              RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(
+        return asyncio.get_event_loop().run_until_complete(
             card_api.get_cards_by(
                 property_name="set",
                 values=[set_code],
@@ -218,7 +219,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(card_api.get_cards_all(self.card_class))
+        return asyncio.get_event_loop().run_until_complete(card_api.get_cards_all(self.card_class))
 
     # TODO(#146): add function get_cards_by_format (format, legality)
 
@@ -239,7 +240,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(card_api.add_card(card=card))
+        return asyncio.get_event_loop().run_until_complete(card_api.add_card(card=card))
 
     @_check_for_safe_context
     def add_cards(self, cards: list[CardT]) -> list[PydanticObjectId]:
@@ -256,7 +257,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(card_api.add_cards(cards=cards))
+        return asyncio.get_event_loop().run_until_complete(card_api.add_cards(cards=cards))
 
     @_check_for_safe_context
     def delete_card(self, id: str) -> bool:
@@ -273,7 +274,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(card_api.delete_card(id=id))
+        return asyncio.get_event_loop().run_until_complete(card_api.delete_card(id=id))
 
     @_check_for_safe_context
     def delete_cards_all(self) -> int:
@@ -287,7 +288,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(card_api.delete_cards_all())
+        return asyncio.get_event_loop().run_until_complete(card_api.delete_cards_all())
 
     # endregion
 
@@ -314,7 +315,7 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return self.runner.run(
+        return asyncio.get_event_loop().run_until_complete(
             bulkdata_api.load_card_file(
                 file_type=file_type,
                 bulk_file_dir=bulk_file_dir,
