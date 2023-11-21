@@ -1,10 +1,10 @@
 from typing import Any
 
 from beanie import PydanticObjectId
-from pydantic.alias_generators import to_camel
 from scooze.card import CardT, FullCard
 from scooze.errors import BulkAddError
 from scooze.models.card import CardModel, CardModelData
+from scooze.utils import to_lower_camel
 
 
 async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> CardT:
@@ -25,7 +25,7 @@ async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -
             prop_name = "_id"
             val = PydanticObjectId(value)  # Normalize Mongo id
         case _:
-            prop_name = to_camel(property_name)
+            prop_name = to_lower_camel(property_name)
             val = value
 
     card_model = await CardModel.find_one({prop_name: val})
@@ -64,7 +64,7 @@ async def get_cards_by(
             prop_name = "_id"
             vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo ids
         case _:
-            prop_name = to_camel(property_name)
+            prop_name = to_lower_camel(property_name)
             vals = values
 
     skip = (page - 1) * page_size if paginated else 0

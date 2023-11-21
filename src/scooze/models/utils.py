@@ -4,10 +4,9 @@ from typing import Annotated, Any, TypeAlias
 from beanie import Document, PydanticObjectId
 from bson import ObjectId as BsonObjectId
 from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
-from pydantic.alias_generators import to_camel
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
-from scooze.utils import DATE_FORMAT
+from scooze.utils import DATE_FORMAT, to_lower_camel
 
 # region Private Utility Functions
 
@@ -31,7 +30,7 @@ class ScoozeDocument(Document):
     )
 
     model_config = ConfigDict(
-        alias_generator=to_camel,
+        alias_generator=to_lower_camel,
         arbitrary_types_allowed=True,
         populate_by_name=True,
     )
@@ -43,7 +42,7 @@ class ScoozeBaseModel(BaseModel, validate_assignment=True):
     """
 
     model_config = ConfigDict(
-        alias_generator=to_camel,
+        alias_generator=to_lower_camel,
         arbitrary_types_allowed=True,
         populate_by_name=True,
     )

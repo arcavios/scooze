@@ -3,8 +3,8 @@ from typing import Any
 from beanie import PydanticObjectId
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
-from pydantic.alias_generators import to_camel
 from scooze.models.card import CardModel, CardModelData
+from scooze.utils import to_lower_camel
 
 router = APIRouter(
     prefix="/cards",
@@ -95,7 +95,7 @@ async def get_cards_by(
             prop_name = "_id"
             vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo ids
         case _:
-            prop_name = to_camel(property_name)
+            prop_name = to_lower_camel(property_name)
             vals = values
 
     skip = (page - 1) * page_size if paginated else 0

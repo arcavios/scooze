@@ -6,6 +6,7 @@ from sys import maxsize, stdout
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
+from pydantic.alias_generators import to_camel
 from scooze.catalogs import ExtendedEnum, Format
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
@@ -21,6 +22,13 @@ FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize t
 
 ## String formatting
 DATE_FORMAT = "%Y-%m-%d"
+
+
+def to_lower_camel(string: str) -> str:
+    if len(string.split("_")) == 1:
+        return string
+
+    return to_camel(string)
 
 
 def get_logger(
