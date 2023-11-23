@@ -175,6 +175,7 @@ class CardModelData(ScoozeBaseModel):
         default=None,
         description="Scryfall's unique ID for this card.",
         validation_alias="id",
+        alias_priority=1,
     )
     lang: Language | None = Field(
         default=None,

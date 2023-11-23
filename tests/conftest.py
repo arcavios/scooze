@@ -47,18 +47,22 @@ def event_loop():
     loop.close()
 
 
-@pytest.fixture(scope="session")
-async def api_client():
+@pytest.fixture(scope="session", autouse=True)
+async def api_client(request: pytest.FixtureRequest):
     """API client fixture."""
 
-    async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
-        server_name = "https://localhost"
-        async with AsyncClient(app=app, base_url=server_name) as ac:
-            # Yield client to tests
-            yield ac
-            # Done testing, clean test db
-            for model in [CardModel]:
-                await model.delete_all()
+    if request.config.getoption("-m") != "not context":
+        # NOTE: Testing context manager, don't need API client
+        yield
+    else:
+        async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
+            server_name = "https://localhost"
+            async with AsyncClient(app=app, base_url=server_name) as ac:
+                # Yield client to tests
+                yield ac
+                # Done testing, clean test db
+                for model in [CardModel]:
+                    await model.delete_all()
 
 
 # Old client

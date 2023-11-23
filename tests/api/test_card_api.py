@@ -21,25 +21,19 @@ class TestCardApiWithPopulatedDatabase:
         await CardModel.delete_all()
 
     async def test_get_base_card(self, recall_base: Card):
-        card_data = CardModelData.model_validate(recall_base.__dict__)
-        card_model = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
-        result: Card = await card_api.get_card_by(property_name="name", value=card_model.name, card_class=Card)
+        result: Card = await card_api.get_card_by(property_name="name", value=recall_base.name, card_class=Card)
         recall_base.scooze_id = result.scooze_id  # recall_base doesn't start with a Scooze ID
         assert result == recall_base
 
     async def test_get_oracle_card(self, recall_oracle: OracleCard):
-        card_data = CardModelData.model_validate(recall_oracle.__dict__)
-        card_model = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
         result: OracleCard = await card_api.get_card_by(
-            property_name="name", value=card_model.name, card_class=OracleCard
+            property_name="name", value=recall_oracle.name, card_class=OracleCard
         )
         recall_oracle.scooze_id = result.scooze_id  # recall_oracle doesn't start with a Scooze ID
         assert result == recall_oracle
 
     async def test_get_full_card(self, recall_full: FullCard):
-        card_data = CardModelData.model_validate(recall_full.__dict__)
-        card_model = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
-        result: FullCard = await card_api.get_card_by(property_name="name", value=card_model.name, card_class=FullCard)
+        result: FullCard = await card_api.get_card_by(property_name="name", value=recall_full.name, card_class=FullCard)
         recall_full.scooze_id = result.scooze_id  # recall_full doesn't start with a Scooze ID
         assert result == recall_full
 
@@ -102,7 +96,7 @@ class TestCardApiDeletions:
             if num_cards >= 10:
                 break
             card_data = CardModelData.model_validate_json(card_json)
-            card = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+            card = CardModel.model_validate(card_data.model_dump(mode="json"))
             await card.create()
             num_cards += 1
 
