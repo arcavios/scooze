@@ -698,6 +698,20 @@ packaging = "*"
 sentinels = "*"
 
 [[package]]
+name = "mongomock-motor"
+version = "0.0.25"
+description = "Library for mocking AsyncIOMotorClient built on top of mongomock."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "mongomock_motor-0.0.25-py3-none-any.whl", hash = "sha256:76f244a5ed9f3bbd5375c64141588b3ac8fe0a3547662ae1e261dad611fe929a"},
+    {file = "mongomock_motor-0.0.25.tar.gz", hash = "sha256:8202ec8071984494d04f412d0e1f9ef87c3a066e10ed2ad4e8d71073b6950adf"},
+]
+
+[package.dependencies]
+mongomock = ">=3.23.0,<5.0.0"
+
+[[package]]
 name = "motor"
 version = "3.3.2"
 description = "Non-blocking MongoDB driver for Tornado or asyncio"
@@ -1650,4 +1664,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11, <4"
-content-hash = "a2283b3b7cdfb6b60db3464323e7ed2af412bbe4a37acc0eae694a44ae34dbf6"
+content-hash = "052b253e3800ae9559d6022e768dcb9e6e71b27342d11c35c608f2799d0f89ec"

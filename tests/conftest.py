@@ -2,6 +2,7 @@ import asyncio
 import json
 from collections import Counter
 from datetime import date, datetime, timezone
+from unittest.mock import patch
 
 import pytest
 from asgi_lifespan import LifespanManager
@@ -14,6 +15,7 @@ from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.models.card import CardModel, CardModelData
 from scooze.mongo import db
+from mongomock_motor import AsyncMongoMockClient
 
 # Override config for testing
 CONFIG.testing = True
@@ -27,6 +29,19 @@ from scooze.main import app
 
 
 # region Database
+
+
+class MongoMockHelper:
+    async def mock_connect(self):
+        db.client = AsyncMongoMockClient(CONFIG.mongo_dsn)
+
+    async def mock_close(self):
+        db.client.close()
+
+
+@pytest.fixture(scope="session")
+def mongo_helper():
+    return MongoMockHelper()
 
 
 @pytest.fixture(scope="session")
@@ -48,21 +63,26 @@ def event_loop():
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def api_client(request: pytest.FixtureRequest):
+async def api_client(request: pytest.FixtureRequest, mongo_helper: MongoMockHelper):
     """API client fixture."""
 
     if request.config.getoption("-m") != "not context":
         # NOTE: Testing context manager, don't need API client
         yield
     else:
-        async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
-            server_name = "https://localhost"
-            async with AsyncClient(app=app, base_url=server_name) as ac:
-                # Yield client to tests
-                yield ac
-                # Done testing, clean test db
-                for model in [CardModel]:
-                    await model.delete_all()
+        with patch("scooze.main.mongo_connect") as mock_connect:
+            with patch("scooze.main.mongo_close") as mock_close:
+                mock_connect.side_effect = mongo_helper.mock_connect
+                mock_close.side_effect = mongo_helper.mock_close
+
+                async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
+                    server_name = "https://localhost"
+                    async with AsyncClient(app=app, base_url=server_name) as ac:
+                        # Yield client to tests
+                        yield ac
+                        # Done testing, clean test db
+                        for model in [CardModel]:
+                            await model.delete_all()
 
 
 # Old client

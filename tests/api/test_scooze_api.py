@@ -7,14 +7,14 @@ from scooze.card import Card
 from scooze.catalogs import Color
 from scooze.config import CONFIG
 from scooze.models.card import CardModel, CardModelData
-from scooze.mongo import db, mongo_close, mongo_connect
+from scooze.mongo import db
 
 
 @pytest.mark.context
 class TestScoozeApiWithPopulatedDatabase:
     @pytest.fixture(scope="class", autouse=True)
-    async def populate_db(self, cards_json):
-        await mongo_connect()
+    async def populate_db(self, cards_json, mongo_helper):
+        await mongo_helper.mock_connect()
         await init_beanie(database=db.client[CONFIG.mongo_db], document_models=[CardModel])
 
         for card_json in cards_json:
@@ -25,7 +25,7 @@ class TestScoozeApiWithPopulatedDatabase:
         yield
 
         await CardModel.delete_all()
-        await mongo_close()
+        await mongo_helper.mock_close()
 
     @patch("scooze.api.mongo_connect")
     @patch("scooze.api.mongo_close")
