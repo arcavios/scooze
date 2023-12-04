@@ -625,7 +625,7 @@ class CardNormalizer(CardPartsNormalizer):
         Normalize ID from JSON.
 
         Args:
-          id_like: An PydanticObjectId or an ID string.
+          id_like: A PydanticObjectId or an ID string.
 
         Returns:
           A PydanticObjectId.

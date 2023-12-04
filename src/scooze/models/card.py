@@ -155,7 +155,7 @@ class CardModelData(ScoozeBaseModel):
           print's full set.
         set_type: An overall categorization for each set, provided by Scryfall.
         set_uri: Link to the set object for this print in Scryfall's API.
-        set: Set code of the set this print belongs to.
+        set_code: Set code of the set this print belongs to.
         set_id: UUID of the set this print belongs to.
         story_spotlight: Whether this print is a Story Spotlight.
         textless: Whether this print is textless.

@@ -29,7 +29,7 @@ def _validate_card_id(card_id: str) -> PydanticObjectId:
     try:
         return PydanticObjectId(card_id)
     except InvalidId:
-        raise HTTPException(status_code=422, detail="Must give a valid id.")
+        raise HTTPException(status_code=422, detail="Must give a valid ID.")
 
 
 @router.get("/", summary="Get a card at random")
@@ -94,13 +94,13 @@ async def get_card_by_id(card_id: PydanticObjectId = Depends(_validate_card_id))
 
     Raises:
         HTTPException: 404 - Card wasn't found.
-        HTTPException: 422 - Bad id given.
+        HTTPException: 422 - Bad ID given.
     """
 
     card = await CardModel.get(card_id)
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found.")
+        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found.")
 
     return card
 
@@ -151,14 +151,14 @@ async def update_card(card_req: CardModel, card_id: PydanticObjectId = Depends(_
     Raises:
         HTTPException: 404 - Card wasn't found, pre-update.
         HTTPException: 404 - Card wasn't found, post-update.
-        HTTPException: 422 - Bad id given.
+        HTTPException: 422 - Bad ID given.
     """
 
     field_updates = {k: v for k, v in card_req.dict().items() if v is not None}
     card = await CardModel.get(card_id)
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found.")
+        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found.")
 
     # NOTE: This could be slightly less verbose by chaining a la CardModel.get().update() but
     # the typing gets weird from things on Beanie's end so I broke it up like this
@@ -166,7 +166,7 @@ async def update_card(card_req: CardModel, card_id: PydanticObjectId = Depends(_
     updated_card = await CardModel.get(card_id)
 
     if updated_card is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found post-update.")
+        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found post-update.")
 
     return updated_card
 
@@ -188,17 +188,17 @@ async def delete_card_by_id(card_id: PydanticObjectId = Depends(_validate_card_i
     Raises:
         HTTPException: 400 - Card wasn't deleted.
         HTTPException: 404 - Card wasn't found.
-        HTTPException: 422 - Bad id given.
+        HTTPException: 422 - Bad ID given.
     """
 
     card_to_delete = await CardModel.get(card_id)
 
     if card_to_delete is None:
-        raise HTTPException(status_code=404, detail=f"Card with id {card_id} not found.")
+        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found.")
 
     delete_result = await card_to_delete.delete()
 
     if delete_result is None:
-        raise HTTPException(status_code=400, detail=f"Card with id {card_id} not deleted.")
+        raise HTTPException(status_code=400, detail=f"Card with ID {card_id} not deleted.")
 
-    return JSONResponse(f"Card with id {card_id} deleted.")
+    return JSONResponse(f"Card with ID {card_id} deleted.")

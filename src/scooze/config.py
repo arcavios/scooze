@@ -10,7 +10,7 @@ class Version(NamedTuple):
 
 
 class ScoozeSettings(BaseSettings):
-    version: Version = (1, 0, 4)
+    version: Version = (1, 0, 5)
     mongo_dsn: str = "mongodb://127.0.0.1:27017"
     mongo_db: str = "scooze"
 

@@ -36,13 +36,13 @@ class TestCardRouterWithPopulatedDatabase:
     async def test_get_card_bad_id(self, api_client: AsyncClient):
         response = await api_client.get("/card/id/blarghl")
         assert response.status_code == 422
-        assert response.json()["detail"] == "Must give a valid id."
+        assert response.json()["detail"] == "Must give a valid ID."
 
     async def test_get_card_fake_id(self, api_client: AsyncClient):
         fake_id = PydanticObjectId()
         response = await api_client.get(f"/card/id/{fake_id}")
         assert response.status_code == 404
-        assert response.json()["detail"] == f"Card with id {fake_id} not found."
+        assert response.json()["detail"] == f"Card with ID {fake_id} not found."
 
     async def test_get_card_by_name(self, api_client: AsyncClient):
         first_card = await CardModel.find_one({})
@@ -69,30 +69,30 @@ class TestCardRouterWithPopulatedDatabase:
     async def test_update_card_bad_id(self, api_client: AsyncClient):
         response = await api_client.patch(f"/card/update/blarghl", json={})
         assert response.status_code == 422
-        assert response.json()["detail"] == "Must give a valid id."
+        assert response.json()["detail"] == "Must give a valid ID."
 
     async def test_update_card_fake_id(self, api_client: AsyncClient):
         fake_id = PydanticObjectId()
         response = await api_client.patch(f"/card/update/{fake_id}", json={})
         assert response.status_code == 404
-        assert response.json()["detail"] == f"Card with id {fake_id} not found."
+        assert response.json()["detail"] == f"Card with ID {fake_id} not found."
 
     async def test_delete_card(self, api_client: AsyncClient):
         first_card = await CardModel.find_one({})
         response = await api_client.delete(f"/card/delete/{first_card.id}")
         assert response.status_code == 200
-        assert response.json() == f"Card with id {first_card.id} deleted."
+        assert response.json() == f"Card with ID {first_card.id} deleted."
 
     async def test_delete_card_bad_id(self, api_client: AsyncClient):
         response = await api_client.delete("/card/delete/blarghl")
         assert response.status_code == 422
-        assert response.json()["detail"] == "Must give a valid id."
+        assert response.json()["detail"] == "Must give a valid ID."
 
     async def test_delete_card_fake_id(self, api_client: AsyncClient):
         fake_id = PydanticObjectId()
         response = await api_client.delete(f"/card/delete/{fake_id}")
         assert response.status_code == 404
-        assert response.json()["detail"] == f"Card with id {fake_id} not found."
+        assert response.json()["detail"] == f"Card with ID {fake_id} not found."
 
     @patch("scooze.routers.card.CardModel.delete")
     async def test_delete_card_not_deleted(self, mock_delete: MagicMock, api_client: AsyncClient):
@@ -100,7 +100,7 @@ class TestCardRouterWithPopulatedDatabase:
         first_card = await CardModel.find_one({})
         response = await api_client.delete(f"/card/delete/{first_card.id}")
         assert response.status_code == 400
-        assert response.json()["detail"] == f"Card with id {first_card.id} not deleted."
+        assert response.json()["detail"] == f"Card with ID {first_card.id} not deleted."
 
 
 class TestCardRouterWithEmptyDatabase:
