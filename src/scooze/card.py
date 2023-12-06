@@ -353,7 +353,7 @@ class FullCard(OracleCard):
           print's full set.
         set_type: An overall categorization for each set, provided by Scryfall.
         set_uri: Link to the set object for this print in Scryfall's API.
-        set: Set code of the set this print belongs to.
+        set_code: Set code of the set this print belongs to.
         set_id: UUID of the set this print belongs to.
         story_spotlight: Whether this print is a Story Spotlight.
         textless: Whether this print is textless.
@@ -551,7 +551,7 @@ class FullCard(OracleCard):
         self.set_search_uri = set_search_uri
         self.set_type = CardNormalizer.to_enum(SetType, set_type)
         self.set_uri = set_uri
-        self.set = set_code if set_code else kwargs.get("set")
+        self.set_code = set_code if set_code else kwargs.get("set")
         self.set_id = set_id
         self.story_spotlight = story_spotlight
         self.textless = textless

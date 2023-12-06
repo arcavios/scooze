@@ -559,7 +559,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.add_cards(cards=cards)
 
     @_check_for_safe_context
-    async def delete_card(self, id: str) -> bool:
+    async def delete_card(self, id: str) -> bool | None:
         """
         Delete a card from the database.
 
@@ -576,7 +576,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.delete_card(id=id)
 
     @_check_for_safe_context
-    async def delete_cards_all(self) -> int:
+    async def delete_cards_all(self) -> int | None:
         """
         Delete all cards in the database.
 

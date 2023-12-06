@@ -357,7 +357,7 @@ def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_
     assert card.scryfall_set_uri.startswith("https://scryfall.com/sets/")
     assert card.scryfall_uri.startswith("https://scryfall.com/card/")
     assert card.security_stamp is SecurityStamp.OVAL
-    assert card.set == "vma"
+    assert card.set_code == "vma"
     assert card.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
     assert card.set_name == "Vintage Masters"
     assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
@@ -621,7 +621,7 @@ def test_fullcard_from_json_reversible(
     assert card.scryfall_id == "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf"
     assert card.scryfall_uri.startswith("https://scryfall.com/card/")
     assert card.security_stamp is SecurityStamp.OVAL
-    assert card.set == "sld"
+    assert card.set_code == "sld"
     assert card.set_id == "4d92a8a7-ccb0-437d-abdc-9d70fc5ed672"
     assert card.set_name == "Secret Lair Drop"
     assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
@@ -879,7 +879,7 @@ def test_fullcard_from_cardmodel_instant(api_client, cardmodel_ancestral_recall,
     assert card.scryfall_set_uri.startswith("https://scryfall.com/sets/")
     assert card.scryfall_uri.startswith("https://scryfall.com/card/")
     assert card.security_stamp is SecurityStamp.OVAL
-    assert card.set == "vma"
+    assert card.set_code == "vma"
     assert card.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
     assert card.set_name == "Vintage Masters"
     assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
@@ -1140,7 +1140,7 @@ def test_fullcard_from_cardmodel_reversible(
     assert card.scryfall_id == "d5dfd236-b1da-4552-b94f-ebf6bb9dafdf"
     assert card.scryfall_uri.startswith("https://scryfall.com/card/")
     assert card.security_stamp is SecurityStamp.OVAL
-    assert card.set == "sld"
+    assert card.set_code == "sld"
     assert card.set_id == "4d92a8a7-ccb0-437d-abdc-9d70fc5ed672"
     assert card.set_name == "Secret Lair Drop"
     assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")

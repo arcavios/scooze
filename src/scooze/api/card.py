@@ -7,6 +7,16 @@ from scooze.models.card import CardModel, CardModelData
 from scooze.utils import to_lower_camel
 
 
+def _normalize_for_ids(property_name: str, value, is_many: bool = False) -> tuple[str, Any | list[Any]]:
+    match property_name:
+        case "_id" | "id" | "scooze_id":
+            prop_name = "_id"
+            val = [PydanticObjectId(v) for v in value] if is_many else PydanticObjectId(value)
+            return prop_name, val
+        case _:
+            return to_lower_camel(property_name), value
+
+
 async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> CardT:
     """
     Search the database for the first card that matches the given criteria.
@@ -20,14 +30,7 @@ async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -
         The first matching card, or None if none were found.
     """
 
-    match property_name:
-        case "_id" | "id" | "scooze_id":
-            prop_name = "_id"
-            val = PydanticObjectId(value)  # Normalize Mongo id
-        case _:
-            prop_name = to_lower_camel(property_name)
-            val = value
-
+    prop_name, val = _normalize_for_ids(property_name, value)
     card_model = await CardModel.find_one({prop_name: val})
 
     if card_model is not None:
@@ -59,14 +62,7 @@ async def get_cards_by(
         were found.
     """
 
-    match property_name:
-        case "_id" | "id" | "scooze_id":
-            prop_name = "_id"
-            vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo ids
-        case _:
-            prop_name = to_lower_camel(property_name)
-            vals = values
-
+    prop_name, vals = _normalize_for_ids(property_name, values)
     skip = (page - 1) * page_size if paginated else 0
     limit = page_size if paginated else None
     card_models = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
@@ -150,7 +146,7 @@ async def add_cards(cards: list[CardT]) -> list[PydanticObjectId]:
         raise BulkAddError("Failed to add all cards to the database.")
 
 
-async def delete_card(id: str) -> bool:
+async def delete_card(id: str) -> bool | None:
     """
     Delete a card from the database.
 
@@ -174,7 +170,7 @@ async def delete_card(id: str) -> bool:
     return delete_result is not None
 
 
-async def delete_cards_all() -> int:
+async def delete_cards_all() -> int | None:
     """
     Delete all cards in the database.
 
