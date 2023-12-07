@@ -18,7 +18,7 @@ class ScoozeSettings(BaseSettings):
 
     @property
     def get_version(self) -> str:
-        return f"{self.version[0]}.{self.version[1]}.{self.version[2]}"
+        return f"{self.version.major}.{self.version.minor}.{self.version.patch}"
 
 
 CONFIG = ScoozeSettings()
