@@ -103,7 +103,7 @@ async def add_card(card: CardT) -> PydanticObjectId:
         card.scooze_id = card_model.id
         return card_model.id
     except Exception as e:
-        # TODO: log error here
+        # TODO(#75): log error here
         pass
 
 
