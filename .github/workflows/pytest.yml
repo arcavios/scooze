@@ -81,6 +81,6 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          pytest --cov tests/
-          pytest -m 'context' --cov --cov-append tests/
+          pytest -m 'not context' --cov --cov-report='' tests/
+          pytest -m 'context' --cov --cov-append --cov-report='' tests/
           coverage report
