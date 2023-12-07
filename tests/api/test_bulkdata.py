@@ -2,8 +2,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import scooze.api.bulkdata as bulk_api
-from bson import ObjectId
 from scooze.catalogs import ScryfallBulkFile
+from scooze.models.card import CardModel
 
 
 @pytest.fixture(scope="module")
@@ -16,30 +16,57 @@ def bulk_file_dir() -> str:
     return "./data/test"
 
 
-@patch("scooze.database.card.add_cards")
-def test_load_card_file(mock_add: MagicMock, cards_full, file_type, bulk_file_dir, asyncio_runner, capfd):
-    ids = [ObjectId() for _ in cards_full]
-    mock_add.return_value: list[ObjectId] = ids
-    asyncio_runner.run(bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir))
-    captured = capfd.readouterr()
-    expected = f"Loading {file_type} file into the database...\nLoaded {len(ids)} cards to the database.\n"
-    assert captured.out == expected
+class TestBulkDataWithEmptyDatabase:
+    @pytest.fixture(scope="class", autouse=True)
+    async def clean_db(self):
+        yield
+        await CardModel.delete_all()
 
+    async def test_load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, capfd):
+        await bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
+        captured = capfd.readouterr()
+        expected = f"Loading {file_type} file into the database...\nLoaded 9 cards to the database.\n"
+        assert captured.out == expected
 
-@patch("scooze.database.card.add_cards")
-def test_load_card_file_bad(mock_add: MagicMock, file_type, bulk_file_dir, asyncio_runner, capfd):
-    mock_add.return_value = None
-    asyncio_runner.run(bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir))
-    captured = capfd.readouterr()
-    expected = f"Loading {file_type} file into the database...\nNo cards loaded into database.\n"
-    assert captured.out == expected
+    @patch("scooze.api.bulkdata.open")
+    @patch("scooze.api.bulkdata.input")
+    async def test_load_card_file_bad_no_download(
+        self,
+        mock_input: MagicMock,
+        mock_open: MagicMock,
+        file_type: ScryfallBulkFile,
+        bulk_file_dir: str,
+        capfd,
+    ):
+        mock_open.side_effect = FileNotFoundError
+        mock_input.return_value = "N"
+        await bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
+        captured = capfd.readouterr()
+        expected = f"Loading {file_type} file into the database...\n{bulk_file_dir}/{file_type}.json\nNo cards loaded into database.\n"
+        assert captured.out == expected
 
-
-def test_load_card_file_bad(capfd):
-    # TODO(#147): test the load_card_file except block which contains an input() call
-    # bulk_api.load_card_file(file_type="not real", bulk_file_dir="not real")
-    # captured = capfd.readouterr()
-    # expected = f"Loading bulk_test_cards file into the database...\nNo cards loaded into database.\n"
-    # assert captured.out == expected
-    # https://stackoverflow.com/questions/35851323/how-to-test-a-function-with-input-call
-    pass
+    @patch("scooze.api.bulkdata.open")
+    @patch("scooze.api.bulkdata.input")
+    @patch("scooze.api.bulkdata.download_bulk_data_file_by_type")
+    async def test_load_card_file_bad_with_download(
+        self,
+        mock_download: MagicMock,
+        mock_input: MagicMock,
+        mock_open_custom: MagicMock,
+        file_type: ScryfallBulkFile,
+        bulk_file_dir: str,
+        capfd,
+    ):
+        # NOTE: Wrapping all of this test with the file open lets us use the actual
+        # file we're testing with as the second side effect for the 'open' mock
+        with open(f"{bulk_file_dir}/{file_type}.json", "rb") as test_file:
+            mock_open_custom.return_value.__enter__.side_effect = [FileNotFoundError, test_file]
+            mock_input.return_value = "Y"
+            mock_download.return_value = None
+            await bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
+            captured = capfd.readouterr()
+            expected = (
+                f"Loading {file_type} file into the database...\n{bulk_file_dir}/{file_type}.json\n"
+                f"Loading {file_type} file into the database...\nLoaded 9 cards to the database.\n"
+            )
+            assert captured.out == expected

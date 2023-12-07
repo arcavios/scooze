@@ -1,9 +1,8 @@
 import ijson
-import scooze.database.card as db
 from pydantic_core import ValidationError
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
-from scooze.models.card import CardModelIn
+from scooze.models.card import CardModel, CardModelData
 
 
 async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
@@ -19,19 +18,18 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
 
     file_path = f"{bulk_file_dir}/{file_type}.json"
     try:
+        print(f"Loading {file_type} file into the database...")
         with open(file_path, "rb") as cards_file:
-            print(f"Loading {file_type} file into the database...")
-
             batch_size = 5000
             current_batch_count = 0
             results_count = 0
-            current_batch = []
+            current_batch: list[CardModel] = []
             card_jsons = ijson.items(cards_file, "item")
 
-            async def load_batch(batch) -> int:
-                batch_results = await db.add_cards(batch)
+            async def load_batch(batch: list[CardModel]) -> int:
+                batch_results = await CardModel.insert_many(batch)
                 if batch_results is not None:
-                    return len(batch_results)
+                    return len(batch_results.inserted_ids)
                 return 0
 
             for card_json in card_jsons:
@@ -57,7 +55,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
         await load_card_file(file_type, bulk_file_dir)
 
 
-def _try_validate_card(card_json: dict) -> CardModelIn | None:
+def _try_validate_card(card_json: dict) -> CardModel | None:
     """
     Attempt to convert a single card's JSON to a model for DB import, and
     report validation errors that arise in conversion.
@@ -70,8 +68,8 @@ def _try_validate_card(card_json: dict) -> CardModelIn | None:
     """
 
     try:
-        card = CardModelIn.model_validate(card_json)
-        return card
+        card = CardModelData.model_validate(card_json)
+        return CardModel.model_validate(card.model_dump(mode="json", by_alias=True))
 
     except ValidationError as e:
         print(f"Card with name {card_json['name']} not added due to validation error: \n{e}")

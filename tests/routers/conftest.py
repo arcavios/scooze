@@ -6,7 +6,7 @@ from mongomock import Collection, MongoClient
 from scooze.card import OracleCard
 from scooze.catalogs import DbCollection
 from scooze.deck import DeckPart
-from scooze.models.card import CardModelIn
+from scooze.models.card import CardModelData
 from scooze.models.deck import DeckModelIn
 
 
@@ -20,7 +20,7 @@ def mock_cards_collection(mock_scooze_client: MongoClient, cards_json: list[str]
     cards_collection = mock_scooze_client.scooze[DbCollection.CARDS]
     for card in cards_json:
         cards_collection.insert_one(
-            CardModelIn.model_validate_json(card).model_dump(
+            CardModelData.model_validate_json(card).model_dump(
                 mode="json",
                 by_alias=True,
             )

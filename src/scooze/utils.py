@@ -6,6 +6,7 @@ from sys import maxsize, stdout
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
+from pydantic.alias_generators import to_camel
 from scooze.catalogs import ExtendedEnum, Format
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
@@ -17,6 +18,17 @@ V = TypeVar("V")  # generic value type
 E = TypeVar("E", bound=ExtendedEnum)  # generic Enum type
 N = TypeVar("N", bound=ExtendedEnum)  # generic Enum (for mapping values) type
 FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize to float
+
+
+## String formatting
+DATE_FORMAT = "%Y-%m-%d"
+
+
+def to_lower_camel(string: str) -> str:
+    if len(string.split("_")) == 1:
+        return string
+
+    return to_camel(string)
 
 
 def get_logger(
@@ -330,7 +342,7 @@ class JsonNormalizer:
         if d is None or isinstance(d, date):
             return d
 
-        return datetime.strptime(d, "%Y-%m-%d").date()  # NOTE: maybe store date format
+        return datetime.strptime(d, DATE_FORMAT).date()
 
     @classmethod
     def to_enum(cls, e: Type[E], v) -> E | None:
