@@ -166,7 +166,12 @@ def mana_cost_with_generic() -> str:
 
 @pytest.fixture
 def mana_cost_with_multiple_generic() -> str:
-    return "{2}{1}{W}{B}"
+    return "{1}{1}{U}{R}"
+
+
+@pytest.fixture
+def mana_cost_with_hybrid() -> str:
+    return "{B/G}{B/G}"
 
 
 # endregion
@@ -783,10 +788,15 @@ def test_parse_symbols_with_generic(mana_cost_with_generic):
 
 def test_parse_symbols_with_multiple_generic(mana_cost_with_multiple_generic):
     assert parse_symbols(mana_cost_with_multiple_generic) == {
-        CostSymbol.WHITE: 1,
-        CostSymbol.BLACK: 1,
-        CostSymbol.GENERIC_1: 1,
-        CostSymbol.GENERIC_2: 1,
+        CostSymbol.BLUE: 1,
+        CostSymbol.RED: 1,
+        CostSymbol.GENERIC_1: 2,
+    }
+
+
+def test_parse_symbols_with_hybrid(mana_cost_with_hybrid):
+    assert parse_symbols(mana_cost_with_hybrid) == {
+        CostSymbol.HYBRID_BG: 2,
     }
 
 
