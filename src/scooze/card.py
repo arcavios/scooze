@@ -3,6 +3,7 @@ import re
 from datetime import date
 from typing import Iterable, Mapping, Self, TypeVar
 
+from beanie import PydanticObjectId
 from scooze.cardparts import (
     CardFace,
     CardPartsNormalizer,
@@ -30,7 +31,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.models.card import CardModelOut
+from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
@@ -71,7 +72,7 @@ class Card(HashableObject):
         # kwargs
         **kwargs,  # TODO(77): log information about kwargs
     ):
-        self.scooze_id = kwargs.get("scooze_id")
+        self.scooze_id = CardNormalizer.to_id(id_like=kwargs.get("id"))
 
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
@@ -96,7 +97,7 @@ class Card(HashableObject):
             return cls(**json.loads(data))
 
     @classmethod
-    def from_model(cls, model: CardModelOut) -> Self:
+    def from_model(cls, model: CardModel) -> Self:
         return cls(**model.model_dump())
 
 
@@ -179,7 +180,7 @@ class OracleCard(Card):
             type_line=type_line,
             **kwargs,
         )
-        self.scooze_id = kwargs.get("scooze_id")
+        self.scooze_id = CardNormalizer.to_id(id_like=kwargs.get("id"))
 
         self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=CardFace)
         self.color_indicator = CardNormalizer.to_frozenset(color_indicator, convert_to_enum=Color)
@@ -199,7 +200,9 @@ class OracleCard(Card):
     @classmethod
     def oracle_text_without_reminder(cls, oracle_text: str) -> str:
         """
-        Provide the given oracle text with reminder text removed.
+        Provide the given oracle text with reminder text removed. This is a class method
+        because cards with different faces won't know which face you'd want. Instead you
+        simply pass the text you want to trim reminder text from here.
 
         Args:
             oracle_text: The oracle text of a card.
@@ -241,7 +244,7 @@ class FullCard(OracleCard):
     Scryfall documentation: https://scryfall.com/docs/api/cards
 
     Attributes:
-    scooze_id: A unique identifier for a document in a scooze database.
+        scooze_id: A unique identifier for a document in a scooze database.
 
     Core fields
         arena_id: This card's Arena ID, if applicable.
@@ -350,7 +353,7 @@ class FullCard(OracleCard):
           print's full set.
         set_type: An overall categorization for each set, provided by Scryfall.
         set_uri: Link to the set object for this print in Scryfall's API.
-        set: Set code of the set this print belongs to.
+        set_code: Set code of the set this print belongs to.
         set_id: UUID of the set this print belongs to.
         story_spotlight: Whether this print is a Story Spotlight.
         textless: Whether this print is textless.
@@ -362,8 +365,6 @@ class FullCard(OracleCard):
 
     def __init__(
         self,
-        # Aliases
-        id: str = "",  # Alias for scryfall_id
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str | None = None,
@@ -442,7 +443,7 @@ class FullCard(OracleCard):
         set_search_uri: str | None = None,
         set_type: SetType | None = None,
         set_uri: str | None = None,
-        set: str | None = None,
+        set_code: str | None = None,
         set_id: str | None = None,
         story_spotlight: bool | None = None,
         textless: bool | None = None,
@@ -478,12 +479,12 @@ class FullCard(OracleCard):
             type_line=type_line,
             **kwargs,
         )
-        self.scooze_id = kwargs.get("scooze_id")
+        self.scooze_id = CardNormalizer.to_id(id_like=kwargs.get("id"))
 
         # region Core Fields
 
         self.arena_id = arena_id
-        self.scryfall_id = scryfall_id if scryfall_id else id
+        self.scryfall_id = scryfall_id if scryfall_id else kwargs.get("id")
         self.lang = CardNormalizer.to_enum(Language, lang)
         self.mtgo_id = mtgo_id
         self.mtgo_foil_id = mtgo_foil_id
@@ -550,7 +551,7 @@ class FullCard(OracleCard):
         self.set_search_uri = set_search_uri
         self.set_type = CardNormalizer.to_enum(SetType, set_type)
         self.set_uri = set_uri
-        self.set = set
+        self.set_code = set_code if set_code else kwargs.get("set")
         self.set_id = set_id
         self.story_spotlight = story_spotlight
         self.textless = textless
@@ -617,6 +618,23 @@ class CardNormalizer(CardPartsNormalizer):
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
             return tuple(card_face_class.from_json(card_face) for card_face in card_faces)
+
+    @classmethod
+    def to_id(cls, id_like: PydanticObjectId | str | None) -> PydanticObjectId:
+        """
+        Normalize ID from JSON.
+
+        Args:
+          id_like: A PydanticObjectId or an ID string.
+
+        Returns:
+          A PydanticObjectId.
+        """
+
+        if id_like is None or isinstance(id_like, PydanticObjectId):
+            return id_like
+        elif PydanticObjectId.is_valid(id_like):
+            return PydanticObjectId(id_like)
 
     @classmethod
     def to_preview(cls, preview: Preview | dict | None) -> Preview:

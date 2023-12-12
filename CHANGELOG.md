@@ -17,6 +17,7 @@
 - Changed the database lookup behavior to treat _id and scooze_id as the same. Also support snake case and camel case for property names. ([#205](https://github.com/arcavios/scooze/pull/205))
 - Added `None` as valid return type in normalizers ([#190](https://github.com/arcavios/scooze/pull/190))
 - Use `super().__init__()` for Card subclasses ([#217](https://github.com/arcavios/scooze/pull/217))
+- Using Beanie ODM to handle Mongo IO ([#220](https://github.com/arcavios/scooze/pull/220))
 
 ### Fixed
 
