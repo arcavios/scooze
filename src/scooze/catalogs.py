@@ -626,6 +626,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Returns:
             Numerical mana value for this symbol; will be integer valued except for 1/2 mana symbols from unsets.
         """
+
         if self.is_nonmana or self.is_variable:
             return 0
         if self.is_twobrid:

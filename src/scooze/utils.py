@@ -513,6 +513,7 @@ def parse_symbols(cost: str) -> Dict[CostSymbol, int]:
     Returns:
         A mapping of cost symbols to the number of times they appear in that string.
     """
+
     # find all symbols of form {W}, {W/P}, etc
     symbols = [CostSymbol(s) for s in re.findall("{([^}]+)}", cost)]
     return Counter(symbols)
