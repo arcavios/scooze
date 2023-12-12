@@ -476,7 +476,6 @@ class CostSymbol(ExtendedEnum, StrEnum):
     @classmethod
     @cache
     def _hybrid_symbols(cls) -> FrozenSet["CostSymbol"]:
-        # TODO(214): include phyrexian hybrid?
         return frozenset(
             [
                 CostSymbol.HYBRID_WU,
@@ -489,6 +488,16 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.HYBRID_BG,
                 CostSymbol.HYBRID_RW,
                 CostSymbol.HYBRID_GU,
+                CostSymbol.HYBRID_PHYREXIAN_WU,
+                CostSymbol.HYBRID_PHYREXIAN_UB,
+                CostSymbol.HYBRID_PHYREXIAN_BR,
+                CostSymbol.HYBRID_PHYREXIAN_RG,
+                CostSymbol.HYBRID_PHYREXIAN_GW,
+                CostSymbol.HYBRID_PHYREXIAN_WB,
+                CostSymbol.HYBRID_PHYREXIAN_UR,
+                CostSymbol.HYBRID_PHYREXIAN_BG,
+                CostSymbol.HYBRID_PHYREXIAN_RW,
+                CostSymbol.HYBRID_PHYREXIAN_GU,
             ]
         )
 
