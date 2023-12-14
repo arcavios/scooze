@@ -10,6 +10,7 @@
 - CLI rework to be more robust ([#203](https://github.com/arcavios/scooze/pull/203))
 - Github Actions to test on push and deploy on tag ([#211](https://github.com/arcavios/scooze/pull/211))
 - Add `cmc` field to top level for reversible cards ([#212](https://github.com/arcavios/scooze/pull/212))
+- Add support for symbols on cards (mana, energy, tap/untap, etc.) ([#214](https://github.com/arcavios/scooze/pull/214))
 
 ### Changed
 

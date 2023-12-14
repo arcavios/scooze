@@ -1,13 +1,15 @@
 import argparse
 import logging
 import os.path
+import re
+from collections import Counter
 from datetime import date, datetime
 from sys import maxsize, stdout
-from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
+from typing import Any, Dict, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
 from pydantic.alias_generators import to_camel
-from scooze.catalogs import ExtendedEnum, Format
+from scooze.catalogs import CostSymbol, ExtendedEnum, Format
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
 DEFAULT_DECKS_DIR = "./data/decks"
@@ -494,6 +496,27 @@ class DictDiff(ComparableObject):
         return DictDiff(diff)
 
     # endregion
+
+
+# endregion
+
+# region Symbology utils
+
+
+def parse_symbols(cost: str) -> Dict[CostSymbol, int]:
+    """
+    Parse a string containing one or more cost symbols, in standard oracle text form (e.g. "{4}{G}").
+
+    Args:
+        cost: String representing a mana cost, or rules text that may have one or more symbols.
+
+    Returns:
+        A mapping of cost symbols to the number of times they appear in that string.
+    """
+
+    # find all symbols of form {W}, {W/P}, etc
+    symbols = [CostSymbol(s) for s in re.findall("{([^}]+)}", cost)]
+    return Counter(symbols)
 
 
 # endregion

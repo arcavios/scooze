@@ -1,4 +1,6 @@
 from enum import Enum, EnumMeta, StrEnum, auto
+from functools import cache
+from typing import FrozenSet
 
 # region Enum Extensions
 
@@ -327,6 +329,317 @@ class SetType(ExtendedEnum, StrEnum):
 
 
 # endregion
+
+# region Symbology
+
+
+class CostSymbol(ExtendedEnum, StrEnum):
+    """
+    A symbol that can show up in mana cost or oracle text of Magic cards.
+    """
+
+    WHITE = "W"
+    BLUE = "U"
+    BLACK = "B"
+    RED = "R"
+    GREEN = "G"
+
+    COLORLESS = "C"
+
+    GENERIC_0 = "0"
+    GENERIC_1 = "1"
+    GENERIC_2 = "2"
+    GENERIC_3 = "3"
+    GENERIC_4 = "4"
+    GENERIC_5 = "5"
+    GENERIC_6 = "6"
+    GENERIC_7 = "7"
+    GENERIC_8 = "8"
+    GENERIC_9 = "9"
+    GENERIC_10 = "10"
+    GENERIC_11 = "11"
+    GENERIC_12 = "12"
+    GENERIC_13 = "13"
+    GENERIC_14 = "14"
+    GENERIC_15 = "15"
+    GENERIC_16 = "16"
+    GENERIC_17 = "17"
+    GENERIC_18 = "18"
+    GENERIC_19 = "19"
+    GENERIC_20 = "20"
+
+    GENERIC_X = "X"
+    GENERIC_Y = "Y"
+    SNOW = "S"
+
+    HYBRID_WU = "W/U"
+    HYBRID_UB = "U/B"
+    HYBRID_BR = "B/R"
+    HYBRID_RG = "R/G"
+    HYBRID_GW = "G/W"
+    HYBRID_WB = "W/B"
+    HYBRID_UR = "U/R"
+    HYBRID_BG = "B/G"
+    HYBRID_RW = "R/W"
+    HYBRID_GU = "G/U"
+
+    PHYREXIAN_WHITE = "W/P"
+    PHYREXIAN_BLUE = "U/P"
+    PHYREXIAN_BLACK = "B/P"
+    PHYREXIAN_RED = "R/P"
+    PHYREXIAN_GREEN = "G/P"
+    GENERIC_PHYREXIAN = "P"
+
+    HYBRID_PHYREXIAN_WU = "W/U/P"
+    HYBRID_PHYREXIAN_UB = "U/B/P"
+    HYBRID_PHYREXIAN_BR = "B/R/P"
+    HYBRID_PHYREXIAN_RG = "R/G/P"
+    HYBRID_PHYREXIAN_GW = "G/W/P"
+    HYBRID_PHYREXIAN_WB = "W/B/P"
+    HYBRID_PHYREXIAN_UR = "U/R/P"
+    HYBRID_PHYREXIAN_BG = "B/G/P"
+    HYBRID_PHYREXIAN_RW = "R/W/P"
+    HYBRID_PHYREXIAN_GU = "G/U/P"
+
+    TWOBRID_WHITE = "2/W"
+    TWOBRID_BLUE = "2/U"
+    TWOBRID_BLACK = "2/B"
+    TWOBRID_RED = "2/R"
+    TWOBRID_GREEN = "2/G"
+
+    # Non-mana symbols
+    TAP = "T"
+    UNTAP = "Q"
+    ENERGY = "E"
+
+    # specific to un-cards
+    GENERIC_HALF = "½"
+    HALF_WHITE = "HW"
+    HALF_BLUE = "HU"
+    HALF_BLACK = "HB"
+    HALF_RED = "HR"
+    HALF_GREEN = "HG"
+    GENERIC_100 = "100"
+    GENERIC_1000000 = "1000000"
+    GENERIC_INFINITY = "∞"
+    GENERIC_Z = "Z"
+    TICKET = "TK"
+
+    # region Symbol groupings
+
+    @classmethod
+    @cache
+    def _generic_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_0,
+                CostSymbol.GENERIC_1,
+                CostSymbol.GENERIC_2,
+                CostSymbol.GENERIC_3,
+                CostSymbol.GENERIC_4,
+                CostSymbol.GENERIC_5,
+                CostSymbol.GENERIC_6,
+                CostSymbol.GENERIC_7,
+                CostSymbol.GENERIC_8,
+                CostSymbol.GENERIC_9,
+                CostSymbol.GENERIC_10,
+                CostSymbol.GENERIC_11,
+                CostSymbol.GENERIC_12,
+                CostSymbol.GENERIC_13,
+                CostSymbol.GENERIC_14,
+                CostSymbol.GENERIC_15,
+                CostSymbol.GENERIC_16,
+                CostSymbol.GENERIC_17,
+                CostSymbol.GENERIC_18,
+                CostSymbol.GENERIC_19,
+                CostSymbol.GENERIC_20,
+                CostSymbol.GENERIC_100,
+                CostSymbol.GENERIC_1000000,
+                CostSymbol.GENERIC_HALF,
+            ]
+        )
+
+    @classmethod
+    @cache
+    def _half_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_HALF,
+                CostSymbol.HALF_WHITE,
+                CostSymbol.HALF_BLUE,
+                CostSymbol.HALF_BLACK,
+                CostSymbol.HALF_RED,
+                CostSymbol.HALF_GREEN,
+            ]
+        )
+
+    @classmethod
+    @cache
+    def _hybrid_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.HYBRID_WU,
+                CostSymbol.HYBRID_UB,
+                CostSymbol.HYBRID_BR,
+                CostSymbol.HYBRID_RG,
+                CostSymbol.HYBRID_GW,
+                CostSymbol.HYBRID_WB,
+                CostSymbol.HYBRID_UR,
+                CostSymbol.HYBRID_BG,
+                CostSymbol.HYBRID_RW,
+                CostSymbol.HYBRID_GU,
+                CostSymbol.HYBRID_PHYREXIAN_WU,
+                CostSymbol.HYBRID_PHYREXIAN_UB,
+                CostSymbol.HYBRID_PHYREXIAN_BR,
+                CostSymbol.HYBRID_PHYREXIAN_RG,
+                CostSymbol.HYBRID_PHYREXIAN_GW,
+                CostSymbol.HYBRID_PHYREXIAN_WB,
+                CostSymbol.HYBRID_PHYREXIAN_UR,
+                CostSymbol.HYBRID_PHYREXIAN_BG,
+                CostSymbol.HYBRID_PHYREXIAN_RW,
+                CostSymbol.HYBRID_PHYREXIAN_GU,
+            ]
+        )
+
+    @classmethod
+    @cache
+    def _phyrexian_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.PHYREXIAN_WHITE,
+                CostSymbol.PHYREXIAN_BLUE,
+                CostSymbol.PHYREXIAN_BLACK,
+                CostSymbol.PHYREXIAN_RED,
+                CostSymbol.PHYREXIAN_GREEN,
+                CostSymbol.GENERIC_PHYREXIAN,
+                CostSymbol.HYBRID_PHYREXIAN_WU,
+                CostSymbol.HYBRID_PHYREXIAN_UB,
+                CostSymbol.HYBRID_PHYREXIAN_BR,
+                CostSymbol.HYBRID_PHYREXIAN_RG,
+                CostSymbol.HYBRID_PHYREXIAN_GW,
+                CostSymbol.HYBRID_PHYREXIAN_WB,
+                CostSymbol.HYBRID_PHYREXIAN_UR,
+                CostSymbol.HYBRID_PHYREXIAN_BG,
+                CostSymbol.HYBRID_PHYREXIAN_RW,
+                CostSymbol.HYBRID_PHYREXIAN_GU,
+            ]
+        )
+
+    @classmethod
+    @cache
+    def _twobrid_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.TWOBRID_WHITE,
+                CostSymbol.TWOBRID_BLUE,
+                CostSymbol.TWOBRID_BLACK,
+                CostSymbol.TWOBRID_RED,
+                CostSymbol.TWOBRID_GREEN,
+            ]
+        )
+
+    @classmethod
+    @cache
+    def _variable_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_X,
+                CostSymbol.GENERIC_Y,
+                CostSymbol.GENERIC_Z,
+            ]
+        )
+
+    @classmethod
+    @cache
+    def _nonmana_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.TAP,
+                CostSymbol.UNTAP,
+                CostSymbol.ENERGY,
+                CostSymbol.TICKET,
+            ]
+        )
+
+    @classmethod
+    @cache
+    def _un_symbols(cls) -> FrozenSet["CostSymbol"]:
+        return frozenset(
+            [
+                CostSymbol.GENERIC_HALF,
+                CostSymbol.HALF_WHITE,
+                CostSymbol.HALF_BLUE,
+                CostSymbol.HALF_BLACK,
+                CostSymbol.HALF_RED,
+                CostSymbol.HALF_GREEN,
+                CostSymbol.GENERIC_100,
+                CostSymbol.GENERIC_1000000,
+                CostSymbol.GENERIC_INFINITY,
+                CostSymbol.GENERIC_Z,
+                CostSymbol.TICKET,
+            ]
+        )
+
+    # endregion
+
+    # region Properties for types of symbol
+
+    @property
+    def is_generic(self) -> bool:
+        return self in CostSymbol._generic_symbols()
+
+    @property
+    def is_half(self) -> bool:
+        return self in CostSymbol._half_symbols()
+
+    @property
+    def is_hybrid(self) -> bool:
+        return self in CostSymbol._hybrid_symbols()
+
+    @property
+    def is_phyrexian(self) -> bool:
+        return self in CostSymbol._phyrexian_symbols()
+
+    @property
+    def is_twobrid(self) -> bool:
+        return self in CostSymbol._twobrid_symbols()
+
+    @property
+    def is_variable(self) -> bool:
+        return self in CostSymbol._variable_symbols()
+
+    @property
+    def is_un(self) -> bool:
+        return self in CostSymbol._un_symbols()
+
+    @property
+    def is_nonmana(self) -> bool:
+        return self in CostSymbol._nonmana_symbols()
+
+    # endregion
+
+    @property
+    def mana_value_contribution(self) -> float:
+        """
+        The contribution to mana value for this mana symbol.
+
+        Returns:
+            Numerical mana value for this symbol; will be integer valued except for 1/2 mana symbols from unsets.
+        """
+
+        if self.is_nonmana or self.is_variable:
+            return 0
+        if self.is_twobrid:
+            return 2
+        if self.is_half:
+            return 0.5
+        if self.is_generic:
+            return float(self)
+        return 1
+
+
+# endregion
+
 
 # region Deck Enums
 
