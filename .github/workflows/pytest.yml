@@ -25,7 +25,7 @@ jobs:
       - run: python -m pip install black isort
       - run: |
           black --version
-          black . --line-length 120 --check
+          black . --check
           isort .
   test:
     needs: linting
