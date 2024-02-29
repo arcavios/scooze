@@ -117,19 +117,15 @@ def test_average_words(deck_modern_4c):
 
 @pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
-    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(
-        main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty
-    )
+    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(main=dictdiff_empty)
 
 
 @pytest.mark.deck_diff
-def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
+def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard):
     other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.MAIN)
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=DictDiff({card_kaheera_the_orphanguard: (0, 1)}),
-        side=dictdiff_empty,
-        cmdr=dictdiff_empty,
     )
 
 
@@ -140,7 +136,6 @@ def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
         side=DictDiff({card_kaheera_the_orphanguard: (1, 2)}),
-        cmdr=dictdiff_empty,
     )
 
 
@@ -155,7 +150,6 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
     )
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
-        side=dictdiff_empty,
         cmdr=DictDiff(
             {
                 card_omnath_locus_of_creation: (0, 1),
@@ -163,6 +157,9 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
             }
         ),
     )
+
+# TODO(#218): test_diff_attractions
+# TODO(#218): test_diff_stickers
 
 
 def test_decklist_equals(deck_modern_4c, main_modern_4c, side_modern_4c, card_omnath_locus_of_creation):
@@ -231,6 +228,19 @@ def test_is_legal(deck_modern_4c):
     assert deck_modern_4c.is_legal()  # self.format
     deck_modern_4c.format = None
     assert deck_modern_4c.is_legal()  # format = None
+
+
+# TODO(#218): test attraction and sticker deck legalities. might be more than one test.
+def test_is_legal_attractions_stickers():
+    pass
+
+
+def test_is_legal_16_sideboard(deck_modern_4c, card_aether_gust):
+    deck_modern_4c.add_card(card_aether_gust, in_the=InThe.SIDE)
+    assert not deck_modern_4c.is_legal(Format.MODERN)
+
+
+# TODO(#229): Add a test for a commander or oathbreaker deck that exceeds the formats maximum size
 
 
 def test_total_cards(deck_modern_4c):

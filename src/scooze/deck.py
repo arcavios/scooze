@@ -18,6 +18,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
+        attractions: The attraction deck.
+        stickers: The sticker deck.
     """
 
     def __init__(
@@ -27,6 +29,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         main: DeckPart[CardT] = None,
         side: DeckPart[CardT] = None,
         cmdr: DeckPart[CardT] = None,
+        attractions: DeckPart[CardT] = None,
+        stickers: DeckPart[CardT] = None,
     ):
         self.archetype = archetype
         self.format = format
@@ -34,10 +38,12 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         self.main = main if main is not None else DeckPart()
         self.side = side if side is not None else DeckPart()
         self.cmdr = cmdr if cmdr is not None else DeckPart()
+        self.attractions = attractions if attractions is not None else DeckPart()
+        self.stickers = stickers if stickers is not None else DeckPart()
 
     @property
     def cards(self) -> Counter[CardT]:
-        return self.main.cards + self.side.cards + self.cmdr.cards
+        return self.main.cards + self.side.cards + self.cmdr.cards + self.attractions.cards + self.stickers.cards
 
     def __str__(self):
         decklist = self.export()
@@ -87,6 +93,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             main=self.main.diff(other.main),
             side=self.side.diff(other.side),
             cmdr=self.cmdr.diff(other.cmdr),
+            attractions=self.attractions.diff(other.attractions),
+            stickers=self.stickers.diff(other.stickers),
         )
 
     def decklist_equals(self, other: Self) -> bool:
@@ -108,8 +116,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         same_main = not bool(diff.main)
         same_side = not bool(diff.side)
         same_cmdr = not bool(diff.cmdr)
+        same_attractions = not bool(diff.attractions)
+        same_stickers = not bool(diff.stickers)
 
-        return same_main and same_side and same_cmdr
+        return same_main and same_side and same_cmdr and same_attractions and same_stickers
 
     def export(self, export_format: DecklistFormatter = None) -> str:
         """
@@ -133,8 +143,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 cmdr_prefix = ""
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
             case _:
-                sb_prefix = "Sideboard\n"  # Default
-                cmdr_prefix = "Commander\n"  # Default
+                sb_prefix = "SIDEBOARD:\n"  # Default
+                cmdr_prefix = "COMMANDERS:\n"  # Default
         sb_prefix = "\n" + sb_prefix
         cmdr_suffix = "\n"
 
@@ -175,8 +185,18 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             return False
         if self.cmdr.total() < utils.cmdr_size(format)[0]:
             return False
+        # TODO(#218): add attraction and sticker checks
 
-        # Check card quantities do not exceed acceptable maximums
+        # Check deck is within maximum size requirements
+        if self.main.total() > utils.main_size(format)[1]:
+            return False
+        if self.side.total() > utils.side_size(format)[1]:
+            return False
+        if self.cmdr.total() > utils.cmdr_size(format)[1]:
+            return False
+        # TODO(#218): add attraction and sticker checks
+
+        # Check card quantities do not exceed acceptable maximums per card
         for c, q in self.cards.items():
             c_legal = c.legalities[format] if format not in [Format.LIMITED, Format.NONE] else Legality.LEGAL
 
@@ -185,6 +205,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
             if q > utils.max_card_quantity(format) and q > utils.max_relentless_quantity(c.name):
                 return False
+        # TODO(#218): add attraction and sticker checks
 
         return True
 
@@ -193,7 +214,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         The number of cards in this Deck.
         """
 
-        return self.main.total() + self.side.total() + self.cmdr.total()
+        return self.main.total() + self.side.total() + self.cmdr.total() + self.attractions.total() + self.stickers.total()
 
     def total_cmc(self) -> float:
         """
@@ -231,6 +252,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 self.side.add_card(card=card, quantity=quantity)
             case InThe.CMDR:
                 self.cmdr.add_card(card=card, quantity=quantity)
+            case InThe.ATTRACTIONS:
+                self.attractions.add_card(card=card, quantity=quantity)
+            case InThe.STICKERS:
+                self.stickers.add_card(card=card, quantity=quantity)
             case _:
                 pass  # TODO(#75): 'in' must be one of InThe.list()
 
@@ -250,6 +275,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 self.side.add_cards(cards)
             case InThe.CMDR:
                 self.cmdr.add_cards(cards)
+            case InThe.ATTRACTIONS:
+                self.attractions.add_cards(cards)
+            case InThe.STICKERS:
+                self.stickers.add_cards(cards)
 
     def remove_card(self, card: CardT, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
@@ -270,6 +299,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 self.side.remove_card(card=card, quantity=quantity)
             case InThe.CMDR:
                 self.cmdr.remove_card(card=card, quantity=quantity)
+            case InThe.ATTRACTIONS:
+                self.attractions.remove_card(card=card, quantity=quantity)
+            case InThe.STICKERS:
+                self.stickers.remove_card(card=card, quantity=quantity)
             case _:
                 pass  # TODO(#75): failed to remove card
 
@@ -290,6 +323,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 self.side.remove_cards(cards=cards)
             case InThe.CMDR:
                 self.cmdr.remove_cards(cards=cards)
+            case InThe.ATTRACTIONS:
+                self.attractions.remove_cards(cards=cards)
+            case InThe.STICKERS:
+                self.stickers.remove_cards(cards=cards)
             case _:
                 pass  # TODO(#75): failed to remove cards
 
