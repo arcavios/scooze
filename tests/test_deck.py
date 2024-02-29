@@ -178,7 +178,7 @@ def test_decklist_equals(deck_modern_4c, main_modern_4c, side_modern_4c, card_om
 
 
 def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"
 
 
 def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
@@ -188,7 +188,7 @@ def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
 
 def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
     deck = Deck[OracleCard](archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
-    assert deck.export() == f"Commander\n{cmdr_part}\n{main_modern_4c_str}"
+    assert deck.export() == f"COMMANDERS:\n{cmdr_part}\n{main_modern_4c_str}"
 
 
 def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
