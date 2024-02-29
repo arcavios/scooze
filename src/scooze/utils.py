@@ -111,11 +111,13 @@ def max_relentless_quantity(name: str) -> int:
             | "Snow-Covered Swamp"
             | "Snow-Covered Mountain"
             | "Snow-Covered Forest"
+            | "Snow-Covered Wastes"
             | "Dragon's Approach"
             | "Persistent Petitioners"
             | "Rat Colony"
             | "Relentless Rats"
             | "Shadowborn Apostle"
+            | "Slime Against Humanity"
         ):
             return maxsize
         case _:
