@@ -214,7 +214,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         The number of cards in this Deck.
         """
 
-        return self.main.total() + self.side.total() + self.cmdr.total() + self.attractions.total() + self.stickers.total()
+        return (
+            self.main.total() + self.side.total() + self.cmdr.total() + self.attractions.total() + self.stickers.total()
+        )
 
     def total_cmc(self) -> float:
         """

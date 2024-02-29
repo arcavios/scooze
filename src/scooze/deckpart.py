@@ -41,11 +41,15 @@ class DeckDiff(ComparableObject):
             stickers_diff = str(self.stickers)
 
             return (
-                f"Main Diff:\n{main_diff}"
-                + f"\nSide Diff:\n{side_diff}" if not self.side.is_empty() else ""
-                + f"\nCmdr Diff:\n{cmdr_diff}" if not self.cmdr.is_empty() else ""
-                + f"\nAttractions Diff:\n{attractions_diff}" if not self.attractions.is_empty() else ""
-                + f"\nStickers{stickers_diff}" if not self.stickers.is_empty() else ""
+                f"Main Diff:\n{main_diff}" + f"\nSide Diff:\n{side_diff}"
+                if not self.side.is_empty()
+                else "" + f"\nCmdr Diff:\n{cmdr_diff}"
+                if not self.cmdr.is_empty()
+                else "" + f"\nAttractions Diff:\n{attractions_diff}"
+                if not self.attractions.is_empty()
+                else "" + f"\nStickers{stickers_diff}"
+                if not self.stickers.is_empty()
+                else ""
             )
         else:
             return ""

@@ -158,6 +158,7 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
         ),
     )
 
+
 # TODO(#218): test_diff_attractions
 # TODO(#218): test_diff_stickers
 
