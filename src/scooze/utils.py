@@ -497,7 +497,14 @@ class DictDiff(ComparableObject):
         diff.update({k: (NO_KEY, d2[k]) for k in d2.keys() - both})
         return DictDiff(diff)
 
-    # endregion
+    def is_empty(self):
+        """
+        Determines if this diff is empty.
+        """
+
+        return self.contents == {}
+
+# endregion
 
 
 # endregion
