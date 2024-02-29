@@ -652,6 +652,8 @@ class InThe(ExtendedEnum, StrEnum):
     MAIN = auto()
     SIDE = auto()
     CMDR = auto()
+    ATTRACTIONS = auto()
+    STICKERS = auto()
 
 
 class DecklistFormatter(ExtendedEnum, StrEnum):
