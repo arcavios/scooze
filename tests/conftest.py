@@ -8,6 +8,7 @@ import pytest
 from asgi_lifespan import LifespanManager
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
+from mongomock_motor import AsyncMongoMockClient
 from scooze.card import OracleCard
 from scooze.catalogs import Format, Legality
 from scooze.config import CONFIG
@@ -15,7 +16,6 @@ from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.models.card import CardModel, CardModelData
 from scooze.mongo import db
-from mongomock_motor import AsyncMongoMockClient
 
 # Override config for testing
 CONFIG.testing = True
