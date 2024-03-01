@@ -272,19 +272,30 @@ def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_m
     assert deck.export(DecklistFormatter.ARENA) == f"Deck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
 
-def test_export_arena_companion(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, card_kaheera_the_orphanguard):
-    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, companion=card_kaheera_the_orphanguard)
-    assert deck.export(DecklistFormatter.ARENA) == f"Companion\n{card_kaheera_the_orphanguard.name}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+def test_export_arena_companion(
+    main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, card_kaheera_the_orphanguard
+):
+    deck = Deck[OracleCard](
+        archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, companion=card_kaheera_the_orphanguard
+    )
+    assert (
+        deck.export(DecklistFormatter.ARENA)
+        == f"Companion\n{card_kaheera_the_orphanguard.name}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    )
 
 
 def test_export_arena_companion(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, cmdr_part):
     deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, cmdr=cmdr_part)
-    assert deck.export(DecklistFormatter.ARENA) == f"Commander\n{cmdr_part}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    assert (
+        deck.export(DecklistFormatter.ARENA)
+        == f"Commander\n{cmdr_part}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    )
 
 
 def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
     deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
     assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n{side_modern_4c_str}"
+
 
 def test_export_mtgo_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
     deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, cmdr=cmdr_part)
@@ -321,9 +332,13 @@ def test_is_legal(deck_modern_4c):
     assert deck_modern_4c.is_legal()  # format = None
 
 
-def test_is_legal_attractions_stickers(card_forest, attraction_part, sticker_part, attraction_balloon_stand, sticker_ancestral_hotdog_minotaur):
+def test_is_legal_attractions_stickers(
+    card_forest, attraction_part, sticker_part, attraction_balloon_stand, sticker_ancestral_hotdog_minotaur
+):
     main = DeckPart[OracleCard](Counter[OracleCard]({card_forest: 60}))
-    deck = Deck[OracleCard](archetype="test_is_legal_attractions_stickers", main=main, attractions=attraction_part, stickers=sticker_part)
+    deck = Deck[OracleCard](
+        archetype="test_is_legal_attractions_stickers", main=main, attractions=attraction_part, stickers=sticker_part
+    )
     assert deck.is_legal(Format.LEGACY)
     deck.add_card(attraction_balloon_stand, in_the=InThe.ATTRACTIONS)
     assert not deck.is_legal(Format.LEGACY)
