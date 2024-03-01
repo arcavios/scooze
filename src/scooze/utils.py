@@ -331,6 +331,8 @@ def attractions_size(fmt: Format) -> tuple[int, int]:
             | Format.PREDH
             | Format.PREMODERN
             | Format.STANDARD
+            | Format.STANDARDBRAWL
+            | Format.TIMELESS
         ):
             return 0, 0
 
@@ -378,6 +380,8 @@ def stickers_size(fmt: Format) -> tuple[int, int]:
             | Format.PREDH
             | Format.PREMODERN
             | Format.STANDARD
+            | Format.STANDARDBRAWL
+            | Format.TIMELESS
         ):
             return 0, 0
 
