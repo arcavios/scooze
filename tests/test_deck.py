@@ -232,7 +232,11 @@ def test_export_default_attractions(main_modern_4c, main_modern_4c_str, attracti
     assert deck.export() == f"Deck:\n{main_modern_4c_str}\nAttractions:\n{attraction_part}"
 
 
-# TODO: test export with stickers
+# def test_export_default_stickers(main_modern_4c, main_modern_4c_str, sticker_part):
+#     deck = Deck[OracleCard](
+#         archetype="test_export_default_attractions", main=main_modern_4c, stickers=sticker_part
+#     )
+#     assert deck.export() == f"Deck:\n{main_modern_4c_str}\nStickers:\n{sticker_part}"
 
 
 def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):

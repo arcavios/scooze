@@ -389,6 +389,11 @@ def test_fmt_standard_max_card_quantity():
 
 
 @pytest.mark.card_quantity
+def test_fmt_standardbrawl_max_card_quantity():
+    assert max_card_quantity(Format.STANDARDBRAWL) == 1
+
+
+@pytest.mark.card_quantity
 def test_fmt_timeless_max_card_quantity():
     assert max_card_quantity(Format.TIMELESS) == 4
 
@@ -518,6 +523,11 @@ def test_fmt_standard_main_size(main_size_60):
 
 
 @pytest.mark.deck_size
+def test_fmt_standardbrawl_main_size(main_size_99):
+    assert main_size(Format.STANDARDBRAWL) == main_size_99
+
+
+@pytest.mark.deck_size
 def test_fmt_timeless_main_size(main_size_60):
     assert main_size(Format.TIMELESS) == main_size_60
 
@@ -640,6 +650,10 @@ def test_fmt_premodern_side_size(side_size_15):
 @pytest.mark.deck_size
 def test_fmt_standard_side_size(side_size_15):
     assert side_size(Format.STANDARD) == side_size_15
+
+@pytest.mark.deck_size
+def test_fmt_standardbrawl_side_size(side_size_0):
+    assert side_size(Format.STANDARDBRAWL) == side_size_0
 
 
 @pytest.mark.deck_size
@@ -765,6 +779,10 @@ def test_fmt_premodern_cmdr_size(cmdr_size_0):
 @pytest.mark.deck_size
 def test_fmt_standard_cmdr_size(cmdr_size_0):
     assert cmdr_size(Format.STANDARD) == cmdr_size_0
+
+@pytest.mark.deck_size
+def test_fmt_standardbrawl_cmdr_size(cmdr_size_1):
+    assert cmdr_size(Format.STANDARDBRAWL) == cmdr_size_1
 
 
 @pytest.mark.deck_size
