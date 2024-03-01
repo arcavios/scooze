@@ -276,9 +276,14 @@ def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_m
     assert deck.export(DecklistFormatter.ARENA) == f"Deck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
 
-# TODO: add test for arena + companion
+def test_export_arena_companion(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, card_kaheera_the_orphanguard):
+    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, companion=card_kaheera_the_orphanguard)
+    assert deck.export(DecklistFormatter.ARENA) == f"Companion\n{card_kaheera_the_orphanguard.name}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
-# TODO: add test for arena + commander
+
+def test_export_arena_companion(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, cmdr_part):
+    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, cmdr=cmdr_part)
+    assert deck.export(DecklistFormatter.ARENA) == f"Commander\n{cmdr_part}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
 
 def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
