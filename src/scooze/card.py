@@ -211,28 +211,12 @@ class OracleCard(Card):
         pattern_reminder = r" ?\([^()]+\) ?"  # text between parens ()
         return re.sub(pattern_reminder, "", oracle_text)
 
-    # TODO(#230): This is used to make sure cards that are added to the attraction deck are attractions.
-    def is_attraction(self) -> bool:
-        """
-        Determine if this is an attraction card.
-        """
-
-        return True
-
     def is_double_sided(self) -> bool:
         """
         Determine if this is a double-sided card.
         """
 
         return self.card_faces is not None
-
-    # TODO(#230): This is used to make sure cards that are added to the sticker deck are stickers.
-    def is_attraction(self) -> bool:
-        """
-        Determine if this is a sticker card.
-        """
-
-        return True
 
     def total_words(self) -> int:
         """
