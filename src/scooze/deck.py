@@ -31,6 +31,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         cmdr: DeckPart[CardT] = None,
         attractions: DeckPart[CardT] = None,
         stickers: DeckPart[CardT] = None,
+        companion: CardT = None,
     ):
         self.archetype = archetype
         self.format = format
@@ -40,6 +41,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         self.cmdr = cmdr if cmdr is not None else DeckPart()
         self.attractions = attractions if attractions is not None else DeckPart()
         self.stickers = stickers if stickers is not None else DeckPart()
+
+        self.companion = companion
 
     @property
     def cards(self) -> Counter[CardT]:
@@ -135,26 +138,29 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         match export_format:
             case DecklistFormatter.ARENA:
-                sb_prefix = "Sideboard\n"
                 cmdr_prefix = "Commander\n"
+                companion_prefix = "Companion\n"
+                main_prefix = "Deck\n"
+                sb_prefix = "Sideboard\n"
+                # TODO(#232): export specific versions to Arena <(SET) ###>
                 # TODO(#50): filter out cards that are not on Arena. Log a WARNING with those cards.
             case DecklistFormatter.MTGO:
-                sb_prefix = "SIDEBOARD:\n"
-                cmdr_prefix = ""
+                decklist = f"{str(self.main)}"
+                decklist += f"\n{str(self.side)}" if self.side else ""
+                decklist += f"\n{str(self.cmdr)}" if self.cmdr else ""
+                return decklist
                 # TODO(#50): filter out cards that are not on MTGO. Log a WARNING with those cards.
             case _:
-                sb_prefix = "SIDEBOARD:\n"  # Default
-                cmdr_prefix = "COMMANDERS:\n"  # Default
-        sb_prefix = "\n" + sb_prefix
-        cmdr_suffix = "\n"
+                cmdr_prefix = "Commander(s):\n"
+                companion_prefix = "Companion:\n"
+                main_prefix = "Deck:\n"
+                sb_prefix = "Sideboard:\n"
 
-        # Build the decklist string
-        main = str(self.main) if len(self.main) > 0 else ""
-        side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ""
-        cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ""
-        attractions = ""  # TODO(218): update export to include attractions
-        stickers = ""  # TODO(218): update export to include stickers
-        decklist = f"{cmdr}{main}{side}{attractions}{stickers}"
+        # ARENA and PLAINTEXT should be roughly the same.
+        decklist = f"{cmdr_prefix}{str(self.cmdr)}\n" if self.cmdr else ""
+        decklist += f"{companion_prefix}{self.companion.name}\n\n" if self.companion else ""
+        decklist += f"{main_prefix}{str(self.main)}"
+        decklist += f"\n{sb_prefix}{str(self.side)}" if self.side else ""
 
         return decklist
 

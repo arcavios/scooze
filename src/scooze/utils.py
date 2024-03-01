@@ -334,6 +334,7 @@ def attractions_size(fmt: Format) -> tuple[int, int]:
         case Format.NONE | _:
             return 0, maxsize
 
+
 def stickers_size(fmt: Format) -> tuple[int, int]:
     """
     Given a Format, what are the min and max size for the sticker deck?
@@ -376,6 +377,7 @@ def stickers_size(fmt: Format) -> tuple[int, int]:
 
         case Format.LIMITED | Format.NONE | _:
             return 0, maxsize
+
 
 # endregion
 
