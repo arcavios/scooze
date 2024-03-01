@@ -44,29 +44,29 @@ def cmdr_part(cmdr_cards) -> DeckPart[OracleCard]:
 
 @pytest.fixture
 def attraction_cards(
-    card_balloon_stand,
-    card_bounce_chamber,
-    card_bumper_cars,
-    card_centrifuge,
-    card_clown_extruder,
-    card_concession_stand,
-    card_costume_shop,
-    card_cover_the_spot,
-    card_dart_throw,
-    card_drop_tower,
+    attraction_balloon_stand,
+    attraction_bounce_chamber,
+    attraction_bumper_cars,
+    attraction_centrifuge,
+    attraction_clown_extruder,
+    attraction_concession_stand,
+    attraction_costume_shop,
+    attraction_cover_the_spot,
+    attractionn_dart_throw,
+    attraction_drop_tower,
 ) -> Counter[OracleCard]:
     return Counter[OracleCard](
         {
-            card_balloon_stand: 1,
-            card_bounce_chamber: 1,
-            card_bumper_cars: 1,
-            card_centrifuge: 1,
-            card_clown_extruder: 1,
-            card_concession_stand: 1,
-            card_costume_shop: 1,
-            card_cover_the_spot: 1,
-            card_dart_throw: 1,
-            card_drop_tower: 1,
+            attraction_balloon_stand: 1,
+            attraction_bounce_chamber: 1,
+            attraction_bumper_cars: 1,
+            attraction_centrifuge: 1,
+            attraction_clown_extruder: 1,
+            attraction_concession_stand: 1,
+            attraction_costume_shop: 1,
+            attraction_cover_the_spot: 1,
+            attractionn_dart_throw: 1,
+            attraction_drop_tower: 1,
         }
     )
 
@@ -74,6 +74,40 @@ def attraction_cards(
 @pytest.fixture
 def attraction_part(attraction_cards) -> DeckPart[OracleCard]:
     return DeckPart[OracleCard](cards=attraction_cards)
+
+
+@pytest.fixture
+def sticker_cards(
+    sticker_ancestral_hotdog_minotaur,
+    sticker_carnival_elephant_meteor,
+    sticker_contortionist_otter_storm,
+    sticker_cool_fluffy_loxodon,
+    sticker_cursed_firebreathing_yogurt,
+    sticker_deepfried_plague_myr,
+    sticker_demonic_tourist_laser,
+    sticker_eldrazi_guacamole_tightrope,
+    sticker_elemental_time_flamingo,
+    sticker_eternal_acrobat_toast,
+) -> Counter[OracleCard]:
+    return Counter[OracleCard](
+        {
+            sticker_ancestral_hotdog_minotaur: 1,
+            sticker_carnival_elephant_meteor: 1,
+            sticker_contortionist_otter_storm: 1,
+            sticker_cool_fluffy_loxodon: 1,
+            sticker_cursed_firebreathing_yogurt: 1,
+            sticker_deepfried_plague_myr: 1,
+            sticker_demonic_tourist_laser: 1,
+            sticker_eldrazi_guacamole_tightrope: 1,
+            sticker_elemental_time_flamingo: 1,
+            sticker_eternal_acrobat_toast: 1,
+        }
+    )
+
+
+@pytest.fixture
+def sticker_part(sticker_cards) -> DeckPart[OracleCard]:
+    return DeckPart[OracleCard](cards=sticker_cards)
 
 
 @pytest.fixture
@@ -232,11 +266,9 @@ def test_export_default_attractions(main_modern_4c, main_modern_4c_str, attracti
     assert deck.export() == f"Deck:\n{main_modern_4c_str}\nAttractions:\n{attraction_part}"
 
 
-# def test_export_default_stickers(main_modern_4c, main_modern_4c_str, sticker_part):
-#     deck = Deck[OracleCard](
-#         archetype="test_export_default_attractions", main=main_modern_4c, stickers=sticker_part
-#     )
-#     assert deck.export() == f"Deck:\n{main_modern_4c_str}\nStickers:\n{sticker_part}"
+def test_export_default_stickers(main_modern_4c, main_modern_4c_str, sticker_part):
+    deck = Deck[OracleCard](archetype="test_export_default_attractions", main=main_modern_4c, stickers=sticker_part)
+    assert deck.export() == f"Deck:\n{main_modern_4c_str}\nStickers:\n{sticker_part}"
 
 
 def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):

@@ -651,6 +651,7 @@ def test_fmt_premodern_side_size(side_size_15):
 def test_fmt_standard_side_size(side_size_15):
     assert side_size(Format.STANDARD) == side_size_15
 
+
 @pytest.mark.deck_size
 def test_fmt_standardbrawl_side_size(side_size_0):
     assert side_size(Format.STANDARDBRAWL) == side_size_0
@@ -779,6 +780,7 @@ def test_fmt_premodern_cmdr_size(cmdr_size_0):
 @pytest.mark.deck_size
 def test_fmt_standard_cmdr_size(cmdr_size_0):
     assert cmdr_size(Format.STANDARD) == cmdr_size_0
+
 
 @pytest.mark.deck_size
 def test_fmt_standardbrawl_cmdr_size(cmdr_size_1):
