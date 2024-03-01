@@ -188,9 +188,11 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             return False
         if self.cmdr.total() < utils.cmdr_size(format)[0]:
             return False
-        if self.attractions.total() < utils.attractions_size(format)[0]:
+
+        # Only check attraction and sticker deck rules if there is at least 1 card in those parts.
+        if self.attractions.total() > 0 and self.attractions.total() < utils.attractions_size(format)[0]:
             return False
-        if self.stickers.total() < utils.stickers_size(format)[0]:
+        if self.stickers.total() > 0 and self.stickers.total() < utils.stickers_size(format)[0]:
             return False
 
         # Check deck is within maximum size requirements
@@ -200,9 +202,11 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             return False
         if self.cmdr.total() > utils.cmdr_size(format)[1]:
             return False
-        if self.attractions.total() > utils.attractions_size(format)[1]:
+
+        # Only check attraction and sticker deck rules if there is at least 1 card in those parts.
+        if self.attractions.total() > 0 and self.attractions.total() > utils.attractions_size(format)[1]:
             return False
-        if self.stickers.total() > utils.stickers_size(format)[1]:
+        if self.stickers.total() > 0 and self.stickers.total() > utils.stickers_size(format)[1]:
             return False
 
         # Check card quantities do not exceed acceptable maximums per card
@@ -217,9 +221,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         # Check attraction and sticker deck uniqueness rules
         if format not in [Format.LIMITED, Format.NONE]:
-            if len(self.attractions) > len(set(self.attractions)):
+            if len(self.attractions) > len(set(self.attractions.cards)):
                 return False
-            if len(self.stickers) > len(set(self.stickers)):
+            if len(self.stickers) > len(set(self.stickers.cards)):
                 return False
 
         return True

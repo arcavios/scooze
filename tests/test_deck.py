@@ -188,17 +188,17 @@ def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
 
 def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
     deck = Deck[OracleCard](archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
-    assert deck.export() == f"COMMANDERS:\n{cmdr_part}\n{main_modern_4c_str}"
+    assert deck.export() == f"{main_modern_4c_str}\n\nCOMMANDERS:\n{cmdr_part}"
 
 
 def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
     deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
-    assert deck.export(DecklistFormatter.ARENA) == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    assert deck.export(DecklistFormatter.ARENA) == f"{main_modern_4c_str}\n\nSideboard\n{side_modern_4c_str}"
 
 
 def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
     deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
-    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"
+    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n\nSIDEBOARD:\n{side_modern_4c_str}"
 
 
 def test_is_legal(deck_modern_4c):
