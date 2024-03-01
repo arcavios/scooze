@@ -237,9 +237,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         # Check attraction and sticker deck uniqueness rules
         if format not in [Format.LIMITED, Format.NONE]:
-            if len(self.attractions) > len(set(self.attractions.cards)):
+            if self.attractions.total() > len(self.attractions.cards):
                 return False
-            if len(self.stickers) > len(set(self.stickers.cards)):
+            if self.stickers.total() > len(self.stickers.cards):
                 return False
 
         return True

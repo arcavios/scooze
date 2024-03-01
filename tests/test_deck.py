@@ -47,26 +47,26 @@ def attraction_cards(
     attraction_balloon_stand,
     attraction_bounce_chamber,
     attraction_bumper_cars,
-    attraction_centrifuge,
     attraction_clown_extruder,
     attraction_concession_stand,
     attraction_costume_shop,
-    attraction_cover_the_spot,
-    attractionn_dart_throw,
     attraction_drop_tower,
+    attraction_ferris_wheel,
+    attraction_foam_weapons_kiosk,
+    attraction_fortune_teller,
 ) -> Counter[OracleCard]:
     return Counter[OracleCard](
         {
             attraction_balloon_stand: 1,
             attraction_bounce_chamber: 1,
             attraction_bumper_cars: 1,
-            attraction_centrifuge: 1,
             attraction_clown_extruder: 1,
             attraction_concession_stand: 1,
             attraction_costume_shop: 1,
-            attraction_cover_the_spot: 1,
-            attractionn_dart_throw: 1,
             attraction_drop_tower: 1,
+            attraction_ferris_wheel: 1,
+            attraction_foam_weapons_kiosk: 1,
+            attraction_fortune_teller: 1,
         }
     )
 
@@ -227,10 +227,6 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
     )
 
 
-# TODO(#218): test_diff_attractions
-# TODO(#218): test_diff_stickers
-
-
 def test_decklist_equals(deck_modern_4c, main_modern_4c, side_modern_4c, card_omnath_locus_of_creation):
     deck = Deck[OracleCard](
         archetype="test_decklist_equals",
@@ -325,9 +321,14 @@ def test_is_legal(deck_modern_4c):
     assert deck_modern_4c.is_legal()  # format = None
 
 
-# TODO(#218): test attraction and sticker deck legalities. might be more than one test.
-def test_is_legal_attractions_stickers():
-    pass
+def test_is_legal_attractions_stickers(card_forest, attraction_part, sticker_part, attraction_balloon_stand, sticker_ancestral_hotdog_minotaur):
+    main = DeckPart[OracleCard](Counter[OracleCard]({card_forest: 60}))
+    deck = Deck[OracleCard](archetype="test_is_legal_attractions_stickers", main=main, attractions=attraction_part, stickers=sticker_part)
+    assert deck.is_legal(Format.LEGACY)
+    deck.add_card(attraction_balloon_stand, in_the=InThe.ATTRACTIONS)
+    assert not deck.is_legal(Format.LEGACY)
+    deck.add_card(sticker_ancestral_hotdog_minotaur, in_the=InThe.STICKERS)
+    assert not deck.is_legal(Format.LEGACY)
 
 
 def test_is_legal_16_sideboard(deck_modern_4c, card_aether_gust):
