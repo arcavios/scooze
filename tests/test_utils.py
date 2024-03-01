@@ -251,42 +251,6 @@ def test_normal_max_relentless_quantity():
 
 # region Normal Cards
 
-# match fmt.value:
-#     case Format.LIMITED:
-#         return maxsize
-
-#     case (
-#         Format.BRAWL
-#         | Format.COMMANDER
-#         | Format.DUEL
-#         | Format.GLADIATOR
-#         | Format.HISTORICBRAWL
-#         | Format.OATHBREAKER
-#         | Format.PAUPERCOMMANDER
-#         | Format.PREDH
-#     ):
-#         return 1
-
-#     case (
-#         Format.ALCHEMY
-#         | Format.EXPLORER
-#         | Format.FUTURE
-#         | Format.HISTORIC
-#         | Format.LEGACY
-#         | Format.MODERN
-#         | Format.OLDSCHOOL
-#         | Format.PAUPER
-#         | Format.PENNY
-#         | Format.PIONEER
-#         | Format.PREMODERN
-#         | Format.STANDARD
-#         | Format.VINTAGE
-#     ):
-#         return 4
-
-#     case Format.NONE | _:
-#         return maxsize
-
 
 @pytest.mark.card_quantity
 def test_fmt_alchemy_max_card_quantity():
@@ -326,11 +290,6 @@ def test_fmt_gladiator_max_card_quantity():
 @pytest.mark.card_quantity
 def test_fmt_historic_max_card_quantity():
     assert max_card_quantity(Format.HISTORIC) == 4
-
-
-@pytest.mark.card_quantity
-def test_fmt_historicbrawl_max_card_quantity():
-    assert max_card_quantity(Format.HISTORICBRAWL) == 1
 
 
 @pytest.mark.card_quantity
@@ -463,11 +422,6 @@ def test_fmt_historic_main_size(main_size_60):
 
 
 @pytest.mark.deck_size
-def test_fmt_historicbrawl_main_size(main_size_99):
-    assert main_size(Format.HISTORICBRAWL) == main_size_99
-
-
-@pytest.mark.deck_size
 def test_fmt_legacy_main_size(main_size_60):
     assert main_size(Format.LEGACY) == main_size_60
 
@@ -593,11 +547,6 @@ def test_fmt_historic_side_size(side_size_15):
 
 
 @pytest.mark.deck_size
-def test_fmt_historicbrawl_side_size(side_size_0):
-    assert side_size(Format.HISTORICBRAWL) == side_size_0
-
-
-@pytest.mark.deck_size
 def test_fmt_legacy_side_size(side_size_15):
     assert side_size(Format.LEGACY) == side_size_15
 
@@ -720,11 +669,6 @@ def test_fmt_gladiator_cmdr_size(cmdr_size_0):
 @pytest.mark.deck_size
 def test_fmt_historic_cmdr_size(cmdr_size_0):
     assert cmdr_size(Format.HISTORIC) == cmdr_size_0
-
-
-@pytest.mark.deck_size
-def test_fmt_historicbrawl_cmdr_size(cmdr_size_1):
-    assert cmdr_size(Format.HISTORICBRAWL) == cmdr_size_1
 
 
 @pytest.mark.deck_size
