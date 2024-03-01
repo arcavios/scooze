@@ -111,11 +111,13 @@ def max_relentless_quantity(name: str) -> int:
             | "Snow-Covered Swamp"
             | "Snow-Covered Mountain"
             | "Snow-Covered Forest"
+            | "Snow-Covered Wastes"
             | "Dragon's Approach"
             | "Persistent Petitioners"
             | "Rat Colony"
             | "Relentless Rats"
             | "Shadowborn Apostle"
+            | "Slime Against Humanity"
         ):
             return maxsize
         case _:
@@ -289,6 +291,101 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
             return 2, 2
 
         case Format.NONE | _:
+            return 0, maxsize
+
+
+def attractions_size(fmt: Format) -> tuple[int, int]:
+    """
+    Given a Format, what are the min and max size for the attraction deck?
+
+    - Attraction decks must contain at least 10 attraction cards in
+    constructed. They must be unique.
+    - Attraction decks must contain at least 3 attraction cards in limited.
+    They do not need to be unique.
+    """
+
+    match fmt.value:
+        case (
+            Format.COMMANDER
+            | Format.DUEL
+            | Format.LEGACY
+            | Format.OATHBREAKER
+            | Format.PAUPER
+            | Format.PAUPERCOMMANDER
+            | Format.VINTAGE
+        ):
+            return 10, maxsize
+
+        case (
+            Format.ALCHEMY
+            | Format.BRAWL
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.GLADIATOR
+            | Format.HISTORIC
+            | Format.HISTORICBRAWL
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREDH
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.STANDARDBRAWL
+            | Format.TIMELESS
+        ):
+            return 0, 0
+
+        case Format.LIMITED:
+            return 3, maxsize
+
+        case Format.NONE | _:
+            return 0, maxsize
+
+
+def stickers_size(fmt: Format) -> tuple[int, int]:
+    """
+    Given a Format, what are the min and max size for the sticker deck?
+
+    - Sticker decks must contain at least 10 unique sheets in constructed.
+    3 are randomly chosen at the start of each game.
+    - Sticker decks in limited may contain up to 3 sheets from among those
+    opened. There could be repeats.
+    """
+
+    match fmt.value:
+        case (
+            Format.COMMANDER
+            | Format.DUEL
+            | Format.LEGACY
+            | Format.OATHBREAKER
+            | Format.PAUPER
+            | Format.PAUPERCOMMANDER
+            | Format.VINTAGE
+        ):
+            return 10, maxsize
+
+        case (
+            Format.ALCHEMY
+            | Format.BRAWL
+            | Format.EXPLORER
+            | Format.FUTURE
+            | Format.GLADIATOR
+            | Format.HISTORIC
+            | Format.HISTORICBRAWL
+            | Format.MODERN
+            | Format.OLDSCHOOL
+            | Format.PENNY
+            | Format.PIONEER
+            | Format.PREDH
+            | Format.PREMODERN
+            | Format.STANDARD
+            | Format.STANDARDBRAWL
+            | Format.TIMELESS
+        ):
+            return 0, 0
+
+        case Format.LIMITED | Format.NONE | _:
             return 0, maxsize
 
 
@@ -499,7 +596,15 @@ class DictDiff(ComparableObject):
         diff.update({k: (NO_KEY, d2[k]) for k in d2.keys() - both})
         return DictDiff(diff)
 
-    # endregion
+    def is_empty(self):
+        """
+        Determines if this diff is empty.
+        """
+
+        return self.contents == {}
+
+
+# endregion
 
 
 # endregion

@@ -14,28 +14,52 @@ class DeckDiff(ComparableObject):
         main: The diff between the main decks of two Decks.
         side: The diff between the sideboards of two Decks.
         cmdr: The diff between the command zones of two Decks.
+        attractions: The diff between the attractions of the two Decks.
+        stickers: The diff between the stickers fo the two Decks.
     """
 
-    def __init__(self, main: DictDiff, side: DictDiff, cmdr: DictDiff):
+    def __init__(
+        self,
+        main: DictDiff,
+        side: DictDiff = None,
+        cmdr: DictDiff = None,
+        attractions: DictDiff = None,
+        stickers: DictDiff = None,
+    ):
         self.main = main
-        self.side = side
-        self.cmdr = cmdr
+        self.side = side or DictDiff(contents={})
+        self.cmdr = cmdr or DictDiff(contents={})
+        self.attractions = attractions or DictDiff(contents={})
+        self.stickers = stickers or DictDiff(contents={})
 
     def __str__(self):
         if self.total() > 0:
             main_diff = str(self.main)
             side_diff = str(self.side)
             cmdr_diff = str(self.cmdr)
-            return f"Main Diff:\n{main_diff}\nSide Diff:\n{side_diff}\nCmdr Diff:\n{cmdr_diff}"
-        else:
-            return ""
+            attractions_diff = str(self.stickers)
+            stickers_diff = str(self.stickers)
+
+            diff = f"Main Diff:\n{main_diff}"
+            if not self.side.is_empty():
+                diff += f"\nSide Diff:\n{side_diff}"
+            if not self.cmdr.is_empty():
+                diff += f"\nCmdr Diff:\n{cmdr_diff}"
+            if not self.attractions.is_empty():
+                diff += f"\nAttractions Diff:\n{attractions_diff}"
+            if not self.stickers.is_empty():
+                diff += f"\nStickers{stickers_diff}"
+
+            return diff
+
+        return ""
 
     def total(self) -> int:
         """
         The number of Cards in this DeckDiff.
         """
 
-        return len(self.main) + len(self.side) + len(self.cmdr)
+        return sum(map(len, (self.main, self.side, self.cmdr, self.attractions, self.stickers)))
 
 
 class DeckPart(ComparableObject, Generic[CardT]):
