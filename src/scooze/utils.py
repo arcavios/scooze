@@ -142,6 +142,7 @@ def max_card_quantity(fmt: Format) -> int:
             | Format.OATHBREAKER
             | Format.PAUPERCOMMANDER
             | Format.PREDH
+            | Format.STANDARDBRAWL
         ):
             return 1
 
@@ -158,6 +159,7 @@ def max_card_quantity(fmt: Format) -> int:
             | Format.PIONEER
             | Format.PREMODERN
             | Format.STANDARD
+            | Format.TIMELESS
             | Format.VINTAGE
         ):
             return 4
@@ -191,11 +193,12 @@ def main_size(fmt: Format) -> tuple[int, int]:
             | Format.PIONEER
             | Format.PREMODERN
             | Format.STANDARD
+            | Format.TIMELESS
             | Format.VINTAGE
         ):
             return 60, maxsize
 
-        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH:
+        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 99, 99
 
         case Format.COMMANDER | Format.DUEL:
@@ -230,6 +233,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
             | Format.PIONEER
             | Format.PREMODERN
             | Format.STANDARD
+            | Format.TIMELESS
             | Format.VINTAGE
         ):
             return 0, 15
@@ -243,6 +247,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
             | Format.OATHBREAKER
             | Format.PAUPERCOMMANDER
             | Format.PREDH
+            | Format.STANDARDBRAWL
         ):
             return 0, 0
 
@@ -271,11 +276,12 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
             | Format.PIONEER
             | Format.PREMODERN
             | Format.STANDARD
+            | Format.TIMELESS
             | Format.VINTAGE
         ):
             return 0, 0
 
-        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH:
+        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 1, 1
 
         case Format.COMMANDER | Format.DUEL:
@@ -497,9 +503,9 @@ class JsonNormalizer:
 
         return frozendict(
             {
-                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k)
-                if convert_key_to_enum
-                else k: (JsonNormalizer.to_enum(e=convert_value_to_enum, v=v) if convert_value_to_enum else v)
+                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k) if convert_key_to_enum else k: (
+                    JsonNormalizer.to_enum(e=convert_value_to_enum, v=v) if convert_value_to_enum else v
+                )
                 for k, v in d.items()
             }
         )

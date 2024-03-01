@@ -108,6 +108,8 @@ class Format(ExtendedEnum, StrEnum):
     PREDH = auto()
     PREMODERN = auto()
     STANDARD = auto()
+    STANDARDBRAWL = auto()
+    TIMELESS = auto()
     VINTAGE = auto()
     # non-Scryfall formats
     LIMITED = auto()

@@ -165,7 +165,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         decklist += f"\n{sb_prefix}{str(self.side)}" if self.side else ""
 
         # ARENA and MTGO not have attractions or stickers
-        decklist += f"\n{attraction_prefix}{str(self.attractions)}" if self.attractions and export_format is None else ""
+        decklist += (
+            f"\n{attraction_prefix}{str(self.attractions)}" if self.attractions and export_format is None else ""
+        )
         decklist += f"\n{sticker_prefix}{str(self.stickers)}" if self.stickers and export_format is None else ""
 
         return decklist
