@@ -174,6 +174,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     # TODO(#233): Add checks for commander formats to check cards for commanders' color identity
     # TODO(#234): Replace self.stickers.total() > 0 with a check to see if there are only stickers in the sticker deck
+    # TODO(#236): Add `has_valid_companion()` and `has_valid_commanders(format)`. Call them in `is_legal(format)`
     def is_legal(self, format: Format = None) -> bool:
         """
         Determine if this Deck is legal in the given format.
