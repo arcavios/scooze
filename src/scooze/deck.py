@@ -152,7 +152,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         main = str(self.main) if len(self.main) > 0 else ""
         side = (sb_prefix + str(self.side)) if len(self.side) > 0 else ""
         cmdr = (cmdr_prefix + str(self.cmdr) + cmdr_suffix) if len(self.cmdr) > 0 else ""
-        decklist = f"{cmdr}{main}{side}"
+        attractions = ""  # TODO(218): update export to include attractions
+        stickers = ""  # TODO(218): update export to include stickers
+        decklist = f"{cmdr}{main}{side}{attractions}{stickers}"
 
         return decklist
 
@@ -160,7 +162,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         """
         Determine if this Deck is legal in the given format.
 
-        Default checks against `self.Format`. If `self.Format` is unset, checks against `Format.NONE`.
+        Default checks against `self.Format`. If `self.Format` is unset, checks
+        against `Format.NONE`.
 
         - For cards with `Legality.RESTRICTED`, only 1 or fewer may be present
         throughout all deck parts.
@@ -185,7 +188,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             return False
         if self.cmdr.total() < utils.cmdr_size(format)[0]:
             return False
-        # TODO(#218): add attraction and sticker checks
+        if self.attractions.total() < utils.attractions_size(format)[0]:
+            return False
+        if self.stickers.total() < utils.stickers_size(format)[0]:
+            return False
 
         # Check deck is within maximum size requirements
         if self.main.total() > utils.main_size(format)[1]:
@@ -194,7 +200,10 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             return False
         if self.cmdr.total() > utils.cmdr_size(format)[1]:
             return False
-        # TODO(#218): add attraction and sticker checks
+        if self.attractions.total() > utils.attractions_size(format)[1]:
+            return False
+        if self.stickers.total() > utils.stickers_size(format)[1]:
+            return False
 
         # Check card quantities do not exceed acceptable maximums per card
         for c, q in self.cards.items():
@@ -205,7 +214,13 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
             if q > utils.max_card_quantity(format) and q > utils.max_relentless_quantity(c.name):
                 return False
-        # TODO(#218): add attraction and sticker checks
+
+        # Check attraction and sticker deck uniqueness rules
+        if format not in [Format.LIMITED, Format.NONE]:
+            if len(self.attractions) > len(set(self.attractions)):
+                return False
+            if len(self.stickers) > len(set(self.stickers)):
+                return False
 
         return True
 
