@@ -290,6 +290,10 @@ def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_mo
     deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
     assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n{side_modern_4c_str}"
 
+def test_export_mtgo_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
+    deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, cmdr=cmdr_part)
+    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n{cmdr_part}"
+
 
 def test_is_legal(deck_modern_4c):
     assert not deck_modern_4c.is_legal(Format.ALCHEMY)
