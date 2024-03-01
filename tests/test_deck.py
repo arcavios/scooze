@@ -43,6 +43,40 @@ def cmdr_part(cmdr_cards) -> DeckPart[OracleCard]:
 
 
 @pytest.fixture
+def attraction_cards(
+    card_balloon_stand,
+    card_bounce_chamber,
+    card_bumper_cars,
+    card_centrifuge,
+    card_clown_extruder,
+    card_concession_stand,
+    card_costume_shop,
+    card_cover_the_spot,
+    card_dart_throw,
+    card_drop_tower,
+) -> Counter[OracleCard]:
+    return Counter[OracleCard](
+        {
+            card_balloon_stand: 1,
+            card_bounce_chamber: 1,
+            card_bumper_cars: 1,
+            card_centrifuge: 1,
+            card_clown_extruder: 1,
+            card_concession_stand: 1,
+            card_costume_shop: 1,
+            card_cover_the_spot: 1,
+            card_dart_throw: 1,
+            card_drop_tower: 1,
+        }
+    )
+
+
+@pytest.fixture
+def attraction_part(attraction_cards) -> DeckPart[OracleCard]:
+    return DeckPart[OracleCard](cards=attraction_cards)
+
+
+@pytest.fixture
 def dictdiff_empty() -> DictDiff:
     return DictDiff(contents={})
 
@@ -191,9 +225,21 @@ def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
     assert deck.export() == f"Commander(s):\n{cmdr_part}\nDeck:\n{main_modern_4c_str}"
 
 
+def test_export_default_attractions(main_modern_4c, main_modern_4c_str, attraction_part):
+    deck = Deck[OracleCard](archetype="test_export_default_attractions", main=main_modern_4c, attractions=attraction_part)
+    assert deck.export() == f"Deck:\n{main_modern_4c_str}\nAttractions:\n{attraction_part}"
+
+# TODO: test export with stickers
+
+
 def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
     deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
     assert deck.export(DecklistFormatter.ARENA) == f"Deck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+
+
+# TODO: add test for arena + companion
+
+# TODO: add test for arena + commander
 
 
 def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):

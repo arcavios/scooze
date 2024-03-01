@@ -434,8 +434,20 @@ def card_aether_gust(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def card_balloon_stand(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2e9eaed8-e956-4fb2-a23d-3d442cd2fa5c")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_boseiju_who_endures(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_bounce_chamber(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "8e5985a9-2f9c-45b9-ac59-f29e7197b301")
     return OracleCard.from_json(card_json)
 
 
@@ -446,14 +458,56 @@ def card_breeding_pool(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def card_bumper_cars(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2bdefffa-14bb-4a2b-9e75-13e29eaa6677")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_centrifuge(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "3eed5075-0632-4af1-8a16-9b959317e154")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_chalice_of_the_void(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
     return OracleCard.from_json(card_json)
 
 
 @pytest.fixture(scope="session")
+def card_clown_extruder(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "54cd6f28-11b0-4d69-bc2c-9050c2478b1d")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_concession_stand(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "49ab8948-1080-487b-b0a0-c5d11935141f")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_costume_shop(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "c81dd9df-0eeb-42fd-8dd0-fd7f154954e0")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_counterspell(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "8493131c-0a7b-4be6-a8a2-0b425f4f67fb")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_cover_the_spot(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "174517f4-efdc-4932-bc6a-53703dfa6875")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_dart_throw(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "c1d11e43-6942-408a-a585-7f431b154f65")
     return OracleCard.from_json(card_json)
 
 
@@ -466,6 +520,12 @@ def card_dovins_veto(cards_json) -> OracleCard:
 @pytest.fixture(scope="session")
 def card_dress_down(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "04f9f061-67b8-4427-9fcb-b3ccfee8fc5d")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_drop_tower(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b738cd8d-f88b-431e-b66f-dc32e39a9606")
     return OracleCard.from_json(card_json)
 
 

@@ -5,6 +5,7 @@
 ### Added
 
 - Add support for symbols on cards (mana, energy, tap/untap, etc.) ([#214](https://github.com/arcavios/scooze/pull/214))
+- Add support for attraction and sticker decks ([#231](https://github.com/arcavios/scooze/pull/231))
 
 ### Changed
 

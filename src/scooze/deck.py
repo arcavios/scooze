@@ -155,6 +155,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
                 companion_prefix = "Companion:\n"
                 main_prefix = "Deck:\n"
                 sb_prefix = "Sideboard:\n"
+                attraction_prefix = "Attractions:\n"
+                sticker_prefix = "Stickers:\n"
 
         # ARENA and PLAINTEXT should be roughly the same.
         decklist = f"{cmdr_prefix}{str(self.cmdr)}\n" if self.cmdr else ""
@@ -162,8 +164,14 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         decklist += f"{main_prefix}{str(self.main)}"
         decklist += f"\n{sb_prefix}{str(self.side)}" if self.side else ""
 
+        # ARENA and MTGO not have attractions or stickers
+        decklist += f"\n{attraction_prefix}{str(self.attractions)}" if self.attractions and export_format is None else ""
+        decklist += f"\n{sticker_prefix}{str(self.stickers)}" if self.stickers and export_format is None else ""
+
         return decklist
 
+    # TODO(#233): Add checks for commander formats to check cards for commanders' color identity
+    # TODO(#234): Replace self.stickers.total() > 0 with a check to see if there are only stickers in the sticker deck
     def is_legal(self, format: Format = None) -> bool:
         """
         Determine if this Deck is legal in the given format.
