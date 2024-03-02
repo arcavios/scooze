@@ -11,6 +11,7 @@
 ### Changed
 
 - Using Beanie ODM to handle Mongo IO ([#220](https://github.com/arcavios/scooze/pull/220))
+- Removed Historic Brawl format ([#237](https://github.com/arcavios/scooze/pull/237))
 
 ### Fixed
 
