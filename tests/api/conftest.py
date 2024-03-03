@@ -1,5 +1,14 @@
+import asyncio
+
 import pytest
 from scooze.card import Card, FullCard, OracleCard
+
+
+@pytest.fixture(scope="session")
+def asyncio_runner():
+    with asyncio.Runner() as runner:
+        yield runner
+
 
 # region Card fixtures
 

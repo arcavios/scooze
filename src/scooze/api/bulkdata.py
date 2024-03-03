@@ -6,6 +6,7 @@ from scooze.models.card import CardModel, CardModelData
 
 
 async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
+async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
     """
     Loads the desired file from the given directory into a local Mongo
     database. Attempts to download it from Scryfall if it isn't found.
@@ -32,6 +33,16 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
                     return len(batch_results.inserted_ids)
                 return 0
 
+            for card_json in card_jsons:
+                if (validated_card := _try_validate_card(card_json)) is not None:
+                    current_batch.append(validated_card)
+                    current_batch_count += 1
+                    if current_batch_count >= batch_size:
+                        results_count += await load_batch(current_batch)
+                        current_batch = []
+                        current_batch_count = 0
+                        print(f"Finished processing {results_count} cards...", end="\r")
+            results_count += await load_batch(current_batch)
             for card_json in card_jsons:
                 if (validated_card := _try_validate_card(card_json)) is not None:
                     current_batch.append(validated_card)

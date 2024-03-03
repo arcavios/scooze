@@ -11,10 +11,12 @@ from scooze.utils import to_lower_camel
 
 
 async def insert_document(coll_type: DbCollection, document: dict[str, Any]):
+async def insert_document(coll_type: DbCollection, document: dict[str, Any]):
     """
     Insert a document into a collection in the database.
 
     Args:
+        coll_type: The collection to insert into.
         coll_type: The collection to insert into.
         document: The document to insert.
 
@@ -33,10 +35,12 @@ async def insert_document(coll_type: DbCollection, document: dict[str, Any]):
 
 
 async def get_document_by_property(coll_type: DbCollection, property_name: str, value):
+async def get_document_by_property(coll_type: DbCollection, property_name: str, value):
     """
     Search a collection in the database for the first document matching the given criteria.
 
     Args:
+        coll_type: The collection to search.
         coll_type: The collection to search.
         property_name: The property to check.
         value: The value to match on.
@@ -57,10 +61,12 @@ async def get_document_by_property(coll_type: DbCollection, property_name: str, 
 
 
 async def update_document(coll_type: DbCollection, id: str, document: dict[str, Any]):
+async def update_document(coll_type: DbCollection, id: str, document: dict[str, Any]):
     """
     Update a document in a collection with new values.
 
     Args:
+        coll_type: The collection containing the document to update.
         coll_type: The collection containing the document to update.
         id: The ID of the document to update.
         document: The properties to update and their new values.
@@ -75,6 +81,8 @@ async def update_document(coll_type: DbCollection, id: str, document: dict[str, 
     if len(document) == 0:
         raise ValueError(f"No data given, skipping update for {coll_type.title} with id: {id}")
     return await db.client.scooze[coll_type].find_one_and_update(
+        raise ValueError(f"No data given, skipping update for {coll_type.title} with id: {id}")
+    return await db.client.scooze[coll_type].find_one_and_update(
         {"_id": ObjectId(id)},
         {"$set": document},
         return_document=ReturnDocument.AFTER,
@@ -82,16 +90,20 @@ async def update_document(coll_type: DbCollection, id: str, document: dict[str, 
 
 
 async def delete_document(coll_type: DbCollection, id: str):
+async def delete_document(coll_type: DbCollection, id: str):
     """
     Delete a document from the database.
 
     Args:
+        coll_type: The collection to delete from.
         coll_type: The collection to delete from.
         id: The ID of the document to delete.
 
     Returns:
         The deleted document, or None if unable to delete.
     """
+
+    return await db.client.scooze[coll_type].find_one_and_delete({"_id": ObjectId(id)})
 
     return await db.client.scooze[coll_type].find_one_and_delete({"_id": ObjectId(id)})
 
@@ -102,10 +114,12 @@ async def delete_document(coll_type: DbCollection, id: str):
 
 
 async def insert_many_documents(coll_type: DbCollection, documents: list[dict[str, Any]]):
+async def insert_many_documents(coll_type: DbCollection, documents: list[dict[str, Any]]):
     """
     Insert a list of documents into the database.
 
     Args:
+        coll_type: The collection to insert into.
         coll_type: The collection to insert into.
         documents: The list of documents to insert.
 
@@ -114,13 +128,16 @@ async def insert_many_documents(coll_type: DbCollection, documents: list[dict[st
     """
 
     return await db.client.scooze[coll_type].insert_many(documents)
+    return await db.client.scooze[coll_type].insert_many(documents)
 
 
+async def get_random_documents(coll_type: DbCollection, limit: int):
 async def get_random_documents(coll_type: DbCollection, limit: int):
     """
     Get a random sample of documents from a single collection in the database.
 
     Args:
+        coll_type: The desired collection.
         coll_type: The desired collection.
         limit: The number of documents to return.
 
@@ -144,9 +161,25 @@ async def get_all_documents(coll_type: DbCollection):
     """
 
     return await db.client.scooze[coll_type].find().to_list(None)
+    return await db.client.scooze[coll_type].aggregate(pipeline).to_list(limit)
+
+
+async def get_all_documents(coll_type: DbCollection):
+    """
+    Get a random sample of documents from a single collection in the database.
+
+    Args:
+        coll_type: The desired collection.
+
+    Returns:
+        The list of random documents.
+    """
+
+    return await db.client.scooze[coll_type].find().to_list(None)
 
 
 async def get_documents_by_property(
+    coll_type: DbCollection,
     coll_type: DbCollection,
     property_name: str,
     values: list[Any],
@@ -180,6 +213,7 @@ async def get_documents_by_property(
 
     return (
         await db.client.scooze[coll_type]
+        await db.client.scooze[coll_type]
         .find({"$or": [{property_name: v} for v in vals]})
         .skip((page - 1) * page_size if paginated else 0)
         .to_list(page_size if paginated else None)
@@ -207,11 +241,13 @@ async def delete_documents(coll_type: DbCollection) -> DeleteResult:
 
     Args:
         coll_type: The collection to delete from.
+        coll_type: The collection to delete from.
 
     Returns:
         A PyMongo DeleteResult.
     """
 
+    return await db.client.scooze[coll_type].delete_many({})  # NOTE: This deletes the entire collection.
     return await db.client.scooze[coll_type].delete_many({})  # NOTE: This deletes the entire collection.
 
 

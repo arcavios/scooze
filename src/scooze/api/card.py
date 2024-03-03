@@ -38,6 +38,7 @@ async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -
 
 
 async def get_cards_by(
+async def get_cards_by(
     property_name: str,
     values: list[Any],
     card_class: CardT = FullCard,
