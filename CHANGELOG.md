@@ -4,6 +4,25 @@
 
 ### Added
 
+- N/A
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Docs
+
+- N/A
+
+
+## [1.0.6] - 2024-03-02
+
+### Added
+
 - Add support for symbols on cards (mana, energy, tap/untap, etc.) ([#214](https://github.com/arcavios/scooze/pull/214))
 - Add support for attraction and sticker decks ([#231](https://github.com/arcavios/scooze/pull/231))
 - Add support for Timeless and Standard Brawl formats ([#235](https://github.com/arcavios/scooze/pull/235))
