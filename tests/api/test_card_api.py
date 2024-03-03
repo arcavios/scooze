@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock, patch
 
+import pytest
 import scooze.api.card as card_api
 from beanie import PydanticObjectId
 from scooze.card import Card, FullCard, OracleCard
