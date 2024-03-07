@@ -96,7 +96,6 @@ class Format(ExtendedEnum, StrEnum):
     FUTURE = auto()
     GLADIATOR = auto()
     HISTORIC = auto()
-    HISTORICBRAWL = auto()
     LEGACY = auto()
     MODERN = auto()
     OATHBREAKER = auto()
