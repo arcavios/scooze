@@ -20,6 +20,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
         attractions: The attraction deck.
         stickers: The sticker deck.
+        companion: This deck's companion (if applicable).
     """
 
     def __init__(
@@ -52,13 +53,12 @@ class Deck(utils.ComparableObject, Generic[CardT]):
         decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
+    # TODO(#112): Add type filters.
+    # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
     def average_cmc(self) -> float:
         """
         The average mana value of cards in this Deck.
         """
-
-        # TODO(#112): Add type filters.
-        # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
 
         total_cards = self.total_cards()
 
@@ -66,13 +66,12 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             return self.total_cmc() / self.total_cards()
         return 0
 
+    # TODO(#112): Add type filters.
     def average_words(self) -> float:
         """
         The average number of words across all oracle text on all cards in this
         Deck (excludes reminder text).
         """
-
-        # TODO(#112): Add type filters.
 
         total_cards = self.total_cards()
 
@@ -353,7 +352,6 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             in_the: Where to remove the cards from (main, side, etc.)
         """
 
-        # using counterA - counterB results in a new Counter with only positive results
         match in_the:
             case InThe.MAIN:
                 self.main.remove_cards(cards=cards)
