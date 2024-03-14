@@ -32,7 +32,7 @@ def load_scooze_command(name: str) -> Callable[[], Command]:
     def _scooze_command_factory() -> Command:
         cli_words = name.split(" ")
         # We want `docker` in the setup command name, but need a different filename for import to work
-        # TODO: find a way to do this without ugly special casing
+        # TODO(#246): find a way to do this without ugly special casing
         if cli_words[-1] == "docker":
             cli_words[-1] = "setup-docker"
             module = import_module("scooze.console.commands." + ".".join(cli_words))
