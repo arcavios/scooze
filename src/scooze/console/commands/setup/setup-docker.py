@@ -2,7 +2,7 @@ import subprocess
 
 import docker
 from cleo.commands.command import Command
-from docker.errors import ImageNotFound
+from docker.errors import APIError, ImageNotFound
 
 
 class SetupDockerCommand(Command):
@@ -23,8 +23,8 @@ class SetupDockerCommand(Command):
         client = docker.from_env()
         try:
             scooze_container = client.containers.get("scooze-mongodb")
-        except ImageNotFound:
-            # image doesn't yet exist; start it
+        except (APIError, ImageNotFound):
+            # image doesn't yet exist; create and start it
             self.line("Setting up latest MongoDB Docker container as scooze-mongodb...")
             # Start Docker container
             client.containers.run("mongo:latest", detach=True, ports=({"27017/tcp": 27017}), name="scooze-mongodb")
