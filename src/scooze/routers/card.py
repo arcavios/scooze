@@ -72,7 +72,8 @@ async def add_card(card_data: CardModelData) -> CardModel:
 
     try:
         # NOTE: would like to add the dupe protection back in
-        card = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+        card = CardModel.model_validate(card_data.model_dump())
+
         return await card.create()
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to create a new card. Error: {e}")
