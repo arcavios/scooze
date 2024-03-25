@@ -19,7 +19,7 @@ class TestScoozeApiWithPopulatedDatabase:
 
         for card_json in cards_json:
             card_data = CardModelData.model_validate_json(card_json)
-            card = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+            card = CardModel.model_validate(card_data.model_dump())
             await card.create()
 
         yield

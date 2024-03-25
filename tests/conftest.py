@@ -115,7 +115,7 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
 
 def get_cardmodel_from_json(card_json: dict) -> CardModel:
     card_data = CardModelData.model_validate(card_json)
-    return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+    return CardModel.model_validate(card_data.model_dump())
 
 
 @pytest.fixture(scope="session")

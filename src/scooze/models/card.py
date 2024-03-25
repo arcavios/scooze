@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Any
 
-from pydantic import ConfigDict, Field, field_serializer, field_validator
+from pydantic import AliasChoices, ConfigDict, Field, field_serializer, field_validator
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
@@ -174,8 +174,7 @@ class CardModelData(ScoozeBaseModel):
     scryfall_id: str | None = Field(
         default=None,
         description="Scryfall's unique ID for this card.",
-        validation_alias="id",
-        alias_priority=1,
+        validation_alias=AliasChoices("scryfall_id", "scryfallId", "id"),
     )
     lang: Language | None = Field(
         default=None,
