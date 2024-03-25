@@ -1,6 +1,7 @@
 import argparse
 import logging
 import re
+import sys
 from collections import Counter
 from datetime import date, datetime
 from sys import maxsize
@@ -32,6 +33,40 @@ def to_lower_camel(string: str) -> str:
     return to_camel(string)
 
 
+# TODO: remove this setlevel stuff and formatters
+class ExFormatter(logging.Formatter):
+    def_keys = [
+        "name",
+        "msg",
+        "args",
+        "levelname",
+        "levelno",
+        "pathname",
+        "filename",
+        "module",
+        "exc_info",
+        "exc_text",
+        "stack_info",
+        "lineno",
+        "funcName",
+        "created",
+        "msecs",
+        "relativeCreated",
+        "thread",
+        "threadName",
+        "processName",
+        "process",
+        "message",
+    ]
+
+    def format(self, record):
+        string = super().format(record)
+        extra = {k: v for k, v in record.__dict__.items() if k not in self.def_keys}
+        if len(extra) > 0:
+            string += " - extra: " + str(extra)
+        return string
+
+
 def scooze_logger() -> logging.Logger:
     """
     Helper function to get the Scooze logger.
@@ -40,7 +75,17 @@ def scooze_logger() -> logging.Logger:
     or handlers, so users can make informed decisions about their own logging.
     """
 
-    return logging.get_logger("scooze")
+    logger = logging.getLogger("scooze")
+    logger.propagate = False
+    logger.setLevel(logging.DEBUG)
+
+    root = logging.getLogger()
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(ExFormatter())
+    logger.addHandler(handler)
+
+    return logger
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):

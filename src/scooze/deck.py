@@ -7,6 +7,8 @@ from scooze.card import CardT
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 
+logger = utils.scooze_logger()
+
 
 class Deck(utils.ComparableObject, Generic[CardT]):
     """
@@ -294,7 +296,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             case InThe.STICKERS:
                 self.stickers.add_card(card=card, quantity=quantity)
             case _:
-                pass  # TODO(#75): 'in' must be one of InThe.list()
+                logger.warning(f'in_the "{in_the}" not found. Must be one of {InThe.list()}')
 
     def add_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -341,7 +343,8 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             case InThe.STICKERS:
                 self.stickers.remove_card(card=card, quantity=quantity)
             case _:
-                pass  # TODO(#75): failed to remove card
+                logger.info("Failed to remove card.", extra={"card": card})
+                logger.warning(f'in_the "{in_the}" not found. Must be one of {InThe.list()}')
 
     def remove_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
         """
@@ -364,6 +367,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             case InThe.STICKERS:
                 self.stickers.remove_cards(cards=cards)
             case _:
-                pass  # TODO(#75): failed to remove cards
+                logger.info("Failed to remove cards.")
+                logger.warning(f'in_the "{in_the}" not found. Must be one of {InThe.list()}')
 
     # endregion

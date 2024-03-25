@@ -3,7 +3,9 @@ from datetime import date
 from typing import Iterable, Mapping, Self
 
 from scooze.catalogs import Color, Component, Layout
-from scooze.utils import FloatableT, HashableObject, JsonNormalizer
+from scooze.utils import FloatableT, HashableObject, JsonNormalizer, scooze_logger
+
+logger = scooze_logger()
 
 
 class ImageUris(HashableObject):
@@ -32,7 +34,7 @@ class ImageUris(HashableObject):
         normal: str | None = None,
         small: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
         self.png = png
         self.border_crop = border_crop
@@ -40,6 +42,9 @@ class ImageUris(HashableObject):
         self.large = large
         self.normal = normal
         self.small = small
+
+        if len(kwargs) > 0:
+            logger.debug("kwargs found", extra=kwargs)
 
 
 class CardFace(HashableObject):
@@ -50,12 +55,12 @@ class CardFace(HashableObject):
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
     Attributes:
+        name: Name of this face.
         cmc: Mana value of this face.
         color_indicator: Color indicator on this face, if any.
         colors: Colors of this face.
         loyalty: Starting planeswalker loyalty of this face, if any.
         mana_cost: Mana cost of this face.
-        name: Name of this face.
         oracle_id: Oracle ID of this face, for reversible cards.
         oracle_text: Oracle text of this face, if any.
         power: Power of this face, if any.
@@ -65,31 +70,34 @@ class CardFace(HashableObject):
 
     def __init__(
         self,
+        name: str | None = None,
         cmc: FloatableT | None = None,
         color_indicator: Iterable[Color] | None = None,
         colors: Iterable[Color] | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
-        name: str | None = None,
         oracle_id: str | None = None,
         oracle_text: str | None = None,
         power: str | None = None,
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
+        self.name = name
         self.cmc = CardPartsNormalizer.to_float(cmc)
         self.color_indicator = CardPartsNormalizer.to_frozenset(color_indicator)
         self.colors = CardPartsNormalizer.to_frozenset(colors)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
-        self.name = name
         self.oracle_id = oracle_id
         self.oracle_text = oracle_text
         self.power = power
         self.toughness = toughness
         self.type_line = type_line
+
+        if len(kwargs) > 0:
+            logger.debug("kwargs found", extra=kwargs)
 
     @classmethod
     def from_json(cls, data: dict | str) -> Self:
@@ -107,6 +115,7 @@ class FullCardFace(CardFace):
     Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
 
     Attributes:
+        name: Name of this face.
         artist: Illustrator for art on this face.
         artist_id: Scryfall ID for the artist of this face.
         cmc: Mana value of this face.
@@ -118,7 +127,6 @@ class FullCardFace(CardFace):
         layout: Layout of this face, if any.
         loyalty: Starting planeswalker loyalty of this face, if any.
         mana_cost: Mana cost of this face.
-        name: Name of this face.
         oracle_id: Oracle ID of this face, for reversible cards.
         oracle_text: Oracle text of this face, if any.
         power: Power of this face, if any.
@@ -135,6 +143,7 @@ class FullCardFace(CardFace):
 
     def __init__(
         self,
+        name: str | None = None,
         artist: str | None = None,
         artist_id: str | None = None,
         cmc: FloatableT | None = None,
@@ -146,7 +155,6 @@ class FullCardFace(CardFace):
         layout: Layout | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
-        name: str | None = None,
         oracle_id: str | None = None,
         oracle_text: str | None = None,
         power: str | None = None,
@@ -157,8 +165,9 @@ class FullCardFace(CardFace):
         type_line: str | None = None,
         watermark: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
+        self.name = name
         self.artist = artist
         self.artist_id = artist_id
         self.cmc = CardPartsNormalizer.to_float(cmc)
@@ -170,7 +179,6 @@ class FullCardFace(CardFace):
         self.layout = CardPartsNormalizer.to_enum(Layout, layout)
         self.loyalty = loyalty
         self.mana_cost = mana_cost
-        self.name = name
         self.oracle_id = oracle_id
         self.oracle_text = oracle_text
         self.power = power
@@ -180,6 +188,9 @@ class FullCardFace(CardFace):
         self.toughness = toughness
         self.type_line = type_line
         self.watermark = watermark
+
+        if len(kwargs) > 0:
+            logger.debug("kwargs found", extra=kwargs)
 
 
 class Prices(HashableObject):
@@ -204,7 +215,7 @@ class Prices(HashableObject):
         eur_foil: FloatableT | None = None,
         tix: FloatableT | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
         self.usd = CardPartsNormalizer.to_float(usd)
         self.usd_foil = CardPartsNormalizer.to_float(usd_foil)
@@ -212,6 +223,9 @@ class Prices(HashableObject):
         self.eur = CardPartsNormalizer.to_float(eur)
         self.eur_foil = CardPartsNormalizer.to_float(eur_foil)
         self.tix = CardPartsNormalizer.to_float(tix)
+
+        if len(kwargs) > 0:
+            logger.debug("kwargs found", extra=kwargs)
 
 
 class Preview(HashableObject):
@@ -230,11 +244,14 @@ class Preview(HashableObject):
         source: str | None = None,
         source_uri: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
         self.previewed_at = CardPartsNormalizer.to_date(previewed_at)
         self.source = source
         self.source_uri = source_uri
+
+        if len(kwargs) > 0:
+            logger.debug("kwargs found", extra=kwargs)
 
 
 class PurchaseUris(HashableObject):
@@ -266,30 +283,33 @@ class RelatedCard(HashableObject):
     Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
+        name: Name of linked component.
         scryfall_id: ID of linked component.
         component: One of `token`, `meld_part`, `meld_result`, or
           `combo_piece`.
-        name: Name of linked component.
         type_line: Type line of linked component.
         uri: URI of linked component.
     """
 
     def __init__(
         self,
+        name: str | None = None,
         id: str = "",  # Alias for scryfall_id
         scryfall_id: str = "",
         component: Component | None = None,
-        name: str | None = None,
         type_line: str | None = None,
         uri: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
+        self.name = name
         self.scryfall_id = scryfall_id if scryfall_id else id
         self.component = CardPartsNormalizer.to_enum(Component, component)
-        self.name = name
         self.type_line = type_line
         self.uri = uri
+
+        if len(kwargs) > 0:
+            logger.debug("kwargs found", extra=kwargs)
 
 
 class RelatedUris(HashableObject):

@@ -4,7 +4,9 @@ from beanie import PydanticObjectId
 from scooze.card import CardT, FullCard
 from scooze.errors import BulkAddError
 from scooze.models.card import CardModel, CardModelData
-from scooze.utils import to_lower_camel
+from scooze.utils import scooze_logger, to_lower_camel
+
+logger = scooze_logger()
 
 
 def _normalize_for_ids(property_name: str, value, is_many: bool = False) -> tuple[str, Any | list[Any]]:
@@ -103,8 +105,7 @@ async def add_card(card: CardT) -> PydanticObjectId:
         card.scooze_id = card_model.id
         return card_model.id
     except Exception as e:
-        # TODO(#75): log error here
-        pass
+        logger.exception("Failed to add the card to the database.", extra={"card": card}, exc_info=e)
 
 
 async def add_cards(cards: list[CardT]) -> list[PydanticObjectId]:

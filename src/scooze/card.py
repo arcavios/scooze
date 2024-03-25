@@ -32,7 +32,9 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.models.card import CardModel
-from scooze.utils import FloatableT, HashableObject
+from scooze.utils import FloatableT, HashableObject, scooze_logger
+
+logger = scooze_logger()
 
 ## Generic Types
 CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type
@@ -44,6 +46,7 @@ class Card(HashableObject):
     use to sort a decklist.
 
     Attributes:
+        name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
@@ -52,7 +55,6 @@ class Card(HashableObject):
         legalities: Formats and the legality status of this card in them.
         mana_cost: Mana cost, as string of mana symbols.
           (e.g. "{1}{W}{U}{B}{R}{G}")
-        name: This card's name.
         power: Power of this card, if applicable.
         toughness: Toughness of this card, if applicable.
         type_line: This card's type line. (e.g. "Creature — Ooze")
@@ -60,20 +62,21 @@ class Card(HashableObject):
 
     def __init__(
         self,
+        name: str | None = None,
         cmc: FloatableT | None = None,
         color_identity: Iterable[Color] | None = None,
         colors: Iterable[Color] | None = None,
         legalities: Mapping[Format, Legality] | None = None,
         mana_cost: str | None = None,
-        name: str | None = None,
         power: str | None = None,
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
         self.scooze_id = CardNormalizer.to_id(id_like=kwargs.get("id"))
 
+        self.name = name
         self.cmc = CardNormalizer.to_float(cmc)
         self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
         self.colors = CardNormalizer.to_frozenset(colors, convert_to_enum=Color)
@@ -81,10 +84,12 @@ class Card(HashableObject):
             legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality
         )
         self.mana_cost = mana_cost
-        self.name = name
         self.power = power
         self.toughness = toughness
         self.type_line = type_line
+
+        if len(kwargs) > 0:
+            logger.debug("kwargs found", extra=kwargs)
 
     def __str__(self):
         return self.name
@@ -107,6 +112,7 @@ class OracleCard(Card):
     All information in this class is print-agnostic.
 
     Attributes:
+        name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
         card_faces: All component CardFace objects of this card, for multifaced
           cards.
@@ -124,7 +130,6 @@ class OracleCard(Card):
         loyalty: This card's starting planeswalker loyalty, if applicable.
         mana_cost: Mana cost, as string of mana symbols.
           (e.g. "{1}{W}{U}{B}{R}{G}")
-        name: This card's name.
         oracle_id: A UUID for this card's oracle identity; shared across prints
           of the same card but not same-named objects with different gameplay
           properties.
@@ -142,6 +147,7 @@ class OracleCard(Card):
 
     def __init__(
         self,
+        name: str | None = None,
         card_faces: Iterable[CardFace] | None = None,
         cmc: FloatableT | None = None,
         color_identity: Iterable[Color] | None = None,
@@ -154,7 +160,6 @@ class OracleCard(Card):
         life_modifier: str | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
-        name: str | None = None,
         oracle_id: str | None = None,
         oracle_text: str | None = None,
         penny_rank: int | None = None,
@@ -166,15 +171,15 @@ class OracleCard(Card):
         toughness: str | None = None,
         type_line: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
         super().__init__(
+            name=name,
             cmc=cmc,
             color_identity=color_identity,
             colors=colors,
             legalities=legalities,
             mana_cost=mana_cost,
-            name=name,
             power=power,
             toughness=toughness,
             type_line=type_line,
@@ -244,6 +249,7 @@ class FullCard(OracleCard):
     Scryfall documentation: https://scryfall.com/docs/api/cards
 
     Attributes:
+        name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
 
     Core fields
@@ -288,7 +294,6 @@ class FullCard(OracleCard):
         loyalty: This card's starting planeswalker loyalty, if applicable.
         mana_cost: Mana cost, as string of mana symbols.
           (e.g. "{1}{W}{U}{B}{R}{G}")
-        name: This card's name.
         oracle_text: This card's oracle text, if any.
         penny_rank: This card's rank/popularity on Penny Dreadful.
         power: Power of this card, if applicable.
@@ -365,6 +370,7 @@ class FullCard(OracleCard):
 
     def __init__(
         self,
+        name: str | None = None,
         # Core Fields
         arena_id: int | None = None,
         scryfall_id: str | None = None,
@@ -394,7 +400,6 @@ class FullCard(OracleCard):
         life_modifier: str | None = None,
         loyalty: str | None = None,
         mana_cost: str | None = None,
-        name: str | None = None,
         oracle_text: str | None = None,
         oversized: bool | None = None,
         penny_rank: int | None = None,
@@ -451,9 +456,10 @@ class FullCard(OracleCard):
         variation_of: str | None = None,
         watermark: str | None = None,
         # kwargs
-        **kwargs,  # TODO(77): log information about kwargs
+        **kwargs,
     ):
         super().__init__(
+            name=name,
             card_faces=None,  # will be overridden with FullCardFace objects
             cmc=0,  # will be overridden with reversible card logic
             color_identity=color_identity,
@@ -466,7 +472,6 @@ class FullCard(OracleCard):
             life_modifier=life_modifier,
             loyalty=loyalty,
             mana_cost=mana_cost,
-            name=name,
             oracle_id=oracle_id,
             oracle_text=oracle_text,
             penny_rank=penny_rank,
