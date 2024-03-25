@@ -40,7 +40,7 @@ def scooze_logger() -> logging.Logger:
     or handlers, so users can make informed decisions about their own logging.
     """
 
-    return logging.get_logger("scooze")
+    return logging.getLogger("scooze")
 
 
 class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
