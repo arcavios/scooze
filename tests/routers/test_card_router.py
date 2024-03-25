@@ -118,9 +118,7 @@ class TestCardRouterWithEmptyDatabase:
     ):
         response = await api_client.post("/card/add", json=json_omnath_locus_of_creation)
         assert response.status_code == 200
-
         card = await CardModel.get(response.json()["_id"])
-
         assert card.model_dump(exclude=["id"]) == cardmodel_omnath.model_dump(exclude=["id"])
 
     @patch("scooze.routers.card.CardModel.create")
