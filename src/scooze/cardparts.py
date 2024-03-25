@@ -43,7 +43,7 @@ class ImageUris(HashableObject):
         self.normal = normal
         self.small = small
 
-        if len(kwargs) > 0:
+        if kwargs:
             logger.debug("kwargs found", extra=kwargs)
 
 
@@ -96,7 +96,7 @@ class CardFace(HashableObject):
         self.toughness = toughness
         self.type_line = type_line
 
-        if len(kwargs) > 0:
+        if kwargs:
             logger.debug("kwargs found", extra=kwargs)
 
     @classmethod
@@ -189,7 +189,7 @@ class FullCardFace(CardFace):
         self.type_line = type_line
         self.watermark = watermark
 
-        if len(kwargs) > 0:
+        if kwargs:
             logger.debug("kwargs found", extra=kwargs)
 
 
@@ -224,7 +224,7 @@ class Prices(HashableObject):
         self.eur_foil = CardPartsNormalizer.to_float(eur_foil)
         self.tix = CardPartsNormalizer.to_float(tix)
 
-        if len(kwargs) > 0:
+        if kwargs:
             logger.debug("kwargs found", extra=kwargs)
 
 
@@ -250,7 +250,7 @@ class Preview(HashableObject):
         self.source = source
         self.source_uri = source_uri
 
-        if len(kwargs) > 0:
+        if kwargs:
             logger.debug("kwargs found", extra=kwargs)
 
 
@@ -308,7 +308,7 @@ class RelatedCard(HashableObject):
         self.type_line = type_line
         self.uri = uri
 
-        if len(kwargs) > 0:
+        if kwargs:
             logger.debug("kwargs found", extra=kwargs)
 
 

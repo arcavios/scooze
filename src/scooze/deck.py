@@ -296,6 +296,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
             case InThe.STICKERS:
                 self.stickers.add_card(card=card, quantity=quantity)
             case _:
+                logger.info("Failed to add card.", extra={"card": card})
                 logger.warning(f'in_the "{in_the}" not found. Must be one of {InThe.list()}')
 
     def add_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:

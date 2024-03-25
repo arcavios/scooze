@@ -88,7 +88,7 @@ class Card(HashableObject):
         self.toughness = toughness
         self.type_line = type_line
 
-        if len(kwargs) > 0:
+        if kwargs:
             logger.debug("kwargs found", extra=kwargs)
 
     def __str__(self):

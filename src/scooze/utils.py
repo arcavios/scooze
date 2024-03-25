@@ -1,7 +1,6 @@
 import argparse
 import logging
 import re
-import sys
 from collections import Counter
 from datetime import date, datetime
 from sys import maxsize
