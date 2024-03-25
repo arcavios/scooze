@@ -4,15 +4,17 @@
 
 ### Added
 
-- N/A
+- Start Docker container if exists, but not running ([#243](https://github.com/arcavios/scooze/pull/243))
+- Add basic logging to some of our modules ([#249](https://github.com/arcavios/scooze/pull/249))
 
 ### Changed
 
-- N/A
+- Change logging behavior to be extensible by applications using Scooze ([#248](https://github.com/arcavios/scooze/pull/248))
 
 ### Fixed
 
-- N/A
+- Upgrade dependencies ([#245](https://github.com/arcavios/scooze/pull/245))
+- Support latest version of Pydantic ([#247](https://github.com/arcavios/scooze/pull/247))
 
 ### Docs
 
