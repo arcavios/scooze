@@ -105,7 +105,7 @@ async def add_card(card: CardT) -> PydanticObjectId:
         card.scooze_id = card_model.id
         return card_model.id
     except Exception as e:
-        logger.exception("Failed to add the card to the database.", extra={"card": card}, exc_info=e)
+        logger.exception("Failed to add card.", extra={"card": card}, exc_info=e)
 
 
 async def add_cards(cards: list[CardT]) -> list[PydanticObjectId]:
