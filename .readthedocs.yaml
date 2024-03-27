@@ -16,6 +16,7 @@ build:
       - poetry config virtualenvs.create false
     post_install:
       - poetry install --with docs
+      - poetry run pip freeze
 
 # Build documentation in the docs/ directory with MkDocs
 mkdocs:
