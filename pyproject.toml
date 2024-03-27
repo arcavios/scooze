@@ -45,13 +45,18 @@ black = "^24.3.0"
 coverage = "^7.3.2"
 httpx = "^0.24.1"
 isort = "^5.12.0"
-mkdocs = "^1.5.3"
 mongomock = "^4.1.2"
 mongomock-motor = "^0.0.25"
 pytest = "^7.4.0"
 pytest-asyncio = "^0.21.1"
 pytest-cov = "^4.1.0"
 setuptools = "^68.2.2"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.5.3"
 
 [tool.poetry.scripts]
 scooze = "scooze.console.cli:run_cli"
