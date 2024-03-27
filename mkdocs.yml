@@ -1,7 +1,7 @@
 site_name: Scooze
 
 theme:
-  name: 'material'
+  name: material
 #   custom_dir: 'docs/theme'
   palette:
   - media: "(prefers-color-scheme: light)"
