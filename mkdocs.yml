@@ -26,3 +26,10 @@ theme:
     - navigation.tabs
 #   logo: 'logo-white.svg'
 #   favicon: 'favicon.png'
+
+plugins:
+  - mkdocstrings
+
+nav:
+  - Scooze: index.md
+  - Cards: card.md
