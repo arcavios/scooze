@@ -1,22 +1,24 @@
 # Read the Docs configuration file for MkDocs projects
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+# See https://docs.readthedocs.io/en/stable/build-customization.html for context
 
-# .readthedocs.yaml
 version: 2
 
-# Set the version of Python and other tools you might need
 build:
-  os: ubuntu-22.04
-  tools: {python: "3.11"}
+  os: "ubuntu-22.04"
+  tools:
+    python: "3.11"
   jobs:
     post_create_environment:
       # Install poetry
+      # https://python-poetry.org/docs/#installing-manually
       - pip install poetry
-      # Tell poetry to not use a virtual environment
-      - poetry config virtualenvs.create false
-    # post_install:
-      # Install dependencies
-      - poetry install --with docs
+    post_install:
+      # Install dependencies with 'docs' dependency group
+      # https://python-poetry.org/docs/managing-dependencies/#dependency-groups
+      # VIRTUAL_ENV needs to be set manually for now.
+      # See https://github.com/readthedocs/readthedocs.org/pull/11152/
+      - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --with docs
 
 # Build documentation in the docs/ directory with MkDocs
 mkdocs:
