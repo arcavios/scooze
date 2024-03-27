@@ -1,5 +1,6 @@
 import json
 import re
+from collections import Counter
 from datetime import date
 from typing import Iterable, Mapping, Self, TypeVar
 
@@ -30,9 +31,10 @@ from scooze.catalogs import (
     Rarity,
     SecurityStamp,
     SetType,
+    CostSymbol,
 )
 from scooze.models.card import CardModel
-from scooze.utils import FloatableT, HashableObject, scooze_logger
+from scooze.utils import FloatableT, HashableObject, parse_symbols, scooze_logger
 
 logger = scooze_logger()
 
@@ -104,6 +106,9 @@ class Card(HashableObject):
     @classmethod
     def from_model(cls, model: CardModel) -> Self:
         return cls(**model.model_dump())
+
+    def mana_symbols(self) -> Counter[CostSymbol]:
+        return parse_symbols(self.mana_cost)
 
 
 class OracleCard(Card):

@@ -3,6 +3,7 @@ from sys import maxsize
 
 import pytest
 from scooze.card import Card
+from scooze.catalogs import Color
 from scooze.deckpart import DeckPart
 from scooze.utils import DictDiff
 
@@ -150,3 +151,10 @@ def test_remove_cards(some_cards):
     part.remove_cards(some_cards)
     some_cards = some_cards - some_cards
     assert part.cards == some_cards
+
+
+@pytest.mark.deck_count_pips
+def test_count_pips(some_cards):
+    part = DeckPart(cards=some_cards)
+    pips = part.count_pips()
+    assert pips == Counter({Color.WHITE: 2, Color.GREEN: 1})
