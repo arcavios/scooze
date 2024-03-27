@@ -49,12 +49,10 @@ class Card(HashableObject):
         name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
         cmc: This card's mana value/converted mana cost.
-        color_identity: This card's color identity, for Commander variant
-          deckbuilding.
+        color_identity: This card's color identity, for Commander variant deckbuilding.
         colors: This card's colors.
         legalities: Formats and the legality status of this card in them.
-        mana_cost: Mana cost, as string of mana symbols.
-          (e.g. "{1}{W}{U}{B}{R}{G}")
+        mana_cost: Mana cost, as string of mana symbols. (e.g. "{1}{W}{U}{B}{R}{G}")
         power: Power of this card, if applicable.
         toughness: Toughness of this card, if applicable.
         type_line: This card's type line. (e.g. "Creature — Ooze")
@@ -115,12 +113,12 @@ class OracleCard(Card):
         name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
         card_faces: All component CardFace objects of this card, for multifaced
-          cards.
+            cards.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
-          deckbuilding.
+            deckbuilding.
         color_indicator: The colors in this card's color indicator, if it has
-          one.
+            one.
         colors: This card's colors.
         edhrec_rank: This card's rank/popularity on EDHREC, if applicable.
         hand_modifier: This card's Vanguard hand size modifier, if applicable.
@@ -129,15 +127,15 @@ class OracleCard(Card):
         life_modifier: This card's Vanguard life modifier value, if applicable.
         loyalty: This card's starting planeswalker loyalty, if applicable.
         mana_cost: Mana cost, as string of mana symbols.
-          (e.g. "{1}{W}{U}{B}{R}{G}")
+            (e.g. "{1}{W}{U}{B}{R}{G}")
         oracle_id: A UUID for this card's oracle identity; shared across prints
-          of the same card but not same-named objects with different gameplay
-          properties.
+            of the same card but not same-named objects with different gameplay
+            properties.
         oracle_text: This card's oracle text, if any.
         penny_rank: This card's rank/popularity on Penny Dreadful.
         power: Power of this card, if applicable.
         prints_search_uri: A link to begin paginating through all prints of
-          this card in Scryfall's API.
+            this card in Scryfall's API.
         produced_mana: Which colors of mana this card can produce.
         reserved: Whether this card is on the Reserved List.
         rulings_uri: A link to rulings for this card in Scryfall's API.

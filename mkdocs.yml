@@ -27,9 +27,23 @@ theme:
 #   logo: 'logo-white.svg'
 #   favicon: 'favicon.png'
 
-plugins:
-  - mkdocstrings
+repo_name: arcavios/scooze
+repo_url: https://github.com/arcavios/scooze
+
+# https://www.mkdocs.org/user-guide/configuration/#validation
+validation:
+  nav:
+    omitted_files: warn # default: info
+    not_found: warn # default: warn
+    absolute_links: info # default: info
+  links:
+    not_found: warn # default: warn
+    absolute_links: warn # default: info
+    unrecognized_links: warn # default: info
 
 nav:
   - Scooze: index.md
   - Card: card.md
+
+plugins:
+  - mkdocstrings
