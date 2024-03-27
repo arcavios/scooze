@@ -1,8 +1,9 @@
 from collections import Counter
 from sys import maxsize
-from typing import Generic, Self
+from typing import Dict, Generic, Self
 
 from scooze.card import CardT
+from scooze.catalogs import Color, CostSymbol
 from scooze.utils import ComparableObject, DictDiff
 
 
@@ -152,3 +153,16 @@ class DeckPart(ComparableObject, Generic[CardT]):
 
         # using counterA - counterB results in a new Counter with only positive results
         self.cards = self.cards - cards
+
+    def count_pips(self) -> Counter[CostSymbol]:
+        """
+
+        Returns:
+            A mapping of Colors to how many times they appear as mana symbols in costs of cards in this DeckPart.
+        """
+        counts = Counter()
+        for card, num in self.cards.items():
+            for symbol, count in card.mana_symbols().items():
+                counts.update({symbol: count * num})
+        # filter only to colors and colorless (not generic)
+        return Counter({color: count for color, count in counts.items() if color in Color.list()})
