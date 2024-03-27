@@ -57,6 +57,9 @@ optional = true
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.5.3"
+mkdocs-material = "^9.5.15"
+mkdocstrings = "^0.24.1"
+mkdocstrings-python = "^1.9.0"
 
 [tool.poetry.scripts]
 scooze = "scooze.console.cli:run_cli"

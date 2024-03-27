@@ -1,1 +1,28 @@
-site_name: Scooze API Docs
+site_name: Scooze
+
+theme:
+  name: 'material'
+#   custom_dir: 'docs/theme'
+  palette:
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: green
+    accent: green
+    toggle:
+      icon: material/lightbulb-outline
+      name: "Switch to dark mode"
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: green
+    accent: green
+    toggle:
+      icon: material/lightbulb
+      name: "Switch to light mode"
+  features:
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - announce.dismiss
+    - navigation.tabs
+#   logo: 'logo-white.svg'
+#   favicon: 'favicon.png'
