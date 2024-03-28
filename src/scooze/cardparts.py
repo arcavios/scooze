@@ -15,11 +15,11 @@ class ImageUris(HashableObject):
 
     Attributes:
         png: Full card, high quality image with transparent background and
-          rounded corners.
+            rounded corners.
         border_crop: Full card image with corners and majority of border
-          cropped out.
+            cropped out.
         art_crop: Rectangular crop to just art box; may not be perfect for
-          cards with strange layouts.
+            cards with strange layouts.
         large: Large JPG image (672x936)
         normal: Medium JPG image (488x860)
         small: Small JPG image (146x204)
@@ -131,11 +131,11 @@ class FullCardFace(CardFace):
         oracle_text: Oracle text of this face, if any.
         power: Power of this face, if any.
         printed_name: Printed name of this face, for localized non-English
-          cards.
+            cards.
         printed_text: Printed text of this face, for localized non-English
-          cards.
+            cards.
         printed_type_line: Printed type line of this face, for localized
-          non-English cards.
+            non-English cards.
         toughness: Toughness of this face, if any.
         type_line: Type line of this face, if any.
         watermark: Watermark printed on this face, if any.
@@ -286,7 +286,7 @@ class RelatedCard(HashableObject):
         name: Name of linked component.
         scryfall_id: ID of linked component.
         component: One of `token`, `meld_part`, `meld_result`, or
-          `combo_piece`.
+            `combo_piece`.
         type_line: Type line of linked component.
         uri: URI of linked component.
     """
@@ -317,10 +317,10 @@ class RelatedUris(HashableObject):
     Links to information about a Scryfall-based card object on other non-Scryfall resources.
 
     Attributes:
-        edhrec
-        gatherer
-        tcgplayer_infinite_articles
-        tcgplayer_infinite_decks
+        edhrec: Link to EDHREC
+        gatherer: Link to gatherer.wizards.com
+        tcgplayer_infinite_articles: Link to infinite.tcgplayer.com/magic-the-gathering/articles
+        tcgplayer_infinite_decks: LInk to infinite.tcgplayer.com/magic-the-gathering/decks
     """
 
     def __init__(

@@ -254,35 +254,35 @@ class FullCard(OracleCard):
         arena_id: This card's Arena ID, if applicable.
         scryfall_id: Scryfall's unique ID for this card.
         lang: The language code for this print;
-          see https://scryfall.com/docs/api/languages
+            see https://scryfall.com/docs/api/languages
         mtgo_id: This card's MTGO Catalog ID, if applicable.
         mtgo_foil_id: This card's foil MTGO Catalog ID, if applicable.
         multiverse_ids: This card's multiverse IDs on Gatherer, if any.
         tcgplayer_id: This card's ID on TCGplayer, or `productId` in their
-          system.
+            system.
         tcgplayer_etched_id: This card's ID on TCGplayer, for the etched
-          version if that is a separate product.
+            version if that is a separate product.
         cardmarket_id: This card's ID on Cardmarket, or `idProduct` in their
-          system.
+            system.
         oracle_id: A UUID for this card's oracle identity; shared across prints
-          of the same card but not same-named objects with different gameplay
-          properties.
+            of the same card but not same-named objects with different gameplay
+            properties.
         prints_search_uri: A link to begin paginating through all prints of
-          this card in Scryfall's API.
+            this card in Scryfall's API.
         rulings_uri: A link to rulings for this card in Scryfall's API.
         scryfall_uri: A link to the Scryfall page for this card.
         uri: A link to this card object in Scryfall's API.
 
     Gameplay fields
         all_parts: RelatedCard objects for tokens/meld pairs/other associated
-          parts to this card, if applicable.
+            parts to this card, if applicable.
         card_faces: All component CardFace objects of this card, for multifaced
-          cards.
+            cards.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
-          deckbuilding.
+            deckbuilding.
         color_indicator: color_indicator: The colors in this card's color
-          indicator, if it has one.
+            indicator, if it has one.
         colors: This card's colors.
         edhrec_rank: This card's rank/popularity on EDHREC, if applicable.
         hand_modifier: This card's Vanguard hand size modifier, if applicable.
@@ -291,7 +291,7 @@ class FullCard(OracleCard):
         life_modifier: This card's Vanguard life modifier value, if applicable.
         loyalty: This card's starting planeswalker loyalty, if applicable.
         mana_cost: Mana cost, as string of mana symbols.
-          (e.g. "{1}{W}{U}{B}{R}{G}")
+            (e.g. "{1}{W}{U}{B}{R}{G}")
         oracle_text: This card's oracle text, if any.
         penny_rank: This card's rank/popularity on Penny Dreadful.
         power: Power of this card, if applicable.
@@ -306,41 +306,41 @@ class FullCard(OracleCard):
         attraction_lights: Attraction lights lit on this card, if applicable.
         booster: Whether this card can be opened in booster packs.
         border_color: Border color of this card, from among
-          black, white, borderless, silver, and gold.
+            black, white, borderless, silver, and gold.
         card_back_id: Scryfall UUID of the card back design for this card.
         collector_number: This card's collector number; can contain non-numeric
-          characters.
+            characters.
         content_warning: True if use of this print should be avoided;
-          see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220
+            see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220
         digital: True if this card was only released in a video game.
         finishes: Finishes this card is available in, from among foil, nonfoil, and etched.
         flavor_name: Alternate name for this card, such as on Godzilla series.
         flavor_text: Flavor text on this card, if any.
         frame_effects: Special frame effects on this card;
-          see https://scryfall.com/docs/api/frames
+            see https://scryfall.com/docs/api/frames
         frame: This card's frame layout;
-          see https://scryfall.com/docs/api/frames
+            see https://scryfall.com/docs/api/frames
         full_art: Whether this print is full-art.
         games: Which games this print is available on, from among
-          paper, mtgo, and arena.
+            paper, mtgo, and arena.
         highres_image: Whether this card has a high-res image available.
         illustration_id: A UUID for the particular artwork on this print,
-          consistent across art reprints.
+            consistent across art reprints.
         image_status: The quality/status of images available for this card.
-          Either missing, placeholder, lowres, or highres_scan.
+            Either missing, placeholder, lowres, or highres_scan.
         image_uris: Links to images of this card in various qualities.
         layout: This card's printed layout;
-          see https://scryfall.com/docs/api/layouts
+            see https://scryfall.com/docs/api/layouts
         oversized: Whether this card is oversized.
         preview: Information about where, when, and how this print was
-          previewed.
+            previewed.
         prices: Prices for this card on various marketplaces.
         printed_name: Printed name of this card, for localized non-English
-          cards.
+            cards.
         printed_text: Printed text of this card, for localized non-English
-          cards.
+            cards.
         printed_type_line: Printed type line of this card, for localized
-          non-English cards.
+            non-English cards.
         promo: Whether this print is a promo.
         promo_types: Which promo categories this print falls into, if any.
         purchase_uris: Links to purchase this print from marketplaces.
@@ -349,11 +349,11 @@ class FullCard(OracleCard):
         released_at: The date this card was first released.
         reprint: Whether this print is a reprint from an earlier set.
         scryfall_set_uri: Link to the Scryfall set page for the set of this
-          print.
+            print.
         security_stamp: Security stamp on this card, if any.
         set_name: Full name of the set this print belongs to.
         set_search_uri: Link to Scryfall API to start paginating through this
-          print's full set.
+            print's full set.
         set_type: An overall categorization for each set, provided by Scryfall.
         set_uri: Link to the set object for this print in Scryfall's API.
         set_code: Set code of the set this print belongs to.
@@ -361,7 +361,7 @@ class FullCard(OracleCard):
         story_spotlight: Whether this print is a Story Spotlight.
         textless: Whether this print is textless.
         variation: Whether this card print is a variation of another card
-          object.
+            object.
         variation_of: Which card object this object is a variant of, if any.
         watermark: Watermark printed on this card, if any.
     """
@@ -609,9 +609,9 @@ class CardNormalizer(CardPartsNormalizer):
 
         Args:
             card_faces: A Iterable[F] or Iterable[JSON] to normalize. F is of type
-              CardFace or FullCardFace.
+                CardFace or FullCardFace.
             card_face_class: A CardFace class to create an instance of.
-              (one of CardFace or FullCardFace)
+                (one of CardFace or FullCardFace)
 
         Returns:
             A tuple[F] where F is of type CardFace or FullCardFace.
@@ -628,10 +628,10 @@ class CardNormalizer(CardPartsNormalizer):
         Normalize ID from JSON.
 
         Args:
-          id_like: A PydanticObjectId or an ID string.
+            id_like: A PydanticObjectId or an ID string.
 
         Returns:
-          A PydanticObjectId.
+            A PydanticObjectId.
         """
 
         if id_like is None or isinstance(id_like, PydanticObjectId):
