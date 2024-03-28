@@ -1,7 +1,5 @@
 Card Model Docs
 
-### Card
-::: src.scooze.card.Card
+::: src.scooze.models.card
 
-### OracleCard
-::: src.scooze.card.OracleCard
+::: src.scooze.models.cardparts
