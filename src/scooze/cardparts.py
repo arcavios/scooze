@@ -366,7 +366,7 @@ class CardPartsNormalizer(JsonNormalizer):
         Args:
             purchase_uris: An instance of PurchaseUris or some JSON to normalize.
         Returns:
-             An instance of PurchaseUris.
+            An instance of PurchaseUris.
         """
 
         if purchase_uris is None:
@@ -384,7 +384,7 @@ class CardPartsNormalizer(JsonNormalizer):
         Args:
             related_uris: An instance of RelatedUris or some JSON to normalize.
         Returns:
-             An instance of RelatedUris.
+            An instance of RelatedUris.
         """
 
         if related_uris is None:
