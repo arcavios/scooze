@@ -1,3 +1,3 @@
 Extras - CLI Docs
 
-# TODO: add cli docs
+<!-- TODO: Add CLI documentation here -->

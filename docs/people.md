@@ -3,6 +3,6 @@ hide:
     - navigation
 ---
 
-Scooze People Docs
+Alex Gimmi, Jacob Ginsparg, Ben Horkley
 
-# TODO: add people docs
+<!-- TODO: Add maintainer badges similar to how Pydantic does it: https://github.com/pydantic/pydantic/blob/main/docs/pydantic_people.md -->
