@@ -46,7 +46,7 @@ class ScoozeApi(AbstractContextManager):
 
     @_safe_cache
     @_check_for_safe_context
-    def get_card_by(self, property_name: str, value) -> CardT:
+    def get_card_by(self, property_name: str, value: Any) -> CardT:
         """
         Search the database for the first card that matches the given criteria.
 
@@ -308,7 +308,7 @@ class ScoozeApi(AbstractContextManager):
 
         Args:
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
-            to insert into the database.
+                to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
 
         Raises:
@@ -357,7 +357,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
     @_safe_cache
     @_check_for_safe_context
-    async def get_card_by(self, property_name: str, value) -> CardT:
+    async def get_card_by(self, property_name: str, value: Any) -> CardT:
         """
         Search the database for the first card that matches the given criteria.
 
@@ -607,7 +607,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Args:
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
-            to insert into the database.
+                to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
 
         Raises:

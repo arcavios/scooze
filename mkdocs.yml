@@ -1,0 +1,66 @@
+site_name: Scooze
+
+theme:
+  name: material
+#   custom_dir: 'docs/theme'
+  palette:
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: green
+    accent: green
+    toggle:
+      icon: material/lightbulb-outline
+      name: "Switch to dark mode"
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: green
+    accent: green
+    toggle:
+      icon: material/lightbulb
+      name: "Switch to light mode"
+  features: # TODO(#153): I don't know what any of these do
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - announce.dismiss
+    - navigation.tabs
+#   logo: 'logo-white.svg'
+#   favicon: 'favicon.png'
+
+repo_name: arcavios/scooze
+repo_url: https://github.com/arcavios/scooze
+
+# https://www.mkdocs.org/user-guide/configuration/#validation
+validation:
+  nav:
+    omitted_files: warn # default: info
+    not_found: warn # default: warn
+    absolute_links: info # default: info
+  links:
+    not_found: warn # default: warn
+    absolute_links: warn # default: info
+    unrecognized_links: warn # default: info
+
+nav:
+- Scooze:
+    - Welcome to Scooze: index.md
+- API Documentation:
+    - Models:
+        - Card: models/card.md
+        - Deck: models/deck.md
+    - Data Classes:
+        - Card: dataclasses/card.md
+        - Deck: dataclasses/deck.md
+    - Database Interface:
+        - Python API:
+            - Bulkdata: db_interface/python/bulkdata.md
+            - Scooze: db_interface/python/scooze.md
+        - REST API:
+            - Routers: db_interface/rest/routers.md
+    - Extras:
+        - Catalogs: extras/catalogs.md
+        - Command Line Interface: extras/cli.md
+- Arcavios Team: people.md
+
+plugins:
+  - mkdocstrings
