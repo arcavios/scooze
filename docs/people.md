@@ -4,3 +4,5 @@ hide:
 ---
 
 Scooze People Docs
+
+# TODO: add people docs
