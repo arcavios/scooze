@@ -49,8 +49,8 @@ nav:
         - Card: models/card.md
         - Deck: models/deck.md
     - Data Classes:
-        - Card: data_classes/card.md
-        - Deck: data_classes/deck.md
+        - Card: dataclasses/card.md
+        - Deck: dataclasses/deck.md
     - Database Interface:
         - Python API:
             - Bulkdata: db_interface/python/bulkdata.md
