@@ -42,8 +42,25 @@ validation:
     unrecognized_links: warn # default: info
 
 nav:
-  - Scooze: index.md
-  - Card: card.md
+- Scooze:
+    - Welcome to Scooze: index.md
+- API Documentation:
+    - Models:
+        - Card: models/card.md
+        - Deck: models/deck.md
+    - Data Classes:
+        - Card: data_classes/card.md
+        - Deck: data_classes/deck.md
+    - Database Interface:
+        - Python API:
+            - Bulkdata: db_interface/python/bulkdata.md
+            - Scooze: db_interface/python/scooze.md
+        - REST API:
+            - Routers: db_interface/rest/routers.md
+    - Extras:
+        - Catalogs: extras/catalogs.md
+        - Command Line Interface: extras/cli.md
+- Arcavios Team: people.md
 
 plugins:
   - mkdocstrings

@@ -1,0 +1,1 @@
+Card Data Class Docs
