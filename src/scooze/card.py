@@ -286,8 +286,8 @@ class FullCard(OracleCard):
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
             deckbuilding.
-        color_indicator: color_indicator: The colors in this card's color
-            indicator, if it has one.
+        color_indicator: The colors in this card's color indicator, if it has
+            one.
         colors: This card's colors.
         edhrec_rank: This card's rank/popularity on EDHREC, if applicable.
         hand_modifier: This card's Vanguard hand size modifier, if applicable.
