@@ -69,7 +69,6 @@ markdown_extensions:
 - tables
 - toc:
     permalink: true
-    title: Page contents
 # - admonition
 # - pymdownx.details
 # - pymdownx.superfences

@@ -10,7 +10,7 @@ A Scooze `Card` represents a Magic: the Gathering card closely following the [Sc
 ::: scooze.card.OracleCard
     options:
         show_root_heading: true
-        <!-- Explicitly order classmethods first -->
+        # Explicitly order classmethods first
         members:
             - oracle_text_without_reminder
             - is_double_sided
