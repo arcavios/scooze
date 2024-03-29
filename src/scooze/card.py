@@ -255,7 +255,6 @@ class FullCard(OracleCard):
         name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
 
-        # Core fields TODO(#153): Can I remove these? They cause a warning for mkdocstrings
         arena_id: This card's Arena ID, if applicable.
         scryfall_id: Scryfall's unique ID for this card.
         lang: The language code for this print;
@@ -278,7 +277,6 @@ class FullCard(OracleCard):
         scryfall_uri: A link to the Scryfall page for this card.
         uri: A link to this card in Scryfall's API.
 
-        # Gameplay fields TODO(#153): Can I remove these? They cause a warning for mkdocstrings
         all_parts: RelatedCards for tokens/meld pairs/other associated
             parts to this card, if applicable.
         card_faces: All component CardFaces of this card, for multifaced
@@ -305,7 +303,6 @@ class FullCard(OracleCard):
         toughness: Toughness of this card, if applicable.
         type_line: This card's type line. (e.g. "Creature — Ooze")
 
-        # Print fields TODO(#153): Can I remove these? They cause a warning for mkdocstrings
         artist: Artist for this card.
         artist_ids: List of Scryfall IDs for artists of this card.
         attraction_lights: Attraction lights lit on this card, if applicable.

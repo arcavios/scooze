@@ -70,8 +70,6 @@ class CardModelData(ScoozeBaseModel):
         scryfall_uri: A link to the Scryfall page for this card.
         uri: A link to this card in Scryfall's API.
 
-        --- # TODO(#153): Remove this?
-
         all_parts: RelatedCards for tokens/meld pairs/other associated
             parts to this card, if applicable.
         card_faces: All component CardFaces of this card, for multifaced
@@ -98,8 +96,6 @@ class CardModelData(ScoozeBaseModel):
         reserved: Whether this card is on the Reserved List.
         toughness: Toughness of this card, if applicable.
         type_line: This card's type line. (e.g. "Creature — Ooze")
-
-        --- # TODO(#153): Remove this?
 
         artist: Artist for this card.
         artist_ids: List of Scryfall IDs for artists of this card.
