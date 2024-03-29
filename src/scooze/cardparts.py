@@ -317,9 +317,9 @@ class RelatedUris(HashableObject):
         edhrec: Link to EDHREC
         gatherer: Link to gatherer.wizards.com
         tcgplayer_infinite_articles: Link to
-            [infinite.tcgplayer.com/magic-the-gathering/articles](infinite.tcgplayer.com/magic-the-gathering/articles)
+            [infinite.tcgplayer.com/magic-the-gathering/articles](https://infinite.tcgplayer.com/magic-the-gathering/articles)
         tcgplayer_infinite_decks: Link to
-            [infinite.tcgplayer.com/magic-the-gathering/decks](infinite.tcgplayer.com/magic-the-gathering/decks)
+            [infinite.tcgplayer.com/magic-the-gathering/decks](https://infinite.tcgplayer.com/magic-the-gathering/decks)
     """
 
     def __init__(

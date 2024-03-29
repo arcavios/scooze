@@ -10,32 +10,14 @@ data validation.
     options:
         show_root_heading: true
 
-## `cardparts`
-
-### ::: src.scooze.models.cardparts.ImageUrisModel
+::: src.scooze.models.cardparts
     options:
         show_root_heading: true
-
-### ::: src.scooze.models.cardparts.CardFaceModel
-    options:
-        show_root_heading: true
-
-### ::: src.scooze.models.cardparts.PricesModel
-    options:
-        show_root_heading: true
-
-### ::: src.scooze.models.cardparts.PreviewModel
-    options:
-        show_root_heading: true
-
-### ::: src.scooze.models.cardparts.PurchaseUrisModel
-    options:
-        show_root_heading: true
-
-### ::: src.scooze.models.cardparts.RelatedCardModel
-    options:
-        show_root_heading: true
-
-### ::: src.scooze.models.cardparts.RelatedUrisModel
-    options:
-        show_root_heading: true
+        members:
+            - ImageUrisModel
+            - CardFaceModel
+            - PricesModel
+            - PreviewModel
+            - PurchaseUrisModel
+            - RelatedCardModel
+            - RelatedUrisModel

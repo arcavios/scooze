@@ -11,7 +11,7 @@ A Scooze `Card` represents a Magic: the Gathering card closely following the
 ::: scooze.card.OracleCard
     options:
         show_root_heading: true
-        # Explicitly order classmethods first
+        # Explicitly order members to list classmethods first
         members:
             - oracle_text_without_reminder
             - is_double_sided
@@ -21,35 +21,15 @@ A Scooze `Card` represents a Magic: the Gathering card closely following the
     options:
         show_root_heading: true
 
-## `cardparts`
-### ::: scooze.cardparts.ImageUris
+::: scooze.cardparts
     options:
         show_root_heading: true
-
-### ::: scooze.cardparts.CardFace
-    options:
-        show_root_heading: true
-
-### ::: scooze.cardparts.FullCardFace
-    options:
-        show_root_heading: true
-
-### ::: scooze.cardparts.Prices
-    options:
-        show_root_heading: true
-
-### ::: scooze.cardparts.Preview
-    options:
-        show_root_heading: true
-
-### ::: scooze.cardparts.PurchaseUris
-    options:
-        show_root_heading: true
-
-### ::: scooze.cardparts.RelatedCard
-    options:
-        show_root_heading: true
-
-### ::: scooze.cardparts.RelatedUris
-    options:
-        show_root_heading: true
+        members:
+            - ImageUris
+            - CardFace
+            - FullCardFace
+            - Prices
+            - Preview
+            - PurchaseUris
+            - RelatedCard
+            - RelatedUris
