@@ -121,7 +121,7 @@ class FullCardFace(CardFace):
         colors: Colors of this face.
         flavor_text: Flavor text of this face, if any.
         illustration_id: Scryfall illustration ID of this face, if any.
-        image_uris: Scryfall illustration ID of this face, if any.
+        image_uris: URIs for images of this face on Scryfall.
         layout: Layout of this face, if any.
         loyalty: Starting planeswalker loyalty of this face, if any.
         mana_cost: Mana cost of this face.
@@ -254,7 +254,7 @@ class Preview(HashableObject):
 
 class PurchaseUris(HashableObject):
     """
-    URIs to this card’s listing on major marketplaces.
+    URIs to this cards listing on major marketplaces.
 
     Attributes:
         tcgplayer: Link to buy this card on the TCGplayer marketplace.
@@ -316,8 +316,10 @@ class RelatedUris(HashableObject):
     Attributes:
         edhrec: Link to EDHREC
         gatherer: Link to gatherer.wizards.com
-        tcgplayer_infinite_articles: Link to infinite.tcgplayer.com/magic-the-gathering/articles
-        tcgplayer_infinite_decks: LInk to infinite.tcgplayer.com/magic-the-gathering/decks
+        tcgplayer_infinite_articles: Link to
+            [infinite.tcgplayer.com/magic-the-gathering/articles](infinite.tcgplayer.com/magic-the-gathering/articles)
+        tcgplayer_infinite_decks: Link to
+            [infinite.tcgplayer.com/magic-the-gathering/decks](infinite.tcgplayer.com/magic-the-gathering/decks)
     """
 
     def __init__(

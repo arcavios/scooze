@@ -8,8 +8,7 @@ from scooze.models.utils import ScoozeBaseModel
 
 class ImageUrisModel(ScoozeBaseModel):
     """
-    URIs of images associated with this model on Scryfall.
-    Scryfall documentation: https://scryfall.com/docs/api/images
+    URIs of images associated with this model on [Scryfall](https://scryfall.com/docs/api/images).
 
     Attributes:
         png: Full card, high quality image with transparent background and
@@ -51,12 +50,12 @@ class ImageUrisModel(ScoozeBaseModel):
 
 class CardFaceModel(ScoozeBaseModel):
     """
-    Model for a single face of a multi-faced CardModel.
-    Multi-faced cards include MDFCs, split cards, aftermath, etc.
-
-    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
+    A model for a single face of a multi-faced `CardModel`.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc;
+    see [here](https://scryfall.com/docs/api/cards#card-face-objects)
 
     Attributes:
+        name: Name of this face.
         artist: Illustrator for art on this face.
         artist_id: Scryfall ID for the artist of this face.
         cmc: Mana value of this face.
@@ -64,11 +63,10 @@ class CardFaceModel(ScoozeBaseModel):
         colors: Colors of this face.
         flavor_text: Flavor text of this face, if any.
         illustration_id: Scryfall illustration ID of this face, if any.
-        image_uris: Scryfall illustration ID of this face, if any.
+        image_uris: URIs for images of this face on Scryfall.
         layout: Layout of this face, if any.
         loyalty: Starting planeswalker loyalty of this face, if any.
         mana_cost: Mana cost of this face.
-        name: Name of this face.
         oracle_id: Oracle ID of this face, for reversible cards.
         oracle_text: Oracle text of this face, if any.
         power: Power of this face, if any.
@@ -181,7 +179,7 @@ class CardFaceModel(ScoozeBaseModel):
 
 class PricesModel(ScoozeBaseModel):
     """
-    Model for all price data associated with a CardModel.
+    A model for all price data associated with a `CardModel`.
 
     Attributes:
         usd: Price in US dollars, from TCGplayer.
@@ -220,7 +218,7 @@ class PricesModel(ScoozeBaseModel):
 
 class PreviewModel(ScoozeBaseModel):
     """
-    Object for information about where and when a card was previewed.
+    A model for information about where and when a card was previewed.
 
     Attributes:
         previewed_at: Date/time of preview being shown or added to Scryfall.
@@ -248,7 +246,7 @@ class PreviewModel(ScoozeBaseModel):
 
 class PurchaseUrisModel(ScoozeBaseModel):
     """
-    URIs to this card’s listing on major marketplaces.
+    URIs to this card's listing on major marketplaces.
 
     Attributes:
         tcgplayer: Link to buy this card on the TCGplayer marketplace.
@@ -272,16 +270,15 @@ class PurchaseUrisModel(ScoozeBaseModel):
 
 class RelatedCardModel(ScoozeBaseModel):
     """
-    Data about Scryfall objects related to this card
+    Data about [Scryfall](https://scryfall.com/docs/api/cards#related-card-objects) objects related to this card
     (tokens, cards referenced by name, meld pairs, etc.)
 
-    Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
+        name: Name of linked component.
         scryfall_id: ID of linked component.
         component: One of `token`, `meld_part`, `meld_result`, or
             `combo_piece`.
-        name: Name of linked component.
         type_line: Type line of linked component.
         uri: URI of linked component.
     """
@@ -309,10 +306,12 @@ class RelatedUrisModel(ScoozeBaseModel):
     Links to information about a Scryfall-based card object on other non-Scryfall resources.
 
     Attributes:
-        edhrec: Information about this card on edhrec.
-        gatherer: Information about this card on Gatherer.
-        tcgplayer_infinite_articles: Articles about this card on TCGplayer Infinite.
-        tcgplayer_infinite_decks: Decks including this card on TCGplayer Infinite.
+        edhrec: Link to EDHREC
+        gatherer: Link to gatherer.wizards.com
+        tcgplayer_infinite_articles: Link to
+            [infinite.tcgplayer.com/magic-the-gathering/articles](infinite.tcgplayer.com/magic-the-gathering/articles)
+        tcgplayer_infinite_decks: Link to
+            [infinite.tcgplayer.com/magic-the-gathering/decks](infinite.tcgplayer.com/magic-the-gathering/decks)
     """
 
     edhrec: str | None = Field(
