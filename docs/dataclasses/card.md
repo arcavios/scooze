@@ -3,8 +3,6 @@ A Scooze `Card` represents a Magic: the Gathering card closely following the [Sc
 ::: scooze.card.Card
     options:
         show_root_heading: true
-        merge_init_into_class: false
-        group_by_category: false
         members:
             - from_json
             - from_model
@@ -12,8 +10,6 @@ A Scooze `Card` represents a Magic: the Gathering card closely following the [Sc
 ::: scooze.card.OracleCard
     options:
         show_root_heading: true
-        merge_init_into_class: false
-        group_by_category: false
         members:
             - oracle_text_without_reminder
             - is_double_sided
@@ -22,8 +18,6 @@ A Scooze `Card` represents a Magic: the Gathering card closely following the [Sc
 ::: scooze.card.FullCard
     options:
         show_root_heading: true
-        merge_init_into_class: false
-        group_by_category: false
 
 ## `cardparts`
 ### ::: scooze.cardparts.ImageUris
