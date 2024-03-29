@@ -1,4 +1,5 @@
-A Scooze `Card` represents a Magic: the Gathering card closely following the [Scryfall](https://scryfall.com/docs/api/cards) schema.
+A Scooze `Card` represents a Magic: the Gathering card closely following the
+[Scryfall](https://scryfall.com/docs/api/cards) schema.
 
 ::: scooze.card.Card
     options:

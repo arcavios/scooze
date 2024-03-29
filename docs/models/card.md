@@ -1,4 +1,4 @@
-A Scooze `CardModel` represents a Magic: the Gathering card closely following the
+A Scooze `CardModel` is a database representation of a Magic: the Gathering card closely following the
 [Scryfall](https://scryfall.com/docs/api/cards) schema using [Pydantic](https://docs.pydantic.dev/latest/) models for
 data validation.
 
