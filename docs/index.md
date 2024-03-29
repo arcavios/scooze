@@ -1,7 +1,7 @@
----
+<!-- ---
 hide:
     - navigation
----
+--- -->
 
 # Welcome to MkDocs
 

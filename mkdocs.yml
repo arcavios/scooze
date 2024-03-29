@@ -42,8 +42,9 @@ validation:
     unrecognized_links: warn # default: info
 
 nav:
-- Scooze:
+- Get Started:
     - Welcome to Scooze: index.md
+    - Changelog: changelog.md
 - API Documentation:
     - Models:
         - Card: models/card.md

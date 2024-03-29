@@ -34,14 +34,6 @@
 - Using Beanie ODM to handle Mongo IO ([#220](https://github.com/arcavios/scooze/pull/220))
 - Removed Historic Brawl format ([#237](https://github.com/arcavios/scooze/pull/237))
 
-### Fixed
-
-- N/A
-
-### Docs
-
-- N/A
-
 
 ## [1.0.5] - 2023-11-09
 
@@ -112,10 +104,6 @@
 - Fixes the README.md
 - Rename `Cardartist_id` to `Card.artist_ids` to match Scryfall ([#85](https://github.com/arcavios/scooze/pull/85), [#86](https://github.com/arcavios/scooze/pull/86))
 
-### Docs
-
-- N/A
-
 
 ## [0.1.0] - 2023-07-31
 
@@ -123,15 +111,3 @@
 
 - Create a setup.py for local DB use ([#8](https://github.com/arcavios/scooze/pull/8))
 - Create a CRUD API for card and cards ([#8](https://github.com/arcavios/scooze/pull/8))
-
-### Changed
-
-- N/A
-
-### Fixed
-
-- N/A
-
-### Docs
-
-- N/A
