@@ -64,3 +64,20 @@ nav:
 
 plugins:
   - mkdocstrings
+
+markdown_extensions:
+- tables
+- toc:
+    permalink: true
+    title: Page contents
+# - admonition
+# - pymdownx.details
+# - pymdownx.superfences
+# - pymdownx.highlight:
+#     pygments_lang_class: true
+# - pymdownx.extra
+# - pymdownx.emoji:
+#     emoji_index: !!python/name:material.extensions.emoji.twemoji
+#     emoji_generator: !!python/name:material.extensions.emoji.to_svg
+# - pymdownx.tabbed:
+#     alternate_style: true

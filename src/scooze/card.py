@@ -94,6 +94,9 @@ class Card(HashableObject):
 
     @classmethod
     def from_json(cls, data: dict | str) -> Self:
+        """
+        Create a new Card with the given JSON.
+        """
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
@@ -101,19 +104,21 @@ class Card(HashableObject):
 
     @classmethod
     def from_model(cls, model: CardModel) -> Self:
+        """
+        Create a new Card with the given `CardModel`.
+        """
         return cls(**model.model_dump())
 
 
 class OracleCard(Card):
     """
-    Card subclass containing all information about a unique card in Magic.
+    A Card object containing all information about a unique card in Magic.
     All information in this class is print-agnostic.
 
     Attributes:
         name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
-        card_faces: All component CardFace objects of this card, for multifaced
-            cards.
+        card_faces: All component CardFaces of this card, for multifaced cards.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
             deckbuilding.
@@ -205,7 +210,7 @@ class OracleCard(Card):
         """
         Provide the given oracle text with reminder text removed. This is a class method
         because cards with different faces won't know which face you'd want. Instead you
-        simply pass the text you want to trim reminder text from here.
+        simply pass the text you want to trim reminder text.
 
         Args:
             oracle_text: The oracle text of a card.
@@ -243,18 +248,18 @@ class OracleCard(Card):
 
 class FullCard(OracleCard):
     """
-    Card object that supports all fields available from Scryfall's JSON data.
-    Scryfall documentation: https://scryfall.com/docs/api/cards
+    A Card object that supports all fields available from Scryfall's JSON data.
+    Represents a specific printing of a card.
 
     Attributes:
         name: This card's name.
         scooze_id: A unique identifier for a document in a scooze database.
 
-    Core fields
+        # Core fields
         arena_id: This card's Arena ID, if applicable.
         scryfall_id: Scryfall's unique ID for this card.
         lang: The language code for this print;
-            see https://scryfall.com/docs/api/languages
+            see [here](https://scryfall.com/docs/api/languages)
         mtgo_id: This card's MTGO Catalog ID, if applicable.
         mtgo_foil_id: This card's foil MTGO Catalog ID, if applicable.
         multiverse_ids: This card's multiverse IDs on Gatherer, if any.
@@ -271,12 +276,12 @@ class FullCard(OracleCard):
             this card in Scryfall's API.
         rulings_uri: A link to rulings for this card in Scryfall's API.
         scryfall_uri: A link to the Scryfall page for this card.
-        uri: A link to this card object in Scryfall's API.
+        uri: A link to this card in Scryfall's API.
 
-    Gameplay fields
-        all_parts: RelatedCard objects for tokens/meld pairs/other associated
+        # Gameplay fields
+        all_parts: RelatedCards for tokens/meld pairs/other associated
             parts to this card, if applicable.
-        card_faces: All component CardFace objects of this card, for multifaced
+        card_faces: All component CardFaces of this card, for multifaced
             cards.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
@@ -300,7 +305,7 @@ class FullCard(OracleCard):
         toughness: Toughness of this card, if applicable.
         type_line: This card's type line. (e.g. "Creature — Ooze")
 
-    Print fields
+        # Print fields
         artist: Artist for this card.
         artist_ids: List of Scryfall IDs for artists of this card.
         attraction_lights: Attraction lights lit on this card, if applicable.
@@ -311,15 +316,15 @@ class FullCard(OracleCard):
         collector_number: This card's collector number; can contain non-numeric
             characters.
         content_warning: True if use of this print should be avoided;
-            see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220
+            see [here](https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220)
         digital: True if this card was only released in a video game.
         finishes: Finishes this card is available in, from among foil, nonfoil, and etched.
         flavor_name: Alternate name for this card, such as on Godzilla series.
         flavor_text: Flavor text on this card, if any.
         frame_effects: Special frame effects on this card;
-            see https://scryfall.com/docs/api/frames
+            see [here](https://scryfall.com/docs/api/frames)
         frame: This card's frame layout;
-            see https://scryfall.com/docs/api/frames
+            see [here](https://scryfall.com/docs/api/frames)
         full_art: Whether this print is full-art.
         games: Which games this print is available on, from among
             paper, mtgo, and arena.
@@ -330,7 +335,7 @@ class FullCard(OracleCard):
             Either missing, placeholder, lowres, or highres_scan.
         image_uris: Links to images of this card in various qualities.
         layout: This card's printed layout;
-            see https://scryfall.com/docs/api/layouts
+            see [here](https://scryfall.com/docs/api/layouts)
         oversized: Whether this card is oversized.
         preview: Information about where, when, and how this print was
             previewed.
@@ -355,14 +360,13 @@ class FullCard(OracleCard):
         set_search_uri: Link to Scryfall API to start paginating through this
             print's full set.
         set_type: An overall categorization for each set, provided by Scryfall.
-        set_uri: Link to the set object for this print in Scryfall's API.
+        set_uri: Link to the set for this print in Scryfall's API.
         set_code: Set code of the set this print belongs to.
         set_id: UUID of the set this print belongs to.
         story_spotlight: Whether this print is a Story Spotlight.
         textless: Whether this print is textless.
-        variation: Whether this card print is a variation of another card
-            object.
-        variation_of: Which card object this object is a variant of, if any.
+        variation: Whether this card print is a variation of another card.
+        variation_of: Which card this object is a variant of, if any.
         watermark: Watermark printed on this card, if any.
     """
 
@@ -458,7 +462,7 @@ class FullCard(OracleCard):
     ):
         super().__init__(
             name=name,
-            card_faces=None,  # will be overridden with FullCardFace objects
+            card_faces=None,  # will be overridden with FullCardFaces
             cmc=0,  # will be overridden with reversible card logic
             color_identity=color_identity,
             color_indicator=color_indicator,

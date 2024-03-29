@@ -10,8 +10,7 @@ logger = scooze_logger()
 
 class ImageUris(HashableObject):
     """
-    URIs of images associated with this object on Scryfall.
-    Scryfall documentation: https://scryfall.com/docs/api/images
+    URIs of images associated with this object on [Scryfall](https://scryfall.com/docs/api/images).
 
     Attributes:
         png: Full card, high quality image with transparent background and
@@ -49,10 +48,10 @@ class ImageUris(HashableObject):
 
 class CardFace(HashableObject):
     """
-    Object for a single face of a multi-faced OracleCard. Contains only fields that are consistent between card prints.
-    Multi-faced cards include MDFCs, split cards, aftermath, etc.
-
-    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
+    An object for a single face of a multi-faced OracleCard. Contains only
+    fields that are consistent between card prints.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc;
+    see [here](https://scryfall.com/docs/api/cards#card-face-objects)
 
     Attributes:
         name: Name of this face.
@@ -109,10 +108,9 @@ class CardFace(HashableObject):
 
 class FullCardFace(CardFace):
     """
-    Object for a single face of a multi-faced FullCard.
-    Multi-faced cards include MDFCs, split cards, aftermath, etc.
-
-    Scryfall documentation: https://scryfall.com/docs/api/cards#card-face-objects
+    An object for a single face of a multi-faced FullCard.
+    Multi-faced cards include MDFCs, split cards, aftermath, etc;
+    see [here](https://scryfall.com/docs/api/cards#card-face-objects)
 
     Attributes:
         name: Name of this face.
@@ -195,7 +193,7 @@ class FullCardFace(CardFace):
 
 class Prices(HashableObject):
     """
-    Object for all price data associated with a Card object.
+    An object for all price data associated with a Card object.
 
     Attributes:
         usd: Price in US dollars, from TCGplayer.
@@ -230,7 +228,7 @@ class Prices(HashableObject):
 
 class Preview(HashableObject):
     """
-    Object for information about where and when a card was previewed.
+    An object for information about where and when a card was previewed.
 
     Attributes:
         previewed_at: Date/time of preview being shown or added to Scryfall.
@@ -277,10 +275,9 @@ class PurchaseUris(HashableObject):
 
 class RelatedCard(HashableObject):
     """
-    Data about Scryfall objects related to this card
+    Data about [Scryfall](https://scryfall.com/docs/api/cards#related-card-objects) objects related to this card
     (tokens, cards referenced by name, meld pairs, etc.)
 
-    Scryfall documentation: https://scryfall.com/docs/api/cards#related-card-objects
 
     Attributes:
         name: Name of linked component.
