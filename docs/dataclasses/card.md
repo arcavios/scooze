@@ -3,19 +3,11 @@ A scooze `Card` represents a Magic: the Gathering card closely following the
 
 ::: scooze.card
     options:
-        members:
-            - Card
-            - OracleCard
-            - FullCard
+        inherited_members: false
+        filters:
+            - "!CardNormalizer"
 
 ::: scooze.cardparts
     options:
-        members:
-            - ImageUris
-            - CardFace
-            - FullCardFace
-            - Prices
-            - Preview
-            - PurchaseUris
-            - RelatedCard
-            - RelatedUris
+        filters:
+            - "!CardPartsNormalizer"
