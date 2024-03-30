@@ -34,7 +34,7 @@ def to_lower_camel(string: str) -> str:
 
 def scooze_logger() -> logging.Logger:
     """
-    Helper function to get the Scooze logger.
+    Helper function to get the scooze logger.
 
     Use the default logging functionality here without any filters, formatters,
     or handlers, so users can make informed decisions about their own logging.
@@ -411,7 +411,7 @@ class JsonNormalizer:
         return datetime.strptime(d, DATE_FORMAT).date()
 
     @classmethod
-    def to_enum(cls, e: Type[E], v) -> E | None:
+    def to_enum(cls, e: Type[E], v: Any) -> E | None:
         """
         Normalize an Enum.
 
@@ -544,7 +544,7 @@ class DictDiff(ComparableObject):
             d1: The first dict.
             d2: The second dict.
             NO_KEY: Default value to use when a key is in one dict, but not the
-              other.
+                other.
 
         Returns:
             A dict with all keys from both dicts. The values are tuple(v, v)

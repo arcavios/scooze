@@ -24,7 +24,7 @@ class DeckModel(ScoozeBaseModel):
     model_config["json_schema_extra"] = {
         "examples": [
             {
-                "archetype": "Scooze Deck Example",
+                "archetype": "scooze Deck Example",
                 "format": "Limited",
                 "main": {
                     "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id

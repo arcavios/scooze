@@ -8,7 +8,7 @@ class Database:
     A simple database object to house the Motor client.
 
     Attributes:
-        client: An AsyncIOMotorClient for managing Scooze's MongoDB connection.
+        client: An AsyncIOMotorClient for managing scooze's MongoDB connection.
     """
 
     client: AsyncIOMotorClient = None

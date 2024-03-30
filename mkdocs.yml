@@ -1,4 +1,4 @@
-site_name: Scooze
+site_name: scooze
 
 theme:
   name: material
@@ -43,7 +43,7 @@ validation:
 
 nav:
 - Get Started:
-    - Welcome to Scooze: index.md
+    - Welcome to scooze: index.md
     - Changelog: changelog.md
 - API Documentation:
     - Models:
@@ -55,12 +55,13 @@ nav:
     - Database Interface:
         - Python API:
             - Bulkdata: db_interface/python/bulkdata.md
-            - Scooze: db_interface/python/scooze.md
+            - scooze: db_interface/python/scooze.md
         - REST API:
             - Routers: db_interface/rest/routers.md
     - Extras:
         - Catalogs: extras/catalogs.md
         - Command Line Interface: extras/cli.md
+        - Utils: extras/utils.md
 - Arcavios Team: people.md
 
 plugins:

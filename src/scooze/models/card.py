@@ -591,7 +591,7 @@ def encode_date(dt: date):
 
 class CardModel(ScoozeDocument, CardModelData):
     """
-    A database representation of a Scooze Card.
+    A database representation of a scooze Card.
     """
 
     model_config = ConfigDict(

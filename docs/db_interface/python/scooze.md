@@ -1,3 +1,3 @@
-Scooze Python API Docs
+scooze Python API Docs
 
 ::: scooze.api

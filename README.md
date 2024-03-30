@@ -44,7 +44,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
     - Running MongoDB locally:
 
-         Scooze depends on MongoDB to run your local database.
+         scooze depends on MongoDB to run your local database.
          Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
 
          *You can use scooze without MongoDB if you don't intend to use any of its database-related features.*

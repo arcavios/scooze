@@ -102,7 +102,7 @@ class Card(HashableObject):
         Create a new Card with the given JSON.
 
         Args:
-            data: Some JSON to create a Scooze Card from.
+            data: Some JSON to create a scooze Card from.
         """
         if isinstance(data, dict):
             return cls(**data)
@@ -115,7 +115,7 @@ class Card(HashableObject):
         Create a new Card with the given `CardModel`.
 
         Args:
-            model: A CardModel to create a Scooze Card from.
+            model: A CardModel to create a scooze Card from.
         """
         return cls(**model.model_dump())
 

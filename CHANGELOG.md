@@ -9,7 +9,7 @@
 
 ### Changed
 
-- Change logging behavior to be extensible by applications using Scooze ([#248](https://github.com/arcavios/scooze/pull/248))
+- Change logging behavior to be extensible by applications using scooze ([#248](https://github.com/arcavios/scooze/pull/248))
 
 ### Fixed
 
