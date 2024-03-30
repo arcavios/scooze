@@ -1,6 +1,6 @@
 # Change Log
 
-## [DEVELOPMENT] - unreleased
+## [DEVELOPMENT] - UNRELEASED
 
 ### Added
 
@@ -23,6 +23,8 @@
 
 ## [1.0.6] - 2024-03-02
 
+[GitHub Release](https://github.com/arcavios/scooze/releases/tag/v1.0.6)
+
 ### Added
 
 - Add support for symbols on cards (mana, energy, tap/untap, etc.) ([#214](https://github.com/arcavios/scooze/pull/214))
@@ -36,6 +38,8 @@
 
 
 ## [1.0.5] - 2023-11-09
+
+[GitHub Release](https://github.com/arcavios/scooze/releases/tag/v1.0.5)
 
 ### Added
 
@@ -65,6 +69,8 @@
 
 ## [1.0.4] - 2023-10-02
 
+[GitHub Release](https://github.com/arcavios/scooze/releases/tag/v1.0.4)
+
 ### Added
 
 - Add DB/API methods for retrieving all cards at once ([#172](https://github.com/arcavios/scooze/pull/172))
@@ -84,6 +90,8 @@
 
 
 ## [1.0.3] - 2023-09-29
+
+[GitHub Release](https://github.com/arcavios/scooze/releases/tag/v1.0.3)
 
 ### Added
 
@@ -106,6 +114,8 @@
 
 
 ## [0.1.0] - 2023-07-31
+
+[GitHub Release](https://github.com/arcavios/scooze/releases/tag/v0.1.0)
 
 ### Added
 
