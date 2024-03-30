@@ -727,4 +727,4 @@ class CardNormalizer(CardPartsNormalizer):
             return Prices(**prices)
 
 
-CardT = TypeVar("CardT", bound=Card)  # generic Card type
+CardT = TypeVar("CardT", bound=Card)
