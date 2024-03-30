@@ -25,6 +25,9 @@ class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
 
     @classmethod
     def list(cls):
+        """
+        Get a list of this Enum's field names.
+        """
         return list(map(lambda c: c.value, cls))
 
 
@@ -63,8 +66,8 @@ class Color(ExtendedEnum, StrEnum):
 class Component(ExtendedEnum, StrEnum):
     """
     A type of related object, used in Scryfall to link a card
-    to other cards or tokens referenced by it.
-    See https://scryfall.com/docs/api/cards for documentation.
+    to other cards or tokens referenced by it; see
+    [here](https://scryfall.com/docs/api/cards)
     """
 
     MELD_PART = auto()
@@ -176,8 +179,8 @@ class Game(ExtendedEnum, StrEnum):
 class ImageStatus(ExtendedEnum, StrEnum):
     """
     An indicator for whether a card's image exists on Scryfall,
-    and how high quality the sourced image is.
-    See https://scryfall.com/docs/api/images for documentation.
+    and how high quality the sourced image is; see
+    [here](https://scryfall.com/docs/api/images)
     """
 
     MISSING = auto()
@@ -188,8 +191,8 @@ class ImageStatus(ExtendedEnum, StrEnum):
 
 class Language(ExtendedEnum, StrEnum):
     """
-    A language that Magic cards have been printed in, using Scryfall's language codes.
-    See https://scryfall.com/docs/api/languages for documentation.
+    A language that Magic cards have been printed in, using Scryfall's language
+    codes; see [here](https://scryfall.com/docs/api/languages)
     """
 
     ENGLISH = "en"
@@ -300,8 +303,8 @@ class SecurityStamp(ExtendedEnum, StrEnum):
 
 class SetType(ExtendedEnum, StrEnum):
     """
-    A Scryfall-provided categorization for a set.
-    See https://scryfall.com/docs/api/sets for documentation.
+    A Scryfall-provided categorization for a set; see
+    [here](https://scryfall.com/docs/api/sets)
     """
 
     ALCHEMY = auto()
@@ -587,34 +590,106 @@ class CostSymbol(ExtendedEnum, StrEnum):
 
     @property
     def is_generic(self) -> bool:
+        """
+        Determine if this mana symbol is generic.
+
+        Examples:
+            ```
+            CostSymbol.GENERIC_1.is_generic()
+            ```
+        """
+
         return self in CostSymbol._generic_symbols()
 
     @property
     def is_half(self) -> bool:
+        """
+        Determine if this mana symbol is half.
+
+        Examples:
+            ```
+            CostSymbol.GENERIC_HALF.is_half()
+            ```
+        """
+
         return self in CostSymbol._half_symbols()
 
     @property
     def is_hybrid(self) -> bool:
+        """
+        Determine if this mana symbol is hybrid.
+
+        Examples:
+            ```
+            CostSymbol.HYBRID_RG.is_hybrid()
+            ```
+        """
+
         return self in CostSymbol._hybrid_symbols()
 
     @property
     def is_phyrexian(self) -> bool:
+        """
+        Determine if this mana symbol is Phyrexian.
+
+        Examples:
+            ```
+            CostSymbol.PHYREXIAN_BLUE.is_phyrexian()
+            ```
+        """
+
         return self in CostSymbol._phyrexian_symbols()
 
     @property
     def is_twobrid(self) -> bool:
+        """
+        Determine if this mana symbol is a twobrid.
+
+        Examples:
+            ```
+            CostSymbol.TWOBRID_WHITE.is_twobrid()
+            ```
+        """
+
         return self in CostSymbol._twobrid_symbols()
 
     @property
     def is_variable(self) -> bool:
+        """
+        Determine if this mana symbol is variable.
+
+        Examples:
+            ```
+            CostSymbol.GENERIC_X.is_variable()
+            ```
+        """
+
         return self in CostSymbol._variable_symbols()
 
     @property
     def is_un(self) -> bool:
+        """
+        Determine if this mana symbol is from an "Un"-set.
+
+        Examples:
+            ```
+            CostSymbol.GENERIC_100.is_un()
+            ```
+        """
+
         return self in CostSymbol._un_symbols()
 
     @property
     def is_nonmana(self) -> bool:
+        """
+        Determine if this mana symbol is non-mana.
+
+        Examples:
+            ```
+            CostSymbol.TAP.is_nonmana()
+            ```
+        """
+
         return self in CostSymbol._nonmana_symbols()
 
     # endregion
@@ -622,10 +697,14 @@ class CostSymbol(ExtendedEnum, StrEnum):
     @property
     def mana_value_contribution(self) -> float:
         """
-        The contribution to mana value for this mana symbol.
+        The numerical mana value for this symbol; will be integer valued except
+        for 1/2 mana symbols from "Un"-sets.
 
-        Returns:
-            Numerical mana value for this symbol; will be integer valued except for 1/2 mana symbols from unsets.
+        Examples:
+            ```
+            CostSymbol.GREEN.mana_value_contribution()
+            >>> 1
+            ```
         """
 
         if self.is_nonmana or self.is_variable:

@@ -78,6 +78,7 @@ plugins:
             heading_level: 2
             inherited_members: true
             merge_init_into_class: false
+            members_order: source
             separate_signature: true
             show_root_heading: true
             show_root_full_path: false
