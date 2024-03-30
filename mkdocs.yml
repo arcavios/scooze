@@ -64,10 +64,29 @@ nav:
 - Arcavios Team: people.md
 
 plugins:
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          import:
+          - https://docs.python.org/3/objects.inv
+          paths: [src]
+          options:
+            docstring_options:
+              ignore_init_summary: true
+            heading_level: 2
+            inherited_members: true
+            merge_init_into_class: false
+            separate_signature: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_source: false
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            summary: true
 
 markdown_extensions:
-- tables
 - toc:
     permalink: true
 # TODO(#153): Remove these?

@@ -2,17 +2,14 @@ A Scooze `CardModel` is a database representation of a Magic: the Gathering card
 [Scryfall](https://scryfall.com/docs/api/cards) schema using [Pydantic](https://docs.pydantic.dev/latest/) models for
 data validation.
 
-::: scooze.models.card.CardModelData
+::: scooze.models.card
     options:
-        show_root_heading: true
-
-::: scooze.models.card.CardModel
-    options:
-        show_root_heading: true
+        members:
+            - CardModelData
+            - CardModel
 
 ::: scooze.models.cardparts
     options:
-        show_root_heading: true
         members:
             - ImageUrisModel
             - CardFaceModel

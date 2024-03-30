@@ -1,4 +1,4 @@
-Deck Dataclass Docs
+<!-- TODO(#254): Update Deck and DeckModel documentation. -->
 
 ::: scooze.deck
 
