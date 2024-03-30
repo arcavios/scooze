@@ -64,7 +64,7 @@
 
 ### Docs
 
-- More completely document possible exceptions ([#209])(https://github.com/arcavios/scooze/pull/209)
+- More completely document possible exceptions [#209](https://github.com/arcavios/scooze/pull/209)
 
 
 ## [1.0.4] - 2023-10-02
