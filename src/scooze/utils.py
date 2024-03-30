@@ -394,7 +394,7 @@ class JsonNormalizer:
     """
 
     @classmethod
-    def to_date(cls, d: date | str | None) -> date:
+    def to_date(cls, d: date | str | None) -> date | None:
         """
         Normalize a date.
 

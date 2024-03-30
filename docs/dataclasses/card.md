@@ -11,7 +11,7 @@ A Scooze `Card` represents a Magic: the Gathering card closely following the
 ::: scooze.card.OracleCard
     options:
         show_root_heading: true
-        # Explicitly order members to list classmethods first
+        # explicit members list so we can set order and include `__init__` easily
         members:
             - oracle_text_without_reminder
             - is_double_sided
