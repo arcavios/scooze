@@ -1,29 +1,29 @@
 site_name: scooze
 
 theme:
-  name: material
-#   custom_dir: 'docs/theme'
-  palette:
-  - media: "(prefers-color-scheme: light)"
-    scheme: default
-    primary: green
-    accent: green
-    toggle:
-      icon: material/lightbulb-outline
-      name: "Switch to dark mode"
-  - media: "(prefers-color-scheme: dark)"
-    scheme: slate
-    primary: green
-    accent: green
-    toggle:
-      icon: material/lightbulb
-      name: "Switch to light mode"
-  features: # TODO(#153): I don't know what any of these do
-    - content.tabs.link
-    - content.code.annotate
-    - content.code.copy
-    - announce.dismiss
-    - navigation.tabs
+    name: material
+    #   custom_dir: 'docs/theme'
+    palette:
+        - media: "(prefers-color-scheme: light)"
+          scheme: default
+          primary: green
+          accent: green
+          toggle:
+              icon: material/lightbulb-outline
+              name: "Switch to dark mode"
+        - media: "(prefers-color-scheme: dark)"
+          scheme: slate
+          primary: green
+          accent: green
+          toggle:
+              icon: material/lightbulb
+              name: "Switch to light mode"
+    features: # TODO(#153): I don't know what any of these do
+        - content.tabs.link
+        - content.code.annotate
+        - content.code.copy
+        - announce.dismiss
+        - navigation.tabs
 #   logo: 'logo-white.svg'
 #   favicon: 'favicon.png'
 
@@ -32,66 +32,66 @@ repo_url: https://github.com/arcavios/scooze
 
 # https://www.mkdocs.org/user-guide/configuration/#validation
 validation:
-  nav:
-    omitted_files: warn # default: info
-    not_found: warn # default: warn
-    absolute_links: info # default: info
-  links:
-    not_found: warn # default: warn
-    absolute_links: warn # default: info
-    unrecognized_links: warn # default: info
+    nav:
+        omitted_files: warn # default: info
+        not_found: warn # default: warn
+        absolute_links: info # default: info
+    links:
+        not_found: warn # default: warn
+        absolute_links: warn # default: info
+        unrecognized_links: warn # default: info
 
 nav:
-- Get Started:
-    - Welcome to scooze: index.md
-    - Changelog: changelog.md
-- API Documentation:
-    - Models:
-        - Card: models/card.md
-        - Deck: models/deck.md
-        - Base Models: models/base_models.md
-    - Data Classes:
-        - Card: dataclasses/card.md
-        - Deck: dataclasses/deck.md
-    - Database Interface:
-        - Python API:
-            - Bulkdata: db_interface/python/bulkdata.md
-            - scooze: db_interface/python/scooze.md
-        - REST API:
-            - Routers: db_interface/rest/routers.md
-    - Extras:
-        - Catalogs: extras/catalogs.md
-        - Command Line Interface: extras/cli.md
-        - Utils: extras/utils.md
-- Arcavios Team: people.md
+    - Get Started:
+          - Welcome to scooze: index.md
+          - Changelog: changelog.md
+    - API Documentation:
+          - Models:
+                - Card: models/card.md
+                - Deck: models/deck.md
+                - Base Models: models/base_models.md
+          - Data Classes:
+                - Card: dataclasses/card.md
+                - Deck: dataclasses/deck.md
+          - Database Interface:
+                - Python API:
+                      - Bulkdata: db_interface/python/bulkdata.md
+                      - scooze: db_interface/python/scooze.md
+                - REST API:
+                      - Routers: db_interface/rest/routers.md
+          - Extras:
+                - Catalogs: extras/catalogs.md
+                - Command Line Interface: extras/cli.md
+                - Utils: extras/utils.md
+    - Arcavios Team: people.md
 
 plugins:
-  - mkdocstrings:
-      handlers:
-        python:
-          import:
-          - https://docs.python.org/3/objects.inv
-          paths: [src]
-          options:
-            docstring_options:
-              ignore_init_summary: true
-            heading_level: 2
-            inherited_members: true
-            merge_init_into_class: false
-            members_order: source
-            separate_signature: false
-            show_root_heading: true
-            show_root_full_path: false
-            show_source: false
-            show_signature_annotations: true
-            show_symbol_type_heading: true
-            show_symbol_type_toc: true
-            signature_crossrefs: true
-            summary: true
+    - mkdocstrings:
+          handlers:
+              python:
+                  import:
+                      - https://docs.python.org/3/objects.inv
+                  paths: [src]
+                  options:
+                      docstring_options:
+                          ignore_init_summary: true
+                      heading_level: 2
+                      inherited_members: true
+                      merge_init_into_class: false
+                      members_order: source
+                      separate_signature: false
+                      show_root_heading: true
+                      show_root_full_path: false
+                      show_source: false
+                      show_signature_annotations: true
+                      show_symbol_type_heading: true
+                      show_symbol_type_toc: true
+                      signature_crossrefs: true
+                      summary: true
 
 markdown_extensions:
-- toc:
-    permalink: true
+    - toc:
+          permalink: true
 # TODO(#153): Remove these?
 # - admonition
 # - pymdownx.details
