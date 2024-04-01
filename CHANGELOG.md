@@ -18,7 +18,7 @@
 
 ### Docs
 
-- Introduce API documentation on ReadTheDocs via MkDocs and mkdocstring ([#252](https://github.com/arcavios/scooze/pull/252))
+- Introduce API documentation on Read the Docs via MkDocs and mkdocstring ([#252](https://github.com/arcavios/scooze/pull/252))
 
 
 ## [1.0.6] - 2024-03-02
