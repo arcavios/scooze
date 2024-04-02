@@ -3,6 +3,7 @@ import os
 import requests
 from scooze.catalogs import ScryfallBulkFile
 from scooze.utils import DEFAULT_BULK_FILE_DIR
+from urllib.error import HTTPError # TODO(#153): This allows for autolinking to the HTTPError documentation, but it's bloat, right?
 
 SCRYFALL_BULK_INFO_ENDPOINT = "https://api.scryfall.com/bulk-data"
 

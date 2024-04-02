@@ -730,3 +730,6 @@ class CardNormalizer(CardPartsNormalizer):
 
 
 CardT = TypeVar("CardT", bound=Card)
+"""
+A TypeVar for representing Generic Card types.
+"""

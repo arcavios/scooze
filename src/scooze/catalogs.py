@@ -594,7 +594,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is generic.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.GENERIC_1.is_generic()
             ```
         """
@@ -607,7 +607,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is half.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.GENERIC_HALF.is_half()
             ```
         """
@@ -620,7 +620,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is hybrid.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.HYBRID_RG.is_hybrid()
             ```
         """
@@ -633,7 +633,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is Phyrexian.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.PHYREXIAN_BLUE.is_phyrexian()
             ```
         """
@@ -646,7 +646,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is a twobrid.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.TWOBRID_WHITE.is_twobrid()
             ```
         """
@@ -659,7 +659,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is variable.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.GENERIC_X.is_variable()
             ```
         """
@@ -672,7 +672,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is from an "Un"-set.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.GENERIC_100.is_un()
             ```
         """
@@ -685,7 +685,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         Determine if this mana symbol is non-mana.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.TAP.is_nonmana()
             ```
         """
@@ -701,7 +701,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         for 1/2 mana symbols from "Un"-sets.
 
         Examples:
-            ```
+            ``` python
             CostSymbol.GREEN.mana_value_contribution()
             >>> 1
             ```
