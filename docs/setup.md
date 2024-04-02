@@ -63,7 +63,7 @@ Run the MongoDB server like this:
 mongod --dbpath path/to/db/
 ```
 
-## Using The CLI
+## Using the CLI
 
 Run the scooze command line interface tool to add some data to your local database.
 
@@ -75,7 +75,7 @@ Run the scooze command line interface tool to add some data to your local databa
     scooze run
     ```
 
-## Using scooze In Your Code
+## Using scooze in Your Code
 
 Now that you've got some cards in your database, you can use it in your own code!
 
