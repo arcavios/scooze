@@ -14,7 +14,7 @@ router = APIRouter(
 
 def _validate_card_id(card_id: str) -> PydanticObjectId:
     """
-    Helper to validate incoming strings as Card IDs
+    Helper to validate incoming strings as card IDs
 
     Args:
         card_id: Incoming string to test.
