@@ -1,14 +1,15 @@
-import argparse
 import logging
 import re
 from collections import Counter
 from datetime import date, datetime
+from enum import Enum, EnumMeta
 from sys import maxsize
-from typing import Any, Dict, Hashable, Iterable, Mapping, Self, Type, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
 from pydantic.alias_generators import to_camel
-from scooze.catalogs import CostSymbol, ExtendedEnum, Format
+from scooze.catalogs import CostSymbol, Format
+from scooze.enum import ExtendedEnum
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
 DEFAULT_DECKS_DIR = "./data/decks"

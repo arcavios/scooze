@@ -1,37 +1,8 @@
-from enum import Enum, EnumMeta, StrEnum, auto
+from enum import StrEnum, auto
 from functools import cache
 from typing import FrozenSet
 
-# region Enum Extensions
-
-
-class CaseInsensitiveEnumMeta(EnumMeta):
-    """
-    An extension of the classic Python EnumMeta to support case-insensitive
-    fields.
-    """
-
-    def __getitem__(self, item):
-        if isinstance(item, str):
-            item = item.upper()
-        return super().__getitem__(item)
-
-
-class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
-    """
-    An extension of the classic Python Enum to support additional
-    functionality.
-    """
-
-    @classmethod
-    def list(cls):
-        """
-        Get a list of this Enum's field names.
-        """
-        return list(map(lambda c: c.value, cls))
-
-
-# endregion
+from scooze.enum import ExtendedEnum
 
 # region Card Enums
 
@@ -716,48 +687,6 @@ class CostSymbol(ExtendedEnum, StrEnum):
         if self.is_generic:
             return float(self)
         return 1
-
-
-# endregion
-
-
-# region Deck Enums
-
-
-class InThe(ExtendedEnum, StrEnum):
-    """
-    The location of a Card in a Deck.
-    """
-
-    MAIN = auto()
-    SIDE = auto()
-    CMDR = auto()
-    ATTRACTIONS = auto()
-    STICKERS = auto()
-
-
-class DecklistFormatter(ExtendedEnum, StrEnum):
-    """
-    A method of formatting a decklist for external systems.
-    """
-
-    ARENA = auto()
-    MTGO = auto()
-
-
-# endregion
-
-
-# region Database Enums
-
-
-class DbCollection(ExtendedEnum, StrEnum):
-    """
-    Collections in the scooze database.
-    """
-
-    CARDS = "cards"
-    DECKS = "decks"
 
 
 # endregion

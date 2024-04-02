@@ -1,14 +1,42 @@
 from collections import Counter
+from enum import StrEnum, auto
 from sys import maxsize
 from typing import Generic, Self
 
 import scooze.utils as utils
 from scooze.card import CardT
-from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
+from scooze.catalogs import Format, Legality
 from scooze.deckpart import DeckDiff, DeckPart
+from scooze.enum import ExtendedEnum
 from scooze.utils import ComparableObject
 
 logger = utils.scooze_logger()
+
+# region Deck Enums
+
+
+class InThe(ExtendedEnum, StrEnum):
+    """
+    The location of a Card in a Deck.
+    """
+
+    MAIN = auto()
+    SIDE = auto()
+    CMDR = auto()
+    ATTRACTIONS = auto()
+    STICKERS = auto()
+
+
+class DecklistFormatter(ExtendedEnum, StrEnum):
+    """
+    A method of formatting a decklist for external systems.
+    """
+
+    ARENA = auto()
+    MTGO = auto()
+
+
+# endregion
 
 
 class Deck(ComparableObject, Generic[CardT]):

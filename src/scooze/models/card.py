@@ -15,7 +15,6 @@ from scooze.cardparts import (
 from scooze.catalogs import (
     BorderColor,
     Color,
-    DbCollection,
     Finish,
     Format,
     Frame,
@@ -29,6 +28,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
+from scooze.database.core import DbCollection
 from scooze.models.cardparts import (
     CardFaceModel,
     ImageUrisModel,
