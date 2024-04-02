@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-
+<!-- start announce block -->
 {% block announce %}
-scooze v1 can only be used locally! v2 will release later this year 🚀
+{% include 'announce.html' ignore missing %}
 {% endblock %}
+<!-- end announce block -->
