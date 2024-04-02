@@ -1,15 +1,9 @@
 ---
 hide:
-    - navigation
+    - toc
 ---
 
-## Contributing
-
-If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/scooze/issues/new?assignees=&labels=bug&template=bug_report.md&title=). If you have an idea for an improvement or new feature 🚀, please open a [feature request](https://github.com/arcavios/scooze/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=).
-
-If you find a security vulnerability, please follow the instructions [here](https://github.com/arcavios/scooze/security/policy).
-
-### Developer setup
+## Developer Setup
 
 1. Install Poetry
 	- [Introduction to Poetry](https://python-poetry.org/docs/#installation)
@@ -32,3 +26,9 @@ If you find a security vulnerability, please follow the instructions [here](http
 3. You're ready to develop!
 
 4. When you have changes you'd like the team to review, please submit a pull request!
+
+## Report A Bug
+
+If you find a bug 🐛, please open a [bug report](https://github.com/arcavios/scooze/issues/new?assignees=&labels=bug&template=bug_report.md&title=). If you have an idea for an improvement or new feature 🚀, please open a [feature request](https://github.com/arcavios/scooze/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=).
+
+If you find a security vulnerability, please follow the instructions [here](https://github.com/arcavios/scooze/security/policy).
