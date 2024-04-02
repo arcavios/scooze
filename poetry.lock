@@ -760,6 +760,23 @@ docs = ["mdx-gh-links (>=0.2)", "mkdocs (>=1.5)", "mkdocs-gen-files", "mkdocs-li
 testing = ["coverage", "pyyaml"]
 
 [[package]]
+name = "markdown-exec"
+version = "1.8.0"
+description = "Utilities to execute code blocks in Markdown files."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "markdown_exec-1.8.0-py3-none-any.whl", hash = "sha256:e80cb766eff8d0bcd1cdd133dba58223b42edbd1b7b9672481c2189572401bff"},
+    {file = "markdown_exec-1.8.0.tar.gz", hash = "sha256:0a932312f0ca89b82150e1638e84febb90eadd410dfd2417f05759c06deed727"},
+]
+
+[package.dependencies]
+pymdown-extensions = ">=9"
+
+[package.extras]
+ansi = ["pygments-ansi-color"]
+
+[[package]]
 name = "markupsafe"
 version = "2.1.5"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -2154,4 +2171,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11, <4"
-content-hash = "5e4351cc26830b0e24f754d76531e68b880298abe6b5fcea6ae26af0a8a4634c"
+content-hash = "ec3c35f3c61f024562493cbc05e684a92460a6cf45f7a048067e7220f5a810a4"
