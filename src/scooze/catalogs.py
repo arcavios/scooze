@@ -593,7 +593,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is generic.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.GENERIC_1.is_generic()
             ```
@@ -606,7 +606,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is half.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.GENERIC_HALF.is_half()
             ```
@@ -619,7 +619,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is hybrid.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.HYBRID_RG.is_hybrid()
             ```
@@ -632,7 +632,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is Phyrexian.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.PHYREXIAN_BLUE.is_phyrexian()
             ```
@@ -645,7 +645,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is a twobrid.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.TWOBRID_WHITE.is_twobrid()
             ```
@@ -658,7 +658,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is variable.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.GENERIC_X.is_variable()
             ```
@@ -671,7 +671,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is from an "Un"-set.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.GENERIC_100.is_un()
             ```
@@ -684,7 +684,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         """
         Determine if this mana symbol is non-mana.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.TAP.is_nonmana()
             ```
@@ -700,7 +700,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
         The numerical mana value for this symbol; will be integer valued except
         for 1/2 mana symbols from "Un"-sets.
 
-        Examples:
+        Example:
             ``` python
             CostSymbol.GREEN.mana_value_contribution()
             >>> 1

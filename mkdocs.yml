@@ -55,8 +55,10 @@ nav:
                 - Card: dataclasses/card.md
                 - Deck: dataclasses/deck.md
           - Database Interface:
-                - Python API: db_interface/scooze_api.md
-                - REST API: db_interface/fast_api.md
+                - Python: db_interface/scooze_api.md
+                - REST API:
+                      Card: db_interface/rest/card.md
+                      Deck: db_interface/rest/deck.md
           - Extras:
                 - Bulkdata: extras/bulkdata.md
                 - Catalogs: extras/catalogs.md
@@ -90,8 +92,7 @@ plugins:
                       summary: true
 
 markdown_extensions:
-    - toc:
-          permalink: true
+    - admonition
     - pymdownx.highlight:
           anchor_linenums: true
           line_spans: __span
@@ -99,3 +100,5 @@ markdown_extensions:
     - pymdownx.inlinehilite
     - pymdownx.snippets
     - pymdownx.superfences
+    - toc:
+          permalink: true

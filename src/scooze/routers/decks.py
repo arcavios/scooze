@@ -3,7 +3,7 @@ from typing import Any
 import scooze.database.deck as db
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from scooze.models.deck import DeckModelIn
+from scooze.models.deck import DeckModelIn, DeckModelOut
 
 router = APIRouter(
     prefix="/decks",
@@ -13,11 +13,12 @@ router = APIRouter(
 
 
 @router.get("/", summary="Get decks at random")
-async def decks_root(limit: int = 3):
+async def decks_root(limit: int = 3) -> DeckModelOut:
     """
     Get random decks up to the given limit.
 
-    - **limit** - the maximum number of decks to get
+    Args:
+        limit: the maximum number of decks to get
     """
 
     decks = await db.get_decks_random(limit=limit)
@@ -31,7 +32,20 @@ async def decks_root(limit: int = 3):
 
 
 @router.post("/add", summary="Create new decks")
-async def add_decks(decks: list[DeckModelIn]):
+async def add_decks(decks: list[DeckModelIn]) -> DeckModelOut:
+    """
+    Add a decks to the database.
+
+    Args:
+        decks: The decks to add.
+
+    Returns:
+        The scooze IDs of the created decks.
+
+    Raises:
+        HTTPException: 400 - Create failed, passes along the error message.
+    """
+
     inserted_ids = await db.add_decks(decks=decks)
     if inserted_ids is not None:
         return JSONResponse({"message": f"Created {len(inserted_ids)} deck(s)."}, status_code=200)
@@ -42,16 +56,17 @@ async def add_decks(decks: list[DeckModelIn]):
 @router.post("/by", summary="Get decks by property")
 async def get_decks_by(
     property_name: str, values: list[Any], paginated: bool = False, page: int = 1, page_size: int = 10
-):
+) -> DeckModelOut:
     """
     Get decks where the given property matches any of the given values.
 
-    - **property_name** - the property to check against
-    - **values** - matching values of the given property
-    - **paginated** - return paginated results if True, return all matches if
-    False
-    - **page** - return matches from the given page
-    - **page_size** - the number of results per page
+    Args:
+        property_name: the property to check against
+        values: matching values of the given property
+        paginated: return paginated results if True, return all matches if
+            False
+        page: return matches from the given page
+        page_size: the number of results per page
     """
 
     decks = await db.get_decks_by_property(
@@ -67,7 +82,11 @@ async def get_decks_by(
 
 
 @router.delete("/delete/all", summary="Delete all decks")
-async def delete_decks_all():
+async def delete_decks_all() -> DeckModelOut:
+    """
+    Delete all decks.
+    """
+
     deleted_count = await db.delete_decks_all()
 
     if deleted_count is not None:

@@ -18,7 +18,7 @@ class ScoozeApi(AbstractContextManager):
     """
     Context manager object for doing I/O from a local database.
 
-    Examples:
+    Example:
         ``` python
         with ScoozeApi() as s:
             green_cards = s.get_cards_by("colors", [Color.GREEN])
@@ -333,7 +333,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     Most commonly used in asynchronous contexts like Jupyter Notebooks or other
     web applications.
 
-    Examples:
+    Example:
         ``` python
         async with AsyncScoozeApi() as s:
             green_cards = await s.get_cards_by("colors", [Color.GREEN])

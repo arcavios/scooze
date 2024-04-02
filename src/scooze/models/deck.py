@@ -111,10 +111,21 @@ class DeckModel(ScoozeBaseModel):
 
 
 class DeckModelIn(DeckModel):
+    """
+    A Deck model to be passed to the database.
+    """
+
     pass
 
 
 class DeckModelOut(DeckModel):
+    """
+    A Deck model to be retrieved from the database.
+
+    Attributes:
+        id: A UUID for this deck in the database.
+    """
+
     id: ObjectIdT = Field(
         default=None,
         alias="_id",
