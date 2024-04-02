@@ -2,7 +2,7 @@ site_name: scooze
 
 theme:
     name: material
-    #   custom_dir: 'docs/theme'
+    custom_dir: "docs/theme"
     palette:
         - media: "(prefers-color-scheme: light)"
           scheme: default
@@ -18,11 +18,11 @@ theme:
           toggle:
               icon: material/lightbulb
               name: "Switch to light mode"
-    features: # TODO(#153): I don't know what any of these do
+    features:
+        - announce.dismiss
         - content.tabs.link
         - content.code.annotate
         - content.code.copy
-        - announce.dismiss
         - navigation.tabs
 #   logo: 'logo-white.svg'
 #   favicon: 'favicon.png'
