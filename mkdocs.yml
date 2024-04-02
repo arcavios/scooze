@@ -44,6 +44,8 @@ validation:
 nav:
     - Get Started:
           - Introduction to scooze: index.md
+          - Installation: installation.md
+          - Setup: setup.md
           - Contributing: contributing.md
           - Changelog: changelog.md
     - API Documentation:
@@ -93,6 +95,7 @@ plugins:
 
 markdown_extensions:
     - admonition
+    - pymdownx.details
     - pymdownx.highlight:
           anchor_linenums: true
           line_spans: __span

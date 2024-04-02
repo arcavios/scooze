@@ -5,5 +5,3 @@
         filters:
             # exclude all private/protected objects, keep special ones (default filters)
             - "!^_[^_]"
-            - "!CaseInsensitiveEnumMeta"
-            - "!DbCollection"

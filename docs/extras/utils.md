@@ -1,3 +1,5 @@
+::: scooze.enum
+
 ::: scooze.utils
     options:
         filters:

@@ -15,7 +15,8 @@ hide:
 
 2. [Fork](https://github.com/arcavios/scooze/fork) and clone the scooze GitHub repo
 
-    *Read more about forking [here](https://docs.github.com/en/get-started/quickstart/fork-a-repo).*
+    ??? Info "More Info About Forking"
+        GitHub has some great resources for learning more about getting started with forking [here](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
     ```
     git clone https://www.github.com/link/to/fork

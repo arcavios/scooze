@@ -8,5 +8,12 @@ title: scooze.deck - Deprecated
     scooze decks are still under construction...
 
 ::: scooze.deck
+    options:
+        inherited_members: false
+        # explicit ordering of members
+        members:
+            - Deck
+            - DecklistFormatter
+            - InThe
 
 ::: scooze.deckpart
