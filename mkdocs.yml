@@ -57,8 +57,8 @@ nav:
           - Database Interface:
                 - Python: db_interface/scooze_api.md
                 - REST API:
-                      Card: db_interface/rest/card.md
-                      Deck: db_interface/rest/deck.md
+                      - Card: db_interface/rest/card.md
+                      - Deck: db_interface/rest/deck.md
           - Extras:
                 - Bulkdata: extras/bulkdata.md
                 - Catalogs: extras/catalogs.md
