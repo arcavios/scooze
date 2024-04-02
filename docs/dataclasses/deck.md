@@ -4,7 +4,8 @@ title: scooze.deck - Deprecated
 ---
 
 <!-- TODO(#254): Update Deck and DeckModel documentation. -->
-scooze decks are still under construction...
+!!! warning
+    scooze decks are still under construction...
 
 ::: scooze.deck
 
