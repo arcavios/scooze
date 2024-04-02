@@ -51,7 +51,7 @@ class Deck(ComparableObject, Generic[CardT]):
     @property
     def cards(self) -> Counter[CardT]:
         """
-        Get this Deck as a list of Cards.
+        Get this Deck as a collection of cards.
         """
         return self.main.cards + self.side.cards + self.cmdr.cards + self.attractions.cards + self.stickers.cards
 
@@ -94,7 +94,7 @@ class Deck(ComparableObject, Generic[CardT]):
 
         Returns:
             A DeckDiff with keys for each deck part. Each contains a dict of
-            each card in both decks and their counts.
+                each card in both decks and their counts.
         """
 
         return DeckDiff(
@@ -114,7 +114,7 @@ class Deck(ComparableObject, Generic[CardT]):
 
         Returns:
             True if this Deck contains exactly the same cards as another, else
-            False.
+                False.
         """
 
         if self.total_cards() != other.total_cards():
@@ -138,7 +138,7 @@ class Deck(ComparableObject, Generic[CardT]):
 
         Returns:
             A string containing the names and quantities of the cards in this
-            Deck.
+                Deck.
         """
 
         match export_format:

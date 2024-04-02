@@ -15,7 +15,7 @@ class DeckDiff(ComparableObject):
         side (DictDiff): The diff between the sideboards of two Decks.
         cmdr (DictDiff): The diff between the command zones of two Decks.
         attractions (DictDiff): The diff between the attractions of the two Decks.
-        stickers (DictDiff): The diff between the stickers fo the two Decks.
+        stickers (DictDiff): The diff between the stickers of the two Decks.
     """
 
     def __init__(
@@ -56,7 +56,7 @@ class DeckDiff(ComparableObject):
 
     def total(self) -> int:
         """
-        The number of Cards in this DeckDiff.
+        The number of cards in this DeckDiff.
         """
 
         return sum(map(len, (self.main, self.side, self.cmdr, self.attractions, self.stickers)))

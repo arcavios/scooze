@@ -228,10 +228,12 @@ class OracleCard(Card):
     @classmethod
     def oracle_text_without_reminder(cls, oracle_text: str) -> str:
         """
-        Provide the given oracle text with reminder text removed. This is a
-        class method because cards with different faces won't know which face
-        you'd want. Instead you simply pass the text you want to trim reminder
-        text.
+        Provide the given oracle text with reminder text removed.
+
+        Note:
+            This is a class method because cards with two unique faces won't
+            know which face you'd want. Instead you simply pass the text from
+            which you want to trim reminder text.
 
         Args:
             oracle_text: The oracle text of a card.
