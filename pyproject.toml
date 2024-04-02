@@ -10,6 +10,11 @@ authors = [
 readme = "README.md"
 packages = [{ include = "scooze", from = "src" }]
 
+[tool.poetry.urls]
+homepage = "https://github.com/arcavios/scooze"
+repository = "https://github.com/arcavios/scooze"
+documentation = "https://scooze.readthedocs.io"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -20,10 +25,6 @@ line-length = 120
 [tool.isort]
 profile = "black"
 src_paths = ["scooze", "tests"]
-
-[tool.poetry.urls]
-"Homepage" = "https://github.com/arcavios/scooze"
-"Bug Tracker" = "https://github.com/arcavios/scooze/issues"
 
 [tool.poetry.dependencies]
 beanie = "^1.23.0"
