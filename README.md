@@ -11,4 +11,4 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
 🎛️ CLI to manage a local database of [Scryfall](https://scryfall.com/docs/api/bulk-data) data
 
-🐍 Python and REST APIs for interacting with the scooze Database
+🐍 Python and REST APIs for interacting with the scooze database

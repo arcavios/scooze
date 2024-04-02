@@ -2,7 +2,7 @@
 hide: toc
 ---
 
-Download and install this package from [PyPi](https://pypi.org/project/scooze/).
+Download and install this package from [PyPi](https://pypi.org/project/scooze/):
 
 ``` shell
 pip install scooze
