@@ -6,35 +6,36 @@ import scooze.utils as utils
 from scooze.card import CardT
 from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
 from scooze.deckpart import DeckDiff, DeckPart
+from scooze.utils import ComparableObject
 
 logger = utils.scooze_logger()
 
 
-class Deck(utils.ComparableObject, Generic[CardT]):
+class Deck(ComparableObject, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
     Attributes:
-        archetype: The archetype of this Deck.
-        format: The format legality of the cards in this Deck.
-        main: The main deck. Typically 60 cards minimum.
-        side: The sideboard. Typically 15 cards maximum.
-        cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
-        attractions: The attraction deck.
-        stickers: The sticker deck.
-        companion: This deck's companion (if applicable).
+        archetype (str | None): The archetype of this Deck.
+        format (Format): The format legality of the cards in this Deck.
+        main (DeckPart[CardT]): The main deck. Typically 60 cards minimum.
+        side (DeckPart[CardT]): The sideboard. Typically 15 cards maximum.
+        cmdr (DeckPart[CardT]): The command zone. Typically 1 or 2 cards in Commander formats.
+        attractions (DeckPart[CardT]): The attraction deck.
+        stickers (DeckPart[CardT]): The sticker deck.
+        companion (CardT | None): This deck's companion (if applicable).
     """
 
     def __init__(
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart[CardT] = None,
-        side: DeckPart[CardT] = None,
-        cmdr: DeckPart[CardT] = None,
-        attractions: DeckPart[CardT] = None,
-        stickers: DeckPart[CardT] = None,
-        companion: CardT = None,
+        main: DeckPart[CardT] | None = None,
+        side: DeckPart[CardT] | None = None,
+        cmdr: DeckPart[CardT] | None = None,
+        attractions: DeckPart[CardT] | None = None,
+        stickers: DeckPart[CardT] | None = None,
+        companion: CardT | None = None,
     ):
         self.archetype = archetype
         self.format = format
@@ -49,6 +50,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     @property
     def cards(self) -> Counter[CardT]:
+        """
+        Get this Deck as a list of Cards.
+        """
         return self.main.cards + self.side.cards + self.cmdr.cards + self.attractions.cards + self.stickers.cards
 
     def __str__(self):

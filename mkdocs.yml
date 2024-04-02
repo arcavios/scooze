@@ -67,6 +67,7 @@ nav:
     - Arcavios Team: people.md
 
 plugins:
+    - search
     - mkdocstrings:
           handlers:
               python:
@@ -82,7 +83,7 @@ plugins:
                       members_order: source
                       separate_signature: false
                       show_root_heading: true
-                      show_root_full_path: false
+                      show_root_full_path: true
                       show_source: false
                       show_signature_annotations: true
                       show_symbol_type_heading: true
