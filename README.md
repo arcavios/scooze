@@ -6,21 +6,22 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 🎛️ CLI to manage a local database of [Scryfall](https://scryfall.com/docs/api/bulk-data) data
 
 📊 Robust data models for representing Magic: the Gathering cards, decks, and tournaments
-    - Cards - follows the Scryfall standard
-    - Decks - main deck/sideboard/command zone, format legality, average words, and more
-    - Tournaments - coming soon!
+
+- Cards - follows the Scryfall standard
+- Decks - main deck/sideboard/command zone, format legality, average words, and more
+- Tournaments - coming soon!
 
 🐍 Python and REST APIs for interacting with the scooze database
-  - Note: v1 is local only
+- Note: v1 is local only
 
 
 ## Initial setup
 
 1. Download and install this package from [PyPi](https://pypi.org/project/scooze/).
 
-  ```
-  pip install scooze
-  ```
+    ```
+    pip install scooze
+    ```
 
 2. Set up the database
     - Using Docker:
@@ -51,30 +52,30 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
 3. Run the scooze CLI tool (installed with pip install) to add some data to your local database.
 
-  ``` shell
-  scooze -h
-  scooze load-cards oracle
-  scooze run
-  ```
+    ``` shell
+    scooze -h
+    scooze load-cards oracle
+    scooze run
+    ```
 
 4. Use scooze in your application code!
 
-  ``` python
-  from scooze.api import ScoozeApi
-  from scooze.catalogs import Color
+    ``` python
+    from scooze.api import ScoozeApi
+    from scooze.catalogs import Color
 
-  with ScoozeApi() as s:
-    # get 10 arbitrary green cards
-    green_cards = s.get_cards_by("colors", [Color.GREEN], paginated=True, page_size=10)
-    # get _all_ green cards
-    green_cards = s.get_cards_by("colors", [Color.GREEN])
+    with ScoozeApi() as s:
+        # get 10 arbitrary green cards
+        green_cards = s.get_cards_by("colors", [Color.GREEN], paginated=True, page_size=10)
+        # get _all_ green cards
+        green_cards = s.get_cards_by("colors", [Color.GREEN])
 
-    # get all cards from a particular set
-    woe_cards = s.get_cards_by_set("woe")
+        # get all cards from a particular set
+        woe_cards = s.get_cards_by_set("woe")
 
-    # get a specific card
-    black_lotus = s.get_card_by_name("Black Lotus")
-    print(black_lotus.total_words())
+        # get a specific card
+        black_lotus = s.get_card_by_name("Black Lotus")
+        print(black_lotus.total_words())
 
-    # and more!
-  ```
+        # and more!
+    ```

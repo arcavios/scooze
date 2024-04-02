@@ -43,7 +43,7 @@ validation:
 
 nav:
     - Get Started:
-          - Welcome to scooze: index.md
+          - Introduction to scooze: index.md
           - Contributing: contributing.md
           - Changelog: changelog.md
     - API Documentation:
