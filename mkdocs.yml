@@ -55,12 +55,10 @@ nav:
                 - Card: dataclasses/card.md
                 - Deck: dataclasses/deck.md
           - Database Interface:
-                - Python API:
-                      - Bulkdata: db_interface/python/bulkdata.md
-                      - scooze: db_interface/python/scooze.md
-                - REST API:
-                      - Routers: db_interface/rest/routers.md
+                - Python API: db_interface/scooze_api.md
+                - REST API: db_interface/fast_api.md
           - Extras:
+                - Bulkdata: extras/bulkdata.md
                 - Catalogs: extras/catalogs.md
                 - Command Line Interface: extras/cli.md
                 - Utils: extras/utils.md
