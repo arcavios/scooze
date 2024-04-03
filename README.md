@@ -61,7 +61,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
     ```
     scooze -h
-    scooze load-cards oracle
+    scooze load cards --oracle
     scooze run
     ```
 
