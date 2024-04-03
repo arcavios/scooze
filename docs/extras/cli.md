@@ -1,5 +1,10 @@
-<!-- TODO(#256): Add CLI documentation here -->
+### scooze CLI Help
+``` shell
+scooze -h &
+scooze list
+```
 
-Work In Progress...
-
-![wip](https://images.pexels.com/photos/1445324/pexels-photo-1445324.jpeg)
+::: scooze.console.cli
+    options:
+        members:
+            - COMMANDS
