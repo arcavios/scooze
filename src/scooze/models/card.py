@@ -1,6 +1,7 @@
 from datetime import date
+from typing import Any
 
-from pydantic import Field, field_validator
+from pydantic import AliasChoices, ConfigDict, Field, field_serializer, field_validator
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
@@ -14,6 +15,7 @@ from scooze.cardparts import (
 from scooze.catalogs import (
     BorderColor,
     Color,
+    DbCollection,
     Finish,
     Format,
     Frame,
@@ -36,86 +38,11 @@ from scooze.models.cardparts import (
     RelatedCardModel,
     RelatedUrisModel,
 )
-from scooze.models.utils import ObjectIdT, ScoozeBaseModel
+from scooze.models.utils import ScoozeBaseModel, ScoozeDocument
+from scooze.utils import DATE_FORMAT
 
 
-class CardModel(ScoozeBaseModel):
-    """
-    Model for a basic Card object with minimal fields. Contains all information
-      you might use to sort a decklist.
-
-    Attributes:
-        cmc: This card's mana value/converted mana cost.
-        color_identity: This card's color identity, for Commander variant
-          deckbuilding.
-        colors: This card's colors.
-        legalities: Formats and the legality status of this card in them.
-        mana_cost: Mana cost, as string of mana symbols.
-          (e.g. "{1}{W}{U}{B}{R}{G}")
-        name: This card's name.
-        power: Power of this card, if applicable.
-        toughness: Toughness of this card, if applicable.
-        type_line: This card's type line. (e.g. "Creature — Ooze")
-    """
-
-    model_config = ScoozeBaseModel.model_config.copy()
-    model_config["json_schema_extra"] = {
-        "examples": [
-            {
-                "cmc": 2.0,
-                "colorIdentity": [Color.GREEN],
-                "colors": [Color.GREEN],
-                "legalities": {Format.COMMANDER: Legality.LEGAL, Format.PAUPER: Legality.NOT_LEGAL},
-                "manaCost": "{1}{G}",
-                "name": "Scavenging Ooze",
-                "power": "2",
-                "toughness": "2",
-                "typeLine": "Creature — Ooze",
-            }
-        ]
-    }
-
-    cmc: float | None = Field(
-        default=None,
-        description="This card's mana value/converted mana cost.",
-    )
-    color_identity: set[Color] | None = Field(
-        default=None,
-        description="This card's color identity, for Commander variant deckbuilding.",
-    )
-    colors: set[Color] | None = Field(
-        default=None,
-        description="This card's colors.",
-    )
-    legalities: dict[Format, Legality] | None = Field(
-        default=None,
-        description="Formats and the legality status of this card in them.",
-    )
-    mana_cost: str | None = Field(
-        default=None,
-        description='Mana cost, as string of mana symbols. (e.g. "{1}{W}{U}{B}{R}{G}")',
-    )
-    name: str | None = Field(
-        default=None,
-        description="This card's name.",
-    )
-    power: str | None = Field(
-        default=None,
-        description="Power of this card, if applicable.",
-    )
-    toughness: str | None = Field(
-        default=None,
-        description="Toughness of this card, if applicable.",
-    )
-    type_line: str | None = Field(
-        default=None,
-        description='This card\'s type line. (e.g. "Creature — Ooze")',
-    )
-
-    # TODO(#46): add Card field validators
-
-
-class FullCardModel(CardModel, validate_assignment=True):
+class CardModelData(ScoozeBaseModel):
     """
     Card object that supports all fields available from Scryfall's JSON data.
     Scryfall documentation: https://scryfall.com/docs/api/cards
@@ -228,7 +155,7 @@ class FullCardModel(CardModel, validate_assignment=True):
           print's full set.
         set_type: An overall categorization for each set, provided by Scryfall.
         set_uri: Link to the set object for this print in Scryfall's API.
-        set: Set code of the set this print belongs to.
+        set_code: Set code of the set this print belongs to.
         set_id: UUID of the set this print belongs to.
         story_spotlight: Whether this print is a Story Spotlight.
         textless: Whether this print is textless.
@@ -247,7 +174,7 @@ class FullCardModel(CardModel, validate_assignment=True):
     scryfall_id: str | None = Field(
         default=None,
         description="Scryfall's unique ID for this card.",
-        validation_alias="id",
+        validation_alias=AliasChoices("scryfall_id", "scryfallId", "id"),
     )
     lang: Language | None = Field(
         default=None,
@@ -310,13 +237,22 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="All component CardFace objects of this card, for multifaced cards.",
     )
-    # cmc defined by base model
-    # color_identity defined by base model
+    cmc: float | None = Field(
+        default=None,
+        description="This card's mana value/converted mana cost.",
+    )
+    color_identity: set[Color] | None = Field(
+        default=None,
+        description="This card's color identity, for Commander variant deckbuilding.",
+    )
     color_indicator: set[Color] | None = Field(
         default=None,
         description="The colors in this card's color indicator, if it has one.",
     )
-    # colors defined by base model
+    colors: set[Color] | None = Field(
+        default=None,
+        description="This card's colors.",
+    )
     edhrec_rank: int | None = Field(
         default=None,
         description="This card's rank/popularity on EDHREC, if applicable.",
@@ -329,7 +265,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Keywords and keyword actions this card uses.",
     )
-    # legalities defined by base model
+    legalities: dict[Format, Legality] | None = Field(
+        default=None,
+        description="Formats and the legality status of this card in them.",
+    )
     life_modifier: str | None = Field(
         default=None,
         description="This card's Vanguard life modifier value, if applicable.",
@@ -338,8 +277,14 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="This card's starting planeswalker loyalty, if applicable.",
     )
-    # mana_cost defined by base model
-    # name defined by base model
+    mana_cost: str | None = Field(
+        default=None,
+        description='Mana cost, as string of mana symbols. (e.g. "{1}{W}{U}{B}{R}{G}")',
+    )
+    name: str | None = Field(
+        default=None,
+        description="This card's name.",
+    )
     oracle_text: str | None = Field(
         default=None,
         description="This card's oracle text, if any.",
@@ -348,7 +293,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="This card's rank/popularity on Penny Dreadful.",
     )
-    # power defined by base model
+    power: str | None = Field(
+        default=None,
+        description="Power of this card, if applicable.",
+    )
     produced_mana: set[Color] | None = Field(
         default=None,
         description="Which colors of mana this card can produce.",
@@ -357,8 +305,14 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Whether this card is on the Reserved List.",
     )
-    # toughness defined by base model
-    # type_line defined by base model
+    toughness: str | None = Field(
+        default=None,
+        description="Toughness of this card, if applicable.",
+    )
+    type_line: str | None = Field(
+        default=None,
+        description='This card\'s type line. (e.g. "Creature — Ooze")',
+    )
 
     # endregion
 
@@ -524,9 +478,10 @@ class FullCardModel(CardModel, validate_assignment=True):
         default=None,
         description="Link to the set object for this print in Scryfall's API.",
     )
-    set: str | None = Field(
+    set_code: str | None = Field(
         default=None,
         description="Set code of the set this print belongs to.",
+        alias="set",
     )
     set_id: str | None = Field(
         default=None,
@@ -608,13 +563,62 @@ class FullCardModel(CardModel, validate_assignment=True):
 
     # endregion
 
+    # region Serializers
 
-class CardModelIn(FullCardModel):
-    pass
+    @field_serializer("released_at")
+    def serialize_date(self, dt_field: date):
+        return super().serialize_date(dt_field=dt_field)
 
-
-class CardModelOut(FullCardModel):
-    scooze_id: ObjectIdT = Field(
-        default=None,
-        alias="_id",
+    @field_serializer(
+        "attraction_lights",
+        "color_identity",
+        "color_indicator",
+        "colors",
+        "finishes",
+        "frame_effects",
+        "games",
+        "keywords",
+        "produced_mana",
+        "promo_types",
     )
+    def serialize_set(self, set_field: set[Any]):
+        return super().serialize_set(set_field=set_field)
+
+    # endregion
+
+    # TODO(#46): add Card field validators
+
+
+def encode_date(dt: date):
+    return dt.strftime(format=DATE_FORMAT)
+
+
+class CardModel(ScoozeDocument, CardModelData):
+    """
+    Database representation of a Scooze Card
+    """
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "cmc": 2.0,
+                    "colorIdentity": [Color.GREEN],
+                    "colors": [Color.GREEN],
+                    "legalities": {Format.COMMANDER: Legality.LEGAL, Format.PAUPER: Legality.NOT_LEGAL},
+                    "manaCost": "{1}{G}",
+                    "name": "Scavenging Ooze",
+                    "power": "2",
+                    "toughness": "2",
+                    "typeLine": "Creature — Ooze",
+                }
+            ]
+        }
+    )
+
+    class Settings:
+        name = DbCollection.CARDS
+        validate_on_save = True
+        bson_encoders = {
+            date: encode_date,
+        }

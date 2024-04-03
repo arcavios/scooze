@@ -1,25 +1,91 @@
+import asyncio
 import json
 from collections import Counter
 from datetime import date, datetime, timezone
+from unittest.mock import patch
 
 import pytest
-from bson import ObjectId
+from asgi_lifespan import LifespanManager
 from fastapi.testclient import TestClient
+from httpx import AsyncClient
+from mongomock_motor import AsyncMongoMockClient
 from scooze.card import OracleCard
 from scooze.catalogs import Format, Legality
+from scooze.config import CONFIG
 from scooze.deck import Deck
 from scooze.deckpart import DeckPart
+from scooze.models.card import CardModel, CardModelData
+from scooze.mongo import db
+
+# Override config for testing
+CONFIG.testing = True
+CONFIG.mongo_db = "scooze_test"
+
 from scooze.main import app
-from scooze.models.card import CardModelOut
 
 # These fixtures can be used in any tests in this directory.
 # https://www.mtggoldfish.com/archetype/modern-4-5c-omnath
 # It was chosen because it has many colors of cards, lots of words, and many types.
 
 
-# region Common
+# region Database
 
 
+class MongoMockHelper:
+    async def mock_connect(self):
+        db.client = AsyncMongoMockClient(CONFIG.mongo_dsn)
+
+    async def mock_close(self):
+        db.client.close()
+
+
+@pytest.fixture(scope="session")
+def mongo_helper():
+    return MongoMockHelper()
+
+
+@pytest.fixture(scope="session")
+def cli():
+    return db.client
+
+
+@pytest.fixture(scope="session")
+def scooze_test_db(cli):
+    return cli[CONFIG.mongo_db]
+
+
+@pytest.fixture(scope="session")
+def event_loop():
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
+    yield loop
+    loop.close()
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def api_client(request: pytest.FixtureRequest, mongo_helper: MongoMockHelper):
+    """API client fixture."""
+
+    if request.config.getoption("-m") != "not context":
+        # NOTE: Testing context manager, don't need API client
+        yield
+    else:
+        with patch("scooze.main.mongo_connect") as mock_connect:
+            with patch("scooze.main.mongo_close") as mock_close:
+                mock_connect.side_effect = mongo_helper.mock_connect
+                mock_close.side_effect = mongo_helper.mock_close
+
+                async with LifespanManager(app, startup_timeout=100, shutdown_timeout=100):
+                    server_name = "https://localhost"
+                    async with AsyncClient(app=app, base_url=server_name) as ac:
+                        # Yield client to tests
+                        yield ac
+                        # Done testing, clean test db
+                        for model in [CardModel]:
+                            await model.delete_all()
+
+
+# Old client
 @pytest.fixture(scope="session")
 def client() -> TestClient:
     return TestClient(app)
@@ -33,7 +99,23 @@ def today() -> date:
 # endregion
 
 
-# region Card JSON
+# region Helpers
+
+
+def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
+    """
+    Helper to get JSON for a particular card.
+    """
+
+    for json_str in cards_json:
+        card_json = json.loads(json_str)
+        if card_json["id"] == scryfall_id:
+            return card_json
+
+
+def get_cardmodel_from_json(card_json: dict) -> CardModel:
+    card_data = CardModelData.model_validate(card_json)
+    return CardModel.model_validate(card_data.model_dump())
 
 
 @pytest.fixture(scope="session")
@@ -49,31 +131,9 @@ def cards_json() -> list[str]:
     return json_list
 
 
-def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
-    """
-    Helper to get JSON for a particular card.
-    """
-
-    for json_str in cards_json:
-        card_json = json.loads(json_str)
-        if card_json["id"] == scryfall_id:
-            return card_json
-
-
-def get_cardmodelout_from_json(card_json: dict) -> CardModelOut:
-    """
-    Helper to get a CardModelOut from some JSON.
-    """
-
-    model = CardModelOut.model_validate(card_json)
-    model.scooze_id = str(ObjectId())
-    return model
-
-
 # endregion
 
-
-# region Test Cards
+# region Card JSON
 
 
 # Instant
@@ -82,9 +142,10 @@ def json_ancestral_recall(cards_json) -> dict:
     return get_card_json(cards_json, "2398892d-28e9-4009-81ec-0d544af79d2b")
 
 
+# Non-Snake Creature
 @pytest.fixture(scope="session")
-def model_ancestral_recall(json_ancestral_recall) -> CardModelOut:
-    return get_cardmodelout_from_json(json_ancestral_recall)
+def json_omnath_locus_of_creation(cards_json) -> dict:
+    return get_card_json(cards_json, "4e4fb50c-a81f-44d3-93c5-fa9a0b37f617")
 
 
 # Creature
@@ -111,7 +172,7 @@ def json_tales_of_master_seshiro(cards_json) -> dict:
     return get_card_json(cards_json, "512bc867-3a86-4da2-93f0-dd76d6a6f30d")
 
 
-# Transform (Planeswalker)
+# Transforming Planeswalker
 @pytest.fixture(scope="session")
 def json_arlinn_the_packs_hope(cards_json) -> dict:
     return get_card_json(cards_json, "50d4b0df-a1d8-494f-a019-70ce34161320")
@@ -161,11 +222,71 @@ def json_anaconda_portal(cards_json) -> dict:
 
 # endregion
 
-
-# region Fixtures for Card and CardModel tests
+# region CardModels
 
 
 @pytest.fixture(scope="session")
+def cardmodel_ancestral_recall(json_ancestral_recall) -> CardModel:
+    return get_cardmodel_from_json(json_ancestral_recall)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_omnath(json_omnath_locus_of_creation) -> CardModel:
+    return get_cardmodel_from_json(json_omnath_locus_of_creation)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_mystic_snake(json_mystic_snake) -> CardModel:
+    return get_cardmodel_from_json(json_mystic_snake)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_tales_of_master_seshiro(json_tales_of_master_seshiro) -> CardModel:
+    return get_cardmodel_from_json(json_tales_of_master_seshiro)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_arlinn_the_packs_hope(json_arlinn_the_packs_hope) -> CardModel:
+    return get_cardmodel_from_json(json_arlinn_the_packs_hope)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_zndrsplt_eye_of_wisdom(json_zndrsplt_eye_of_wisdom) -> CardModel:
+    return get_cardmodel_from_json(json_zndrsplt_eye_of_wisdom)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_anaconda_7ed_foil(json_anaconda_7ed_foil) -> CardModel:
+    return get_cardmodel_from_json(json_anaconda_7ed_foil)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_python_spanish(json_python_spanish) -> CardModel:
+    return get_cardmodel_from_json(json_python_spanish)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_elessar_the_elfstone(json_elessar_the_elfstone) -> CardModel:
+    return get_cardmodel_from_json(json_elessar_the_elfstone)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_trash_bin(json_trash_bin) -> CardModel:
+    return get_cardmodel_from_json(json_trash_bin)
+
+
+@pytest.fixture(scope="session")
+def cardmodel_anaconda_portal(json_anaconda_portal) -> CardModel:
+    return get_cardmodel_from_json(json_anaconda_portal)
+
+
+# endregion
+
+
+# region Legalities
+
+
+@pytest.fixture()
 def legalities_ancestral_recall() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
@@ -192,7 +313,7 @@ def legalities_ancestral_recall() -> dict[Format, Legality]:
     }
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def legalities_token() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
@@ -219,7 +340,7 @@ def legalities_token() -> dict[Format, Legality]:
     }
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
     return {
         Format.ALCHEMY: Legality.NOT_LEGAL,
@@ -246,6 +367,11 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
     }
 
 
+# endregion
+
+# region Oracle text
+
+
 @pytest.fixture(scope="session")
 def oracle_tales_of_master_seshiro() -> str:
     return (
@@ -257,8 +383,8 @@ def oracle_tales_of_master_seshiro() -> str:
     )
 
 
-@pytest.fixture(scope="session")
-def oracle_arlinn_the_packs_hope() -> str:
+@pytest.fixture()
+def oracle_arlinn_daybound() -> str:
     return (
         "Daybound (If a player casts no spells during their own turn, it becomes "
         "night next turn.)\n"
@@ -269,8 +395,8 @@ def oracle_arlinn_the_packs_hope() -> str:
     )
 
 
-@pytest.fixture(scope="session")
-def oracle_arlinn_the_moons_fury() -> str:
+@pytest.fixture()
+def oracle_arlinn_nightbound() -> str:
     return (
         "Nightbound (If a player casts at least two spells during their own turn, it "
         "becomes day next turn.)\n"
@@ -280,7 +406,7 @@ def oracle_arlinn_the_moons_fury() -> str:
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def oracle_zndrsplt_eye_of_wisdom() -> str:
     return (
         "Partner with Okaun, Eye of Chaos (When this creature enters the "
@@ -308,8 +434,26 @@ def card_aether_gust(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def sticker_ancestral_hotdog_minotaur(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "34c3979d-60e7-44b5-bb9f-1b6b0f2b70c3")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_balloon_stand(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2e9eaed8-e956-4fb2-a23d-3d442cd2fa5c")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_boseiju_who_endures(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_bounce_chamber(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "8e5985a9-2f9c-45b9-ac59-f29e7197b301")
     return OracleCard.from_json(card_json)
 
 
@@ -320,14 +464,74 @@ def card_breeding_pool(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def attraction_bumper_cars(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2bdefffa-14bb-4a2b-9e75-13e29eaa6677")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_carnival_elephant_meteor(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "016bf660-16c3-41b7-a988-211921c21eb8")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_chalice_of_the_void(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
     return OracleCard.from_json(card_json)
 
 
 @pytest.fixture(scope="session")
+def attraction_clown_extruder(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "54cd6f28-11b0-4d69-bc2c-9050c2478b1d")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_concession_stand(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "49ab8948-1080-487b-b0a0-c5d11935141f")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_contortionist_otter_storm(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "ca442395-159a-40aa-a1e4-ed6bf0ffbedd")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_cool_fluffy_loxodon(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b1710520-d69f-415f-aef8-03eaa514b63a")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_costume_shop(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "c81dd9df-0eeb-42fd-8dd0-fd7f154954e0")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_counterspell(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "8493131c-0a7b-4be6-a8a2-0b425f4f67fb")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_cursed_firebreathing_yogurt(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "6534ab2b-ed2e-4c51-914d-920dc2307f43")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_deepfried_plague_myr(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "907157c3-f562-403c-94cb-9171deadaee4")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_demonic_tourist_laser(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "7c7241ef-ccde-4c2f-807b-45b9e644870f")
     return OracleCard.from_json(card_json)
 
 
@@ -344,6 +548,36 @@ def card_dress_down(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def attraction_drop_tower(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b738cd8d-f88b-431e-b66f-dc32e39a9606")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_eldrazi_guacamole_tightrope(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b8f1abc7-1a86-4e43-8105-10c1c55e65ba")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_elemental_time_flamingo(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "eacec01f-c971-48b7-bf4a-2fdacae32835")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_eternal_acrobat_toast(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "780b4d5d-d3a0-4aad-abe7-3073339a8fcd")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_ferris_wheel(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "91562ab3-1153-48d9-9f8e-4c79155548f2")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_flooded_strand(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "8c2996d9-3287-4480-8c04-7a378e37e3cf")
     return OracleCard.from_json(card_json)
@@ -356,6 +590,12 @@ def card_flusterstorm(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def attraction_foam_weapons_kiosk(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "e9456ca6-a721-4b61-8afb-19d811f21a3c")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_force_of_negation(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "1825a719-1b2a-4af9-9cd2-7cb497cd0317")
     return OracleCard.from_json(card_json)
@@ -364,6 +604,12 @@ def card_force_of_negation(cards_json) -> OracleCard:
 @pytest.fixture(scope="session")
 def card_forest(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "ecd6d8fb-780c-446c-a8bf-93386b22fe95")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_fortune_teller(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "fde28457-2a4d-44e0-9d03-31173d411c34")
     return OracleCard.from_json(card_json)
 
 

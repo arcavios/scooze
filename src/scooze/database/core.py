@@ -5,7 +5,7 @@ from pymongo import ReturnDocument
 from pymongo.results import DeleteResult
 from scooze.catalogs import DbCollection
 from scooze.database.mongo import db
-from scooze.models.utils import _to_lower_camel
+from scooze.utils import to_lower_camel
 
 # region Single document
 
@@ -51,7 +51,7 @@ async def get_document_by_property(coll_type: DbCollection, property_name: str, 
             property_name = "_id"
             value = ObjectId(value)
         case _:
-            property_name = _to_lower_camel(property_name)
+            property_name = to_lower_camel(property_name)
 
     return await db.client.scooze[coll_type].find_one({property_name: value})
 
@@ -175,7 +175,7 @@ async def get_documents_by_property(
             property_name = "_id"
             vals = [ObjectId(i) for i in values]  # Handle ObjectIds
         case _:
-            property_name = _to_lower_camel(property_name)
+            property_name = to_lower_camel(property_name)
             vals = values
 
     return (

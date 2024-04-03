@@ -1,6 +1,48 @@
 # Change Log
 
-## [dev]
+## [DEVELOPMENT] - unreleased
+
+### Added
+
+- Start Docker container if exists, but not running ([#243](https://github.com/arcavios/scooze/pull/243))
+- Add basic logging to some of our modules ([#249](https://github.com/arcavios/scooze/pull/249))
+
+### Changed
+
+- Change logging behavior to be extensible by applications using Scooze ([#248](https://github.com/arcavios/scooze/pull/248))
+
+### Fixed
+
+- Upgrade dependencies ([#245](https://github.com/arcavios/scooze/pull/245))
+- Support latest version of Pydantic ([#247](https://github.com/arcavios/scooze/pull/247))
+
+### Docs
+
+- N/A
+
+
+## [1.0.6] - 2024-03-02
+
+### Added
+
+- Add support for symbols on cards (mana, energy, tap/untap, etc.) ([#214](https://github.com/arcavios/scooze/pull/214))
+- Add support for attraction and sticker decks ([#231](https://github.com/arcavios/scooze/pull/231))
+- Add support for Timeless and Standard Brawl formats ([#235](https://github.com/arcavios/scooze/pull/235))
+
+### Changed
+
+- Using Beanie ODM to handle Mongo IO ([#220](https://github.com/arcavios/scooze/pull/220))
+
+### Fixed
+
+- N/A
+
+### Docs
+
+- N/A
+
+
+## [1.0.5] - 2023-11-09
 
 ### Added
 
@@ -8,6 +50,7 @@
 - Added AsyncScoozeApi as a way to use API endpoints in an async context (fixes Jupyter compatibility) ([#199](https://github.com/arcavios/scooze/pull/199))
 - Add Docker support for starting MongoDB via the CLI ([#200](https://github.com/arcavios/scooze/pull/200))
 - CLI rework to be more robust ([#203](https://github.com/arcavios/scooze/pull/203))
+- Github Actions to test on push and deploy on tag ([#211](https://github.com/arcavios/scooze/pull/211))
 - Add `cmc` field to top level for reversible cards ([#212](https://github.com/arcavios/scooze/pull/212))
 
 ### Changed

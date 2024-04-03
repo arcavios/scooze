@@ -1,9 +1,12 @@
 import os
 from contextlib import asynccontextmanager
 
+from beanie import init_beanie
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from scooze.database.mongo import mongo_close, mongo_connect
+from scooze.config import CONFIG
+from scooze.models.card import CardModel
+from scooze.mongo import db, mongo_close, mongo_connect
 from scooze.routers.card import router as CardRouter
 from scooze.routers.cards import router as CardsRouter
 from scooze.routers.deck import router as DeckRouter
@@ -13,8 +16,9 @@ from scooze.routers.decks import router as DecksRouter
 # Startup/shutdown
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Setup Mongo
+    # Setup Mongo and Beanie
     await mongo_connect()
+    await init_beanie(database=db.client[CONFIG.mongo_db], document_models=[CardModel])
 
     # Yield to the app
     yield

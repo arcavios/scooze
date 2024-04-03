@@ -1,13 +1,16 @@
+from collections import Counter
 from sys import maxsize
 
 import pytest
 from scooze.catalogs import Format
 from scooze.utils import (
+    CostSymbol,
     DictDiff,
     cmdr_size,
     main_size,
     max_card_quantity,
     max_relentless_quantity,
+    parse_symbols,
     side_size,
 )
 
@@ -144,6 +147,35 @@ def cmdr_size_any() -> tuple[int, int]:
 
 # endregion
 
+
+# region Mana costs
+@pytest.fixture
+def mana_cost_one_symbol() -> str:
+    return "{W}"
+
+
+@pytest.fixture
+def mana_cost_multiple_symbols() -> str:
+    return "{W}{B}"
+
+
+@pytest.fixture
+def mana_cost_with_generic() -> str:
+    return "{2}{W}{B}"
+
+
+@pytest.fixture
+def mana_cost_with_multiple_generic() -> str:
+    return "{1}{1}{U}{R}"
+
+
+@pytest.fixture
+def mana_cost_with_hybrid() -> str:
+    return "{B/G}{B/G}"
+
+
+# endregion
+
 # endregion
 
 # region Tests
@@ -218,42 +250,6 @@ def test_normal_max_relentless_quantity():
 # endregion
 
 # region Normal Cards
-
-# match fmt.value:
-#     case Format.LIMITED:
-#         return maxsize
-
-#     case (
-#         Format.BRAWL
-#         | Format.COMMANDER
-#         | Format.DUEL
-#         | Format.GLADIATOR
-#         | Format.HISTORICBRAWL
-#         | Format.OATHBREAKER
-#         | Format.PAUPERCOMMANDER
-#         | Format.PREDH
-#     ):
-#         return 1
-
-#     case (
-#         Format.ALCHEMY
-#         | Format.EXPLORER
-#         | Format.FUTURE
-#         | Format.HISTORIC
-#         | Format.LEGACY
-#         | Format.MODERN
-#         | Format.OLDSCHOOL
-#         | Format.PAUPER
-#         | Format.PENNY
-#         | Format.PIONEER
-#         | Format.PREMODERN
-#         | Format.STANDARD
-#         | Format.VINTAGE
-#     ):
-#         return 4
-
-#     case Format.NONE | _:
-#         return maxsize
 
 
 @pytest.mark.card_quantity
@@ -354,6 +350,16 @@ def test_fmt_premodern_max_card_quantity():
 @pytest.mark.card_quantity
 def test_fmt_standard_max_card_quantity():
     assert max_card_quantity(Format.STANDARD) == 4
+
+
+@pytest.mark.card_quantity
+def test_fmt_standardbrawl_max_card_quantity():
+    assert max_card_quantity(Format.STANDARDBRAWL) == 1
+
+
+@pytest.mark.card_quantity
+def test_fmt_timeless_max_card_quantity():
+    assert max_card_quantity(Format.TIMELESS) == 4
 
 
 @pytest.mark.card_quantity
@@ -481,6 +487,16 @@ def test_fmt_standard_main_size(main_size_60):
 
 
 @pytest.mark.deck_size
+def test_fmt_standardbrawl_main_size(main_size_99):
+    assert main_size(Format.STANDARDBRAWL) == main_size_99
+
+
+@pytest.mark.deck_size
+def test_fmt_timeless_main_size(main_size_60):
+    assert main_size(Format.TIMELESS) == main_size_60
+
+
+@pytest.mark.deck_size
 def test_fmt_vintage_main_size(main_size_60):
     assert main_size(Format.VINTAGE) == main_size_60
 
@@ -598,6 +614,16 @@ def test_fmt_premodern_side_size(side_size_15):
 @pytest.mark.deck_size
 def test_fmt_standard_side_size(side_size_15):
     assert side_size(Format.STANDARD) == side_size_15
+
+
+@pytest.mark.deck_size
+def test_fmt_standardbrawl_side_size(side_size_0):
+    assert side_size(Format.STANDARDBRAWL) == side_size_0
+
+
+@pytest.mark.deck_size
+def test_fmt_timeless_side_size(side_size_15):
+    assert side_size(Format.TIMELESS) == side_size_15
 
 
 @pytest.mark.deck_size
@@ -721,6 +747,16 @@ def test_fmt_standard_cmdr_size(cmdr_size_0):
 
 
 @pytest.mark.deck_size
+def test_fmt_standardbrawl_cmdr_size(cmdr_size_1):
+    assert cmdr_size(Format.STANDARDBRAWL) == cmdr_size_1
+
+
+@pytest.mark.deck_size
+def test_fmt_timeless_cmdr_size(cmdr_size_0):
+    assert cmdr_size(Format.TIMELESS) == cmdr_size_0
+
+
+@pytest.mark.deck_size
 def test_fmt_vintage_cmdr_size(cmdr_size_0):
     assert cmdr_size(Format.VINTAGE) == cmdr_size_0
 
@@ -736,6 +772,37 @@ def test_fmt_none_cmdr_size(cmdr_size_any):
 
 
 # endregion
+
+# endregion
+
+# region Mana symbology
+
+
+def test_parse_symbols_one_symbol(mana_cost_one_symbol):
+    assert parse_symbols(mana_cost_one_symbol) == {CostSymbol.WHITE: 1}
+
+
+def test_parse_symbols_multiple_symbols(mana_cost_multiple_symbols):
+    assert parse_symbols(mana_cost_multiple_symbols) == {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1}
+
+
+def test_parse_symbols_with_generic(mana_cost_with_generic):
+    assert parse_symbols(mana_cost_with_generic) == {CostSymbol.WHITE: 1, CostSymbol.BLACK: 1, CostSymbol.GENERIC_2: 1}
+
+
+def test_parse_symbols_with_multiple_generic(mana_cost_with_multiple_generic):
+    assert parse_symbols(mana_cost_with_multiple_generic) == {
+        CostSymbol.BLUE: 1,
+        CostSymbol.RED: 1,
+        CostSymbol.GENERIC_1: 2,
+    }
+
+
+def test_parse_symbols_with_hybrid(mana_cost_with_hybrid):
+    assert parse_symbols(mana_cost_with_hybrid) == {
+        CostSymbol.HYBRID_BG: 2,
+    }
+
 
 # endregion
 

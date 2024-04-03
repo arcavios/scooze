@@ -1,10 +1,22 @@
-from typing import Any, List
+from typing import Any
 
-import scooze.database.card as db
-from bson import ObjectId
+from beanie import PydanticObjectId
 from scooze.card import CardT, FullCard
 from scooze.errors import BulkAddError
-from scooze.models.card import CardModelIn
+from scooze.models.card import CardModel, CardModelData
+from scooze.utils import scooze_logger, to_lower_camel
+
+logger = scooze_logger()
+
+
+def _normalize_for_ids(property_name: str, value, is_many: bool = False) -> tuple[str, Any | list[Any]]:
+    match property_name:
+        case "_id" | "id" | "scooze_id":
+            prop_name = "_id"
+            val = [PydanticObjectId(v) for v in value] if is_many else PydanticObjectId(value)
+            return prop_name, val
+        case _:
+            return to_lower_camel(property_name), value
 
 
 async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> CardT:
@@ -20,10 +32,9 @@ async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -
         The first matching card, or None if none were found.
     """
 
-    card_model = await db.get_card_by_property(
-        property_name=property_name,
-        value=value,
-    )
+    prop_name, val = _normalize_for_ids(property_name, value)
+    card_model = await CardModel.find_one({prop_name: val})
+
     if card_model is not None:
         return card_class.from_model(card_model)
 
@@ -35,7 +46,7 @@ async def get_cards_by(
     paginated: bool = False,
     page: int = 1,
     page_size: int = 10,
-) -> List[CardT]:
+) -> list[CardT]:
     """
     Search the database for cards matching the given criteria, with options for
     pagination.
@@ -53,19 +64,15 @@ async def get_cards_by(
         were found.
     """
 
-    card_models = await db.get_cards_by_property(
-        property_name=property_name,
-        values=values,
-        paginated=paginated,
-        page=page,
-        page_size=page_size,
-    )
+    prop_name, vals = _normalize_for_ids(property_name, values)
+    skip = (page - 1) * page_size if paginated else 0
+    limit = page_size if paginated else None
+    card_models = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
+
     return [card_class.from_model(m) for m in card_models]
 
 
-async def get_cards_all(
-    card_class: CardT = FullCard,
-) -> List[CardT]:
+async def get_cards_all(card_class: CardT = FullCard) -> list[CardT]:
     """
     Get all cards from the database. WARNING: may be extremely large.
 
@@ -73,11 +80,12 @@ async def get_cards_all(
         A list of all cards in the database.
     """
 
-    card_models = await db.get_cards_all()
+    card_models = await CardModel.find_all().to_list()
+
     return [card_class.from_model(m) for m in card_models]
 
 
-async def add_card(card: CardT) -> ObjectId:
+async def add_card(card: CardT) -> PydanticObjectId:
     """
     Add a card to the database.
 
@@ -90,15 +98,17 @@ async def add_card(card: CardT) -> ObjectId:
         The ID of the inserted card, or None if it was unable.
     """
 
-    card_model = CardModelIn.model_validate(card.__dict__)
-    model = await db.add_card(card=card_model)
+    try:
+        card_data = CardModelData.model_validate(card.__dict__)
+        card_model = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+        await card_model.create()
+        card.scooze_id = card_model.id
+        return card_model.id
+    except Exception as e:
+        logger.exception("Failed to add card.", extra={"card": card}, exc_info=e)
 
-    if model is not None:
-        card.scooze_id = model.scooze_id
-        return model.scooze_id
 
-
-async def add_cards(cards: List[CardT]) -> List[ObjectId]:
+async def add_cards(cards: list[CardT]) -> list[PydanticObjectId]:
     """
     Add a list of cards to the database.
 
@@ -117,21 +127,27 @@ async def add_cards(cards: List[CardT]) -> List[ObjectId]:
     if not cards:
         return []
 
-    card_models = [CardModelIn.model_validate(card.__dict__) for card in cards]
-    card_ids = await db.add_cards(cards=card_models)
+    try:
+        card_models = [CardModelData.model_validate(card.__dict__) for card in cards]
+        cards_to_insert = [
+            CardModel.model_validate(card_model.model_dump(mode="json", by_alias=True)) for card_model in card_models
+        ]
+        insert_result = await CardModel.insert_many(cards_to_insert)
+        card_ids = insert_result.inserted_ids
 
-    if len(card_ids) != len(cards):
-        # TODO(#202): Perform card lookups to get the ids of the cards that were successfully added.
-        await db.delete_cards_by_id(card_ids)
+        if len(card_ids) != len(cards):
+            # TODO(#202): Perform card lookups to get the ids of the cards that were successfully added.
+            raise Exception()
+        else:
+            for card, card_id in zip(cards, card_ids):
+                card.scooze_id = card_id
+
+        return card_ids
+    except Exception:
         raise BulkAddError("Failed to add all cards to the database.")
-    else:
-        for card, card_id in zip(cards, card_ids):
-            card.scooze_id = card_id
-
-    return card_ids
 
 
-async def delete_card(id: str) -> bool:
+async def delete_card(id: str) -> bool | None:
     """
     Delete a card from the database.
 
@@ -142,10 +158,20 @@ async def delete_card(id: str) -> bool:
         True if the card is deleted, False otherwise.
     """
 
-    return await db.delete_card(id=id) is not None
+    if not PydanticObjectId.is_valid(id):
+        return False
+
+    card_to_delete = await CardModel.get(PydanticObjectId(id))
+
+    if card_to_delete is None:
+        return False
+
+    delete_result = await card_to_delete.delete()
+
+    return delete_result is not None
 
 
-async def delete_cards_all() -> int:
+async def delete_cards_all() -> int | None:
     """
     Delete all cards in the database.
 
@@ -153,4 +179,6 @@ async def delete_cards_all() -> int:
         The number of cards deleted, or None if none could be deleted.
     """
 
-    return await db.delete_cards_all()
+    delete_result = await CardModel.delete_all()
+
+    return delete_result.deleted_count if delete_result is not None else None

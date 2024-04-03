@@ -1,21 +1,14 @@
+from datetime import date
 from typing import Annotated, Any, TypeAlias
 
+from beanie import Document, PydanticObjectId
 from bson import ObjectId as BsonObjectId
-from pydantic import BaseModel, ConfigDict, GetJsonSchemaHandler
+from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
+from scooze.utils import DATE_FORMAT, to_lower_camel
 
 # region Private Utility Functions
-
-
-def _to_lower_camel(string: str) -> str:
-    words = string.split("_")
-
-    if len(words) > 1:
-        upper_camel = "".join(word.capitalize() for word in words)
-        return upper_camel[0].lower() + upper_camel[1:]
-
-    return words[0]
 
 
 # endregion
@@ -24,16 +17,45 @@ def _to_lower_camel(string: str) -> str:
 # region Public Utility Classes
 
 
-class ScoozeBaseModel(BaseModel, validate_assignment=True):
+class ScoozeDocument(Document):
     """
-    A simple base model class to support models in scooze.
+    A simple base Beanie Document class to support models in scooze.
     """
 
+    # Need to explicitly alias here to work around receiving scryfall_id as id when getting data directly from Scryfall
+    id: PydanticObjectId | None = Field(
+        default=None,
+        description="MongoDB _id field",
+        alias="_id",
+    )
+
     model_config = ConfigDict(
-        alias_generator=_to_lower_camel,
+        alias_generator=to_lower_camel,
         arbitrary_types_allowed=True,
         populate_by_name=True,
     )
+
+
+class ScoozeBaseModel(BaseModel, validate_assignment=True):
+    """
+    A simple base model class to support data models in scooze.
+    """
+
+    model_config = ConfigDict(
+        alias_generator=to_lower_camel,
+        arbitrary_types_allowed=True,
+        populate_by_name=True,
+    )
+
+    def serialize_date(self, dt_field: date):
+        if dt_field is None:
+            return dt_field
+        return dt_field.strftime(format=DATE_FORMAT)
+
+    def serialize_set(self, set_field: set[Any]):
+        if set_field is None:
+            return set_field
+        return sorted(list(set_field))
 
 
 # Solution to BSON/MongoDB ObjectId issue, provided by Pydantic author:

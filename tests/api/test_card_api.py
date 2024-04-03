@@ -2,181 +2,184 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import scooze.api.card as card_api
-from bson import ObjectId
+from beanie import PydanticObjectId
 from scooze.card import Card, FullCard, OracleCard
 from scooze.errors import BulkAddError
-from scooze.models.card import CardModelOut
+from scooze.models.card import CardModel, CardModelData
 
 
-@patch("scooze.database.card.get_card_by_property")
-def test_get_base_card(mock_get: MagicMock, recall_base, asyncio_runner):
-    model = CardModelOut.model_validate(recall_base.__dict__)
-    mock_get.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=model.scooze_id, card_class=Card))
-    assert result == recall_base
+class TestCardApiWithPopulatedDatabase:
+    @pytest.fixture(scope="class", autouse=True)
+    async def populate_db(self, cards_json: list[str]):
+        for card_json in cards_json:
+            card_data = CardModelData.model_validate_json(card_json)
+            card = CardModel.model_validate(card_data.model_dump())
+            await card.create()
+
+        yield
+
+        await CardModel.delete_all()
+
+    async def test_get_base_card(self, recall_base: Card):
+        result: Card = await card_api.get_card_by(property_name="name", value=recall_base.name, card_class=Card)
+        recall_base.scooze_id = result.scooze_id  # recall_base doesn't start with a Scooze ID
+        assert result == recall_base
+
+    async def test_get_oracle_card(self, recall_oracle: OracleCard):
+        result: OracleCard = await card_api.get_card_by(
+            property_name="name", value=recall_oracle.name, card_class=OracleCard
+        )
+        recall_oracle.scooze_id = result.scooze_id  # recall_oracle doesn't start with a Scooze ID
+        assert result == recall_oracle
+
+    async def test_get_full_card(self, recall_full: FullCard):
+        result: FullCard = await card_api.get_card_by(property_name="name", value=recall_full.name, card_class=FullCard)
+        recall_full.scooze_id = result.scooze_id  # recall_full doesn't start with a Scooze ID
+        assert result == recall_full
+
+    async def test_get_card_bad(self):
+        result = await card_api.get_card_by(property_name="name", value="This is not a card name", card_class=Card)
+        assert result is None
+
+    async def test_get_base_cards(self, cards_base: list[Card]):
+        data = [CardModelData.model_validate(card.__dict__) for card in cards_base]
+        models = [CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True)) for card_data in data]
+        names = [model.name for model in models]
+        results: list[Card] = await card_api.get_cards_by(property_name="name", values=names, card_class=Card)
+        assert len(cards_base) == len(results)
+        for item in zip(cards_base, results):
+            card, result = item
+            result.scooze_id = card.scooze_id
+            assert card == result
+
+    async def test_get_oracle_cards(self, cards_oracle: list[OracleCard]):
+        data = [CardModelData.model_validate(card.__dict__) for card in cards_oracle]
+        models = [CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True)) for card_data in data]
+        names = [model.name for model in models]
+        results: list[OracleCard] = await card_api.get_cards_by(
+            property_name="name", values=names, card_class=OracleCard
+        )
+        assert len(cards_oracle) == len(results)
+        for item in zip(cards_oracle, results):
+            card, result = item
+            result.scooze_id = card.scooze_id
+            assert card == result
+
+    async def test_get_full_cards(self, cards_full: list[FullCard]):
+        data = [CardModelData.model_validate(card.__dict__) for card in cards_full]
+        models = [CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True)) for card_data in data]
+        names = [model.name for model in models]
+        results: list[FullCard] = await card_api.get_cards_by(property_name="name", values=names, card_class=FullCard)
+        assert len(cards_full) == len(results)
+        for item in zip(cards_full, results):
+            card, result = item
+            result.scooze_id = card.scooze_id
+            assert card == result
+
+    async def test_get_all_cards_base(self):
+        total_cards = await CardModel.count()
+        results = await card_api.get_cards_all(card_class=Card)
+        assert len(results) == total_cards
+
+    async def test_get_cards_bad(self):
+        results = await card_api.get_cards_by(
+            property_name="name", values=["Not a card name", "Also not a card name"], card_class=Card
+        )
+        assert results == []
 
 
-@patch("scooze.database.card.get_card_by_property")
-def test_get_oracle_card(mock_get: MagicMock, recall_oracle, asyncio_runner):
-    model = CardModelOut.model_validate(recall_oracle.__dict__)
-    mock_get.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=model.scooze_id, card_class=OracleCard))
-    assert result == recall_oracle
+class TestCardApiDeletions:
+    @pytest.fixture(autouse=True)
+    async def populate_db(self, cards_json: list[str]):
+        num_cards = 0
+        for card_json in cards_json:
+            if num_cards >= 10:
+                break
+            card_data = CardModelData.model_validate_json(card_json)
+            card = CardModel.model_validate(card_data.model_dump())
+            await card.create()
+            num_cards += 1
+
+        yield
+
+        # Just in case
+        await CardModel.delete_all()
+
+    async def test_delete_card(self):
+        card = await CardModel.find_one()
+        result = await card_api.delete_card(id=card.id)
+        assert result is True
+
+    async def test_delete_card_bad_id(self):
+        result = await card_api.delete_card(id=PydanticObjectId())
+        assert result is False
+
+    async def test_delete_card_malformed_id(self):
+        result = await card_api.delete_card(id="not a valid id")
+        assert result is False
+
+    async def test_delete_cards(self):
+        total_cards = await CardModel.count()
+        result = await card_api.delete_cards_all()
+        assert result == total_cards
+
+    @patch("scooze.api.card.CardModel.delete_all")
+    async def test_delete_cards_bad(self, mock_delete: MagicMock):
+        mock_delete.return_value = None
+        result = await card_api.delete_cards_all()
+        assert result is None
 
 
-@patch("scooze.database.card.get_card_by_property")
-def test_get_full_card(mock_get: MagicMock, recall_full, asyncio_runner):
-    model = CardModelOut.model_validate(recall_full.__dict__)
-    mock_get.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=model.scooze_id, card_class=FullCard))
-    assert result == recall_full
+class TestCardApiWithEmptyDatabase:
+    @pytest.fixture(scope="class", autouse=True)
+    async def clean_db(self):
+        await CardModel.delete_all()
 
+    async def test_add_base_card(self, recall_base):
+        result = await card_api.add_card(card=recall_base)
+        assert PydanticObjectId.is_valid(result)
 
-@patch("scooze.database.card.get_card_by_property")
-def test_get_card_bad(mock_get: MagicMock, asyncio_runner):
-    mock_get.return_value = None
-    result = asyncio_runner.run(card_api.get_card_by(property_name="_id", value=ObjectId(), card_class=Card))
-    assert result is None
+    async def test_add_oracle_card(self, recall_oracle):
+        result = await card_api.add_card(card=recall_oracle)
+        assert PydanticObjectId.is_valid(result)
 
+    async def test_add_full_card(self, recall_full):
+        result = await card_api.add_card(card=recall_full)
+        assert PydanticObjectId.is_valid(result)
 
-@patch("scooze.database.card.get_cards_by_property")
-def test_get_base_cards(mock_get: MagicMock, cards_base, asyncio_runner):
-    models = [CardModelOut.model_validate(card.__dict__) for card in cards_base]
-    ids = [model.scooze_id for model in models]
-    mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_by(property_name="_id", values=ids, card_class=Card))
-    assert results == cards_base
+    @patch("scooze.api.card.CardModel.create")
+    async def test_add_card_bad(self, mock_create: MagicMock, recall_base):
+        error_msg = "Test card create route error"
 
+        def mock_create_exception():
+            raise Exception(error_msg)
 
-@patch("scooze.database.card.get_cards_by_property")
-def test_get_oracle_cards(mock_get: MagicMock, cards_oracle, asyncio_runner):
-    models = [CardModelOut.model_validate(card.__dict__) for card in cards_oracle]
-    ids = [model.scooze_id for model in models]
-    mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_by(property_name="_id", values=ids, card_class=OracleCard))
-    assert results == cards_oracle
+        mock_create.side_effect = mock_create_exception
+        result = await card_api.add_card(card=recall_base)
+        assert result is None
 
+    async def test_add_base_cards(self, cards_base: list[Card]):
+        results = await card_api.add_cards(cards=cards_base)
+        for result in results:
+            assert PydanticObjectId.is_valid(result)
 
-@patch("scooze.database.card.get_cards_by_property")
-def test_get_full_cards(mock_get: MagicMock, cards_full, asyncio_runner):
-    models = [CardModelOut.model_validate(card.__dict__) for card in cards_full]
-    ids = [model.scooze_id for model in models]
-    mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_by(property_name="_id", values=ids, card_class=FullCard))
-    assert results == cards_full
+    async def test_add_oracle_cards(self, cards_oracle: list[OracleCard]):
+        results = await card_api.add_cards(cards=cards_oracle)
+        for result in results:
+            assert PydanticObjectId.is_valid(result)
 
+    async def test_add_full_cards(self, cards_full: list[FullCard]):
+        results = await card_api.add_cards(cards=cards_full)
+        for result in results:
+            assert PydanticObjectId.is_valid(result)
 
-@patch("scooze.database.card.get_cards_all")
-def test_get_all_cards_base(mock_get: MagicMock, cards_base, asyncio_runner):
-    models = [CardModelOut.model_validate(card.__dict__) for card in cards_base]
-    mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_all(card_class=Card))
-    assert results == cards_base
+    @patch("scooze.api.card.CardModel.insert_many")
+    async def test_add_cards_bad(self, mock_insert_many: MagicMock, cards_base: list[Card]):
+        error_msg = "Test card create route error"
 
+        def mock_insert_exception():
+            raise Exception(error_msg)
 
-@patch("scooze.database.card.get_cards_all")
-def test_get_all_cards_oracle(mock_get: MagicMock, cards_oracle, asyncio_runner):
-    models = [CardModelOut.model_validate(card.__dict__) for card in cards_oracle]
-    mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_all(card_class=OracleCard))
-    assert results == cards_oracle
-
-
-@patch("scooze.database.card.get_cards_all")
-def test_get_all_cards_full(mock_get: MagicMock, cards_full, asyncio_runner):
-    models = [CardModelOut.model_validate(card.__dict__) for card in cards_full]
-    mock_get.return_value: list[CardModelOut] = models
-    results = asyncio_runner.run(card_api.get_cards_all(card_class=FullCard))
-    assert results == cards_full
-
-
-@patch("scooze.database.card.get_cards_by_property")
-def test_get_cards_bad(mock_get: MagicMock, cards_base, asyncio_runner):
-    mock_get.return_value = []
-    results = asyncio_runner.run(
-        card_api.get_cards_by(property_name="id", values=[ObjectId() for _ in cards_base], card_class=Card)
-    )
-    assert results == []
-
-
-@patch("scooze.database.card.add_card")
-def test_add_base_card(mock_add: MagicMock, recall_base, asyncio_runner):
-    model = CardModelOut.model_validate(recall_base.__dict__)
-    model.scooze_id = ObjectId()
-    mock_add.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.add_card(card=recall_base))
-    assert recall_base.scooze_id == model.scooze_id
-    assert result == model.scooze_id
-
-
-@patch("scooze.database.card.add_card")
-def test_add_oracle_card(mock_add: MagicMock, recall_oracle, asyncio_runner):
-    model = CardModelOut.model_validate(recall_oracle.__dict__)
-    mock_add.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.add_card(card=recall_oracle))
-    assert recall_oracle.scooze_id == model.scooze_id
-    assert result == model.scooze_id
-
-
-@patch("scooze.database.card.add_card")
-def test_add_full_card(mock_add: MagicMock, recall_full, asyncio_runner):
-    model = CardModelOut.model_validate(recall_full.__dict__)
-    mock_add.return_value: CardModelOut = model
-    result = asyncio_runner.run(card_api.add_card(card=recall_full))
-    assert recall_full.scooze_id == model.scooze_id
-    assert result == model.scooze_id
-
-
-@patch("scooze.database.card.add_card")
-def test_add_card_bad(mock_add: MagicMock, recall_base, asyncio_runner):
-    mock_add.return_value = None
-    result = asyncio_runner.run(card_api.add_card(card=recall_base))
-    assert result is None
-
-
-@patch("scooze.database.card.add_cards")
-def test_add_base_cards(mock_add: MagicMock, cards_base, asyncio_runner):
-    ids = [ObjectId() for _ in cards_base]
-    mock_add.return_value: list[ObjectId] = ids
-    results = asyncio_runner.run(card_api.add_cards(cards=cards_base))
-    assert results == ids
-
-
-@patch("scooze.database.card.add_cards")
-def test_add_oracle_cards(mock_add: MagicMock, cards_oracle, asyncio_runner):
-    ids = [ObjectId() for _ in cards_oracle]
-    mock_add.return_value: list[ObjectId] = ids
-    results = asyncio_runner.run(card_api.add_cards(cards=cards_oracle))
-    assert results == ids
-
-
-@patch("scooze.database.card.add_cards")
-def test_add_full_cards(mock_add: MagicMock, cards_full, asyncio_runner):
-    ids = [ObjectId() for _ in cards_full]
-    mock_add.return_value: list[ObjectId] = ids
-    results = asyncio_runner.run(card_api.add_cards(cards=cards_full))
-    assert results == ids
-
-
-@patch("scooze.database.card.delete_cards_by_id")
-@patch("scooze.database.card.add_cards")
-def test_add_cards_bad(mock_add: MagicMock, mock_delete: MagicMock, cards_base, asyncio_runner):
-    mock_add.return_value = []
-    mock_delete.return_value = 0
-
-    with pytest.raises(BulkAddError):
-        asyncio_runner.run(card_api.add_cards(cards=cards_base))
-
-
-@patch("scooze.database.card.delete_cards_all")
-def test_delete_cards(mock_delete: MagicMock, asyncio_runner):
-    mock_delete.return_value: int = 4
-    results = asyncio_runner.run(card_api.delete_cards_all())
-    assert results == 4
-
-
-@patch("scooze.database.card.delete_cards_all")
-def test_delete_cards_bad(mock_delete: MagicMock, asyncio_runner):
-    mock_delete.return_value = None
-    results = asyncio_runner.run(card_api.delete_cards_all())
-    assert results is None
+        mock_insert_many.side_effect = mock_insert_exception
+        with pytest.raises(BulkAddError):
+            await card_api.add_cards(cards=cards_base)
