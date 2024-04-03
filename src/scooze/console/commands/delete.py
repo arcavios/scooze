@@ -2,7 +2,7 @@ import scooze.database.deck as deck_db
 from cleo.commands.command import Command
 from cleo.helpers import argument
 from scooze.api import ScoozeApi
-from scooze.database.core import DbCollection
+from scooze.enum import DbCollection
 
 ACCEPTED_DELETE_ARGS = {
     "all",
