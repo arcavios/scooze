@@ -1,15 +1,15 @@
 from collections import Counter
 from datetime import date
 
-from pydantic import Field, model_validator
-from scooze.catalogs import Format
-from scooze.models.utils import ObjectIdT, ScoozeBaseModel
-from scooze.utils import cmdr_size, main_size, side_size
+from pydantic import ConfigDict, Field, field_serializer, model_validator
+from scooze.catalogs import DbCollection, Format
+from scooze.models.utils import ObjectIdT, ScoozeBaseModel, ScoozeDocument
+from scooze.utils import cmdr_size, encode_date, main_size, side_size
 
 
-class DeckModel(ScoozeBaseModel):
+class DeckModelData(ScoozeBaseModel):
     """
-    A model to represent a deck of Magic: the Gathering cards.
+    A data model to represent a deck of Magic: the Gathering cards.
 
     Attributes:
         archetype: The archetype of this DeckModel.
@@ -19,23 +19,6 @@ class DeckModel(ScoozeBaseModel):
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
     """
-
-    model_config = ScoozeBaseModel.model_config.copy()
-    model_config["json_schema_extra"] = {
-        "examples": [
-            {
-                "archetype": "Scooze Deck Example",
-                "format": "Limited",
-                "main": {
-                    "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id
-                    "6502bf77bffae3b433093dcb": 4,  # TODO(#6): replace with Scavenging Ooze scooze id
-                },
-                "side": {
-                    "6502bfe2e0e370d002c87ceb": 1,  # TODO(#6): replace with Keruga scooze id
-                },
-            },
-        ]
-    }
 
     archetype: str = Field(
         default="",
@@ -109,13 +92,41 @@ class DeckModel(ScoozeBaseModel):
 
     # endregion
 
+    # region Serializers
 
-class DeckModelIn(DeckModel):
-    pass
+    @field_serializer("date_played")
+    def serialize_date(self, dt_field: date):
+        return super().serialize_date(dt_field=dt_field)
+
+    # endregion
 
 
-class DeckModelOut(DeckModel):
-    id: ObjectIdT = Field(
-        default=None,
-        alias="_id",
+class DeckModel(ScoozeDocument, DeckModelData):
+    """
+    Database representation of a Scooze Deck
+    """
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "archetype": "Scooze Deck Example",
+                    "format": "Limited",
+                    "main": {
+                        "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id
+                        "6502bf77bffae3b433093dcb": 4,  # TODO(#6): replace with Scavenging Ooze scooze id
+                    },
+                    "side": {
+                        "6502bfe2e0e370d002c87ceb": 1,  # TODO(#6): replace with Keruga scooze id
+                    },
+                },
+            ]
+        }
     )
+
+    class Settings:
+        name = DbCollection.DECKS
+        validate_on_save = True
+        bson_encoders = {
+            date: encode_date,
+        }

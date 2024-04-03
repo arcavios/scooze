@@ -16,7 +16,7 @@ router = APIRouter(
 @router.get("/", summary="Get cards at random")
 async def cards_root(limit: int = 3) -> list[CardModel]:
     """
-    Get a random card from the database.
+    Get random cards from the database.
 
     Args:
         limit: The maximum number of cards to get.
@@ -79,7 +79,7 @@ async def get_cards_by(
     Args:
         property_name: The property to check against.
         values: Matching values for the given property
-        paginated: Return paginated results if True, or all matches if False
+        paginated: Return paginated results if True, or all matches if False.
         page: The page to return matches from.
         page_size: The number of results per page.
 

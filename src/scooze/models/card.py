@@ -39,7 +39,7 @@ from scooze.models.cardparts import (
     RelatedUrisModel,
 )
 from scooze.models.utils import ScoozeBaseModel, ScoozeDocument
-from scooze.utils import DATE_FORMAT
+from scooze.utils import DATE_FORMAT, encode_date
 
 
 class CardModelData(ScoozeBaseModel):
@@ -588,10 +588,6 @@ class CardModelData(ScoozeBaseModel):
     # endregion
 
     # TODO(#46): add Card field validators
-
-
-def encode_date(dt: date):
-    return dt.strftime(format=DATE_FORMAT)
 
 
 class CardModel(ScoozeDocument, CardModelData):

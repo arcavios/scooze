@@ -26,6 +26,10 @@ FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize t
 DATE_FORMAT = "%Y-%m-%d"
 
 
+def encode_date(dt: date) -> str:
+    return dt.strftime(format=DATE_FORMAT)
+
+
 def to_lower_camel(string: str) -> str:
     if len(string.split("_")) == 1:
         return string
@@ -193,7 +197,7 @@ def main_size(fmt: Format) -> tuple[int, int]:
         ):
             return 60, maxsize
 
-        case (Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH):
+        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH:
             return 99, 99
 
         case Format.COMMANDER | Format.DUEL:
@@ -273,7 +277,7 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
         ):
             return 0, 0
 
-        case (Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH):
+        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH:
             return 1, 1
 
         case Format.COMMANDER | Format.DUEL:
@@ -404,11 +408,9 @@ class JsonNormalizer:
 
         return frozendict(
             {
-                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k)
-                if convert_key_to_enum
-                else k: JsonNormalizer.to_enum(e=convert_value_to_enum, v=v)
-                if convert_value_to_enum
-                else v
+                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k) if convert_key_to_enum else k: (
+                    JsonNormalizer.to_enum(e=convert_value_to_enum, v=v) if convert_value_to_enum else v
+                )
                 for k, v in d.items()
             }
         )

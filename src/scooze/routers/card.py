@@ -154,7 +154,7 @@ async def update_card(card_req: CardModel, card_id: PydanticObjectId = Depends(_
         HTTPException: 422 - Bad ID given.
     """
 
-    field_updates = {k: v for k, v in card_req.dict().items() if v is not None}
+    field_updates = {k: v for k, v in card_req.model_dump().items() if v is not None}
     card = await CardModel.get(card_id)
 
     if card is None:
