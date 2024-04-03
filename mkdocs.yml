@@ -49,13 +49,13 @@ nav:
           - Contributing: contributing.md
           - Changelog: changelog.md
     - API Documentation:
+          - Data Classes:
+                - Card: dataclasses/card.md
+                - Deck: dataclasses/deck.md
           - Models:
                 - Card: models/card.md
                 - Deck: models/deck.md
                 - Base Models: models/base_models.md
-          - Data Classes:
-                - Card: dataclasses/card.md
-                - Deck: dataclasses/deck.md
           - Database Interface:
                 - Python: db_interface/scooze_api.md
                 - REST API:
