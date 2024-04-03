@@ -4,8 +4,8 @@ import pytest
 from bson import ObjectId
 from mongomock import Collection, MongoClient
 from scooze.card import OracleCard
-from scooze.database.core import DbCollection
 from scooze.deck import DeckPart
+from scooze.enum import DbCollection
 from scooze.models.card import CardModelData
 from scooze.models.deck import DeckModel, DeckModelData
 

@@ -1,27 +1,11 @@
-from enum import StrEnum
 from typing import Any
 
 from bson import ObjectId
 from pymongo import ReturnDocument
 from pymongo.results import DeleteResult
 from scooze.database.mongo import db
-from scooze.enum import ExtendedEnum
+from scooze.enum import DbCollection
 from scooze.utils import to_lower_camel
-
-# region Database Enums
-
-
-class DbCollection(ExtendedEnum, StrEnum):
-    """
-    Collections in the scooze database.
-    """
-
-    CARDS = "cards"
-    DECKS = "decks"
-
-
-# endregion
-
 
 # region Single document
 
