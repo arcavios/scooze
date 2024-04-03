@@ -1,6 +1,10 @@
 ### scooze CLI Help
 ``` shell
-scooze -h &
+scooze -h
+```
+
+### List scooze CLI Commands
+``` shell
 scooze list
 ```
 
