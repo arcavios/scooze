@@ -24,6 +24,8 @@ theme:
         - content.code.annotate
         - content.code.copy
         - navigation.tabs
+
+# TODO(#267): Add Logo and Favicon
 #   logo: 'logo-white.svg'
 #   favicon: 'favicon.png'
 
