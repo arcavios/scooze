@@ -96,6 +96,7 @@ def max_card_quantity(fmt: Format) -> int:
             | Format.COMMANDER
             | Format.DUEL
             | Format.GLADIATOR
+            | Format.HISTORICBRAWL
             | Format.OATHBREAKER
             | Format.PAUPERCOMMANDER
             | Format.PREDH
@@ -155,7 +156,7 @@ def main_size(fmt: Format) -> tuple[int, int]:
         ):
             return 60, maxsize
 
-        case Format.BRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
+        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 99, 99
 
         case Format.COMMANDER | Format.DUEL:
@@ -200,6 +201,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
             | Format.COMMANDER
             | Format.DUEL
             | Format.GLADIATOR
+            | Format.HISTORICBRAWL
             | Format.OATHBREAKER
             | Format.PAUPERCOMMANDER
             | Format.PREDH
@@ -237,7 +239,7 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
         ):
             return 0, 0
 
-        case Format.BRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
+        case Format.BRAWL | Format.HISTORICBRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 1, 1
 
         case Format.COMMANDER | Format.DUEL:
@@ -279,6 +281,7 @@ def attractions_size(fmt: Format) -> tuple[int, int]:
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
+            | Format.HISTORICBRAWL
             | Format.MODERN
             | Format.OLDSCHOOL
             | Format.PENNY
@@ -327,6 +330,7 @@ def stickers_size(fmt: Format) -> tuple[int, int]:
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
+            | Format.HISTORICBRAWL
             | Format.MODERN
             | Format.OLDSCHOOL
             | Format.PENNY

@@ -311,6 +311,7 @@ def test_is_legal(deck_modern_4c):
     assert not deck_modern_4c.is_legal(Format.FUTURE)
     assert not deck_modern_4c.is_legal(Format.GLADIATOR)
     assert not deck_modern_4c.is_legal(Format.HISTORIC)
+    assert not deck_modern_4c.is_legal(Format.HISTORICBRAWL)
     assert not deck_modern_4c.is_legal(Format.LEGACY)
     assert deck_modern_4c.is_legal(Format.LIMITED)
     assert deck_modern_4c.is_legal(Format.MODERN)
