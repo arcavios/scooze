@@ -2,7 +2,8 @@ from collections import Counter
 from datetime import date
 
 from pydantic import ConfigDict, Field, field_serializer, model_validator
-from scooze.catalogs import DbCollection, Format
+from scooze.catalogs import Format
+from scooze.enum import DbCollection
 from scooze.models.utils import ObjectIdT, ScoozeBaseModel, ScoozeDocument
 from scooze.utils import cmdr_size, encode_date, main_size, side_size
 
