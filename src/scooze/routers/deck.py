@@ -57,7 +57,7 @@ async def deck_root() -> DeckModel:
 @router.post("/add", summary="Create a new deck")
 async def add_deck(deck_data: DeckModelData):
     """
-    Add a card to the database.
+    Add a deck to the database.
 
     Args:
         deck_data: A dict conforming to DeckModelData's schema.

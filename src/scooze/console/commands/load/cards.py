@@ -17,7 +17,7 @@ class LoadCardsCommand(Command):
         option("test", description="The Power 9, for testing purposes."),
         option(
             "bulk-data-dir",
-            description="Directory to store bulk files, used with load-cards.",
+            description="Directory to store bulk files, used with load cards.",
             default=DEFAULT_BULK_FILE_DIR,
             value_required=True,
             flag=False,

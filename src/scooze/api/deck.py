@@ -1,4 +1,3 @@
-import scooze.database.deck as db
 from scooze.card import CardT
 from scooze.deck import Deck
 

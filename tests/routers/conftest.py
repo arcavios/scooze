@@ -4,7 +4,7 @@ import pytest
 from bson import ObjectId
 from mongomock import Collection, MongoClient
 from scooze.card import OracleCard
-from scooze.catalogs import DbCollection
+from scooze.database.core import DbCollection
 from scooze.deck import DeckPart
 from scooze.models.card import CardModelData
 from scooze.models.deck import DeckModel, DeckModelData
@@ -19,24 +19,14 @@ def mock_scooze_client():
 def mock_cards_collection(mock_scooze_client: MongoClient, cards_json: list[str]) -> Collection:
     cards_collection = mock_scooze_client.scooze[DbCollection.CARDS]
     for card in cards_json:
-        cards_collection.insert_one(
-            CardModelData.model_validate_json(card).model_dump(
-                mode="json",
-                by_alias=True,
-            )
-        )
+        cards_collection.insert_one(CardModelData.model_validate_json(card).model_dump(mode="json", by_alias=True))
     return cards_collection
 
 
 @pytest.fixture()
 def mock_decks_collection(mock_scooze_client: MongoClient, deck_model_modern_4c: DeckModel) -> Collection:
     decks_collection = mock_scooze_client.scooze[DbCollection.DECKS]
-    decks_collection.insert_one(
-        deck_model_modern_4c.model_dump(
-            mode="json",
-            by_alias=True,
-        )
-    )
+    decks_collection.insert_one(deck_model_modern_4c.model_dump(mode="json", by_alias=True))
     return decks_collection
 
 

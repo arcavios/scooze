@@ -8,6 +8,7 @@ import pytest
 from asgi_lifespan import LifespanManager
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
+from mongomock_motor import AsyncMongoMockClient
 from scooze.card import OracleCard
 from scooze.catalogs import Format, Legality
 from scooze.config import CONFIG
@@ -15,7 +16,6 @@ from scooze.deck import Deck
 from scooze.deckpart import DeckPart
 from scooze.models.card import CardModel, CardModelData
 from scooze.mongo import db
-from mongomock_motor import AsyncMongoMockClient
 
 # Override config for testing
 CONFIG.testing = True
@@ -115,7 +115,7 @@ def get_card_json(cards_json: list[str], scryfall_id: str) -> dict:
 
 def get_cardmodel_from_json(card_json: dict) -> CardModel:
     card_data = CardModelData.model_validate(card_json)
-    return CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+    return CardModel.model_validate(card_data.model_dump())
 
 
 @pytest.fixture(scope="session")
@@ -297,7 +297,6 @@ def legalities_ancestral_recall() -> dict[Format, Legality]:
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
         Format.LEGACY: Legality.BANNED,
         Format.MODERN: Legality.NOT_LEGAL,
         Format.OATHBREAKER: Legality.BANNED,
@@ -324,7 +323,6 @@ def legalities_token() -> dict[Format, Legality]:
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
         Format.LEGACY: Legality.NOT_LEGAL,
         Format.MODERN: Legality.NOT_LEGAL,
         Format.OATHBREAKER: Legality.NOT_LEGAL,
@@ -351,7 +349,6 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
         Format.LEGACY: Legality.LEGAL,
         Format.MODERN: Legality.NOT_LEGAL,
         Format.OATHBREAKER: Legality.LEGAL,
@@ -434,8 +431,26 @@ def card_aether_gust(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def sticker_ancestral_hotdog_minotaur(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "34c3979d-60e7-44b5-bb9f-1b6b0f2b70c3")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_balloon_stand(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2e9eaed8-e956-4fb2-a23d-3d442cd2fa5c")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_boseiju_who_endures(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "2135ac5a-187b-4dc9-8f82-34e8d1603416")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_bounce_chamber(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "8e5985a9-2f9c-45b9-ac59-f29e7197b301")
     return OracleCard.from_json(card_json)
 
 
@@ -446,14 +461,74 @@ def card_breeding_pool(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def attraction_bumper_cars(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2bdefffa-14bb-4a2b-9e75-13e29eaa6677")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_carnival_elephant_meteor(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "016bf660-16c3-41b7-a988-211921c21eb8")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_chalice_of_the_void(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4")
     return OracleCard.from_json(card_json)
 
 
 @pytest.fixture(scope="session")
+def attraction_clown_extruder(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "54cd6f28-11b0-4d69-bc2c-9050c2478b1d")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_concession_stand(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "49ab8948-1080-487b-b0a0-c5d11935141f")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_contortionist_otter_storm(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "ca442395-159a-40aa-a1e4-ed6bf0ffbedd")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_cool_fluffy_loxodon(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b1710520-d69f-415f-aef8-03eaa514b63a")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_costume_shop(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "c81dd9df-0eeb-42fd-8dd0-fd7f154954e0")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_counterspell(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "8493131c-0a7b-4be6-a8a2-0b425f4f67fb")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_cursed_firebreathing_yogurt(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "6534ab2b-ed2e-4c51-914d-920dc2307f43")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_deepfried_plague_myr(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "907157c3-f562-403c-94cb-9171deadaee4")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_demonic_tourist_laser(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "7c7241ef-ccde-4c2f-807b-45b9e644870f")
     return OracleCard.from_json(card_json)
 
 
@@ -470,6 +545,36 @@ def card_dress_down(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def attraction_drop_tower(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b738cd8d-f88b-431e-b66f-dc32e39a9606")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_eldrazi_guacamole_tightrope(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "b8f1abc7-1a86-4e43-8105-10c1c55e65ba")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_elemental_time_flamingo(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "eacec01f-c971-48b7-bf4a-2fdacae32835")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def sticker_eternal_acrobat_toast(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "780b4d5d-d3a0-4aad-abe7-3073339a8fcd")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_ferris_wheel(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "91562ab3-1153-48d9-9f8e-4c79155548f2")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_flooded_strand(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "8c2996d9-3287-4480-8c04-7a378e37e3cf")
     return OracleCard.from_json(card_json)
@@ -482,6 +587,12 @@ def card_flusterstorm(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def attraction_foam_weapons_kiosk(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "e9456ca6-a721-4b61-8afb-19d811f21a3c")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_force_of_negation(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "1825a719-1b2a-4af9-9cd2-7cb497cd0317")
     return OracleCard.from_json(card_json)
@@ -490,6 +601,12 @@ def card_force_of_negation(cards_json) -> OracleCard:
 @pytest.fixture(scope="session")
 def card_forest(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "ecd6d8fb-780c-446c-a8bf-93386b22fe95")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def attraction_fortune_teller(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "fde28457-2a4d-44e0-9d03-31173d411c34")
     return OracleCard.from_json(card_json)
 
 

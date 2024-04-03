@@ -8,10 +8,10 @@ from scooze.models.card import CardModel, CardModelData
 
 class TestCardRouterWithPopulatedDatabase:
     @pytest.fixture(scope="class", autouse=True)
-    async def populate_db(self, cards_json):
+    async def populate_db(self, cards_json: list[str]):
         for card_json in cards_json:
             card_data = CardModelData.model_validate_json(card_json)
-            card = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+            card = CardModel.model_validate(card_data.model_dump())
             await card.create()
 
         yield
@@ -119,7 +119,7 @@ class TestCardRouterWithEmptyDatabase:
         response = await api_client.post("/card/add", json=json_omnath_locus_of_creation)
         assert response.status_code == 200
         card = await CardModel.get(response.json()["_id"])
-        assert card.model_dump(mode="json", exclude=["id"]) == cardmodel_omnath.model_dump(mode="json", exclude=["id"])
+        assert card.model_dump(exclude=["id"]) == cardmodel_omnath.model_dump(exclude=["id"])
 
     @patch("scooze.routers.card.CardModel.create")
     async def test_add_card_bad(

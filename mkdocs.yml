@@ -1,0 +1,114 @@
+site_name: scooze
+
+theme:
+    name: material
+    custom_dir: "docs/theme"
+    palette:
+        - media: "(prefers-color-scheme: light)"
+          scheme: default
+          primary: green
+          accent: green
+          toggle:
+              icon: material/lightbulb-outline
+              name: "Switch to dark mode"
+        - media: "(prefers-color-scheme: dark)"
+          scheme: slate
+          primary: green
+          accent: green
+          toggle:
+              icon: material/lightbulb
+              name: "Switch to light mode"
+    features:
+        - announce.dismiss
+        - content.tabs.link
+        - content.code.annotate
+        - content.code.copy
+        - navigation.tabs
+
+# TODO(#267): Add Logo and Favicon
+#   logo: 'logo-white.svg'
+#   favicon: 'favicon.png'
+
+repo_name: arcavios/scooze
+repo_url: https://github.com/arcavios/scooze
+
+# https://www.mkdocs.org/user-guide/configuration/#validation
+validation:
+    nav:
+        omitted_files: warn # default: info
+        not_found: warn # default: warn
+        absolute_links: info # default: info
+    links:
+        not_found: warn # default: warn
+        absolute_links: warn # default: info
+        unrecognized_links: warn # default: info
+
+extra_css:
+    - "stylesheets/tweaks.css"
+
+nav:
+    - Get Started:
+          - Introduction to scooze: index.md
+          - Installation: installation.md
+          - Setup: setup.md
+          - Contributing: contributing.md
+          - Changelog: changelog.md
+    - API Documentation:
+          - Data Classes:
+                - Card: dataclasses/card.md
+                - Deck: dataclasses/deck.md
+          - Models:
+                - Card: models/card.md
+                - Deck: models/deck.md
+                - Base Models: models/base_models.md
+          - Database Interface:
+                - Python: db_interface/scooze_api.md
+                - REST API:
+                      - Card: db_interface/rest/card.md
+                      - Deck: db_interface/rest/deck.md
+          - Command Line Interface: cli.md
+          - Catalogs: catalogs.md
+          - Bulkdata: bulkdata.md
+          - Utils: utils.md
+    - Arcavios Team: people.md
+
+plugins:
+    - search
+    - mkdocs-simple-hooks:
+          hooks:
+              on_page_markdown: "docs.plugins.main:on_page_markdown"
+    - mkdocstrings:
+          handlers:
+              python:
+                  import:
+                      - https://docs.python.org/3/objects.inv
+                  paths: [src]
+                  options:
+                      docstring_options:
+                          ignore_init_summary: true
+                      heading_level: 2
+                      inherited_members: true
+                      merge_init_into_class: false
+                      members_order: source
+                      separate_signature: false
+                      show_root_heading: true
+                      show_root_full_path: true
+                      show_source: false
+                      show_signature_annotations: true
+                      show_symbol_type_heading: true
+                      show_symbol_type_toc: true
+                      signature_crossrefs: true
+                      summary: true
+
+markdown_extensions:
+    - admonition
+    - pymdownx.details
+    - pymdownx.highlight:
+          anchor_linenums: true
+          line_spans: __span
+          pygments_lang_class: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences
+    - toc:
+          permalink: true

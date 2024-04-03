@@ -19,7 +19,7 @@ class LoadDecksCommand(Command):
         option("test", description="A set of Pioneer decks for testing purposes."),
         option(
             "decks-dir",
-            description="Directory to store deck files, used with load-decks.",
+            description="Directory to store deck files, used with load decks.",
             default=DEFAULT_DECKS_DIR,
             value_required=True,
             flag=False,

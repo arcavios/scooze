@@ -4,8 +4,8 @@ from copy import deepcopy
 
 import pytest
 from scooze.card import OracleCard
-from scooze.catalogs import DecklistFormatter, Format, InThe
-from scooze.deck import Deck
+from scooze.catalogs import Format
+from scooze.deck import Deck, DecklistFormatter, InThe
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.utils import DictDiff
 
@@ -40,6 +40,74 @@ def cmdr_cards(card_omnath_locus_of_creation, card_supreme_verdict) -> Counter[O
 @pytest.fixture
 def cmdr_part(cmdr_cards) -> DeckPart[OracleCard]:
     return DeckPart[OracleCard](cards=cmdr_cards)
+
+
+@pytest.fixture
+def attraction_cards(
+    attraction_balloon_stand,
+    attraction_bounce_chamber,
+    attraction_bumper_cars,
+    attraction_clown_extruder,
+    attraction_concession_stand,
+    attraction_costume_shop,
+    attraction_drop_tower,
+    attraction_ferris_wheel,
+    attraction_foam_weapons_kiosk,
+    attraction_fortune_teller,
+) -> Counter[OracleCard]:
+    return Counter[OracleCard](
+        {
+            attraction_balloon_stand: 1,
+            attraction_bounce_chamber: 1,
+            attraction_bumper_cars: 1,
+            attraction_clown_extruder: 1,
+            attraction_concession_stand: 1,
+            attraction_costume_shop: 1,
+            attraction_drop_tower: 1,
+            attraction_ferris_wheel: 1,
+            attraction_foam_weapons_kiosk: 1,
+            attraction_fortune_teller: 1,
+        }
+    )
+
+
+@pytest.fixture
+def attraction_part(attraction_cards) -> DeckPart[OracleCard]:
+    return DeckPart[OracleCard](cards=attraction_cards)
+
+
+@pytest.fixture
+def sticker_cards(
+    sticker_ancestral_hotdog_minotaur,
+    sticker_carnival_elephant_meteor,
+    sticker_contortionist_otter_storm,
+    sticker_cool_fluffy_loxodon,
+    sticker_cursed_firebreathing_yogurt,
+    sticker_deepfried_plague_myr,
+    sticker_demonic_tourist_laser,
+    sticker_eldrazi_guacamole_tightrope,
+    sticker_elemental_time_flamingo,
+    sticker_eternal_acrobat_toast,
+) -> Counter[OracleCard]:
+    return Counter[OracleCard](
+        {
+            sticker_ancestral_hotdog_minotaur: 1,
+            sticker_carnival_elephant_meteor: 1,
+            sticker_contortionist_otter_storm: 1,
+            sticker_cool_fluffy_loxodon: 1,
+            sticker_cursed_firebreathing_yogurt: 1,
+            sticker_deepfried_plague_myr: 1,
+            sticker_demonic_tourist_laser: 1,
+            sticker_eldrazi_guacamole_tightrope: 1,
+            sticker_elemental_time_flamingo: 1,
+            sticker_eternal_acrobat_toast: 1,
+        }
+    )
+
+
+@pytest.fixture
+def sticker_part(sticker_cards) -> DeckPart[OracleCard]:
+    return DeckPart[OracleCard](cards=sticker_cards)
 
 
 @pytest.fixture
@@ -117,19 +185,15 @@ def test_average_words(deck_modern_4c):
 
 @pytest.mark.deck_diff
 def test_diff_none(deck_modern_4c, dictdiff_empty):
-    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(
-        main=dictdiff_empty, side=dictdiff_empty, cmdr=dictdiff_empty
-    )
+    assert deck_modern_4c.diff(deck_modern_4c) == DeckDiff(main=dictdiff_empty)
 
 
 @pytest.mark.deck_diff
-def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty):
+def test_diff_main(deck_modern_4c, card_kaheera_the_orphanguard):
     other = deepcopy(deck_modern_4c)
     other.add_card(card=card_kaheera_the_orphanguard, quantity=1, in_the=InThe.MAIN)
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=DictDiff({card_kaheera_the_orphanguard: (0, 1)}),
-        side=dictdiff_empty,
-        cmdr=dictdiff_empty,
     )
 
 
@@ -140,7 +204,6 @@ def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
         side=DictDiff({card_kaheera_the_orphanguard: (1, 2)}),
-        cmdr=dictdiff_empty,
     )
 
 
@@ -155,7 +218,6 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
     )
     assert deck_modern_4c.diff(other) == DeckDiff(
         main=dictdiff_empty,
-        side=dictdiff_empty,
         cmdr=DictDiff(
             {
                 card_omnath_locus_of_creation: (0, 1),
@@ -180,27 +242,64 @@ def test_decklist_equals(deck_modern_4c, main_modern_4c, side_modern_4c, card_om
 
 
 def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    assert deck_modern_4c.export() == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    assert deck_modern_4c.export() == f"Deck:\n{main_modern_4c_str}\nSideboard:\n{side_modern_4c_str}"
 
 
 def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
     deck = Deck[OracleCard](archetype="test_export_default_no_side", main=main_modern_4c)
-    assert deck.export() == f"{main_modern_4c_str}"
+    assert deck.export() == f"Deck:\n{main_modern_4c_str}"
 
 
 def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
     deck = Deck[OracleCard](archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
-    assert deck.export() == f"Commander\n{cmdr_part}\n{main_modern_4c_str}"
+    assert deck.export() == f"Commander(s):\n{cmdr_part}\nDeck:\n{main_modern_4c_str}"
+
+
+def test_export_default_attractions(main_modern_4c, main_modern_4c_str, attraction_part):
+    deck = Deck[OracleCard](
+        archetype="test_export_default_attractions", main=main_modern_4c, attractions=attraction_part
+    )
+    assert deck.export() == f"Deck:\n{main_modern_4c_str}\nAttractions:\n{attraction_part}"
+
+
+def test_export_default_stickers(main_modern_4c, main_modern_4c_str, sticker_part):
+    deck = Deck[OracleCard](archetype="test_export_default_attractions", main=main_modern_4c, stickers=sticker_part)
+    assert deck.export() == f"Deck:\n{main_modern_4c_str}\nStickers:\n{sticker_part}"
 
 
 def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
     deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
-    assert deck.export(DecklistFormatter.ARENA) == f"{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    assert deck.export(DecklistFormatter.ARENA) == f"Deck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+
+
+def test_export_arena_companion(
+    main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, card_kaheera_the_orphanguard
+):
+    deck = Deck[OracleCard](
+        archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, companion=card_kaheera_the_orphanguard
+    )
+    assert (
+        deck.export(DecklistFormatter.ARENA)
+        == f"Companion\n{card_kaheera_the_orphanguard.name}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    )
+
+
+def test_export_arena_companion(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, cmdr_part):
+    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, cmdr=cmdr_part)
+    assert (
+        deck.export(DecklistFormatter.ARENA)
+        == f"Commander\n{cmdr_part}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
+    )
 
 
 def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
     deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
-    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\nSIDEBOARD:\n{side_modern_4c_str}"
+    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n{side_modern_4c_str}"
+
+
+def test_export_mtgo_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
+    deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, cmdr=cmdr_part)
+    assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n{cmdr_part}"
 
 
 def test_is_legal(deck_modern_4c):
@@ -212,7 +311,6 @@ def test_is_legal(deck_modern_4c):
     assert not deck_modern_4c.is_legal(Format.FUTURE)
     assert not deck_modern_4c.is_legal(Format.GLADIATOR)
     assert not deck_modern_4c.is_legal(Format.HISTORIC)
-    assert not deck_modern_4c.is_legal(Format.HISTORICBRAWL)
     assert not deck_modern_4c.is_legal(Format.LEGACY)
     assert deck_modern_4c.is_legal(Format.LIMITED)
     assert deck_modern_4c.is_legal(Format.MODERN)
@@ -231,6 +329,28 @@ def test_is_legal(deck_modern_4c):
     assert deck_modern_4c.is_legal()  # self.format
     deck_modern_4c.format = None
     assert deck_modern_4c.is_legal()  # format = None
+
+
+def test_is_legal_attractions_stickers(
+    card_forest, attraction_part, sticker_part, attraction_balloon_stand, sticker_ancestral_hotdog_minotaur
+):
+    main = DeckPart[OracleCard](Counter[OracleCard]({card_forest: 60}))
+    deck = Deck[OracleCard](
+        archetype="test_is_legal_attractions_stickers", main=main, attractions=attraction_part, stickers=sticker_part
+    )
+    assert deck.is_legal(Format.LEGACY)
+    deck.add_card(attraction_balloon_stand, in_the=InThe.ATTRACTIONS)
+    assert not deck.is_legal(Format.LEGACY)
+    deck.add_card(sticker_ancestral_hotdog_minotaur, in_the=InThe.STICKERS)
+    assert not deck.is_legal(Format.LEGACY)
+
+
+def test_is_legal_16_sideboard(deck_modern_4c, card_aether_gust):
+    deck_modern_4c.add_card(card_aether_gust, in_the=InThe.SIDE)
+    assert not deck_modern_4c.is_legal(Format.MODERN)
+
+
+# TODO(#229): Add a test for a commander or oathbreaker deck that exceeds the formats maximum size
 
 
 def test_total_cards(deck_modern_4c):
