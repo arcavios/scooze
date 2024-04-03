@@ -60,7 +60,7 @@ Sideboard:
 
 ## Contributing
 
-For guidance on setting up a development environment and how to make a contribution to Pydantic, see [Contributing to scooze](https://scooze.readthedocs.io/en/latest/contributing).
+For guidance on setting up a development environment and how to make a contribution to scooze, see [Contributing to scooze](https://scooze.readthedocs.io/en/latest/contributing).
 
 ## Report a Bug
 
