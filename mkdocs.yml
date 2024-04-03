@@ -64,11 +64,10 @@ nav:
                 - REST API:
                       - Card: db_interface/rest/card.md
                       - Deck: db_interface/rest/deck.md
-          - Extras:
-                - Utils: extras/utils.md
-                - Catalogs: extras/catalogs.md
-                - Bulkdata: extras/bulkdata.md
-                - Command Line Interface: extras/cli.md
+          - Command Line Interface: cli.md
+          - Catalogs: catalogs.md
+          - Bulkdata: bulkdata.md
+          - Utils: utils.md
     - Arcavios Team: people.md
 
 plugins:
