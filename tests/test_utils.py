@@ -251,42 +251,6 @@ def test_normal_max_relentless_quantity():
 
 # region Normal Cards
 
-# match fmt.value:
-#     case Format.LIMITED:
-#         return maxsize
-
-#     case (
-#         Format.BRAWL
-#         | Format.COMMANDER
-#         | Format.DUEL
-#         | Format.GLADIATOR
-#         | Format.HISTORICBRAWL
-#         | Format.OATHBREAKER
-#         | Format.PAUPERCOMMANDER
-#         | Format.PREDH
-#     ):
-#         return 1
-
-#     case (
-#         Format.ALCHEMY
-#         | Format.EXPLORER
-#         | Format.FUTURE
-#         | Format.HISTORIC
-#         | Format.LEGACY
-#         | Format.MODERN
-#         | Format.OLDSCHOOL
-#         | Format.PAUPER
-#         | Format.PENNY
-#         | Format.PIONEER
-#         | Format.PREMODERN
-#         | Format.STANDARD
-#         | Format.VINTAGE
-#     ):
-#         return 4
-
-#     case Format.NONE | _:
-#         return maxsize
-
 
 @pytest.mark.card_quantity
 def test_fmt_alchemy_max_card_quantity():
