@@ -1,17 +1,18 @@
 from __future__ import annotations as _annotations
 
-from pathlib import Path
 import re
+from pathlib import Path
 
 import yaml
 from jinja2 import Template  # type: ignore
-from mkdocs.structure.pages import Page
 from mkdocs.config import Config
 from mkdocs.structure.files import Files
+from mkdocs.structure.pages import Page
 
 THIS_DIR = Path(__file__).parent
 DOCS_DIR = THIS_DIR.parent
 PROJECT_ROOT = DOCS_DIR.parent
+
 
 def on_page_markdown(markdown: str, page: Page, config: Config, files: Files) -> str:
     """
@@ -23,8 +24,9 @@ def on_page_markdown(markdown: str, page: Page, config: Config, files: Files) ->
     else:
         return markdown
 
+
 maintainers_template = Template(
-"""
+    """
 <div class="user-list user-list-center">
     {% for user in people.maintainers %}
     <div class="user">
@@ -42,18 +44,18 @@ maintainers_template = Template(
 
 
 def populate_people(markdown: str, page: Page) -> str | None:
-    if page.file.src_uri != 'people.md':
+    if page.file.src_uri != "people.md":
         return None
 
     # read people.yml file data
-    with (THIS_DIR / 'people.yml').open('rb') as f:
+    with (THIS_DIR / "people.yml").open("rb") as f:
         people = yaml.load(f, Loader=yaml.FullLoader)
 
     # Render the templates
     for name, template in [
-        ('maintainers', maintainers_template),
+        ("maintainers", maintainers_template),
     ]:
         rendered = template.render(people=people)
-        markdown = re.sub(f'{{{{ {name} }}}}', rendered, markdown)
+        markdown = re.sub(f"{{{{ {name} }}}}", rendered, markdown)
 
     return markdown
