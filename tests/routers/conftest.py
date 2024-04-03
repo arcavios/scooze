@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 import pytest
 from bson import ObjectId
@@ -7,7 +7,7 @@ from scooze.card import OracleCard
 from scooze.catalogs import DbCollection
 from scooze.deck import DeckPart
 from scooze.models.card import CardModelData
-from scooze.models.deck import DeckModelIn
+from scooze.models.deck import DeckModel, DeckModelData
 
 
 @pytest.fixture(scope="session")
@@ -29,7 +29,7 @@ def mock_cards_collection(mock_scooze_client: MongoClient, cards_json: list[str]
 
 
 @pytest.fixture()
-def mock_decks_collection(mock_scooze_client: MongoClient, deck_model_modern_4c: DeckModelIn) -> Collection:
+def mock_decks_collection(mock_scooze_client: MongoClient, deck_model_modern_4c: DeckModel) -> Collection:
     decks_collection = mock_scooze_client.scooze[DbCollection.DECKS]
     decks_collection.insert_one(
         deck_model_modern_4c.model_dump(
@@ -40,14 +40,14 @@ def mock_decks_collection(mock_scooze_client: MongoClient, deck_model_modern_4c:
     return decks_collection
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def deck_model_modern_4c(
     archetype_modern_4c: str,
     main_modern_4c_dict: dict[ObjectId, int],
     side_modern_4c_dict: dict[ObjectId, int],
-    today: datetime,
-) -> DeckModelIn:
-    return DeckModelIn.model_validate(
+    today: date,
+) -> DeckModel:
+    return DeckModel.model_validate(
         {
             "archetype": archetype_modern_4c,
             "format": "modern",
@@ -58,11 +58,29 @@ def deck_model_modern_4c(
     )
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
+def deck_model_data(
+    archetype_modern_4c: str,
+    main_modern_4c_dict: dict[ObjectId, int],
+    side_modern_4c_dict: dict[ObjectId, int],
+    today: date,
+) -> str:
+    return DeckModelData.model_validate(
+        {
+            "archetype": archetype_modern_4c,
+            "format": "modern",
+            "date_played": today,
+            "main": main_modern_4c_dict,
+            "side": side_modern_4c_dict,
+        }
+    )
+
+
+@pytest.fixture(scope="session")
 def main_modern_4c_dict(main_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
     return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in main_modern_4c.cards.items()}
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def side_modern_4c_dict(side_modern_4c: DeckPart[OracleCard], mock_cards_collection: Collection) -> dict[ObjectId, int]:
     return {mock_cards_collection.find_one({"name": c.name})["_id"]: q for c, q in side_modern_4c.cards.items()}
