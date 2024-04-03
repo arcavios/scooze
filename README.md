@@ -58,6 +58,8 @@ Sideboard:
 """
 ```
 
+See [Setup](https://scooze.readthedocs.io/en/latest/setup/) and our [API Documentation](https://scooze.readthedocs.io/en/latest/dataclasses/card/) for more details.
+
 ## Contributing
 
 For guidance on setting up a development environment and how to make a contribution to scooze, see [Contributing to scooze](https://scooze.readthedocs.io/en/latest/contributing).
