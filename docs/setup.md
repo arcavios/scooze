@@ -71,7 +71,7 @@ Run the scooze command line interface tool to add some data to your local databa
 
     ``` shell
     scooze -h
-    scooze load-cards oracle
+    scooze load cards --oracle
     scooze run
     ```
 
