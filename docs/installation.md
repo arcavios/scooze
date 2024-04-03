@@ -4,8 +4,16 @@ hide: toc
 
 Download and install this package from [PyPi](https://pypi.org/project/scooze/):
 
+## pip
+
 ``` shell
 pip install scooze
+```
+
+## Poetry
+
+``` shell
+poetry add scooze
 ```
 
 ## Install From GitHub
