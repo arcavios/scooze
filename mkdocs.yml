@@ -41,6 +41,9 @@ validation:
         absolute_links: warn # default: info
         unrecognized_links: warn # default: info
 
+extra_css:
+    - "stylesheets/tweaks.css"
+
 nav:
     - Get Started:
           - Introduction to scooze: index.md
@@ -70,6 +73,11 @@ nav:
 
 plugins:
     - search
+    - mkdocs-simple-hooks:
+          hooks:
+              #   on_pre_build: "docs.plugins.main:on_pre_build"
+              #   on_files: "docs.plugins.main:on_files"
+              on_page_markdown: "docs.plugins.main:on_page_markdown"
     - mkdocstrings:
           handlers:
               python:
