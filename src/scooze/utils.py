@@ -1,14 +1,15 @@
-import argparse
 import logging
 import re
 from collections import Counter
 from datetime import date, datetime
+from enum import Enum, EnumMeta
 from sys import maxsize
-from typing import Any, Dict, Hashable, Iterable, Mapping, Self, Type, TypeVar
+from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
 from pydantic.alias_generators import to_camel
-from scooze.catalogs import CostSymbol, ExtendedEnum, Format
+from scooze.catalogs import CostSymbol, Format
+from scooze.enum import ExtendedEnum
 
 DEFAULT_BULK_FILE_DIR = "./data/bulk"
 DEFAULT_DECKS_DIR = "./data/decks"
@@ -34,21 +35,13 @@ def to_lower_camel(string: str) -> str:
 
 def scooze_logger() -> logging.Logger:
     """
-    Helper function to get the Scooze logger.
+    Helper function to get the scooze logger.
 
     Use the default logging functionality here without any filters, formatters,
     or handlers, so users can make informed decisions about their own logging.
     """
 
     return logging.getLogger("scooze")
-
-
-class SmartFormatter(argparse.RawDescriptionHelpFormatter, argparse.HelpFormatter):
-    def _split_lines(self, text, width):
-        if text.startswith("R|"):
-            return text[2:].splitlines()
-        # this is the RawTextHelpFormatter._split_lines
-        return argparse.HelpFormatter._split_lines(self, text, width)
 
 
 # region Deck Format Helpers
@@ -394,7 +387,7 @@ class JsonNormalizer:
     """
 
     @classmethod
-    def to_date(cls, d: date | str | None) -> date:
+    def to_date(cls, d: date | str | None) -> date | None:
         """
         Normalize a date.
 
@@ -411,7 +404,7 @@ class JsonNormalizer:
         return datetime.strptime(d, DATE_FORMAT).date()
 
     @classmethod
-    def to_enum(cls, e: Type[E], v) -> E | None:
+    def to_enum(cls, e: Type[E], v: Any) -> E | None:
         """
         Normalize an Enum.
 
@@ -544,7 +537,7 @@ class DictDiff(ComparableObject):
             d1: The first dict.
             d2: The second dict.
             NO_KEY: Default value to use when a key is in one dict, but not the
-              other.
+                other.
 
         Returns:
             A dict with all keys from both dicts. The values are tuple(v, v)
@@ -573,7 +566,7 @@ class DictDiff(ComparableObject):
 # region Symbology utils
 
 
-def parse_symbols(cost: str) -> Dict[CostSymbol, int]:
+def parse_symbols(cost: str) -> Counter[CostSymbol]:
     """
     Parse a string containing one or more cost symbols, in standard oracle text form (e.g. "{4}{G}").
 

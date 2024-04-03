@@ -98,7 +98,7 @@ def test_get_decks_by_format_none_found(mock_get: MagicMock, client: TestClient)
 @pytest.mark.router_decks
 @patch("scooze.database.deck.delete_decks_all")
 def test_delete_decks(mock_update: MagicMock, client: TestClient, modern_4c):
-    # Acting as though the db is set up with just Four-color Control for purposes of this test
+    # Acting as though the db is setup with just Four-color Control for purposes of this test
     mock_update.return_value = 1
     response = client.delete("/decks/delete/all")
     assert response.status_code == 200

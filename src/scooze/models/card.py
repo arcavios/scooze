@@ -15,7 +15,6 @@ from scooze.cardparts import (
 from scooze.catalogs import (
     BorderColor,
     Color,
-    DbCollection,
     Finish,
     Format,
     Frame,
@@ -29,6 +28,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
+from scooze.database.core import DbCollection
 from scooze.models.cardparts import (
     CardFaceModel,
     ImageUrisModel,
@@ -44,43 +44,41 @@ from scooze.utils import DATE_FORMAT
 
 class CardModelData(ScoozeBaseModel):
     """
-    Card object that supports all fields available from Scryfall's JSON data.
-    Scryfall documentation: https://scryfall.com/docs/api/cards
+    A Card object that supports all fields available from Scryfall's JSON data.
+    Represents a specific printing of a card.
 
     Attributes:
-    Core fields
         arena_id: This card's Arena ID, if applicable.
         scryfall_id: Scryfall's unique ID for this card.
         lang: The language code for this print;
-          see https://scryfall.com/docs/api/languages
+            see [here](https://scryfall.com/docs/api/languages)
         mtgo_id: This card's MTGO Catalog ID, if applicable.
         mtgo_foil_id: This card's foil MTGO Catalog ID, if applicable.
         multiverse_ids: This card's multiverse IDs on Gatherer, if any.
         tcgplayer_id: This card's ID on TCGplayer, or `productId` in their
-          system.
+            system.
         tcgplayer_etched_id: This card's ID on TCGplayer, for the etched
-          version if that is a separate product.
+            version if that is a separate product.
         cardmarket_id: This card's ID on Cardmarket, or `idProduct` in their
-          system.
+            system.
         oracle_id: A UUID for this card's oracle identity; shared across prints
-          of the same card but not same-named objects with different gameplay
-          properties.
+            of the same card but not same-named objects with different gameplay
+            properties.
         prints_search_uri: A link to begin paginating through all prints of
-          this card in Scryfall's API.
+            this card in Scryfall's API.
         rulings_uri: A link to rulings for this card in Scryfall's API.
         scryfall_uri: A link to the Scryfall page for this card.
-        uri: A link to this card object in Scryfall's API.
+        uri: A link to this card in Scryfall's API.
 
-    Gameplay fields
-        all_parts: RelatedCard objects for tokens/meld pairs/other associated
-          parts to this card, if applicable.
-        card_faces: All component CardFace objects of this card, for multifaced
-          cards.
+        all_parts: RelatedCards for tokens/meld pairs/other associated
+            parts to this card, if applicable.
+        card_faces: All component CardFaces of this card, for multifaced
+            cards.
         cmc: This card's mana value/converted mana cost.
         color_identity: This card's color identity, for Commander variant
-          deckbuilding.
+            deckbuilding.
         color_indicator: color_indicator: The colors in this card's color
-          indicator, if it has one.
+            indicator, if it has one.
         colors: This card's colors.
         edhrec_rank: This card's rank/popularity on EDHREC, if applicable.
         hand_modifier: This card's Vanguard hand size modifier, if applicable.
@@ -89,7 +87,7 @@ class CardModelData(ScoozeBaseModel):
         life_modifier: This card's Vanguard life modifier value, if applicable.
         loyalty: This card's starting planeswalker loyalty, if applicable.
         mana_cost: Mana cost, as string of mana symbols.
-          (e.g. "{1}{W}{U}{B}{R}{G}")
+            (e.g. "{1}{W}{U}{B}{R}{G}")
         name: This card's name.
         oracle_text: This card's oracle text, if any.
         penny_rank: This card's rank/popularity on Penny Dreadful.
@@ -99,47 +97,46 @@ class CardModelData(ScoozeBaseModel):
         toughness: Toughness of this card, if applicable.
         type_line: This card's type line. (e.g. "Creature — Ooze")
 
-    Print fields
         artist: Artist for this card.
         artist_ids: List of Scryfall IDs for artists of this card.
         attraction_lights: Attraction lights lit on this card, if applicable.
         booster: Whether this card can be opened in booster packs.
         border_color: Border color of this card, from among
-          black, white, borderless, silver, and gold.
+            black, white, borderless, silver, and gold.
         card_back_id: Scryfall UUID of the card back design for this card.
         collector_number: This card's collector number; can contain non-numeric
-          characters.
+            characters.
         content_warning: True if use of this print should be avoided;
-          see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220
+            see [here](https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220)
         digital: True if this card was only released in a video game.
         finishes: Finishes this card is available in, from among foil, nonfoil, and etched.
         flavor_name: Alternate name for this card, such as on Godzilla series.
         flavor_text: Flavor text on this card, if any.
         frame_effects: Special frame effects on this card;
-          see https://scryfall.com/docs/api/frames
+            see [here](https://scryfall.com/docs/api/frames)
         frame: This card's frame layout;
-          see https://scryfall.com/docs/api/frames
+            see [here](https://scryfall.com/docs/api/frames)
         full_art: Whether this print is full-art.
         games: Which games this print is available on, from among
-          paper, mtgo, and arena.
+            paper, mtgo, and arena.
         highres_image: Whether this card has a high-res image available.
         illustration_id: A UUID for the particular artwork on this print,
-          consistent across art reprints.
+            consistent across art reprints.
         image_status: The quality/status of images available for this card.
-          Either missing, placeholder, lowres, or highres_scan.
+            Either missing, placeholder, lowres, or highres_scan.
         image_uris: Links to images of this card in various qualities.
         layout: This card's printed layout;
-          see https://scryfall.com/docs/api/layouts
+            see [here](https://scryfall.com/docs/api/layouts)
         oversized: Whether this card is oversized.
         preview: Information about where, when, and how this print was
-          previewed.
+            previewed.
         prices: Prices for this card on various marketplaces.
         printed_name: Printed name of this card, for localized non-English
-          cards.
+            cards.
         printed_text: Printed text of this card, for localized non-English
-          cards.
+            cards.
         printed_type_line: Printed type line of this card, for localized
-          non-English cards.
+            non-English cards.
         promo: Whether this print is a promo.
         promo_types: Which promo categories this print falls into, if any.
         purchase_uris: Links to purchase this print from marketplaces.
@@ -148,20 +145,19 @@ class CardModelData(ScoozeBaseModel):
         released_at: The date this card was first released.
         reprint: Whether this print is a reprint from an earlier set.
         scryfall_set_uri: Link to the Scryfall set page for the set of this
-          print.
+            print.
         security_stamp: Security stamp on this card, if any.
         set_name: Full name of the set this print belongs to.
         set_search_uri: Link to Scryfall API to start paginating through this
-          print's full set.
+            print's full set.
         set_type: An overall categorization for each set, provided by Scryfall.
-        set_uri: Link to the set object for this print in Scryfall's API.
+        set_uri: Link to the set for this print in Scryfall's API.
         set_code: Set code of the set this print belongs to.
         set_id: UUID of the set this print belongs to.
         story_spotlight: Whether this print is a Story Spotlight.
         textless: Whether this print is textless.
-        variation: Whether this card print is a variation of another card
-          object.
-        variation_of: Which card object this object is a variant of, if any.
+        variation: Whether this card print is a variation of another card.
+        variation_of: Which card this object is a variant of, if any.
         watermark: Watermark printed on this card, if any.
     """
 
@@ -178,7 +174,7 @@ class CardModelData(ScoozeBaseModel):
     )
     lang: Language | None = Field(
         default=None,
-        description="The language code for this print; see https://scryfall.com/docs/api/languages",
+        description="The language code for this print; see [here](https://scryfall.com/docs/api/languages)",
     )
     mtgo_id: int | None = Field(
         default=None,
@@ -222,7 +218,7 @@ class CardModelData(ScoozeBaseModel):
     )
     uri: str | None = Field(
         default=None,
-        description="A link to this card object in Scryfall's API.",
+        description="A link to this card in Scryfall's API.",
     )
 
     # endregion
@@ -231,11 +227,11 @@ class CardModelData(ScoozeBaseModel):
 
     all_parts: list[RelatedCardModel] | None = Field(
         default=None,
-        description="RelatedCard objects for tokens/meld pairs/other associated parts to this card, if applicable.",
+        description="RelatedCards for tokens/meld pairs/other associated parts to this card, if applicable.",
     )
     card_faces: list[CardFaceModel] | None = Field(
         default=None,
-        description="All component CardFace objects of this card, for multifaced cards.",
+        description="All component CardFaces of this card, for multifaced cards.",
     )
     cmc: float | None = Field(
         default=None,
@@ -348,7 +344,7 @@ class CardModelData(ScoozeBaseModel):
     )
     content_warning: bool = Field(
         default=False,
-        description="True if use of this print should be avoided; see https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220",
+        description="True if use of this print should be avoided; see [here](https://scryfall.com/blog/regarding-wotc-s-recent-statement-on-depictions-of-racism-220)",
     )
     digital: bool | None = Field(
         default=None,
@@ -368,11 +364,11 @@ class CardModelData(ScoozeBaseModel):
     )
     frame_effects: set[FrameEffect] | None = Field(
         default=None,
-        description="Special frame effects on this card; see https://scryfall.com/docs/api/frames",
+        description="Special frame effects on this card; see [here](https://scryfall.com/docs/api/frames)",
     )
     frame: Frame | None = Field(
         default=None,
-        description="This card's frame layout; see https://scryfall.com/docs/api/frames",
+        description="This card's frame layout; see [here](https://scryfall.com/docs/api/frames)",
     )
     full_art: bool | None = Field(
         default=None,
@@ -400,7 +396,7 @@ class CardModelData(ScoozeBaseModel):
     )
     layout: Layout | None = Field(
         default=None,
-        description="This card's printed layout; see https://scryfall.com/docs/api/layouts",
+        description="This card's printed layout; see [here](https://scryfall.com/docs/api/layouts)",
     )
     oversized: bool | None = Field(
         default=None,
@@ -476,7 +472,7 @@ class CardModelData(ScoozeBaseModel):
     )
     set_uri: str | None = Field(
         default=None,
-        description="Link to the set object for this print in Scryfall's API.",
+        description="Link to the set for this print in Scryfall's API.",
     )
     set_code: str | None = Field(
         default=None,
@@ -485,11 +481,11 @@ class CardModelData(ScoozeBaseModel):
     )
     set_id: str | None = Field(
         default=None,
-        description="UUID of the set this print belongs to.",
+        description="UUID of the set this print belongs to",
     )
     story_spotlight: bool | None = Field(
         default=None,
-        description="Whether this print is a Story Spotlight.",
+        description="Whether this print is a Story Spotlight",
     )
     textless: bool | None = Field(
         default=None,
@@ -497,11 +493,11 @@ class CardModelData(ScoozeBaseModel):
     )
     variation: bool | None = Field(
         default=None,
-        description="Whether this card print is a variation of another card object.",
+        description="Whether this card print is a variation of another card.",
     )
     variation_of: str | None = Field(
         default=None,
-        description="Which card object this object is a variant of, if any.",
+        description="Which card this object is a variant of, if any.",
     )
     watermark: str | None = Field(
         default=None,
@@ -595,7 +591,7 @@ def encode_date(dt: date):
 
 class CardModel(ScoozeDocument, CardModelData):
     """
-    Database representation of a Scooze Card
+    A database representation of a scooze Card.
     """
 
     model_config = ConfigDict(

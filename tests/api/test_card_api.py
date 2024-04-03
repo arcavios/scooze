@@ -22,19 +22,19 @@ class TestCardApiWithPopulatedDatabase:
 
     async def test_get_base_card(self, recall_base: Card):
         result: Card = await card_api.get_card_by(property_name="name", value=recall_base.name, card_class=Card)
-        recall_base.scooze_id = result.scooze_id  # recall_base doesn't start with a Scooze ID
+        recall_base.scooze_id = result.scooze_id  # recall_base doesn't start with a scooze ID
         assert result == recall_base
 
     async def test_get_oracle_card(self, recall_oracle: OracleCard):
         result: OracleCard = await card_api.get_card_by(
             property_name="name", value=recall_oracle.name, card_class=OracleCard
         )
-        recall_oracle.scooze_id = result.scooze_id  # recall_oracle doesn't start with a Scooze ID
+        recall_oracle.scooze_id = result.scooze_id  # recall_oracle doesn't start with a scooze ID
         assert result == recall_oracle
 
     async def test_get_full_card(self, recall_full: FullCard):
         result: FullCard = await card_api.get_card_by(property_name="name", value=recall_full.name, card_class=FullCard)
-        recall_full.scooze_id = result.scooze_id  # recall_full doesn't start with a Scooze ID
+        recall_full.scooze_id = result.scooze_id  # recall_full doesn't start with a scooze ID
         assert result == recall_full
 
     async def test_get_card_bad(self):
