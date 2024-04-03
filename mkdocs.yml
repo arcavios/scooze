@@ -75,8 +75,6 @@ plugins:
     - search
     - mkdocs-simple-hooks:
           hooks:
-              #   on_pre_build: "docs.plugins.main:on_pre_build"
-              #   on_files: "docs.plugins.main:on_files"
               on_page_markdown: "docs.plugins.main:on_page_markdown"
     - mkdocstrings:
           handlers:
