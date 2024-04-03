@@ -34,7 +34,7 @@ To take advantage of all the features scooze has to offer, you'll need to decide
 
 ## Database Setup
 
-### Using Docker
+### Option 1: Using Docker
 
 Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is running.
 
@@ -48,7 +48,7 @@ scooze setup docker
 
 After this, you can continue to ["Using The CLI"](#using-the-cli) below.
 
-### Running Local MongoDB
+### Option 2: Running Local MongoDB
 
 scooze depends on MongoDB to run your local database.
 Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/).
