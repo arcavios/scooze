@@ -260,7 +260,7 @@ class Preview(HashableObject):
 
 class PurchaseUris(HashableObject):
     """
-    URIs to this cards listing on major marketplaces.
+    URIs to this card's listings on major marketplaces.
 
     Attributes:
         tcgplayer (str | None): Link to buy this card on the TCGplayer marketplace.

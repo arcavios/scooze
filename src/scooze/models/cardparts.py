@@ -246,7 +246,7 @@ class PreviewModel(ScoozeBaseModel):
 
 class PurchaseUrisModel(ScoozeBaseModel):
     """
-    URIs to this card's listing on major marketplaces.
+    URIs to this card's listings on major marketplaces.
 
     Attributes:
         tcgplayer: Link to buy this card on the TCGplayer marketplace.
