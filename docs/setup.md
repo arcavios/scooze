@@ -14,7 +14,7 @@ scooze can be used without a database to gain access to robust data models for r
 
     deck.add_card(card1, 25)
     deck.add_card(swamp, 15)
-    deck.add_card(card2, 100, in_the=InThe.SIDE)
+    deck.add_card(card2, 100, InThe.SIDE)
 
     legal_limited = deck.is_legal(Format.LIMITED)   # True
     legal_pauper = deck.is_legal(Format.PAUPER)     # False
