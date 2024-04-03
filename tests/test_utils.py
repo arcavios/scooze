@@ -293,6 +293,11 @@ def test_fmt_historic_max_card_quantity():
 
 
 @pytest.mark.card_quantity
+def test_fmt_historicbrawl_max_card_quantity():
+    assert max_card_quantity(Format.HISTORICBRAWL) == 1
+
+
+@pytest.mark.card_quantity
 def test_fmt_legacy_max_card_quantity():
     assert max_card_quantity(Format.LEGACY) == 4
 
@@ -422,6 +427,11 @@ def test_fmt_historic_main_size(main_size_60):
 
 
 @pytest.mark.deck_size
+def test_fmt_historicbrawl_main_size(main_size_99):
+    assert main_size(Format.HISTORICBRAWL) == main_size_99
+
+
+@pytest.mark.deck_size
 def test_fmt_legacy_main_size(main_size_60):
     assert main_size(Format.LEGACY) == main_size_60
 
@@ -547,6 +557,11 @@ def test_fmt_historic_side_size(side_size_15):
 
 
 @pytest.mark.deck_size
+def test_fmt_historicbrawl_side_size(side_size_0):
+    assert side_size(Format.HISTORICBRAWL) == side_size_0
+
+
+@pytest.mark.deck_size
 def test_fmt_legacy_side_size(side_size_15):
     assert side_size(Format.LEGACY) == side_size_15
 
@@ -669,6 +684,11 @@ def test_fmt_gladiator_cmdr_size(cmdr_size_0):
 @pytest.mark.deck_size
 def test_fmt_historic_cmdr_size(cmdr_size_0):
     assert cmdr_size(Format.HISTORIC) == cmdr_size_0
+
+
+@pytest.mark.deck_size
+def test_fmt_historicbrawl_cmdr_size(cmdr_size_1):
+    assert cmdr_size(Format.HISTORICBRAWL) == cmdr_size_1
 
 
 @pytest.mark.deck_size
