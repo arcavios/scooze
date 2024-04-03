@@ -34,7 +34,7 @@ async def decks_root(limit: int = 3) -> DeckModelOut:
 @router.post("/add", summary="Create new decks")
 async def add_decks(decks: list[DeckModelIn]) -> DeckModelOut:
     """
-    Add a decks to the database.
+    Add decks to the database.
 
     Args:
         decks: The decks to add.
