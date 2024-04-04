@@ -1,5 +1,5 @@
 from beanie import PydanticObjectId
-from bson import InvalidDocument
+from bson.errors import InvalidId
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from scooze.models.deck import DeckModel, DeckModelData
@@ -27,7 +27,7 @@ def _validate_deck_id(deck_id: str) -> PydanticObjectId:
 
     try:
         return PydanticObjectId(deck_id)
-    except InvalidDocument:
+    except InvalidId:
         raise HTTPException(status_code=422, detail="Must give a valid ID.")
 
 
@@ -98,7 +98,7 @@ async def get_deck_by_id(deck_id: PydanticObjectId = Depends(_validate_deck_id))
 
     deck = await DeckModel.get(deck_id)
 
-    if deck is not None:
+    if deck is None:
         raise HTTPException(status_code=404, detail=f"Deck with ID {deck_id} not found.")
 
     return deck
