@@ -465,9 +465,9 @@ class JsonNormalizer:
 
         return frozendict(
             {
-                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k)
-                if convert_key_to_enum
-                else k: (JsonNormalizer.to_enum(e=convert_value_to_enum, v=v) if convert_value_to_enum else v)
+                JsonNormalizer.to_enum(e=convert_key_to_enum, v=k) if convert_key_to_enum else k: (
+                    JsonNormalizer.to_enum(e=convert_value_to_enum, v=v) if convert_value_to_enum else v
+                )
                 for k, v in d.items()
             }
         )
