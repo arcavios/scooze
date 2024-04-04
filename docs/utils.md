@@ -6,3 +6,5 @@
             - "!JsonNormalizer"
 
 ::: scooze.enum
+    options:
+        inherited_members: false

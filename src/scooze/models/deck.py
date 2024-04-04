@@ -1,15 +1,16 @@
 from collections import Counter
 from datetime import date
 
-from pydantic import Field, model_validator
+from pydantic import ConfigDict, Field, field_serializer, model_validator
 from scooze.catalogs import Format
-from scooze.models.utils import ObjectIdT, ScoozeBaseModel
-from scooze.utils import cmdr_size, main_size, side_size
+from scooze.enum import DbCollection
+from scooze.models.utils import ObjectIdT, ScoozeBaseModel, ScoozeDocument
+from scooze.utils import cmdr_size, encode_date, main_size, side_size
 
 
-class DeckModel(ScoozeBaseModel):
+class DeckModelData(ScoozeBaseModel):
     """
-    A model to represent a deck of Magic: the Gathering cards.
+    A data model to represent a deck of Magic: the Gathering cards.
 
     Attributes:
         archetype: The archetype of this DeckModel.
@@ -18,24 +19,8 @@ class DeckModel(ScoozeBaseModel):
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
+        TODO(#273): Add attraction and sticker decks to Deck model.
     """
-
-    model_config = ScoozeBaseModel.model_config.copy()
-    model_config["json_schema_extra"] = {
-        "examples": [
-            {
-                "archetype": "scooze Deck Example",
-                "format": "Limited",
-                "main": {
-                    "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id
-                    "6502bf77bffae3b433093dcb": 4,  # TODO(#6): replace with Scavenging Ooze scooze id
-                },
-                "side": {
-                    "6502bfe2e0e370d002c87ceb": 1,  # TODO(#6): replace with Keruga scooze id
-                },
-            },
-        ]
-    }
 
     archetype: str = Field(
         default="",
@@ -61,6 +46,8 @@ class DeckModel(ScoozeBaseModel):
         default=Counter(),
         description="The command zone. Typically 1 or 2 cards in Commander formats.",
     )
+
+    # TODO(#273): Add attraction and sticker decks to Deck model.
 
     # region Validators
 
@@ -107,26 +94,45 @@ class DeckModel(ScoozeBaseModel):
             )
         return self
 
+    # TODO(#273): Add attraction and sticker deck validators.
+
+    # endregion
+
+    # region Serializers
+
+    @field_serializer("date_played")
+    def serialize_date(self, dt_field: date):
+        return super().serialize_date(dt_field=dt_field)
+
     # endregion
 
 
-class DeckModelIn(DeckModel):
+class DeckModel(ScoozeDocument, DeckModelData):
     """
-    A Deck model to be passed to the database.
-    """
-
-    pass
-
-
-class DeckModelOut(DeckModel):
-    """
-    A Deck model to be retrieved from the database.
-
-    Attributes:
-        id: A UUID for this deck in the database.
+    Database representation of a scooze Deck.
     """
 
-    id: ObjectIdT = Field(
-        default=None,
-        alias="_id",
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "archetype": "Example Deck",
+                    "format": "Limited",
+                    "main": {
+                        "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id
+                        "6502bf77bffae3b433093dcb": 4,  # TODO(#6): replace with Scavenging Ooze scooze id
+                    },
+                    "side": {
+                        "6502bfe2e0e370d002c87ceb": 1,  # TODO(#6): replace with Keruga scooze id
+                    },
+                },
+            ]
+        }
     )
+
+    class Settings:
+        name = DbCollection.DECKS
+        validate_on_save = True
+        bson_encoders = {
+            date: encode_date,
+        }

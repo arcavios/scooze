@@ -2,7 +2,9 @@
 
 ### [DEVELOPMENT] - UNRELEASED
 
-#### N/A
+#### Changed
+
+- Using Beanie for decks ([#272](https://github.com/arcavios/scooze/pull/272))
 
 ### [1.0.7] - 2024-03-02
 

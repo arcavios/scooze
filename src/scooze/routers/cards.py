@@ -16,7 +16,7 @@ router = APIRouter(
 @router.get("/", summary="Get cards at random")
 async def cards_root(limit: int = 3) -> list[CardModel]:
     """
-    Get a random card from the database.
+    Get random cards from the database.
 
     Args:
         limit: The maximum number of cards to get.
@@ -30,7 +30,7 @@ async def cards_root(limit: int = 3) -> list[CardModel]:
 
     cards = await CardModel.aggregate([{"$sample": {"size": limit}}], projection_model=CardModel).to_list()
 
-    if cards is None or len(cards) == 0:
+    if cards is None or not cards:
         raise HTTPException(status_code=404, detail="No cards found in the database.")
 
     return cards
@@ -55,7 +55,7 @@ async def add_cards(cards: list[CardModelData]) -> JSONResponse:
     """
 
     try:
-        cards_to_insert = [CardModel.model_validate(card.model_dump(mode="json", by_alias=True)) for card in cards]
+        cards_to_insert = [CardModel.model_validate(card.model_dump()) for card in cards]
         insert_result = await CardModel.insert_many(cards_to_insert)
         return JSONResponse(f"Created {len(insert_result.inserted_ids)} card(s).")
     except Exception as e:
@@ -78,8 +78,8 @@ async def get_cards_by(
 
     Args:
         property_name: The property to check against.
-        values: Matching values for the given property
-        paginated: Return paginated results if True, or all matches if False
+        values: Matching values for the given property.
+        paginated: Return paginated results if True, or all matches if False.
         page: The page to return matches from.
         page_size: The number of results per page.
 
@@ -93,7 +93,7 @@ async def get_cards_by(
     match property_name:
         case "_id" | "id":
             prop_name = "_id"
-            vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo ids
+            vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo IDs
         case _:
             prop_name = to_lower_camel(property_name)
             vals = values

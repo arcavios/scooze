@@ -27,6 +27,10 @@ FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize t
 DATE_FORMAT = "%Y-%m-%d"
 
 
+def encode_date(dt: date) -> str:
+    return dt.strftime(format=DATE_FORMAT)
+
+
 def to_lower_camel(string: str) -> str:
     if len(string.split("_")) == 1:
         return string
