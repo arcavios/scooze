@@ -52,4 +52,4 @@ def delete_collection(coll: DbCollection):
                     s.delete_cards_all()
             case DbCollection.DECKS:
                 # TODO(#145): Use the ScoozeApi for this
-                pass
+                print("Can't delete decks yet")

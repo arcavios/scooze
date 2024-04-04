@@ -55,7 +55,7 @@ async def deck_root() -> DeckModel:
 
 
 @router.post("/add", summary="Create a new deck")
-async def add_deck(deck_data: DeckModelData):
+async def add_deck(deck_data: DeckModelData) -> DeckModel:
     """
     Add a deck to the database.
 
