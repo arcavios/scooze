@@ -39,12 +39,12 @@ from scooze.models.cardparts import (
     RelatedUrisModel,
 )
 from scooze.models.utils import ScoozeBaseModel, ScoozeDocument
-from scooze.utils import DATE_FORMAT
+from scooze.utils import encode_date
 
 
 class CardModelData(ScoozeBaseModel):
     """
-    A Card object that supports all fields available from Scryfall's JSON data.
+    A data model that supports all fields available from Scryfall's JSON data.
     Represents a specific printing of a card.
 
     Attributes:
@@ -583,10 +583,6 @@ class CardModelData(ScoozeBaseModel):
     # endregion
 
     # TODO(#46): add Card field validators
-
-
-def encode_date(dt: date):
-    return dt.strftime(format=DATE_FORMAT)
 
 
 class CardModel(ScoozeDocument, CardModelData):

@@ -2,7 +2,6 @@ import logging
 import re
 from collections import Counter
 from datetime import date, datetime
-from enum import Enum, EnumMeta
 from sys import maxsize
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
@@ -24,6 +23,10 @@ FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize t
 
 ## String formatting
 DATE_FORMAT = "%Y-%m-%d"
+
+
+def encode_date(dt: date) -> str:
+    return dt.strftime(format=DATE_FORMAT)
 
 
 def to_lower_camel(string: str) -> str:
