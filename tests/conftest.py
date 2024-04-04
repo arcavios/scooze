@@ -778,12 +778,14 @@ def card_zagoth_triome(cards_json) -> OracleCard:
 # region DeckParts
 
 
-@pytest.fixture(scope="session")
+# Scoping this to "class" for the router tests
+@pytest.fixture(scope="class")
 def archetype_modern_4c() -> str:
     return "Four-color Control"
 
 
-@pytest.fixture(scope="session")
+# Scoping this to "class" for the router tests
+@pytest.fixture(scope="class")
 def main_modern_4c(
     card_boseiju_who_endures,
     card_breeding_pool,
@@ -931,7 +933,8 @@ def main_modern_4c_str(
     )
 
 
-@pytest.fixture(scope="session")
+# Scoping this to "class" for the router tests
+@pytest.fixture(scope="class")
 def side_modern_4c(
     card_aether_gust,
     card_boseiju_who_endures,
