@@ -1,6 +1,6 @@
 from typing import Any
-from beanie import PydanticObjectId
 
+from beanie import PydanticObjectId
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from scooze.models.deck import DeckModel, DeckModelData
