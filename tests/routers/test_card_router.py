@@ -26,7 +26,7 @@ class TestCardRouterWithPopulatedDatabase:
         assert PydanticObjectId.is_valid(card_id)
 
     async def test_get_card_by_id(self, api_client: AsyncClient):
-        first_card = await CardModel.find_one({})
+        first_card = await CardModel.find_one()
         response = await api_client.get(f"/card/id/{first_card.id}")
         assert response.status_code == 200
         response_json = response.json()
@@ -45,7 +45,7 @@ class TestCardRouterWithPopulatedDatabase:
         assert response.json()["detail"] == f"Card with ID {fake_id} not found."
 
     async def test_get_card_by_name(self, api_client: AsyncClient):
-        first_card = await CardModel.find_one({})
+        first_card = await CardModel.find_one()
         response = await api_client.get(f"/card/name/{first_card.name}")
         assert response.status_code == 200
         response_json = response.json()
@@ -58,7 +58,7 @@ class TestCardRouterWithPopulatedDatabase:
         assert response.json()["detail"] == "Card with name 'not a valid magic card name' not found."
 
     async def test_update_card(self, api_client: AsyncClient):
-        first_card = await CardModel.find_one({})
+        first_card = await CardModel.find_one()
         update_data = {"cmc": 5.0}
         response = await api_client.patch(f"/card/update/{first_card.id}", json=update_data)
         assert response.status_code == 200
@@ -78,7 +78,7 @@ class TestCardRouterWithPopulatedDatabase:
         assert response.json()["detail"] == f"Card with ID {fake_id} not found."
 
     async def test_delete_card(self, api_client: AsyncClient):
-        first_card = await CardModel.find_one({})
+        first_card = await CardModel.find_one()
         response = await api_client.delete(f"/card/delete/{first_card.id}")
         assert response.status_code == 200
         assert response.json() == f"Card with ID {first_card.id} deleted."
@@ -97,7 +97,7 @@ class TestCardRouterWithPopulatedDatabase:
     @patch("scooze.routers.card.CardModel.delete")
     async def test_delete_card_not_deleted(self, mock_delete: MagicMock, api_client: AsyncClient):
         mock_delete.return_value = None
-        first_card = await CardModel.find_one({})
+        first_card = await CardModel.find_one()
         response = await api_client.delete(f"/card/delete/{first_card.id}")
         assert response.status_code == 400
         assert response.json()["detail"] == f"Card with ID {first_card.id} not deleted."

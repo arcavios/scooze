@@ -1,8 +1,7 @@
-import scooze.database.deck as deck_db
 from cleo.commands.command import Command
 from cleo.helpers import argument
 from scooze.api import ScoozeApi
-from scooze.catalogs import DbCollection
+from scooze.enum import DbCollection
 
 ACCEPTED_DELETE_ARGS = {
     "all",
@@ -53,4 +52,4 @@ def delete_collection(coll: DbCollection):
                     s.delete_cards_all()
             case DbCollection.DECKS:
                 # TODO(#145): Use the ScoozeApi for this
-                deck_db.delete_decks_all()
+                print("Can't delete decks yet")

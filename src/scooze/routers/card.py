@@ -14,7 +14,7 @@ router = APIRouter(
 
 def _validate_card_id(card_id: str) -> PydanticObjectId:
     """
-    Helper to validate incoming strings as Card IDs
+    Helper to validate incoming strings as card IDs
 
     Args:
         card_id: Incoming string to test.
@@ -46,7 +46,7 @@ async def card_root() -> CardModel:
 
     cards = await CardModel.aggregate([{"$sample": {"size": 1}}], projection_model=CardModel).to_list()
 
-    if cards is None or len(cards) == 0:
+    if cards is None or not cards:
         raise HTTPException(status_code=404, detail="No cards found in the database.")
 
     return cards[0]
@@ -155,7 +155,7 @@ async def update_card(card_req: CardModel, card_id: PydanticObjectId = Depends(_
         HTTPException: 422 - Bad ID given.
     """
 
-    field_updates = {k: v for k, v in card_req.dict().items() if v is not None}
+    field_updates = {k: v for k, v in card_req.model_dump().items() if v is not None}
     card = await CardModel.get(card_id)
 
     if card is None:

@@ -12,11 +12,11 @@ class DeckDiff(ComparableObject):
     A class to represent a diff between two decks.
 
     Attributes:
-        main: The diff between the main decks of two Decks.
-        side: The diff between the sideboards of two Decks.
-        cmdr: The diff between the command zones of two Decks.
-        attractions: The diff between the attractions of the two Decks.
-        stickers: The diff between the stickers fo the two Decks.
+        main (DictDiff): The diff between the main decks of two Decks.
+        side (DictDiff): The diff between the sideboards of two Decks.
+        cmdr (DictDiff): The diff between the command zones of two Decks.
+        attractions (DictDiff): The diff between the attractions of the two Decks.
+        stickers (DictDiff): The diff between the stickers of the two Decks.
     """
 
     def __init__(
@@ -57,7 +57,7 @@ class DeckDiff(ComparableObject):
 
     def total(self) -> int:
         """
-        The number of Cards in this DeckDiff.
+        The number of cards in this DeckDiff.
         """
 
         return sum(map(len, (self.main, self.side, self.cmdr, self.attractions, self.stickers)))
@@ -68,7 +68,7 @@ class DeckPart(ComparableObject, Generic[CardT]):
     A class to represent a part of a deck.
 
     Attributes:
-        cards: The cards in this DeckPart.
+        cards (Counter[CardT]): The cards in this DeckPart.
     """
 
     def __init__(self, cards: Counter[CardT] = None):

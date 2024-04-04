@@ -1,40 +1,69 @@
 from collections import Counter
+from enum import StrEnum, auto
 from sys import maxsize
 from typing import Generic, Self
 
 import scooze.utils as utils
 from scooze.card import CardT
-from scooze.catalogs import DecklistFormatter, Format, InThe, Legality
+from scooze.catalogs import Format, Legality
 from scooze.deckpart import DeckDiff, DeckPart
+from scooze.enum import ExtendedEnum
+from scooze.utils import ComparableObject
 
 logger = utils.scooze_logger()
 
+# region Deck Enums
 
-class Deck(utils.ComparableObject, Generic[CardT]):
+
+class InThe(ExtendedEnum, StrEnum):
+    """
+    The location of a Card in a Deck.
+    """
+
+    MAIN = auto()
+    SIDE = auto()
+    CMDR = auto()
+    ATTRACTIONS = auto()
+    STICKERS = auto()
+
+
+class DecklistFormatter(ExtendedEnum, StrEnum):
+    """
+    A method of formatting a decklist for external systems.
+    """
+
+    ARENA = auto()
+    MTGO = auto()
+
+
+# endregion
+
+
+class Deck(ComparableObject, Generic[CardT]):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
     Attributes:
-        archetype: The archetype of this Deck.
-        format: The format legality of the cards in this Deck.
-        main: The main deck. Typically 60 cards minimum.
-        side: The sideboard. Typically 15 cards maximum.
-        cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
-        attractions: The attraction deck.
-        stickers: The sticker deck.
-        companion: This deck's companion (if applicable).
+        archetype (str | None): The archetype of this Deck.
+        format (Format): The format legality of the cards in this Deck.
+        main (DeckPart[CardT]): The main deck. Typically 60 cards minimum.
+        side (DeckPart[CardT]): The sideboard. Typically 15 cards maximum.
+        cmdr (DeckPart[CardT]): The command zone. Typically 1 or 2 cards in Commander formats.
+        attractions (DeckPart[CardT]): The attraction deck.
+        stickers (DeckPart[CardT]): The sticker deck.
+        companion (CardT | None): This deck's companion (if applicable).
     """
 
     def __init__(
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart[CardT] = None,
-        side: DeckPart[CardT] = None,
-        cmdr: DeckPart[CardT] = None,
-        attractions: DeckPart[CardT] = None,
-        stickers: DeckPart[CardT] = None,
-        companion: CardT = None,
+        main: DeckPart[CardT] | None = None,
+        side: DeckPart[CardT] | None = None,
+        cmdr: DeckPart[CardT] | None = None,
+        attractions: DeckPart[CardT] | None = None,
+        stickers: DeckPart[CardT] | None = None,
+        companion: CardT | None = None,
     ):
         self.archetype = archetype
         self.format = format
@@ -49,6 +78,9 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
     @property
     def cards(self) -> Counter[CardT]:
+        """
+        Get this Deck as a collection of cards.
+        """
         return self.main.cards + self.side.cards + self.cmdr.cards + self.attractions.cards + self.stickers.cards
 
     def __str__(self):
@@ -90,7 +122,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         Returns:
             A DeckDiff with keys for each deck part. Each contains a dict of
-            each card in both decks and their counts.
+                each card in both decks and their counts.
         """
 
         return DeckDiff(
@@ -110,7 +142,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         Returns:
             True if this Deck contains exactly the same cards as another, else
-            False.
+                False.
         """
 
         if self.total_cards() != other.total_cards():
@@ -134,7 +166,7 @@ class Deck(utils.ComparableObject, Generic[CardT]):
 
         Returns:
             A string containing the names and quantities of the cards in this
-            Deck.
+                Deck.
         """
 
         match export_format:

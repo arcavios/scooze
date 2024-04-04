@@ -16,7 +16,7 @@ class TestCardsRouterWithPopulatedDatabase:
 
         yield
 
-        await CardModel.get_motor_collection().delete_many({})
+        await CardModel.delete_all()
 
     async def test_cards_root(self, api_client: AsyncClient):
         response = await api_client.get("/cards/")
@@ -54,7 +54,7 @@ class TestCardsRouterWithPopulatedDatabase:
         assert response.json()["detail"] == "Cards not found."
 
     async def test_delete_cards(self, api_client: AsyncClient):
-        num_cards = await CardModel.find({}).count()
+        num_cards = await CardModel.count()
         response = await api_client.delete("/cards/delete/all")
         assert response.status_code == 200
         assert response.json() == f"Deleted {num_cards} card(s)."
@@ -62,7 +62,7 @@ class TestCardsRouterWithPopulatedDatabase:
     @patch("scooze.routers.cards.CardModel.delete_all")
     async def test_delete_cards_not_deleted(self, mock_delete_all: MagicMock, api_client: AsyncClient):
         mock_delete_all.return_value = None
-        response = await api_client.delete(f"/cards/delete/all")
+        response = await api_client.delete("/cards/delete/all")
         assert response.status_code == 400
         assert response.json()["detail"] == "Cards weren't deleted."
 
@@ -70,7 +70,7 @@ class TestCardsRouterWithPopulatedDatabase:
 class TestCardsRouterWithEmptyDatabase:
     @pytest.fixture(scope="class", autouse=True)
     async def clean_db(self):
-        await CardModel.get_motor_collection().delete_many({})
+        await CardModel.delete_all()
 
     async def test_cards_root_no_cards(self, api_client: AsyncClient):
         response = await api_client.get("/cards/")

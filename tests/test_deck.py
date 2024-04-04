@@ -4,8 +4,8 @@ from copy import deepcopy
 
 import pytest
 from scooze.card import OracleCard
-from scooze.catalogs import DecklistFormatter, Format, InThe
-from scooze.deck import Deck
+from scooze.catalogs import Format
+from scooze.deck import Deck, DecklistFormatter, InThe
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.utils import DictDiff
 
@@ -311,7 +311,6 @@ def test_is_legal(deck_modern_4c):
     assert not deck_modern_4c.is_legal(Format.FUTURE)
     assert not deck_modern_4c.is_legal(Format.GLADIATOR)
     assert not deck_modern_4c.is_legal(Format.HISTORIC)
-    assert not deck_modern_4c.is_legal(Format.HISTORICBRAWL)
     assert not deck_modern_4c.is_legal(Format.LEGACY)
     assert deck_modern_4c.is_legal(Format.LIMITED)
     assert deck_modern_4c.is_legal(Format.MODERN)

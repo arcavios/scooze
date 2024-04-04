@@ -6,7 +6,6 @@ from scooze.catalogs import (
     BorderColor,
     Color,
     Component,
-    DbCollection,
     Finish,
     Frame,
     FrameEffect,
@@ -18,6 +17,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
+from scooze.enum import DbCollection
 from scooze.models.card import CardModel, CardModelData
 
 # region eq and ne

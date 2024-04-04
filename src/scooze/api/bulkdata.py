@@ -69,7 +69,7 @@ def _try_validate_card(card_json: dict) -> CardModel | None:
 
     try:
         card = CardModelData.model_validate(card_json)
-        return CardModel.model_validate(card.model_dump(mode="json", by_alias=True))
+        return CardModel.model_validate(card.model_dump())
 
     except ValidationError as e:
         print(f"Card with name {card_json['name']} not added due to validation error: \n{e}")

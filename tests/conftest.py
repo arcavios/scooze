@@ -297,7 +297,6 @@ def legalities_ancestral_recall() -> dict[Format, Legality]:
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
         Format.LEGACY: Legality.BANNED,
         Format.MODERN: Legality.NOT_LEGAL,
         Format.OATHBREAKER: Legality.BANNED,
@@ -324,7 +323,6 @@ def legalities_token() -> dict[Format, Legality]:
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
         Format.LEGACY: Legality.NOT_LEGAL,
         Format.MODERN: Legality.NOT_LEGAL,
         Format.OATHBREAKER: Legality.NOT_LEGAL,
@@ -351,7 +349,6 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
-        Format.HISTORICBRAWL: Legality.NOT_LEGAL,
         Format.LEGACY: Legality.LEGAL,
         Format.MODERN: Legality.NOT_LEGAL,
         Format.OATHBREAKER: Legality.LEGAL,
@@ -781,12 +778,14 @@ def card_zagoth_triome(cards_json) -> OracleCard:
 # region DeckParts
 
 
-@pytest.fixture
+# Scoping this to "class" for the router tests
+@pytest.fixture(scope="class")
 def archetype_modern_4c() -> str:
     return "Four-color Control"
 
 
-@pytest.fixture
+# Scoping this to "class" for the router tests
+@pytest.fixture(scope="class")
 def main_modern_4c(
     card_boseiju_who_endures,
     card_breeding_pool,
@@ -934,7 +933,8 @@ def main_modern_4c_str(
     )
 
 
-@pytest.fixture
+# Scoping this to "class" for the router tests
+@pytest.fixture(scope="class")
 def side_modern_4c(
     card_aether_gust,
     card_boseiju_who_endures,
