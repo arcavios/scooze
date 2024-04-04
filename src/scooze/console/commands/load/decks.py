@@ -3,7 +3,6 @@ import json
 import os
 
 import ijson
-import scooze.database.deck as deck_db
 from cleo.commands.command import Command
 from cleo.helpers import option
 from scooze.models.deck import DeckModelIn
@@ -50,7 +49,7 @@ def load_all_decks(decks_dir: str):
                         "item",
                     )
                 ]
-                asyncio.run(deck_db.add_decks(decks))
+                # asyncio.run(deck_db.add_decks(decks))
     except OSError as e:
         print(f"Encountered an error while trying to load {file_path.split('/')[-1]}")
         raise e
@@ -63,7 +62,7 @@ def load_test_decks():
             print("Inserting test decks into the database...")
             json_list = list(decks_file)
             decks = [DeckModelIn.model_validate(json.loads(deck_json)) for deck_json in json_list]
-            asyncio.run(deck_db.add_decks(decks))  # TODO(#7): this need async for now, replace with Python API
+            # asyncio.run(deck_db.add_decks(decks))  # TODO(#7): this need async for now, replace with Python API
     except OSError as e:
         print("Encountered an error while trying to load test decks")
         raise e
