@@ -90,7 +90,7 @@ async def get_decks_by(
     match property_name:
         case "_id" | "id":
             prop_name = "_id"
-            vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo ids
+            vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo IDs
         case _:
             prop_name = to_lower_camel(property_name)
             vals = values

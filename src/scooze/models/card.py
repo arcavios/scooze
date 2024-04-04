@@ -39,12 +39,12 @@ from scooze.models.cardparts import (
     RelatedUrisModel,
 )
 from scooze.models.utils import ScoozeBaseModel, ScoozeDocument
-from scooze.utils import DATE_FORMAT, encode_date
+from scooze.utils import encode_date
 
 
 class CardModelData(ScoozeBaseModel):
     """
-    A Card object that supports all fields available from Scryfall's JSON data.
+    A data model that supports all fields available from Scryfall's JSON data.
     Represents a specific printing of a card.
 
     Attributes:

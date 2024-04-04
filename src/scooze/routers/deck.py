@@ -13,7 +13,7 @@ router = APIRouter(
 
 def _validate_deck_id(deck_id: str) -> PydanticObjectId:
     """
-    Helper to validate incoming strings as Deck IDs
+    Helper to validate incoming strings as Deck IDs.
 
     Args:
         deck_id: Incoming string to test.
@@ -71,7 +71,7 @@ async def add_deck(deck_data: DeckModelData):
 
     try:
         # NOTE: would like to add the dupe protection back in
-        deck = DeckModel.model_validate(deck_data.model_dump(mode="json", by_alias=True))
+        deck = DeckModel.model_validate(deck_data.model_dump())
         return await deck.create()
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to create a new deck. Error: {e}")

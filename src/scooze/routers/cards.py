@@ -78,7 +78,7 @@ async def get_cards_by(
 
     Args:
         property_name: The property to check against.
-        values: Matching values for the given property
+        values: Matching values for the given property.
         paginated: Return paginated results if True, or all matches if False.
         page: The page to return matches from.
         page_size: The number of results per page.
@@ -93,7 +93,7 @@ async def get_cards_by(
     match property_name:
         case "_id" | "id":
             prop_name = "_id"
-            vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo ids
+            vals = [PydanticObjectId(v) for v in values]  # Normalize Mongo IDs
         case _:
             prop_name = to_lower_camel(property_name)
             vals = values

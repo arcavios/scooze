@@ -19,6 +19,7 @@ class DeckModelData(ScoozeBaseModel):
         main: The main deck. Typically 60 cards minimum.
         side: The sideboard. Typically 15 cards maximum.
         cmdr: The command zone. Typically 1 or 2 cards in Commander formats.
+        TODO(#273): Add attraction and sticker decks to Deck model.
     """
 
     archetype: str = Field(
@@ -45,6 +46,8 @@ class DeckModelData(ScoozeBaseModel):
         default=Counter(),
         description="The command zone. Typically 1 or 2 cards in Commander formats.",
     )
+
+    # TODO(#273): Add attraction and sticker decks to Deck model.
 
     # region Validators
 
@@ -91,6 +94,8 @@ class DeckModelData(ScoozeBaseModel):
             )
         return self
 
+    # TODO(#273): Add attraction and sticker deck validators.
+
     # endregion
 
     # region Serializers
@@ -104,14 +109,14 @@ class DeckModelData(ScoozeBaseModel):
 
 class DeckModel(ScoozeDocument, DeckModelData):
     """
-    Database representation of a Scooze Deck
+    Database representation of a scooze Deck.
     """
 
     model_config = ConfigDict(
         json_schema_extra={
             "examples": [
                 {
-                    "archetype": "Scooze Deck Example",
+                    "archetype": "Example Deck",
                     "format": "Limited",
                     "main": {
                         "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id

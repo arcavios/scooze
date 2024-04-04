@@ -9,6 +9,8 @@ from scooze.deckpart import DeckPart
 from scooze.models.card import CardModel, CardModelData
 from scooze.models.deck import DeckModel, DeckModelData
 
+# TODO(#273): Test Attraction and Sticker decks for deck router?
+
 
 class TestDeckRouterWithPopulatedDatabase:
     @pytest.fixture(scope="class", autouse=True)
