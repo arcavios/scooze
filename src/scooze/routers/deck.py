@@ -45,7 +45,7 @@ async def deck_root() -> DeckModel:
 
     decks = await DeckModel.aggregate([{"$sample": {"size": 1}}], projection_model=DeckModel).to_list()
 
-    if decks is None or len(decks) == 0:
+    if decks is None or not decks:
         raise HTTPException(status_code=404, detail="No decks found in the database.")
 
     return decks[0]

@@ -46,7 +46,7 @@ async def card_root() -> CardModel:
 
     cards = await CardModel.aggregate([{"$sample": {"size": 1}}], projection_model=CardModel).to_list()
 
-    if cards is None or len(cards) == 0:
+    if cards is None or not cards:
         raise HTTPException(status_code=404, detail="No cards found in the database.")
 
     return cards[0]
