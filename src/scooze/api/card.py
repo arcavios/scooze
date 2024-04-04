@@ -129,9 +129,7 @@ async def add_cards(cards: list[CardT]) -> list[PydanticObjectId]:
 
     try:
         card_models = [CardModelData.model_validate(card.__dict__) for card in cards]
-        cards_to_insert = [
-            CardModel.model_validate(card_model.model_dump()) for card_model in card_models
-        ]
+        cards_to_insert = [CardModel.model_validate(card_model.model_dump()) for card_model in card_models]
         insert_result = await CardModel.insert_many(cards_to_insert)
         card_ids = insert_result.inserted_ids
 
