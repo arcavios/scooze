@@ -16,14 +16,16 @@ from scooze.mongo import db, mongo_close, mongo_connect
 
 class ScoozeApi(AbstractContextManager):
     """
-    Context manager object for doing I/O from a Mongo database.
+    Context manager object for doing I/O from a local database.
 
-    Sample usage:
-        >>> with ScoozeApi() as s:
-                green_cards = s.get_cards_by("colors", [Color.GREEN])
-                woe_cards = s.get_cards_by_set("woe")
-                black_lotus = s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
-                print(black_lotus.total_words())
+    Example:
+        ``` python
+        with ScoozeApi() as s:
+            green_cards = s.get_cards_by("colors", [Color.GREEN])
+            woe_cards = s.get_cards_by_set("woe")
+            black_lotus = s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
+            print(black_lotus.total_words())
+        ```
     """
 
     def __init__(self, card_class: type[CardT] = FullCard):
@@ -46,7 +48,7 @@ class ScoozeApi(AbstractContextManager):
 
     @_safe_cache
     @_check_for_safe_context
-    def get_card_by(self, property_name: str, value) -> CardT:
+    def get_card_by(self, property_name: str, value: Any) -> CardT:
         """
         Search the database for the first card that matches the given criteria.
 
@@ -87,7 +89,7 @@ class ScoozeApi(AbstractContextManager):
 
         Returns:
             A list of cards matching the search criteria, or empty list if none
-            were found.
+                were found.
 
         Raises:
             RuntimeError: If used outside a `with` context.
@@ -303,12 +305,12 @@ class ScoozeApi(AbstractContextManager):
     @_check_for_safe_context
     def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
         """
-        Loads the desired file from the given directory into a local Mongo
-        database. Attempts to download it from Scryfall if it isn't found.
+        Loads the desired file from the given directory into a local database.
+        Attempts to download it from Scryfall if it isn't found.
 
         Args:
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
-            to insert into the database.
+                to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
 
         Raises:
@@ -327,16 +329,18 @@ class ScoozeApi(AbstractContextManager):
 
 class AsyncScoozeApi(AbstractAsyncContextManager):
     """
-    Async context manager object for doing I/O from a Mongo database.
+    Async context manager object for doing I/O from a local database.
     Most commonly used in asynchronous contexts like Jupyter Notebooks or other
     web applications.
 
-    Sample usage:
-        >>> async with AsyncScoozeApi() as s:
-                green_cards = await s.get_cards_by("colors", [Color.GREEN])
-                woe_cards = await s.get_cards_by_set("woe")
-                black_lotus = await s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
-                print(black_lotus.total_words())
+    Example:
+        ``` python
+        async with AsyncScoozeApi() as s:
+            green_cards = await s.get_cards_by("colors", [Color.GREEN])
+            woe_cards = await s.get_cards_by_set("woe")
+            black_lotus = await s.get_card_by_scryfall_id("b0faa7f2-b547-42c4-a810-839da50dadfe")
+            print(black_lotus.total_words())
+        ```
     """
 
     def __init__(self, card_class: type[CardT] = FullCard):
@@ -357,7 +361,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
     @_safe_cache
     @_check_for_safe_context
-    async def get_card_by(self, property_name: str, value) -> CardT:
+    async def get_card_by(self, property_name: str, value: Any) -> CardT:
         """
         Search the database for the first card that matches the given criteria.
 
@@ -396,7 +400,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
         Returns:
             A list of cards matching the search criteria, or empty list if none
-            were found.
+                were found.
 
         Raises:
             RuntimeError: If used outside an `async with` context.
@@ -602,12 +606,12 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     @_check_for_safe_context
     async def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
         """
-        Loads the desired file from the given directory into a local Mongo
-        database. Attempts to download it from Scryfall if it isn't found.
+        Loads the desired file from the given directory into a local database.
+        Attempts to download it from Scryfall if it isn't found.
 
         Args:
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
-            to insert into the database.
+                to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
 
         Raises:

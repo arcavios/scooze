@@ -1,4 +1,7 @@
 import os
+from urllib.error import (  # TODO(#153): This allows for autolinking to the HTTPError documentation, but it's bloat, right?
+    HTTPError,
+)
 
 import requests
 from scooze.catalogs import ScryfallBulkFile
@@ -17,10 +20,10 @@ def download_bulk_data_file(
 
     Args:
         uri: Location of bulk data file (generally found from bulk info
-          endpoint).
+            endpoint).
         bulk_file_type: Type of bulk file, used to set filename.
         bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
-          not specified.
+            not specified.
 
     Raises:
         HTTPError: If request for bulk file not successful.
@@ -46,7 +49,7 @@ def download_bulk_data_file_by_type(
     Args:
         bulk_file_type: Type of bulk file, used to set filename.
         bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
-          not specified.
+            not specified.
 
     Raises:
         HTTPError: If request for bulk file not successful.
@@ -71,7 +74,7 @@ def download_all_bulk_data_files(
 
     Args:
         bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
-          not specified.
+            not specified.
 
     Raises:
         HTTPError: If request for bulk file not successful.

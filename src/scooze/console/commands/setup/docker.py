@@ -31,7 +31,7 @@ class SetupDockerCommand(Command):
             self.line("Done. MongoDB running on localhost:27017.")
             return
         if scooze_container.status == "running":
-            self.line("Scooze mongodb container already running! Exiting.")
+            self.line("scooze mongodb container already running! Exiting.")
         else:
-            self.line("Scooze mongodb container exists, but not running; starting...")
+            self.line("scooze mongodb container exists, but not running; starting...")
             scooze_container.start()

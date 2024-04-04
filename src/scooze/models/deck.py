@@ -24,7 +24,7 @@ class DeckModel(ScoozeBaseModel):
     model_config["json_schema_extra"] = {
         "examples": [
             {
-                "archetype": "Scooze Deck Example",
+                "archetype": "scooze Deck Example",
                 "format": "Limited",
                 "main": {
                     "6502bf99532dd43b31e6055a": 4,  # TODO(#6): replace with Python scooze id
@@ -111,10 +111,21 @@ class DeckModel(ScoozeBaseModel):
 
 
 class DeckModelIn(DeckModel):
+    """
+    A Deck model to be passed to the database.
+    """
+
     pass
 
 
 class DeckModelOut(DeckModel):
+    """
+    A Deck model to be retrieved from the database.
+
+    Attributes:
+        id: A UUID for this deck in the database.
+    """
+
     id: ObjectIdT = Field(
         default=None,
         alias="_id",

@@ -1,34 +1,8 @@
-from enum import Enum, EnumMeta, StrEnum, auto
+from enum import StrEnum, auto
 from functools import cache
 from typing import FrozenSet
 
-# region Enum Extensions
-
-
-class CaseInsensitiveEnumMeta(EnumMeta):
-    """
-    An extension of the classic Python EnumMeta to support case-insensitive
-    fields.
-    """
-
-    def __getitem__(self, item):
-        if isinstance(item, str):
-            item = item.upper()
-        return super().__getitem__(item)
-
-
-class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
-    """
-    An extension of the classic Python Enum to support additional
-    functionality.
-    """
-
-    @classmethod
-    def list(cls):
-        return list(map(lambda c: c.value, cls))
-
-
-# endregion
+from scooze.enum import ExtendedEnum
 
 # region Card Enums
 
@@ -63,8 +37,8 @@ class Color(ExtendedEnum, StrEnum):
 class Component(ExtendedEnum, StrEnum):
     """
     A type of related object, used in Scryfall to link a card
-    to other cards or tokens referenced by it.
-    See https://scryfall.com/docs/api/cards for documentation.
+    to other cards or tokens referenced by it; see
+    [here](https://scryfall.com/docs/api/cards)
     """
 
     MELD_PART = auto()
@@ -96,7 +70,6 @@ class Format(ExtendedEnum, StrEnum):
     FUTURE = auto()
     GLADIATOR = auto()
     HISTORIC = auto()
-    HISTORICBRAWL = auto()
     LEGACY = auto()
     MODERN = auto()
     OATHBREAKER = auto()
@@ -177,8 +150,8 @@ class Game(ExtendedEnum, StrEnum):
 class ImageStatus(ExtendedEnum, StrEnum):
     """
     An indicator for whether a card's image exists on Scryfall,
-    and how high quality the sourced image is.
-    See https://scryfall.com/docs/api/images for documentation.
+    and how high quality the sourced image is; see
+    [here](https://scryfall.com/docs/api/images)
     """
 
     MISSING = auto()
@@ -189,8 +162,8 @@ class ImageStatus(ExtendedEnum, StrEnum):
 
 class Language(ExtendedEnum, StrEnum):
     """
-    A language that Magic cards have been printed in, using Scryfall's language codes.
-    See https://scryfall.com/docs/api/languages for documentation.
+    A language that Magic cards have been printed in, using Scryfall's language
+    codes; see [here](https://scryfall.com/docs/api/languages)
     """
 
     ENGLISH = "en"
@@ -224,6 +197,7 @@ class Layout(ExtendedEnum, StrEnum):
     ART_SERIES = auto()
     AUGMENT = auto()
     BATTLE = auto()
+    CASE = auto()
     CLASS = auto()
     DOUBLE_FACED_TOKEN = auto()
     EMBLEM = auto()
@@ -301,8 +275,8 @@ class SecurityStamp(ExtendedEnum, StrEnum):
 
 class SetType(ExtendedEnum, StrEnum):
     """
-    A Scryfall-provided categorization for a set.
-    See https://scryfall.com/docs/api/sets for documentation.
+    A Scryfall-provided categorization for a set; see
+    [here](https://scryfall.com/docs/api/sets)
     """
 
     ALCHEMY = auto()
@@ -588,34 +562,106 @@ class CostSymbol(ExtendedEnum, StrEnum):
 
     @property
     def is_generic(self) -> bool:
+        """
+        Determine if this mana symbol is generic.
+
+        Example:
+            ``` python
+            CostSymbol.GENERIC_1.is_generic()
+            ```
+        """
+
         return self in CostSymbol._generic_symbols()
 
     @property
     def is_half(self) -> bool:
+        """
+        Determine if this mana symbol is half.
+
+        Example:
+            ``` python
+            CostSymbol.GENERIC_HALF.is_half()
+            ```
+        """
+
         return self in CostSymbol._half_symbols()
 
     @property
     def is_hybrid(self) -> bool:
+        """
+        Determine if this mana symbol is hybrid.
+
+        Example:
+            ``` python
+            CostSymbol.HYBRID_RG.is_hybrid()
+            ```
+        """
+
         return self in CostSymbol._hybrid_symbols()
 
     @property
     def is_phyrexian(self) -> bool:
+        """
+        Determine if this mana symbol is Phyrexian.
+
+        Example:
+            ``` python
+            CostSymbol.PHYREXIAN_BLUE.is_phyrexian()
+            ```
+        """
+
         return self in CostSymbol._phyrexian_symbols()
 
     @property
     def is_twobrid(self) -> bool:
+        """
+        Determine if this mana symbol is a twobrid.
+
+        Example:
+            ``` python
+            CostSymbol.TWOBRID_WHITE.is_twobrid()
+            ```
+        """
+
         return self in CostSymbol._twobrid_symbols()
 
     @property
     def is_variable(self) -> bool:
+        """
+        Determine if this mana symbol is variable.
+
+        Example:
+            ``` python
+            CostSymbol.GENERIC_X.is_variable()
+            ```
+        """
+
         return self in CostSymbol._variable_symbols()
 
     @property
     def is_un(self) -> bool:
+        """
+        Determine if this mana symbol is from an "Un"-set.
+
+        Example:
+            ``` python
+            CostSymbol.GENERIC_100.is_un()
+            ```
+        """
+
         return self in CostSymbol._un_symbols()
 
     @property
     def is_nonmana(self) -> bool:
+        """
+        Determine if this mana symbol is non-mana.
+
+        Example:
+            ``` python
+            CostSymbol.TAP.is_nonmana()
+            ```
+        """
+
         return self in CostSymbol._nonmana_symbols()
 
     # endregion
@@ -623,10 +669,14 @@ class CostSymbol(ExtendedEnum, StrEnum):
     @property
     def mana_value_contribution(self) -> float:
         """
-        The contribution to mana value for this mana symbol.
+        The numerical mana value for this symbol; will be integer valued except
+        for 1/2 mana symbols from "Un"-sets.
 
-        Returns:
-            Numerical mana value for this symbol; will be integer valued except for 1/2 mana symbols from unsets.
+        Example:
+            ``` python
+            CostSymbol.GREEN.mana_value_contribution()
+            >>> 1
+            ```
         """
 
         if self.is_nonmana or self.is_variable:
@@ -638,48 +688,6 @@ class CostSymbol(ExtendedEnum, StrEnum):
         if self.is_generic:
             return float(self)
         return 1
-
-
-# endregion
-
-
-# region Deck Enums
-
-
-class InThe(ExtendedEnum, StrEnum):
-    """
-    The location of a Card in a Deck.
-    """
-
-    MAIN = auto()
-    SIDE = auto()
-    CMDR = auto()
-    ATTRACTIONS = auto()
-    STICKERS = auto()
-
-
-class DecklistFormatter(ExtendedEnum, StrEnum):
-    """
-    A method of formatting a decklist for external systems.
-    """
-
-    ARENA = auto()
-    MTGO = auto()
-
-
-# endregion
-
-
-# region Database Enums
-
-
-class DbCollection(ExtendedEnum, StrEnum):
-    """
-    Collections in the Scooze database.
-    """
-
-    CARDS = "cards"
-    DECKS = "decks"
 
 
 # endregion

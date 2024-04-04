@@ -20,6 +20,9 @@ from scooze.utils import DATE_FORMAT, to_lower_camel
 class ScoozeDocument(Document):
     """
     A simple base Beanie Document class to support models in scooze.
+
+    Attributes:
+        id: A UUID for this Document in the database.
     """
 
     # Need to explicitly alias here to work around receiving scryfall_id as id when getting data directly from Scryfall
