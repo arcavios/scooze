@@ -9,6 +9,8 @@ from scooze.deckpart import DeckPart
 from scooze.models.card import CardModel, CardModelData
 from scooze.models.deck import DeckModel, DeckModelData
 
+from tests.routers.utils import dict_from_deckpart
+
 # TODO(#273): Test Attraction and Sticker decks for deck router?
 
 
@@ -27,28 +29,13 @@ class TestDeckRouterWithPopulatedDatabase:
             card = CardModel.model_validate(card_data.model_dump())
             await card.create()
 
-        main_4c_dict = {}
-        side_4c_dict = {}
-
-        for c, q in main_modern_4c.cards.items():
-            card = await CardModel.find_one({"name": c.name})
-            if card is None:
-                continue
-            main_4c_dict[card.id] = q
-
-        for c, q in side_modern_4c.cards.items():
-            card = await CardModel.find_one({"name": c.name})
-            if card is None:
-                continue
-            side_4c_dict[card.id] = q
-
         deck_model_data = DeckModelData.model_validate(
             {
                 "archetype": archetype_modern_4c,
                 "format": "modern",
                 "date_played": today,
-                "main": main_4c_dict,
-                "side": side_4c_dict,
+                "main": await dict_from_deckpart(main_modern_4c),
+                "side": await dict_from_deckpart(side_modern_4c),
             }
         )
 
