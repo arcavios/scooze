@@ -52,7 +52,7 @@ class TestDeckRouterWithPopulatedDatabase:
             }
         )
 
-        deck = DeckModel.model_validate(deck_model_data.model_dump(mode="json"))
+        deck = DeckModel.model_validate(deck_model_data.model_dump())
         await deck.create()
 
         yield

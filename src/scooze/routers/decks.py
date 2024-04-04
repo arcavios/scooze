@@ -55,7 +55,7 @@ async def add_decks(decks: list[DeckModelData]) -> JSONResponse:
     """
 
     try:
-        decks_to_insert = [DeckModel.model_validate(deck.model_dump(mode="json", by_alias=True)) for deck in decks]
+        decks_to_insert = [DeckModel.model_validate(deck.model_dump()) for deck in decks]
         insert_result = await DeckModel.insert_many(decks_to_insert)
         return JSONResponse(f"Created {len(insert_result.inserted_ids)} deck(s).")
     except Exception as e:
