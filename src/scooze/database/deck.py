@@ -2,7 +2,7 @@ from typing import Any
 
 import scooze.database.core as db_core
 from bson import ObjectId
-from scooze.database.core import DbCollection
+from scooze.enum import DbCollection
 from scooze.models.deck import DeckModelIn, DeckModelOut
 
 # region Deck

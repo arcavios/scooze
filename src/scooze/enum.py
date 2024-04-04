@@ -1,4 +1,4 @@
-from enum import Enum, EnumMeta
+from enum import Enum, EnumMeta, StrEnum
 
 # region Enum Extensions
 
@@ -27,6 +27,21 @@ class ExtendedEnum(Enum, metaclass=CaseInsensitiveEnumMeta):
         Get a list of this Enum's field names.
         """
         return list(map(lambda c: c.value, cls))
+
+
+# endregion
+
+
+# region Database Enums
+
+
+class DbCollection(ExtendedEnum, StrEnum):
+    """
+    Collections in the scooze database.
+    """
+
+    CARDS = "cards"
+    DECKS = "decks"
 
 
 # endregion
