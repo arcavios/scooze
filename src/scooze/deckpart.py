@@ -160,7 +160,7 @@ class DeckPart(ComparableObject, Generic[CardT]):
         Returns:
             A mapping of Colors to how many times they appear as mana symbols in costs of cards in this DeckPart.
         """
-        
+
         counts = Counter()
         for card, num in self.cards.items():
             for symbol, count in card.mana_symbols().items():
