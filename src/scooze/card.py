@@ -19,6 +19,7 @@ from scooze.cardparts import (
 from scooze.catalogs import (
     BorderColor,
     Color,
+    CostSymbol,
     Finish,
     Format,
     Frame,
@@ -31,7 +32,6 @@ from scooze.catalogs import (
     Rarity,
     SecurityStamp,
     SetType,
-    CostSymbol,
 )
 from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject, parse_symbols, scooze_logger
