@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from importlib import import_module
 import json
-from logging import getLogger
 import logging.config
 import pathlib
+import sys
+from importlib import import_module
+from logging import getLogger
 from typing import TYPE_CHECKING
 
 import pkg_resources
@@ -16,10 +17,19 @@ if TYPE_CHECKING:
 
     from cleo.commands.command import Command
 
+logger = getLogger("scooze_cli")
+
 config_file = pathlib.Path("src/scooze/configs/logging_config.json")
 with open(config_file) as f_in:
     logging_config = json.load(f_in)
 logging.config.dictConfig(config=logging_config)
+
+
+def my_handler(type, value, tb):
+    logger.exception("Uncaught exception: {0}".format(str(value)))
+
+
+sys.excepthook = my_handler
 
 
 # Accepted scooze CLI commands

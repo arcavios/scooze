@@ -7,17 +7,27 @@
         }
     },
     "handlers": {
-        "stdout": {
+        "stderr": {
             "class": "logging.StreamHandler",
+            "level": "WARNING",
             "formatter": "simple",
-            "stream": "ext://sys.stdout"
+            "stream": "ext://sys.stderr"
+        },
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "level": "DEBUG",
+            "formatter": "simple",
+            "filename": "logs/cli.log",
+            "maxBytes": 5000000,
+            "backupCount": 5
         }
     },
     "loggers": {
         "root": {
             "level": "DEBUG",
             "handlers": [
-                "stdout"
+                "stderr",
+                "file"
             ]
         }
     }
