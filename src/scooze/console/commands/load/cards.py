@@ -1,8 +1,17 @@
+from logging import getLogger
 from cleo.commands.command import Command
 from cleo.helpers import option
 from scooze.api import ScoozeApi
 from scooze.catalogs import ScryfallBulkFile
 from scooze.utils import DEFAULT_BULK_FILE_DIR
+
+logger = getLogger("scooze_cli")
+
+logger.debug("cli debug message")
+logger.info("cli debug message")
+logger.warning("cli warning message")
+logger.error("cli error message")
+logger.critical("cli critical message")
 
 
 class LoadCardsCommand(Command):
