@@ -27,10 +27,10 @@ logging.config.dictConfig(config=logging_config)
 
 def my_handler(type, value, tb):
     logger.exception("Uncaught exception: {0}".format(str(value)))
+    sys.__excepthook__(type, value, tb)  # calls default excepthook
 
 
 sys.excepthook = my_handler
-
 
 # Accepted scooze CLI commands
 COMMANDS = [
