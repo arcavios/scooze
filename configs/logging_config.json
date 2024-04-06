@@ -31,8 +31,8 @@
             "level": "DEBUG",
             "formatter": "json",
             "filename": "logs/scooze.log",
-            "maxBytes": 5000000,
-            "backupCount": 5
+            "maxBytes": 20000000,
+            "backupCount": 10
         }
     },
     "loggers": {
