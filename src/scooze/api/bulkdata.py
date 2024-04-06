@@ -74,6 +74,6 @@ def _try_validate_card(card_json: dict) -> CardModel | None:
 
     except ValidationError as e:
         # TODO: use extra to pass along the card object instead of this whole message
-        cli_logger.exception(f"Card with name {card_json['name']} not added due to validation error: \n{e}")
+        cli_logger.exception(f"{card_json['name']} not added due to validation error.", exc_info=e)
 
         return
