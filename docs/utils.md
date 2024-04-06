@@ -2,7 +2,6 @@
     options:
         filters:
             - "!to_lower_camel"
-            - "!scooze_logger"
             - "!JsonNormalizer"
             - "!JsonLoggingFormatter"
 

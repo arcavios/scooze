@@ -1,12 +1,9 @@
-from logging import getLogger
-
 import ijson
 from pydantic_core import ValidationError
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
+from scooze.console import logger as cli_logger
 from scooze.models.card import CardModel, CardModelData
-
-cli_logger = getLogger("scooze.cli")
 
 
 async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
@@ -76,6 +73,7 @@ def _try_validate_card(card_json: dict) -> CardModel | None:
         return CardModel.model_validate(card.model_dump())
 
     except ValidationError as e:
+        # TODO: use extra to pass along the card object instead of this whole message
         cli_logger.exception(f"Card with name {card_json['name']} not added due to validation error: \n{e}")
 
         return
