@@ -32,9 +32,8 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.models.card import CardModel
-from scooze.utils import FloatableT, HashableObject, scooze_logger
-
-logger = scooze_logger()
+from scooze.utils import FloatableT, HashableObject
+from scooze import logger
 
 ## Generic Types
 CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type

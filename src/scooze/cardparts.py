@@ -3,9 +3,8 @@ from datetime import date
 from typing import Iterable, Mapping, Self
 
 from scooze.catalogs import Color, Component, Layout
-from scooze.utils import FloatableT, HashableObject, JsonNormalizer, scooze_logger
-
-logger = scooze_logger()
+from scooze.utils import FloatableT, HashableObject, JsonNormalizer
+from scooze import logger
 
 
 class ImageUris(HashableObject):

@@ -26,7 +26,7 @@ FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize t
 ## String formatting
 DATE_FORMAT = "%Y-%m-%d"
 
-# region Loggin Utils
+# region Logging Utils
 
 
 class JsonLoggingFormatter(logging.Formatter):
@@ -61,17 +61,6 @@ class JsonLoggingFormatter(logging.Formatter):
         message.update(always_fields)
 
         return message
-
-
-def scooze_logger() -> logging.Logger:
-    """
-    Helper function to get the scooze logger.
-
-    Use the default logging functionality here without any filters, formatters,
-    or handlers, so users can make informed decisions about their own logging.
-    """
-
-    return logging.getLogger("scooze")
 
 
 # endregion
