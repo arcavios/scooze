@@ -8,6 +8,7 @@ __pycache__/
 
 # Logs
 *.log
+logs/
 
 # Test coverage
 *.coverage

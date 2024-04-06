@@ -6,7 +6,7 @@ from scooze.api import ScoozeApi
 from scooze.catalogs import ScryfallBulkFile
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
-# cli_logger = getLogger("scooze_cli")
+# cli_logger = getLogger("scooze.cli")
 
 # cli_logger.debug("cli debug message")
 # cli_logger.info("cli debug message")

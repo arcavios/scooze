@@ -6,7 +6,7 @@ from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
 from scooze.models.card import CardModel, CardModelData
 
-cli_logger = getLogger("scooze_cli")
+cli_logger = getLogger("scooze.cli")
 
 
 async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:

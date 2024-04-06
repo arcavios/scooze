@@ -30,13 +30,13 @@
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
             "formatter": "json",
-            "filename": "logs/cli.log",
+            "filename": "logs/scooze_cli.log",
             "maxBytes": 5000000,
             "backupCount": 5
         }
     },
     "loggers": {
-        "root": {
+        "scooze.cli": {
             "level": "DEBUG",
             "handlers": [
                 "stderr",

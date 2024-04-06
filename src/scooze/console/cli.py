@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
     from cleo.commands.command import Command
 
-cli_logger = getLogger("scooze_cli")
+cli_logger = getLogger("scooze.cli")
 
 config_file = pathlib.Path("src/scooze/configs/logging_config.json")
 with open(config_file) as f_in:
