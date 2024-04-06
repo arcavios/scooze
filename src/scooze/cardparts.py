@@ -2,9 +2,9 @@ import json
 from datetime import date
 from typing import Iterable, Mapping, Self
 
+from scooze import logger
 from scooze.catalogs import Color, Component, Layout
 from scooze.utils import FloatableT, HashableObject, JsonNormalizer
-from scooze import logger
 
 
 class ImageUris(HashableObject):

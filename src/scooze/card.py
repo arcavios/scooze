@@ -4,6 +4,7 @@ from datetime import date
 from typing import Iterable, Mapping, Self, TypeVar
 
 from beanie import PydanticObjectId
+from scooze import logger
 from scooze.cardparts import (
     CardFace,
     CardPartsNormalizer,
@@ -33,7 +34,6 @@ from scooze.catalogs import (
 )
 from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
-from scooze import logger
 
 ## Generic Types
 CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type

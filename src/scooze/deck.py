@@ -4,12 +4,12 @@ from sys import maxsize
 from typing import Generic, Self
 
 import scooze.utils as utils
+from scooze import logger
 from scooze.card import CardT
 from scooze.catalogs import Format, Legality
 from scooze.deckpart import DeckDiff, DeckPart
 from scooze.enum import ExtendedEnum
 from scooze.utils import ComparableObject
-from scooze import logger
 
 # region Deck Enums
 
