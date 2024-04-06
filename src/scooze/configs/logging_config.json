@@ -4,6 +4,19 @@
     "formatters": {
         "simple": {
             "format": "%(levelname)s: %(message)s"
+        },
+        "json": {
+            "()": "scooze.utils.JsonLoggingFormatter",
+            "fmt_keys": {
+                "level": "levelname",
+                "message": "message",
+                "timestamp": "timestamp",
+                "logger": "name",
+                "module": "module",
+                "function": "funcName",
+                "line": "lineno",
+                "thread_name": "threadName"
+            }
         }
     },
     "handlers": {
@@ -16,7 +29,7 @@
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
-            "formatter": "simple",
+            "formatter": "json",
             "filename": "logs/cli.log",
             "maxBytes": 5000000,
             "backupCount": 5
