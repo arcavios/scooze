@@ -73,7 +73,6 @@ def _try_validate_card(card_json: dict) -> CardModel | None:
         return CardModel.model_validate(card.model_dump())
 
     except ValidationError as e:
-        # TODO: use extra to pass along the card object instead of this whole message
         cli_logger.exception(f"{card_json['name']} not loaded due to validation error.", exc_info=e)
 
         return

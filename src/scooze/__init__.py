@@ -15,7 +15,7 @@ logging.config.dictConfig(config=logging_config)
 if DEBUG := False:
     logger.setLevel(logging.DEBUG)
     stdout_handler = logging.StreamHandler(stream=sys.stdout)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     stdout_handler.setFormatter(formatter)
     logger.addHandler(stdout_handler)
 
