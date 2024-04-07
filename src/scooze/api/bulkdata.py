@@ -73,6 +73,8 @@ def _try_validate_card(card_json: dict) -> CardModel | None:
         return CardModel.model_validate(card.model_dump())
 
     except ValidationError as e:
-        cli_logger.exception(f"{card_json['name']} not loaded due to validation error.", exc_info=e, extra={"card": card_json})
+        cli_logger.exception(
+            f"{card_json['name']} not loaded due to validation error.", exc_info=e, extra={"card": card_json}
+        )
 
         return

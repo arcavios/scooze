@@ -1,6 +1,6 @@
 import json
-import logging.config
 import logging
+import logging.config
 import pathlib
 import sys
 

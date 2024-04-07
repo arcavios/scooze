@@ -54,6 +54,7 @@ LOG_RECORD_BUILTIN_ATTRS = {
     "taskName",
 }
 
+
 class JsonLoggingFormatter(logging.Formatter):
     def __init__(self, *, fmt_keys: dict[str, str] | None = None):
         super().__init__()
