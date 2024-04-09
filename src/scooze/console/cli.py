@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
     from cleo.commands.command import Command
 
-
 # Accepted scooze CLI commands
 COMMANDS = [
     "delete",
