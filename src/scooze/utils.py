@@ -65,7 +65,7 @@ class JsonLoggingFormatter(logging.Formatter):
         super().__init__()
         self.fmt_keys = fmt_keys if fmt_keys is not None else {}
 
-    # TODO: In Python 3.12, typing has an override wrapper
+    # TODO(3.12): Python 3.12 typing has an override wrapper
     # @override
     def format(self, record: logging.LogRecord) -> str:
         message = self._prepare_log_dict(record)
