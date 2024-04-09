@@ -557,7 +557,8 @@ class FullCard(OracleCard):
 
         self.all_parts = CardNormalizer.to_all_parts(all_parts)
         self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=FullCardFace)
-        # Reversible cards currently have the same oracle card on both sides; will need to change this if this changes.
+        # NOTE: Reversible cards currently have the same oracle card on both sides;
+        # will need to change this if this changes.
         if layout == Layout.REVERSIBLE_CARD:
             self.cmc = CardNormalizer.to_float(self.card_faces[0].cmc)
         else:

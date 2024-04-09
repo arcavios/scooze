@@ -28,6 +28,7 @@ DATE_FORMAT = "%Y-%m-%d"
 
 # region Logging Utils
 
+# NOTE: LogRecord objects. Subject to change; see https://docs.python.org/3/library/logging.html#logrecord-objects
 LOG_RECORD_BUILTIN_ATTRS = {
     "args",
     "asctime",
@@ -56,10 +57,16 @@ LOG_RECORD_BUILTIN_ATTRS = {
 
 
 class JsonLoggingFormatter(logging.Formatter):
+    """
+    Simple logging Formatter to generate json lines output.
+    """
+
     def __init__(self, *, fmt_keys: dict[str, str] | None = None):
         super().__init__()
         self.fmt_keys = fmt_keys if fmt_keys is not None else {}
 
+    # TODO: In Python 3.12, typing has an override wrapper
+    # @override
     def format(self, record: logging.LogRecord) -> str:
         message = self._prepare_log_dict(record)
         return json.dumps(message, default=str)
@@ -86,6 +93,7 @@ class JsonLoggingFormatter(logging.Formatter):
         # fmt: on
         message.update(always_fields)
 
+        # Handle extras
         for key, val in record.__dict__.items():
             if key not in LOG_RECORD_BUILTIN_ATTRS:
                 message[key] = val
