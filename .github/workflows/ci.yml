@@ -16,7 +16,7 @@ jobs:
                       os: ['ubuntu-latest'] # 'macos-latest'
                       python-version: ['3.11', '3.12']
                       # poetry-version: [ "1.7", "1.8" ]
-    setup-python:
+    linting:
         needs: setup-matrix
         strategy:
             fail-fast: true
@@ -38,10 +38,13 @@ jobs:
                   path: ~/.cache/pip
                   key: ${{ runner.os }}-pip
                   restore-keys: ${{ runner.os }}-pip
-    linting:
-        needs: setup-python
-        runs-on: ubuntu-latest
-        steps:
+            #----------------------------------------------
+            #       check-out repo and set-up python
+            #----------------------------------------------
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ matrix.python-version }}
             #----------------------------------------------
             #          install and run linters
             #----------------------------------------------
@@ -49,7 +52,7 @@ jobs:
             - run: |
                   black --version
                   black . --check
-                  isort .
+                  isort . --check
     test:
         needs:
             - setup-matrix
