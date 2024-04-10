@@ -17,6 +17,10 @@ jobs:
                       python-version: ['3.11', '3.12']
                       # poetry-version: [ "1.7", "1.8" ]
     setup-python:
+        needs: setup-matrix
+        strategy:
+            fail-fast: true
+            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
         runs-on: ubuntu-latest
         steps:
             #----------------------------------------------
@@ -24,6 +28,8 @@ jobs:
             #----------------------------------------------
             - uses: actions/checkout@v4
             - uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ matrix.python-version }}
             #----------------------------------------------
             #        load pip cache if cache exists
             #----------------------------------------------
