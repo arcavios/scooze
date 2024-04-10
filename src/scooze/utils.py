@@ -65,7 +65,7 @@ class JsonLoggingFormatter(logging.Formatter):
         super().__init__()
         self.fmt_keys = fmt_keys if fmt_keys is not None else {}
 
-    # TODO(3.12): Python 3.12 typing has an override wrapper
+    # TODO(py3.12): Python 3.12 typing has an override wrapper
     # @override
     def format(self, record: logging.LogRecord) -> str:
         message = self._prepare_log_dict(record)
@@ -84,6 +84,7 @@ class JsonLoggingFormatter(logging.Formatter):
             always_fields["stack_info"] = self.formatStack(record.stack_info)
 
         # fmt: off
+        # disable black formatter
         message = {
             key: msg_val
             if (msg_val := always_fields.pop(val, None)) is not None
