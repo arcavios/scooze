@@ -23,11 +23,11 @@ jobs:
             #       check-out repo and set-up python
             #----------------------------------------------
             - uses: actions/checkout@v4
-            - uses: actions/setup-python@v4
+            - uses: actions/setup-python@v5
             #----------------------------------------------
             #        load pip cache if cache exists
             #----------------------------------------------
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                   path: ~/.cache/pip
                   key: ${{ runner.os }}-pip
@@ -44,7 +44,7 @@ jobs:
                   black --version
                   black . --check
                   isort .
-    setup-scooze:
+    test:
         needs:
             - setup-matrix
             - linting
@@ -60,7 +60,7 @@ jobs:
               uses: actions/checkout@v4
             - name: Setup python ${{ matrix.python-version }}
               id: setup-python
-              uses: actions/setup-python@v4
+              uses: actions/setup-python@v5
               with:
                   python-version: ${{ matrix.python-version }}
             #----------------------------------------------
@@ -77,7 +77,7 @@ jobs:
             #----------------------------------------------
             - name: Load cached venv
               id: cached-poetry-dependencies
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: .venv
                   key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
@@ -92,16 +92,6 @@ jobs:
             #----------------------------------------------
             - name: Install library
               run: poetry install --no-interaction
-    test:
-        needs: setup-scooze
-        strategy:
-            fail-fast: true
-            matrix:
-                os: ["ubuntu-latest"] # "macos-latest"
-                python-version: ["3.11", "3.12"]
-                # poetry-version: [ "1.7", "1.8" ]
-        runs-on: ${{ matrix.os }}
-        steps:
             #----------------------------------------------
             #    add matrix specifics and run test suite
             #----------------------------------------------
