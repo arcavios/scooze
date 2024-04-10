@@ -1,6 +1,6 @@
 # scooze
 
-[![CI](https://img.shields.io/github/actions/workflow/status/arcavios/scooze/ci.yml?branch=dev&logo=github&label=CI)](https://github.com/arcavios/scooze/actions?query=event%3Apush+branch%3Adev+workflow%3Apytest)
+[![CI](https://img.shields.io/github/actions/workflow/status/arcavios/scooze/ci.yml?branch=dev&logo=github&label=CI)](https://github.com/arcavios/scooze/actions?query=event%3Apush+branch%3Adev+workflow%3Aci)
 [![pypi](https://img.shields.io/pypi/v/scooze.svg)](https://pypi.python.org/pypi/scooze)
 [![versions](https://img.shields.io/pypi/pyversions/scooze.svg)](https://github.com/arcavios/scooze)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/arcavios/scooze/blob/dev/LICENSE)
