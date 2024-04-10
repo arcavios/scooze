@@ -2,7 +2,13 @@
 
 ### [DEVELOPMENT] - UNRELEASED
 
-#### N/A
+#### Added
+
+- Logging for the scooze CLI ([#277](https://github.com/arcavios/scooze/pull/277))
+
+#### Changed
+
+- Using Beanie for decks ([#272](https://github.com/arcavios/scooze/pull/272))
 
 ### [1.0.7] - 2024-03-02
 

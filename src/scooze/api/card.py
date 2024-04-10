@@ -1,12 +1,11 @@
 from typing import Any
 
 from beanie import PydanticObjectId
+from scooze import logger
 from scooze.card import CardT, FullCard
 from scooze.errors import BulkAddError
 from scooze.models.card import CardModel, CardModelData
-from scooze.utils import scooze_logger, to_lower_camel
-
-logger = scooze_logger()
+from scooze.utils import to_lower_camel
 
 
 def _normalize_for_ids(property_name: str, value, is_many: bool = False) -> tuple[str, Any | list[Any]]:
@@ -100,7 +99,7 @@ async def add_card(card: CardT) -> PydanticObjectId:
 
     try:
         card_data = CardModelData.model_validate(card.__dict__)
-        card_model = CardModel.model_validate(card_data.model_dump(mode="json", by_alias=True))
+        card_model = CardModel.model_validate(card_data.model_dump())
         await card_model.create()
         card.scooze_id = card_model.id
         return card_model.id
@@ -129,9 +128,7 @@ async def add_cards(cards: list[CardT]) -> list[PydanticObjectId]:
 
     try:
         card_models = [CardModelData.model_validate(card.__dict__) for card in cards]
-        cards_to_insert = [
-            CardModel.model_validate(card_model.model_dump(mode="json", by_alias=True)) for card_model in card_models
-        ]
+        cards_to_insert = [CardModel.model_validate(card_model.model_dump()) for card_model in card_models]
         insert_result = await CardModel.insert_many(cards_to_insert)
         card_ids = insert_result.inserted_ids
 

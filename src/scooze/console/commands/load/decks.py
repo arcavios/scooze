@@ -3,7 +3,6 @@ import json
 import os
 
 import ijson
-import scooze.database.deck as deck_db
 from cleo.commands.command import Command
 from cleo.helpers import option
 from scooze.models.deck import DeckModelIn
@@ -42,7 +41,7 @@ def load_all_decks(decks_dir: str):
     try:
         for file_path in files:
             with open(file_path, "r", encoding="utf8") as deck_file:
-                print(f"Inserting {file_path.split('/')[-1]} file into the database...")
+                # print(f"Inserting {file_path.split('/')[-1]} file into the database...")
                 decks = [
                     DeckModelIn.model_validate(deck_json)
                     for deck_json in ijson.items(
@@ -50,7 +49,8 @@ def load_all_decks(decks_dir: str):
                         "item",
                     )
                 ]
-                asyncio.run(deck_db.add_decks(decks))
+                # asyncio.run(deck_db.add_decks(decks))
+        print("This doesn't actually do anything yet.")
     except OSError as e:
         print(f"Encountered an error while trying to load {file_path.split('/')[-1]}")
         raise e
@@ -60,10 +60,11 @@ def load_all_decks(decks_dir: str):
 def load_test_decks():
     try:
         with open("./data/test/pioneer_decks.jsonl") as decks_file:
-            print("Inserting test decks into the database...")
+            # print("Inserting test decks into the database...")
             json_list = list(decks_file)
             decks = [DeckModelIn.model_validate(json.loads(deck_json)) for deck_json in json_list]
-            asyncio.run(deck_db.add_decks(decks))  # TODO(#7): this need async for now, replace with Python API
+            # asyncio.run(deck_db.add_decks(decks))  # TODO(#7): this need async for now, replace with Python API
+        print("This doesn't actually do anything yet.")
     except OSError as e:
         print("Encountered an error while trying to load test decks")
         raise e
