@@ -3,7 +3,20 @@ name: Continuous Integration
 on: [push]
 
 jobs:
-    linting:
+    setup-matrix:
+        runs-on: ubuntu-latest
+        outputs:
+            matrix: ${{ steps.setup-matrix.outputs.matrix }}
+        steps:
+            - id: setup-matrix
+              uses: druzsan/setup-matrix@v2
+              with:
+                  # Use | to preserve valid YAML syntax
+                  matrix: |
+                      os: ['ubuntu-latest'] # 'macos-latest'
+                      python-version: ['3.11', '3.12']
+                      # poetry-version: [ "1.7", "1.8" ]
+    setup-python:
         runs-on: ubuntu-latest
         steps:
             #----------------------------------------------
@@ -19,6 +32,10 @@ jobs:
                   path: ~/.cache/pip
                   key: ${{ runner.os }}-pip
                   restore-keys: ${{ runner.os }}-pip
+    linting:
+        needs: setup-python
+        runs-on: ubuntu-latest
+        steps:
             #----------------------------------------------
             #          install and run linters
             #----------------------------------------------
@@ -27,14 +44,13 @@ jobs:
                   black --version
                   black . --check
                   isort .
-    test:
-        needs: linting
+    setup-scooze:
+        needs:
+            - setup-matrix
+            - linting
         strategy:
             fail-fast: true
-            matrix:
-                os: ["ubuntu-latest"] # "macos-latest"
-                python-version: ["3.11", "3.12"]
-                # poetry-version: [ "1.5.1", "1.6.1" ]
+            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
         runs-on: ${{ matrix.os }}
         steps:
             #----------------------------------------------
@@ -76,6 +92,16 @@ jobs:
             #----------------------------------------------
             - name: Install library
               run: poetry install --no-interaction
+    test:
+        needs: setup-scooze
+        strategy:
+            fail-fast: true
+            matrix:
+                os: ["ubuntu-latest"] # "macos-latest"
+                python-version: ["3.11", "3.12"]
+                # poetry-version: [ "1.7", "1.8" ]
+        runs-on: ${{ matrix.os }}
+        steps:
             #----------------------------------------------
             #    add matrix specifics and run test suite
             #----------------------------------------------

@@ -17,7 +17,35 @@ on:
     #     - cron: "0 7 * * 1"
 
 jobs:
-    linting:
+    setup-matrix:
+        runs-on: ubuntu-latest
+        outputs:
+            matrix: ${{ steps.setup-matrix.outputs.matrix }}
+        steps:
+            - id: setup-matrix
+              uses: druzsan/setup-matrix@v2
+              with:
+                  # Use | to preserve valid YAML syntax
+                  matrix: |
+                      os: ['ubuntu-latest'] # 'macos-latest'
+                      python-version: ['3.11', '3.12']
+    setup-python:
+        runs-on: ubuntu-latest
+        steps:
+            #----------------------------------------------
+            #       check-out repo and set-up python
+            #----------------------------------------------
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v4
+            #----------------------------------------------
+            #        load pip cache if cache exists
+            #----------------------------------------------
+            - uses: actions/cache@v3
+              with:
+                  path: ~/.cache/pip
+                  key: ${{ runner.os }}-pip
+                  restore-keys: ${{ runner.os }}-pip
+    do-a-thing:
         runs-on: ubuntu-latest
         steps:
             - run: |
