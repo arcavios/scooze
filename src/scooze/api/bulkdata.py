@@ -1,10 +1,11 @@
+from pathlib import Path
+
 import ijson
 from pydantic_core import ValidationError
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
 from scooze.console import logger as cli_logger
 from scooze.models.card import CardModel, CardModelData
-from pathlib import Path
 
 
 async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
