@@ -21,7 +21,7 @@ jobs:
         strategy:
             fail-fast: true
             matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os }}
         steps:
             #----------------------------------------------
             #       check-out repo and set-up python
