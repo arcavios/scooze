@@ -4,6 +4,7 @@ from datetime import date
 from typing import Iterable, Mapping, Self, TypeVar
 
 from beanie import PydanticObjectId
+from scooze import logger
 from scooze.cardparts import (
     CardFace,
     CardPartsNormalizer,
@@ -32,9 +33,7 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.models.card import CardModel
-from scooze.utils import FloatableT, HashableObject, scooze_logger
-
-logger = scooze_logger()
+from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
 CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type
@@ -558,7 +557,8 @@ class FullCard(OracleCard):
 
         self.all_parts = CardNormalizer.to_all_parts(all_parts)
         self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=FullCardFace)
-        # Reversible cards currently have the same oracle card on both sides; will need to change this if this changes.
+        # NOTE: Reversible cards currently have the same oracle card on both sides;
+        # will need to change this if this changes.
         if layout == Layout.REVERSIBLE_CARD:
             self.cmc = CardNormalizer.to_float(self.card_faces[0].cmc)
         else:

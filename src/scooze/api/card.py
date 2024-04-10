@@ -1,12 +1,11 @@
 from typing import Any
 
 from beanie import PydanticObjectId
+from scooze import logger
 from scooze.card import CardT, FullCard
 from scooze.errors import BulkAddError
 from scooze.models.card import CardModel, CardModelData
-from scooze.utils import scooze_logger, to_lower_camel
-
-logger = scooze_logger()
+from scooze.utils import to_lower_camel
 
 
 def _normalize_for_ids(property_name: str, value, is_many: bool = False) -> tuple[str, Any | list[Any]]:
