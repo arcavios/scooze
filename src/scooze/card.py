@@ -1,5 +1,5 @@
-import json
 import re
+import json
 from datetime import date
 from typing import Iterable, Mapping, Self, TypeVar
 
@@ -36,7 +36,8 @@ from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
 
 ## Generic Types
-CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type
+CardFaceT = TypeVar("CardFaceT",
+                     bound=CardFace)  # generic CardFace type
 
 
 class Card(HashableObject):
