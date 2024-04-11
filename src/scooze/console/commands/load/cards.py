@@ -69,4 +69,5 @@ class LoadCardsCommand(Command):
                     s.load_card_file(bulk_file, self.option("bulk-data-dir"))
 
             if load_test:
+                print(f"Reading from Scryfall data in: {Path('data/test/default_cards.json')}")
                 s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
