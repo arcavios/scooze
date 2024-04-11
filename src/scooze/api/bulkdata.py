@@ -6,7 +6,7 @@ from scooze.console import logger as cli_logger
 from scooze.models.card import CardModel, CardModelData
 
 
-async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str, verbose: bool = True) -> int:
+async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str, show_progress: bool = True) -> int:
     """
     Loads the desired file from the given directory into a local Mongo
     database.
@@ -15,7 +15,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str, verbos
         file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
         to insert into the database.
         bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
-        verbose: Flag to log progress while loading a file.
+        show_progress: Flag to log progress while loading a file.
 
     Returns:
         The total number of cards loaded into the database.
@@ -44,7 +44,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str, verbos
                     results_count += await load_batch(current_batch)
                     current_batch = []
                     current_batch_count = 0
-                    if verbose:
+                    if show_progress:
                         print(f"Finished processing {results_count} cards...", end="\r")
         results_count += await load_batch(current_batch)
 

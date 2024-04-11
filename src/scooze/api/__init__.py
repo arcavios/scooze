@@ -303,7 +303,7 @@ class ScoozeApi(AbstractContextManager):
     # region Bulk data I/O
 
     @_check_for_safe_context
-    def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, verbose: bool = True):
+    def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, show_progress: bool = True) -> int:
         """
         Loads the desired file from the given directory into a local database.
 
@@ -311,7 +311,7 @@ class ScoozeApi(AbstractContextManager):
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
                 to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
-            verbose: Flag to log progress while loading a file.
+            show_progress: Flag to log progress while loading a file.
 
         Returns:
             The total number of cards loaded into the database.
@@ -321,11 +321,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return asyncio.get_event_loop().run_until_complete(
-            bulkdata_api.load_card_file(
-                file_type=file_type,
-                bulk_file_dir=bulk_file_dir,
-                verbose=verbose
-            )
+            bulkdata_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir, show_progress=show_progress)
         )
 
     # endregion
@@ -608,7 +604,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     # region Bulk data I/O
 
     @_check_for_safe_context
-    async def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, verbose: bool = True):
+    async def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, show_progress: bool = True) -> int:
         """
         Loads the desired file from the given directory into a local database.
 
@@ -616,7 +612,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
                 to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
-            verbose: Flag to log progress while loading a file.
+            show_progress: Flag to log progress while loading a file.
 
         Returns:
             The total number of cards loaded into the database.
@@ -626,9 +622,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         """
 
         return await bulkdata_api.load_card_file(
-            file_type=file_type,
-            bulk_file_dir=bulk_file_dir,
-            verbose=verbose
+            file_type=file_type, bulk_file_dir=bulk_file_dir, show_progress=show_progress
         )
 
     # endregion

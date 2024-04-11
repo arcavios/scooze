@@ -63,8 +63,8 @@ jobs:
           source .venv/bin/activate
           echo "scooze setup docker"
           scooze setup docker
-          echo "scooze load cards --all --force-download"
-          scooze load cards --all --force-download
+          echo "scooze load cards --all --force-download --concise"
+          scooze load cards --all --force-download --concise
       #----------------------------------------------
       #    check for validation errors
       #----------------------------------------------

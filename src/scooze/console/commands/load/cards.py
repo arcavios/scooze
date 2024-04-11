@@ -31,10 +31,10 @@ class LoadCardsCommand(Command):
             flag=True,
         ),
         option(
-            "verbose",
-            description="Log progress while loading files."
+            "concise",
+            description="Hide progress logs while loading files.",
             flag=True,
-        )
+        ),
     ]
 
     def handle(self):
@@ -55,8 +55,8 @@ class LoadCardsCommand(Command):
         if len(to_load) == 0 and not load_test:
             self.line("No files were selected to load.")
 
+        loaded_count = 0
         with ScoozeApi() as s:
-            loaded_count = 0
             for bulk_file in to_load:
                 if self.option("force-download") and not load_test:
                     print(f"Downloading {bulk_file} from Scryfall...")
@@ -64,7 +64,9 @@ class LoadCardsCommand(Command):
 
                 try:
                     print(f"Reading from Scryfall data in: {Path(self.option('bulk-data-dir'), bulk_file + '.json')}")
-                    s.load_card_file(bulk_file, self.option("bulk-data-dir"), self.option("verbose"))
+                    loaded_count += s.load_card_file(
+                        bulk_file, self.option("bulk-data-dir"), show_progress=not self.option("concise")
+                    )
                 except FileNotFoundError:
                     download_now = (
                         input(f"{bulk_file} file not found; would you like to download it now? [y/N] ") in "yY"
@@ -73,11 +75,14 @@ class LoadCardsCommand(Command):
                         print("Skipping...")
                         continue
                     download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
-                    loaded_count += s.load_card_file(bulk_file, self.option("bulk-data-dir"), self.option("verbose"))
-
+                    loaded_count += s.load_card_file(
+                        bulk_file, self.option("bulk-data-dir"), show_progress=not self.option("concise")
+                    )
 
             if load_test:
                 print(f"Reading from Scryfall data in: {Path('data/test/default_cards.json')}")
-                loaded_count += s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test", self.option("verbose"))
+                loaded_count += s.load_card_file(
+                    ScryfallBulkFile.DEFAULT, "./data/test", show_progress=not self.option("concise")
+                )
 
-            print(f"Loaded {loaded_count} cards to the database.")
+        print(f"Loaded {loaded_count} cards to the database.")
