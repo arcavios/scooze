@@ -1,6 +1,6 @@
 name: Continuous Integration
 
-on: [page_build] # TODO: put this back to push
+on: [push]
 
 jobs:
     setup-matrix:

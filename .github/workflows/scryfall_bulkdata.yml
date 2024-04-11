@@ -85,7 +85,7 @@ jobs:
                   source .venv/bin/activate
                   scooze teardown docker
                   scooze setup docker
-                  scooze load cards --test
+                  scooze load cards --all
             #----------------------------------------------
             #    check for validation errors
             #----------------------------------------------
@@ -94,4 +94,5 @@ jobs:
                   echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' logs/scooze.log.jsonl)" >> $GITHUB_ENV
             - name: Exit?
               if: env.ERR_COUNT > 0
-              run: exit(1)
+              run: |
+                  exit(1)
