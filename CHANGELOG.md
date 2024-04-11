@@ -5,6 +5,7 @@
 #### Added
 
 - Logging for the scooze CLI ([#277](https://github.com/arcavios/scooze/pull/277))
+- Regression tests for validating Scryfall bulkdata ([#278](https://github.com/arcavios/scooze/pull/278))
 
 #### Changed
 
