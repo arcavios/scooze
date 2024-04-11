@@ -73,7 +73,9 @@ jobs:
             - name: Load Scryfall bulkdata
               run: |
                   source .venv/bin/activate
+                  echo "scooze setup docker"
                   scooze setup docker
+                  scho "scooze load cards --all --force-download"
                   scooze load cards --all --force-download
             #----------------------------------------------
             #    check for validation errors
