@@ -303,7 +303,7 @@ class ScoozeApi(AbstractContextManager):
     # region Bulk data I/O
 
     @_check_for_safe_context
-    def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
+    def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, verbose: bool = True):
         """
         Loads the desired file from the given directory into a local database.
 
@@ -311,6 +311,10 @@ class ScoozeApi(AbstractContextManager):
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
                 to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
+            verbose: Flag to log progress while loading a file.
+
+        Returns:
+            The total number of cards loaded into the database.
 
         Raises:
             RuntimeError: If used outside a `with` context.
@@ -320,6 +324,7 @@ class ScoozeApi(AbstractContextManager):
             bulkdata_api.load_card_file(
                 file_type=file_type,
                 bulk_file_dir=bulk_file_dir,
+                verbose=verbose
             )
         )
 
@@ -603,7 +608,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     # region Bulk data I/O
 
     @_check_for_safe_context
-    async def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
+    async def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, verbose: bool = True):
         """
         Loads the desired file from the given directory into a local database.
 
@@ -611,6 +616,10 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
                 to insert into the database.
             bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
+            verbose: Flag to log progress while loading a file.
+
+        Returns:
+            The total number of cards loaded into the database.
 
         Raises:
             RuntimeError: If used outside an `async with` context.
@@ -619,6 +628,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await bulkdata_api.load_card_file(
             file_type=file_type,
             bulk_file_dir=bulk_file_dir,
+            verbose=verbose
         )
 
     # endregion

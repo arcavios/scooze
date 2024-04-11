@@ -30,6 +30,11 @@ class LoadCardsCommand(Command):
             description="Automatically answer 'Yes' to downloading the relevant file if needed.",
             flag=True,
         ),
+        option(
+            "verbose",
+            description="Log progress while loading files."
+            flag=True,
+        )
     ]
 
     def handle(self):
@@ -51,6 +56,7 @@ class LoadCardsCommand(Command):
             self.line("No files were selected to load.")
 
         with ScoozeApi() as s:
+            loaded_count = 0
             for bulk_file in to_load:
                 if self.option("force-download") and not load_test:
                     print(f"Downloading {bulk_file} from Scryfall...")
@@ -58,17 +64,20 @@ class LoadCardsCommand(Command):
 
                 try:
                     print(f"Reading from Scryfall data in: {Path(self.option('bulk-data-dir'), bulk_file + '.json')}")
-                    s.load_card_file(bulk_file, self.option("bulk-data-dir"))
+                    s.load_card_file(bulk_file, self.option("bulk-data-dir"), self.option("verbose"))
                 except FileNotFoundError:
                     download_now = (
                         input(f"{bulk_file} file not found; would you like to download it now? [y/N] ") in "yY"
                     )
                     if not download_now:
-                        print("No cards loaded into database.")
+                        print("Skipping...")
                         continue
                     download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
-                    s.load_card_file(bulk_file, self.option("bulk-data-dir"))
+                    loaded_count += s.load_card_file(bulk_file, self.option("bulk-data-dir"), self.option("verbose"))
+
 
             if load_test:
                 print(f"Reading from Scryfall data in: {Path('data/test/default_cards.json')}")
-                s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
+                loaded_count += s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test", self.option("verbose"))
+
+            print(f"Loaded {loaded_count} cards to the database.")
