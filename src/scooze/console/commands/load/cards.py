@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from cleo.commands.command import Command
 from cleo.helpers import option
 from scooze.api import ScoozeApi
+from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
 from scooze.utils import DEFAULT_BULK_FILE_DIR
 
@@ -49,6 +52,23 @@ class LoadCardsCommand(Command):
 
         with ScoozeApi() as s:
             for bulk_file in to_load:
-                s.load_card_file(bulk_file, self.option("bulk-data-dir"), self.option("force-download"))
+                if self.option("force-download") and not load_test:
+                    print(f"Downloading {bulk_file} from Scryfall...")
+                    download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
+
+                try:
+                    print(f"Reading from Scryfall data in: {Path(self.option('bulk-data-dir'), bulk_file + '.json')}")
+                    s.load_card_file(bulk_file, self.option("bulk-data-dir"))
+                except FileNotFoundError:
+                    download_now = (
+                        input(f"{bulk_file} file not found; would you like to download it now? [y/N] ") in "yY"
+                    )
+                    if not download_now:
+                        print("No cards loaded into database.")
+                        continue
+                    download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
+                    s.load_card_file(bulk_file, self.option("bulk-data-dir"))
+
             if load_test:
-                s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test", self.option("force-download"))
+                print(f"Reading from Scryfall data in: {Path('data/test/default_cards.json')}")
+                s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")

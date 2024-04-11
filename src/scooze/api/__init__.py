@@ -306,7 +306,6 @@ class ScoozeApi(AbstractContextManager):
     def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, force_download: bool = False):
         """
         Loads the desired file from the given directory into a local database.
-        Attempts to download it from Scryfall if it isn't found.
 
         Args:
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
@@ -609,7 +608,6 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     async def load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, force_download: bool = False):
         """
         Loads the desired file from the given directory into a local database.
-        Attempts to download it from Scryfall if it isn't found.
 
         Args:
             file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
