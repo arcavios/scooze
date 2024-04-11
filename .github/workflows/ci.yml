@@ -3,19 +3,6 @@ name: Continuous Integration
 on: [push]
 
 jobs:
-    setup-matrix:
-        runs-on: ubuntu-latest
-        outputs:
-            matrix: ${{ steps.setup-matrix.outputs.matrix }}
-        steps:
-            - id: setup-matrix
-              uses: druzsan/setup-matrix@v2
-              with:
-                  # Use | to preserve valid YAML syntax
-                  matrix: |
-                      os: ['ubuntu-latest'] # 'macos-latest'
-                      python-version: ['3.11', '3.12']
-                      # poetry-version: [ '1.7', '1.8' ]
     lint:
         runs-on: ubuntu-latest
         steps:
@@ -39,12 +26,12 @@ jobs:
                   black . --check
                   isort . --check
     pytest:
-        needs:
-            - setup-matrix
-            - lint
         strategy:
             fail-fast: true
-            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+            matrix:
+              os: ['ubuntu-latest'] # 'macos-latest'
+              python-version: ['3.11', '3.12']
+              # poetry-version: [ '1.7', '1.8' ]
         runs-on: ${{ matrix.os }}
         steps:
             #----------------------------------------------
