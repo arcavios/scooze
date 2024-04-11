@@ -13,8 +13,8 @@ jobs:
         strategy:
             fail-fast: true
             matrix:
-                os: ${{ vars.OS }}
-                python-version: ${{ vars.PYTHON_VERSIONS }}
+                os: ${{ fromJson(vars.OS) }}
+                python-version: ${{ fromJson(vars.PYTHON_VERSIONS) }}
         runs-on: ${{ matrix.OS }}
         steps:
             #----------------------------------------------
