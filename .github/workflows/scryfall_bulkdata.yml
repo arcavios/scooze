@@ -83,6 +83,7 @@ jobs:
             - name: Load Scryfall bulkdata
               run: |
                   source .venv/bin/activate
+                  scooze teardown docker
                   scooze setup docker
                   scooze load cards --test
     count-validation-errors:
@@ -96,6 +97,8 @@ jobs:
         steps:
             - name: Count validation errors
               run: |
+                  pwd
+                  ls
                   echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' logs/scooze.log.jsonl)" >> $GITHUB_ENV
             - name: print count
               run: |
