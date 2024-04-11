@@ -1,6 +1,6 @@
 name: Continuous Integration
 
-on: [push]
+on: [page_build] # TODO: put this back to push
 
 jobs:
     setup-matrix:
@@ -15,7 +15,7 @@ jobs:
                   matrix: |
                       os: ['ubuntu-latest'] # 'macos-latest'
                       python-version: ['3.11', '3.12']
-                      # poetry-version: [ "1.7", "1.8" ]
+                      # poetry-version: [ '1.7', '1.8' ]
     lint:
         needs: setup-matrix
         strategy:

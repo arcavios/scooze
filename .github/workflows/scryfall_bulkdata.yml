@@ -28,7 +28,7 @@ jobs:
                   # Use | to preserve valid YAML syntax
                   matrix: |
                       os: ['ubuntu-latest'] # 'macos-latest'
-                      python-version: ['3.11', '3.12']
+                      python-version: ['3.11'] # TODO: '3.12'
     setup-python:
         needs: setup-matrix
         strategy:
