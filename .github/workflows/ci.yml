@@ -16,7 +16,7 @@ jobs:
                       os: ['ubuntu-latest'] # 'macos-latest'
                       python-version: ['3.11', '3.12']
                       # poetry-version: [ "1.7", "1.8" ]
-    linting:
+    lint:
         needs: setup-matrix
         strategy:
             fail-fast: true
@@ -42,10 +42,10 @@ jobs:
                   black --version
                   black . --check
                   isort . --check
-    test:
+    pytest:
         needs:
             - setup-matrix
-            - linting
+            - lint
         strategy:
             fail-fast: true
             matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
