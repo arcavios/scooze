@@ -12,7 +12,9 @@ jobs:
     scryfall-bulkdata:
         strategy:
             fail-fast: true
-            matrix: ${{ vars }}
+            matrix:
+                os: ${{ vars.OS }}
+                python-version: ${{ vars.PYTHON_VERSIONS }}
         runs-on: ${{ matrix.OS }}
         steps:
             #----------------------------------------------
@@ -31,7 +33,6 @@ jobs:
             - name: Install Poetry
               uses: snok/install-poetry@v1
               with:
-                  # version: ${{ matrix.poetry-version }}
                   virtualenvs-create: true
                   virtualenvs-in-project: true
             #----------------------------------------------
