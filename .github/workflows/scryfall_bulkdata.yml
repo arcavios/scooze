@@ -89,3 +89,5 @@ jobs:
               if: env.ERR_COUNT > 0
               run: |
                   exit(1)
+
+            # TODO: save the logs as a GitHub Action artifact
