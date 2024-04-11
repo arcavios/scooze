@@ -1,6 +1,6 @@
 name: Continuous Integration
 
-on: [workflow_dispatch] # [push]
+on: [push]
 
 jobs:
   lint:
