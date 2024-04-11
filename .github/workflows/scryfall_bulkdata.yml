@@ -1,12 +1,11 @@
 name: Scryfall Bulkdata Validation
 
 on:
-    push
-    # push:
-    #     branches: [dev]
-    # # Every Monday at 07:00 UTC
-    # schedule:
-    #     - cron: "0 7 * * 1"
+    push:
+        branches: [dev]
+    # Every Monday at 07:00 UTC
+    schedule:
+        - cron: "0 7 * * 1"
 
 jobs:
     setup-matrix:
@@ -20,7 +19,7 @@ jobs:
                   # Use | to preserve valid YAML syntax
                   matrix: |
                       os: ['ubuntu-latest'] # 'macos-latest'
-                      python-version: ['3.11'] # TODO: '3.12'
+                      python-version: ['3.11', '3.12']
     scryfall-bulkdata:
         needs:
             - setup-matrix
@@ -70,15 +69,14 @@ jobs:
               run: poetry install --no-interaction
             #----------------------------------------------
             #    load bulkdata into docker container
-            # TODO: change back to --all
             #----------------------------------------------
             - name: Load Scryfall bulkdata
               run: |
                   source .venv/bin/activate
                   echo "scooze setup docker"
                   scooze setup docker
-                  echo "scooze load cards --oracle --force-download"
-                  scooze load cards --oracle --force-download
+                  echo "scooze load cards --all --force-download"
+                  scooze load cards --all --force-download
             #----------------------------------------------
             #    check for validation errors
             #----------------------------------------------
