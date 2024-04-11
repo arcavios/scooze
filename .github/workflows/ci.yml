@@ -17,11 +17,7 @@ jobs:
                       python-version: ['3.11', '3.12']
                       # poetry-version: [ '1.7', '1.8' ]
     lint:
-        needs: setup-matrix
-        strategy:
-            fail-fast: true
-            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-        runs-on: ${{ matrix.os }}
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout repo and set up Python
               uses: actions/checkout@v4
