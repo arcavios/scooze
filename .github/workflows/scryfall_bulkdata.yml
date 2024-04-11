@@ -69,14 +69,15 @@ jobs:
               run: poetry install --no-interaction
             #----------------------------------------------
             #    load bulkdata into docker container
+            # TODO: change back to --all
             #----------------------------------------------
             - name: Load Scryfall bulkdata
               run: |
                   source .venv/bin/activate
                   echo "scooze setup docker"
                   scooze setup docker
-                  scho "scooze load cards --all --force-download"
-                  scooze load cards --all --force-download
+                  echo "scooze load cards --oracle --force-download"
+                  scooze load cards --oracle --force-download
             #----------------------------------------------
             #    check for validation errors
             #----------------------------------------------
