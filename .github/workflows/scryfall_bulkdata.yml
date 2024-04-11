@@ -2,8 +2,9 @@ name: Scryfall Bulkdata Validation
 
 on:
     push
-    # branches: [dev]
-    # Every Monday at 07:00 UTC
+    # push:
+    #     branches: [dev]
+    # # Every Monday at 07:00 UTC
     # schedule:
     #     - cron: "0 7 * * 1"
 
