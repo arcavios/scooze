@@ -11,7 +11,8 @@
 name: Scryfall Bulkdata Validation
 
 on:
-    [push]
+    push
+    # branches: [dev]
     # Every Monday at 07:00 UTC
     # schedule:
     #     - cron: "0 7 * * 1"
@@ -86,15 +87,16 @@ jobs:
                   scooze load cards --test
     count-validation-errors:
         needs:
+            - setup-matrix
             - scryfall-bulkdata
         strategy:
             fail-fast: true
             matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
         runs-on: ${{ matrix.os }}
         steps:
-            - name: Install jq
-              uses: dcarbone/install-jq-action@v2
-
-            - run: |
-                  which jq
-                  jq --version
+            - name: Count validation errors
+              run: |
+                  echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' logs/scooze.log.jsonl)" >> "$GITHUB_ENV"
+            - name: Exit?
+              if: env.ERR_COUNT > 0
+              run: exit(1)
