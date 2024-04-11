@@ -1,8 +1,8 @@
 import json
 import logging
 import logging.config
-from pathlib import Path
 import sys
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
