@@ -29,38 +29,7 @@ jobs:
                   matrix: |
                       os: ['ubuntu-latest'] # 'macos-latest'
                       python-version: ['3.11'] # TODO: '3.12'
-    setup-python:
-        needs: setup-matrix
-        strategy:
-            fail-fast: true
-            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-        runs-on: ${{ matrix.os }}
-        steps:
-            #----------------------------------------------
-            #       check-out repo and set-up python
-            #----------------------------------------------
-            - uses: actions/checkout@v4
-            - uses: actions/setup-python@v5
-              with:
-                  python-version: ${{ matrix.python-version }}
-            #----------------------------------------------
-            #        load pip cache if cache exists
-            #----------------------------------------------
-            - uses: actions/cache@v4
-              with:
-                  path: ~/.cache/pip
-                  key: ${{ runner.os }}-pip
-                  restore-keys: ${{ runner.os }}-pip
-    do-a-thing:
-        needs:
-            - setup-matrix
-            - setup-python
-        runs-on: ubuntu-latest
-        steps:
-            - run: |
-                  docker info
-                  docker ps -a
-    pytest:
+    scryfall-bulkdata:
         needs:
             - setup-matrix
         strategy:
