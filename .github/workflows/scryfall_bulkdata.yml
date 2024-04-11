@@ -84,3 +84,17 @@ jobs:
                   source .venv/bin/activate
                   scooze setup docker
                   scooze load cards --test
+    count-validation-errors:
+        needs:
+            - scryfall-bulkdata
+        strategy:
+            fail-fast: true
+            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: Install jq
+              uses: dcarbone/install-jq-action@v2
+
+            - run: |
+                  which jq
+                  jq --version
