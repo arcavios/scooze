@@ -1,13 +1,3 @@
-#  0 7 * * 1
-
-# TODO: before I can implement this workflow I need to be able to get logs
-# Add logging to our CLI commands
-
-# TODO: pseudocode
-# pip install scooze
-# scooze load cards --all
-# check the size of the log, maybe report some of the stuff?
-
 name: Scryfall Bulkdata Validation
 
 on:
