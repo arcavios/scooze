@@ -78,7 +78,7 @@ jobs:
             - name: Install library
               run: poetry install --no-interaction
             #----------------------------------------------
-            #    add matrix specifics and run test suite
+            #    load bulkdata into docker container
             #----------------------------------------------
             - name: Load Scryfall bulkdata
               run: |
@@ -86,15 +86,9 @@ jobs:
                   scooze teardown docker
                   scooze setup docker
                   scooze load cards --test
-    count-validation-errors:
-        needs:
-            - setup-matrix
-            - scryfall-bulkdata
-        strategy:
-            fail-fast: true
-            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-        runs-on: ${{ matrix.os }}
-        steps:
+            #----------------------------------------------
+            #    check for validation errors
+            #----------------------------------------------
             - name: Count validation errors
               run: |
                   pwd
