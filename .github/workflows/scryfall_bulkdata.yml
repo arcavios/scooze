@@ -2,10 +2,10 @@ name: Scryfall Bulkdata Validation
 
 on:
   push:
-      branches: [dev]
-  Every Monday at 07:00 UTC
+    branches: [dev]
+  # Every Monday at 07:00 UTC
   schedule:
-      - cron: "0 7 * * 1"
+    - cron: "0 7 * * 1"
 
 jobs:
   scryfall-bulkdata:
@@ -13,7 +13,7 @@ jobs:
       fail-fast: true
       matrix:
         os: ${{ fromJson(vars.OS) }}
-        python-version: ${{ fromJson(vars.PYTHON_VERSIONS) }}
+        python-version: ${{ fromJson(vars.PYTHON_VERSION) }}
     runs-on: ${{ matrix.os }}
     steps:
       #----------------------------------------------

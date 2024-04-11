@@ -30,7 +30,7 @@ jobs:
       fail-fast: true
       matrix:
         os: ${{ fromJson(vars.OS) }}
-        python-version: ${{ fromJson(vars.PYTHON_VERSIONS) }}
+        python-version: ${{ fromJson(vars.PYTHON_VERSION) }}
     runs-on: ${{ matrix.os }}
     steps:
       #----------------------------------------------
