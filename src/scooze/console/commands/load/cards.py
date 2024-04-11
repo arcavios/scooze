@@ -28,8 +28,8 @@ class LoadCardsCommand(Command):
         option(
             "force-download",
             description="Automatically answer 'Yes' to downloading the relevant file if needed.",
-            flag=True
-        )
+            flag=True,
+        ),
     ]
 
     def handle(self):
