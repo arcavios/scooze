@@ -96,7 +96,12 @@ jobs:
         steps:
             - name: Count validation errors
               run: |
-                  echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' logs/scooze.log.jsonl)" >> "$GITHUB_ENV"
+                  echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' logs/scooze.log.jsonl)" >> $GITHUB_ENV
+            - name: print count
+              run: |
+                  echo env.ERR_COUNT
+                  echo $GITHUB_ENV
+                  echo $ERR_COUNT
             - name: Exit?
               if: env.ERR_COUNT > 0
               run: exit(1)
