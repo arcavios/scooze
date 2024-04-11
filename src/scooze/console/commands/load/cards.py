@@ -1,3 +1,4 @@
+import pathlib
 from cleo.commands.command import Command
 from cleo.helpers import option
 from scooze.api import ScoozeApi
@@ -49,14 +50,14 @@ class LoadCardsCommand(Command):
 
         with ScoozeApi() as s:
             for bulk_file in to_load:
-                if self.option("force-download"):
+                if self.option("force-download") and not load_test:
+                    print(f"Downloading {bulk_file} from Scryfall...")
                     download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
 
                 try:
-                    print(f"Loading {bulk_file} file into the database...")
+                    print(f"Reading from Scryfall data in: {pathlib.Path(self.option('bulk-data-dir'), bulk_file + '.json')}")
                     s.load_card_file(bulk_file, self.option("bulk-data-dir"))
                 except FileNotFoundError:
-                    print(f"Reading from Scryfall data in: {self.option('bulk-data-dir')}")
                     download_now = (
                         input(f"{bulk_file} file not found; would you like to download it now? [y/N] ") in "yY"
                     )
