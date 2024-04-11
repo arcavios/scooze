@@ -9,22 +9,10 @@ on:
     #     - cron: "0 7 * * 1"
 
 jobs:
-    setup-matrix:
-        runs-on: ubuntu-latest
-        outputs:
-            matrix: ${{ steps.setup-matrix.outputs.matrix }}
-        steps:
-            - id: setup-matrix
-              uses: druzsan/setup-matrix@v2
-              with:
-                  # Use | to preserve valid YAML syntax
-                  matrix: ${{ vars }}
     scryfall-bulkdata:
-        needs:
-            - setup-matrix
         strategy:
             fail-fast: true
-            matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+            matrix: ${{ vars }}
         runs-on: ${{ matrix.OS }}
         steps:
             #----------------------------------------------
