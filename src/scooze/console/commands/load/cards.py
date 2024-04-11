@@ -22,6 +22,11 @@ class LoadCardsCommand(Command):
             value_required=True,
             flag=False,
         ),
+        option(
+            "force-download",
+            description="Automatically answer 'Yes' to downloading the relevant file if needed.",
+            flag=True
+        )
     ]
 
     def handle(self):
@@ -44,6 +49,6 @@ class LoadCardsCommand(Command):
 
         with ScoozeApi() as s:
             for bulk_file in to_load:
-                s.load_card_file(bulk_file, self.option("bulk-data-dir"))
+                s.load_card_file(bulk_file, self.option("bulk-data-dir"), self.option("force-download"))
             if load_test:
-                s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test")
+                s.load_card_file(ScryfallBulkFile.DEFAULT, "./data/test", self.option("force-download"))

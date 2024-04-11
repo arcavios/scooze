@@ -6,7 +6,7 @@ from scooze.console import logger as cli_logger
 from scooze.models.card import CardModel, CardModelData
 
 
-async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> None:
+async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str, force_download: bool = False) -> None:
     """
     Loads the desired file from the given directory into a local Mongo
     database. Attempts to download it from Scryfall if it isn't found.
@@ -15,6 +15,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
         file_type: The type of [ScryfallBulkFile](https://scryfall.com/docs/api/bulk-data)
         to insert into the database.
         bulk_file_dir: The path to the folder containing the ScryfallBulkFile.
+        force_download: Automatically answer 'Yes' to downloading the relevant file if needed.
     """
 
     file_path = f"{bulk_file_dir}/{file_type}.json"
@@ -48,11 +49,16 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> Non
 
     except FileNotFoundError:
         print(file_path)
-        download_now = input(f"{file_type} file not found; would you like to download it now? [y/N] ") in "yY"
-        if not download_now:
+        download_now = force_download
+        if not force_download:
+            download_now = input(f"{file_type} file not found; would you like to download it now? [y/N] ") in "yY"
+
+        if force_download or download_now:
+            download_bulk_data_file_by_type(file_type, bulk_file_dir)
+        else:
             print("No cards loaded into database.")
             return
-        download_bulk_data_file_by_type(file_type, bulk_file_dir)
+
         await load_card_file(file_type, bulk_file_dir)
 
 
