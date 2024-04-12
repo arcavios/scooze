@@ -70,6 +70,7 @@ jobs:
           echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' ${{ env.LOG_DIR }})" >> $GITHUB_ENV
 
       - name: Exit?
+        continue-on-error: true
         if: env.ERR_COUNT > 0
         run: |
           exit(1)
