@@ -70,11 +70,7 @@ class LoadCardsCommand(Command):
                         bulk_file, self.option("bulk-data-dir"), show_progress=not self.option("concise")
                     )
                 except FileNotFoundError:
-                    download_now = (
-                        input(f"{bulk_file} file not found; would you like to download it now? [y/N] ") in "yY"
-                    )
-
-                    if not download_now:
+                    if not self.confirm(f"{bulk_file} file not found; would you like to download it now?"):
                         self.line("Skipping...")
                         continue
 
