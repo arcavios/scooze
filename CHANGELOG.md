@@ -11,6 +11,7 @@
 
 - Using Beanie for decks ([#272](https://github.com/arcavios/scooze/pull/272))
 - Refactored the bulkdata API endpoints ([#279](https://github.com/arcavios/scooze/pull/279))
+- Renamed DeckPart to CardList ([#281](https://github.com/arcavios/scooze/pull/281))
 
 ### [1.0.7] - 2024-03-02
 
