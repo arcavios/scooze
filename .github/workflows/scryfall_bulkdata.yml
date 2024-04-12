@@ -56,15 +56,6 @@ jobs:
           echo "scooze load cards --oracle --force-download --concise"
           scooze load cards --oracle --force-download --concise
 
-      - name: Count validation errors
-        run: |
-          echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' ${{ env.LOG_DIR }})" >> $GITHUB_ENV
-
-      - name: Exit?
-        if: env.ERR_COUNT > 0
-        run: |
-          exit(1)
-
       - name: Get current date
         run: echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
 
@@ -74,4 +65,11 @@ jobs:
           name: "${{ env.DATE }}-${{ github.workflow }}-${{ github.run_id }}.scooze.log"
           path: env.LOG_DIR
 
-      # TODO: save the logs as a GitHub Action artifact
+      - name: Count validation errors
+        run: |
+          echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' ${{ env.LOG_DIR }})" >> $GITHUB_ENV
+
+      - name: Exit?
+        if: env.ERR_COUNT > 0
+        run: |
+          exit(1)
