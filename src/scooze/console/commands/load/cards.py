@@ -59,11 +59,13 @@ class LoadCardsCommand(Command):
         with ScoozeApi() as s:
             for bulk_file in to_load:
                 if self.option("force-download"):
-                    print(f"Downloading {bulk_file} from Scryfall...")
+                    self.line(f"Downloading {bulk_file} from Scryfall...")
                     download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
 
                 try:
-                    print(f"Reading from Scryfall data in: {Path(self.option('bulk-data-dir'), bulk_file + '.json')}")
+                    self.line(
+                        f"Reading from Scryfall data in: {Path(self.option('bulk-data-dir'), bulk_file + '.json')}"
+                    )
                     loaded_count += s.load_card_file(
                         bulk_file, self.option("bulk-data-dir"), show_progress=not self.option("concise")
                     )
@@ -71,18 +73,21 @@ class LoadCardsCommand(Command):
                     download_now = (
                         input(f"{bulk_file} file not found; would you like to download it now? [y/N] ") in "yY"
                     )
+
                     if not download_now:
-                        print("Skipping...")
+                        self.line("Skipping...")
                         continue
+
+                    self.line(f"Downloading {bulk_file} from Scryfall...")
                     download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
                     loaded_count += s.load_card_file(
                         bulk_file, self.option("bulk-data-dir"), show_progress=not self.option("concise")
                     )
 
             if load_test:
-                print(f"Reading from Scryfall data in: {Path('data/test/default_cards.json')}")
+                self.line(f"Reading from Scryfall data in: {Path('data/test/default_cards.json')}")
                 loaded_count += s.load_card_file(
                     ScryfallBulkFile.DEFAULT, "./data/test", show_progress=not self.option("concise")
                 )
 
-        print(f"Loaded {loaded_count} cards to the database.")
+        self.line(f"Loaded {loaded_count} cards to the database.")
