@@ -11,7 +11,7 @@ from scooze.catalogs import Format, Legality
 from scooze.enum import ExtendedEnum
 from scooze.utils import ComparableObject, DictDiff
 
-# region Deck Enums
+# region Deck Helpers
 
 
 class InThe(ExtendedEnum, StrEnum):
