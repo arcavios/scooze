@@ -10,10 +10,10 @@ from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from mongomock_motor import AsyncMongoMockClient
 from scooze.card import OracleCard
+from scooze.cardlist import CardList
 from scooze.catalogs import Format, Legality
 from scooze.config import CONFIG
 from scooze.deck import Deck
-from scooze.cardlist import CardList
 from scooze.models.card import CardModel, CardModelData
 from scooze.mongo import db
 

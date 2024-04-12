@@ -6,8 +6,8 @@ from typing import Generic, Self
 import scooze.utils as utils
 from scooze import logger
 from scooze.card import CardT
-from scooze.catalogs import Format, Legality
 from scooze.cardlist import CardList
+from scooze.catalogs import Format, Legality
 from scooze.enum import ExtendedEnum
 from scooze.utils import ComparableObject, DictDiff
 
