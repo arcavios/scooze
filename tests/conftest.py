@@ -13,7 +13,7 @@ from scooze.card import OracleCard
 from scooze.catalogs import Format, Legality
 from scooze.config import CONFIG
 from scooze.deck import Deck
-from scooze.deckpart import DeckPart
+from scooze.cardlist import CardList
 from scooze.models.card import CardModel, CardModelData
 from scooze.mongo import db
 
@@ -775,7 +775,7 @@ def card_zagoth_triome(cards_json) -> OracleCard:
 # endregion
 
 
-# region DeckParts
+# region CardLists
 
 
 # Scoping this to "class" for the router tests
@@ -816,7 +816,7 @@ def main_modern_4c(
     card_windswept_heath,
     card_wrenn_and_six,
     card_zagoth_triome,
-) -> DeckPart[OracleCard]:
+) -> CardList[OracleCard]:
     main_cards = Counter[OracleCard](
         {
             # Creature
@@ -858,7 +858,7 @@ def main_modern_4c(
         }
     )
 
-    return DeckPart[OracleCard](main_cards)
+    return CardList[OracleCard](main_cards)
 
 
 @pytest.fixture
@@ -948,7 +948,7 @@ def side_modern_4c(
     card_supreme_verdict,
     card_veil_of_summer,
     card_wear_tear,
-) -> DeckPart[OracleCard]:
+) -> CardList[OracleCard]:
     side_cards = Counter[OracleCard](
         {
             card_aether_gust: 1,
@@ -966,7 +966,7 @@ def side_modern_4c(
         }
     )
 
-    return DeckPart[OracleCard](side_cards)
+    return CardList[OracleCard](side_cards)
 
 
 @pytest.fixture

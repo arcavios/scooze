@@ -7,9 +7,9 @@ import scooze.utils as utils
 from scooze import logger
 from scooze.card import CardT
 from scooze.catalogs import Format, Legality
-from scooze.deckpart import DeckDiff, DeckPart
+from scooze.cardlist import CardList
 from scooze.enum import ExtendedEnum
-from scooze.utils import ComparableObject
+from scooze.utils import ComparableObject, DictDiff
 
 # region Deck Enums
 
@@ -35,6 +35,62 @@ class DecklistFormatter(ExtendedEnum, StrEnum):
     MTGO = auto()
 
 
+class DeckDiff(ComparableObject):
+    """
+    A class to represent a diff between two decks.
+
+    Attributes:
+        main (DictDiff): The diff between the main decks of two Decks.
+        side (DictDiff): The diff between the sideboards of two Decks.
+        cmdr (DictDiff): The diff between the command zones of two Decks.
+        attractions (DictDiff): The diff between the attractions of the two Decks.
+        stickers (DictDiff): The diff between the stickers of the two Decks.
+    """
+
+    def __init__(
+        self,
+        main: DictDiff,
+        side: DictDiff = None,
+        cmdr: DictDiff = None,
+        attractions: DictDiff = None,
+        stickers: DictDiff = None,
+    ):
+        self.main = main
+        self.side = side or DictDiff(contents={})
+        self.cmdr = cmdr or DictDiff(contents={})
+        self.attractions = attractions or DictDiff(contents={})
+        self.stickers = stickers or DictDiff(contents={})
+
+    def __str__(self):
+        if self.total() > 0:
+            main_diff = str(self.main)
+            side_diff = str(self.side)
+            cmdr_diff = str(self.cmdr)
+            attractions_diff = str(self.stickers)
+            stickers_diff = str(self.stickers)
+
+            diff = f"Main Diff:\n{main_diff}"
+            if not self.side.is_empty():
+                diff += f"\nSide Diff:\n{side_diff}"
+            if not self.cmdr.is_empty():
+                diff += f"\nCmdr Diff:\n{cmdr_diff}"
+            if not self.attractions.is_empty():
+                diff += f"\nAttractions Diff:\n{attractions_diff}"
+            if not self.stickers.is_empty():
+                diff += f"\nStickers{stickers_diff}"
+
+            return diff
+
+        return ""
+
+    def total(self) -> int:
+        """
+        The number of cards in this DeckDiff.
+        """
+
+        return sum(map(len, (self.main, self.side, self.cmdr, self.attractions, self.stickers)))
+
+
 # endregion
 
 
@@ -45,11 +101,11 @@ class Deck(ComparableObject, Generic[CardT]):
     Attributes:
         archetype (str | None): The archetype of this Deck.
         format (Format): The format legality of the cards in this Deck.
-        main (DeckPart[CardT]): The main deck. Typically 60 cards minimum.
-        side (DeckPart[CardT]): The sideboard. Typically 15 cards maximum.
-        cmdr (DeckPart[CardT]): The command zone. Typically 1 or 2 cards in Commander formats.
-        attractions (DeckPart[CardT]): The attraction deck.
-        stickers (DeckPart[CardT]): The sticker deck.
+        main (CardList[CardT]): The main deck. Typically 60 cards minimum.
+        side (CardList[CardT]): The sideboard. Typically 15 cards maximum.
+        cmdr (CardList[CardT]): The command zone. Typically 1 or 2 cards in Commander formats.
+        attractions (CardList[CardT]): The attraction deck.
+        stickers (CardList[CardT]): The sticker deck.
         companion (CardT | None): This deck's companion (if applicable).
     """
 
@@ -57,21 +113,21 @@ class Deck(ComparableObject, Generic[CardT]):
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: DeckPart[CardT] | None = None,
-        side: DeckPart[CardT] | None = None,
-        cmdr: DeckPart[CardT] | None = None,
-        attractions: DeckPart[CardT] | None = None,
-        stickers: DeckPart[CardT] | None = None,
+        main: CardList[CardT] | None = None,
+        side: CardList[CardT] | None = None,
+        cmdr: CardList[CardT] | None = None,
+        attractions: CardList[CardT] | None = None,
+        stickers: CardList[CardT] | None = None,
         companion: CardT | None = None,
     ):
         self.archetype = archetype
         self.format = format
 
-        self.main = main if main is not None else DeckPart()
-        self.side = side if side is not None else DeckPart()
-        self.cmdr = cmdr if cmdr is not None else DeckPart()
-        self.attractions = attractions if attractions is not None else DeckPart()
-        self.stickers = stickers if stickers is not None else DeckPart()
+        self.main = main if main is not None else CardList()
+        self.side = side if side is not None else CardList()
+        self.cmdr = cmdr if cmdr is not None else CardList()
+        self.attractions = attractions if attractions is not None else CardList()
+        self.stickers = stickers if stickers is not None else CardList()
 
         self.companion = companion
 

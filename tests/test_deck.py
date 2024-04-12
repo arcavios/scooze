@@ -5,8 +5,8 @@ from copy import deepcopy
 import pytest
 from scooze.card import OracleCard
 from scooze.catalogs import Format
-from scooze.deck import Deck, DecklistFormatter, InThe
-from scooze.deckpart import DeckDiff, DeckPart
+from scooze.deck import Deck, DecklistFormatter, InThe, DeckDiff
+from scooze.cardlist import CardList
 from scooze.utils import DictDiff
 
 # region Fixtures
@@ -38,8 +38,8 @@ def cmdr_cards(card_omnath_locus_of_creation, card_supreme_verdict) -> Counter[O
 
 
 @pytest.fixture
-def cmdr_part(cmdr_cards) -> DeckPart[OracleCard]:
-    return DeckPart[OracleCard](cards=cmdr_cards)
+def cmdr_part(cmdr_cards) -> CardList[OracleCard]:
+    return CardList[OracleCard](cards=cmdr_cards)
 
 
 @pytest.fixture
@@ -72,8 +72,8 @@ def attraction_cards(
 
 
 @pytest.fixture
-def attraction_part(attraction_cards) -> DeckPart[OracleCard]:
-    return DeckPart[OracleCard](cards=attraction_cards)
+def attraction_part(attraction_cards) -> CardList[OracleCard]:
+    return CardList[OracleCard](cards=attraction_cards)
 
 
 @pytest.fixture
@@ -106,8 +106,8 @@ def sticker_cards(
 
 
 @pytest.fixture
-def sticker_part(sticker_cards) -> DeckPart[OracleCard]:
-    return DeckPart[OracleCard](cards=sticker_cards)
+def sticker_part(sticker_cards) -> CardList[OracleCard]:
+    return CardList[OracleCard](cards=sticker_cards)
 
 
 @pytest.fixture
@@ -334,7 +334,7 @@ def test_is_legal(deck_modern_4c):
 def test_is_legal_attractions_stickers(
     card_forest, attraction_part, sticker_part, attraction_balloon_stand, sticker_ancestral_hotdog_minotaur
 ):
-    main = DeckPart[OracleCard](Counter[OracleCard]({card_forest: 60}))
+    main = CardList[OracleCard](Counter[OracleCard]({card_forest: 60}))
     deck = Deck[OracleCard](
         archetype="test_is_legal_attractions_stickers", main=main, attractions=attraction_part, stickers=sticker_part
     )

@@ -13,7 +13,8 @@ title: scooze.deck - Deprecated
         # explicit ordering of members
         members:
             - Deck
+            - DeckDiff
             - DecklistFormatter
             - InThe
 
-::: scooze.deckpart
+::: scooze.cardlist

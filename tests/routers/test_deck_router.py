@@ -5,11 +5,11 @@ import pytest
 from beanie import PydanticObjectId
 from httpx import AsyncClient
 from scooze.card import OracleCard
-from scooze.deckpart import DeckPart
+from scooze.cardlist import CardList
 from scooze.models.card import CardModel, CardModelData
 from scooze.models.deck import DeckModel, DeckModelData
 
-from tests.routers.utils import dict_from_deckpart
+from tests.routers.utils import dict_from_cardlist
 
 # TODO(#273): Test Attraction and Sticker decks for deck router?
 
@@ -20,8 +20,8 @@ class TestDeckRouterWithPopulatedDatabase:
         self,
         cards_json: list[str],
         archetype_modern_4c: str,
-        main_modern_4c: DeckPart[OracleCard],
-        side_modern_4c: DeckPart[OracleCard],
+        main_modern_4c: CardList[OracleCard],
+        side_modern_4c: CardList[OracleCard],
         today: date,
     ):
         for card_json in cards_json:
@@ -34,8 +34,8 @@ class TestDeckRouterWithPopulatedDatabase:
                 "archetype": archetype_modern_4c,
                 "format": "modern",
                 "date_played": today,
-                "main": await dict_from_deckpart(main_modern_4c),
-                "side": await dict_from_deckpart(side_modern_4c),
+                "main": await dict_from_cardlist(main_modern_4c),
+                "side": await dict_from_cardlist(side_modern_4c),
             }
         )
 
