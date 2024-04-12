@@ -22,11 +22,9 @@ class TestBulkDataWithEmptyDatabase:
         yield
         await CardModel.delete_all()
 
-    async def test_load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str, capfd):
-        await bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
-        captured = capfd.readouterr()
-        expected = f"Loaded 9 cards to the database.\n"
-        assert captured.out == expected
+    async def test_load_card_file(self, file_type: ScryfallBulkFile, bulk_file_dir: str):
+        result = await bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
+        assert result == 9
 
     @patch("scooze.api.bulkdata.open")
     async def test_load_card_file_bad(
