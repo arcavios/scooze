@@ -51,7 +51,7 @@ class LoadCardsCommand(Command):
 
         with ScoozeApi() as s:
             for bulk_file in to_load:
-                if self.option("force-download") and not load_test:
+                if self.option("force-download"):
                     print(f"Downloading {bulk_file} from Scryfall...")
                     download_bulk_data_file_by_type(bulk_file, self.option("bulk-data-dir"))
 
