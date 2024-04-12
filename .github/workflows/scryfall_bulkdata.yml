@@ -13,7 +13,7 @@ jobs:
     env:
       LOG_DIR: "logs/scooze.log.jsonl"
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: ${{ fromJson(vars.OS) }}
         python-version: ${{ fromJson(vars.PYTHON_VERSION) }}
@@ -70,7 +70,6 @@ jobs:
           echo "ERR_COUNT=$(grep -c -e '"level": "ERROR"' -e '"level": "CRITICAL"' ${{ env.LOG_DIR }})" >> $GITHUB_ENV
 
       - name: Exit?
-        continue-on-error: true
         if: env.ERR_COUNT > 0
         run: |
-          exit(1)
+          exit 1
