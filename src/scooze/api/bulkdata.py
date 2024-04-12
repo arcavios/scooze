@@ -22,7 +22,7 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str) -> int
 
     file_path = f"{bulk_file_dir}/{file_type}.json"
     batch_size = 5000
-    current_batch_count = 0
+    current_batch_count = 1
     results_count = 0
     current_batch: list[CardModel] = []
 
