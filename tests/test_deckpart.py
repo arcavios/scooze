@@ -31,25 +31,25 @@ def test_no_mutable_defaults():
 
 
 def test_cards(some_cards):
-    part = CardList(cards=some_cards)
-    assert part.cards == some_cards
+    card_list = CardList(cards=some_cards)
+    assert card_list.cards == some_cards
 
 
 def test_eq(some_cards):
-    partA = CardList(cards=some_cards)
-    partB = CardList(cards=some_cards)
-    assert partA == partB
+    listA = CardList(cards=some_cards)
+    listB = CardList(cards=some_cards)
+    assert listA == listB
 
 
 def test_ne(some_cards):
-    partA = CardList(cards=some_cards)
-    partB = CardList()
-    assert partA != partB
+    listA = CardList(cards=some_cards)
+    listB = CardList()
+    assert listA != listB
 
 
 def test_str_empty():
-    part = CardList()
-    assert str(part) == ""
+    card_list = CardList()
+    assert str(card_list) == ""
 
 
 def test_str(main_modern_4c, main_modern_4c_str):
@@ -77,8 +77,8 @@ def test_diff(
     card_veil_of_summer,
     card_wear_tear,
 ):
-    part = CardList(cards=some_cards)
-    diff = side_modern_4c.diff(part)
+    card_list = CardList(cards=some_cards)
+    diff = side_modern_4c.diff(card_list)
     assert diff == DictDiff(
         {
             card_aether_gust: (1, 0),
@@ -98,55 +98,55 @@ def test_diff(
 
 @pytest.mark.deck_add_cards
 def test_add_card_one(some_cards, card_veil_of_summer):
-    part = CardList(cards=some_cards)
-    part.add_card(card=card_veil_of_summer)
+    card_list = CardList(cards=some_cards)
+    card_list.add_card(card=card_veil_of_summer)
     some_cards.update({card_veil_of_summer: 1})
-    assert part.cards == some_cards
+    assert card_list.cards == some_cards
 
 
 @pytest.mark.deck_add_cards
 def test_add_card_many(some_cards, card_veil_of_summer):
-    part = CardList(cards=some_cards)
-    part.add_card(card=card_veil_of_summer, quantity=3)
+    card_list = CardList(cards=some_cards)
+    card_list.add_card(card=card_veil_of_summer, quantity=3)
     some_cards.update({card_veil_of_summer: 3})
-    assert part.cards == some_cards
+    assert card_list.cards == some_cards
 
 
 @pytest.mark.deck_add_cards
 def test_add_cards(some_cards):
-    part = CardList(cards=some_cards)
-    part.add_cards(some_cards)
+    card_list = CardList(cards=some_cards)
+    card_list.add_cards(some_cards)
     some_cards.update(some_cards)
-    assert part.cards == some_cards
+    assert card_list.cards == some_cards
 
 
 @pytest.mark.deck_remove_cards
 def test_remove_card_one(some_cards, card_chalice_of_the_void):
-    part = CardList(cards=some_cards)
-    part.remove_card(card=card_chalice_of_the_void, quantity=1)
+    card_list = CardList(cards=some_cards)
+    card_list.remove_card(card=card_chalice_of_the_void, quantity=1)
     some_cards = some_cards - Counter({card_chalice_of_the_void: 1})
-    assert part.cards == some_cards
+    assert card_list.cards == some_cards
 
 
 @pytest.mark.deck_remove_cards
 def test_remove_card_many(some_cards, card_chalice_of_the_void):
-    part = CardList(cards=some_cards)
-    part.remove_card(card=card_chalice_of_the_void, quantity=3)
+    card_list = CardList(cards=some_cards)
+    card_list.remove_card(card=card_chalice_of_the_void, quantity=3)
     some_cards = some_cards - Counter({card_chalice_of_the_void: 3})
-    assert part.cards == some_cards
+    assert card_list.cards == some_cards
 
 
 @pytest.mark.deck_remove_cards
 def test_remove_card_all(some_cards, card_chalice_of_the_void):
-    part = CardList(cards=some_cards)
-    part.remove_card(card=card_chalice_of_the_void)
+    card_list = CardList(cards=some_cards)
+    card_list.remove_card(card=card_chalice_of_the_void)
     some_cards = some_cards - Counter({card_chalice_of_the_void: maxsize})
-    assert part.cards == some_cards
+    assert card_list.cards == some_cards
 
 
 @pytest.mark.deck_remove_cards
 def test_remove_cards(some_cards):
-    part = CardList(cards=some_cards)
-    part.remove_cards(some_cards)
+    card_list = CardList(cards=some_cards)
+    card_list.remove_cards(some_cards)
     some_cards = some_cards - some_cards
-    assert part.cards == some_cards
+    assert card_list.cards == some_cards

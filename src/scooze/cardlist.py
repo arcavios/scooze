@@ -8,7 +8,7 @@ from scooze.utils import ComparableObject, DictDiff
 
 class CardList(ComparableObject, Generic[CardT]):
     """
-    A class to represent a part of a deck.
+    A class to represent a list of cards, generally as a part of a deck.
 
     Attributes:
         cards (Counter[CardT]): The cards in this CardList.
