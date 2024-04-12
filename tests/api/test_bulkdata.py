@@ -29,7 +29,7 @@ class TestBulkDataWithEmptyDatabase:
         assert captured.out == expected
 
     @patch("scooze.api.bulkdata.open")
-    async def test_load_card_file_bad_no_download(
+    async def test_load_card_file_bad(
         self,
         mock_open: MagicMock,
         file_type: ScryfallBulkFile,
