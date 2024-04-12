@@ -26,6 +26,7 @@ jobs:
           black . --check
           isort --version-number
           isort . --check
+
   pytest:
     strategy:
       fail-fast: true
