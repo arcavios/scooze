@@ -1,12 +1,11 @@
 name: Scryfall Bulkdata Validation
 
 on:
-  push
-  # push:
-  #   branches: [dev]
-  # # Every Monday at 07:00 UTC
-  # schedule:
-  #   - cron: "0 7 * * 1"
+  push:
+    branches: [dev]
+  # Every Monday at 07:00 UTC
+  schedule:
+    - cron: "0 7 * * 1"
 
 jobs:
   scryfall-bulkdata:
@@ -53,8 +52,8 @@ jobs:
           source .venv/bin/activate
           echo "scooze setup docker"
           scooze setup docker
-          echo "scooze load cards --oracle --force-download --concise"
-          scooze load cards --oracle --force-download --concise
+          echo "scooze load cards --all --force-download --concise"
+          scooze load cards --all --force-download --concise
 
       - name: Get current date
         run: |
