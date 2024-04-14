@@ -1,12 +1,12 @@
 import json
 import logging
 import logging.config
-import pathlib
 import sys
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-config_file = pathlib.Path("configs/logging_config.json")
+config_file = Path("configs/logging_config.json")
 with open(config_file) as f_in:
     logging_config = json.load(f_in)
 logging.config.dictConfig(config=logging_config)
