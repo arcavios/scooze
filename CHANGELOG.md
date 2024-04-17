@@ -6,6 +6,7 @@
 
 - Logging for the scooze CLI ([#277](https://github.com/arcavios/scooze/pull/277))
 - Regression tests for validating Scryfall bulkdata ([#278](https://github.com/arcavios/scooze/pull/278))
+- Added `scooze save cards` to the scooze CLI ([#287](https://github.com/arcavios/scooze/pull/287))
 
 #### Changed
 
