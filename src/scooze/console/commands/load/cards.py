@@ -20,7 +20,7 @@ class LoadCardsCommand(Command):
         option("test", description="The Power 9, for testing purposes."),
         option(
             "bulk-data-dir",
-            description="Directory to store bulk files, used with load cards.",
+            description="Directory to load bulk files from.",
             default=DEFAULT_BULK_FILE_DIR,
             value_required=True,
             flag=False,
@@ -42,7 +42,7 @@ class LoadCardsCommand(Command):
         load_all = self.option("all")
         load_test = self.option("test") and not load_all
 
-        if self.option("all"):
+        if load_all:
             to_load.append(ScryfallBulkFile.ALL)
         else:
             if self.option("oracle"):
