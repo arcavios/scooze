@@ -6,7 +6,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-config_file = Path(os.path.dirname(__file__)) / "configs/logging_config.json"
+config_file = Path(__file__).parent / "configs/logging_config.json"
 with config_file.open() as f_in:
     logging_config = json.load(f_in)
 logging.config.dictConfig(config=logging_config)
