@@ -1,11 +1,10 @@
-import asyncio
 import json
 import os
 
 import ijson
 from cleo.commands.command import Command
 from cleo.helpers import option
-from scooze.models.deck import DeckModelIn
+from scooze.models.deck import DeckModel
 from scooze.utils import DEFAULT_DECKS_DIR
 
 
@@ -43,7 +42,7 @@ def load_all_decks(decks_dir: str):
             with open(file_path, "r", encoding="utf8") as deck_file:
                 # print(f"Inserting {file_path.split('/')[-1]} file into the database...")
                 decks = [
-                    DeckModelIn.model_validate(deck_json)
+                    DeckModel.model_validate(deck_json)
                     for deck_json in ijson.items(
                         deck_file,
                         "item",
@@ -62,7 +61,7 @@ def load_test_decks():
         with open("./data/test/pioneer_decks.jsonl") as decks_file:
             # print("Inserting test decks into the database...")
             json_list = list(decks_file)
-            decks = [DeckModelIn.model_validate(json.loads(deck_json)) for deck_json in json_list]
+            decks = [DeckModel.model_validate(json.loads(deck_json)) for deck_json in json_list]
             # asyncio.run(deck_db.add_decks(decks))  # TODO(#7): this need async for now, replace with Python API
         print("This doesn't actually do anything yet.")
     except OSError as e:
