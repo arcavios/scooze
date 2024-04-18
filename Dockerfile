@@ -15,7 +15,8 @@ COPY --from=builder /venv /venv
 ENTRYPOINT ["/venv/bin/scooze"]
 
 # TODO: how do I do this with the given entry point or do I need a diff entry point? etc
-CMD ["uvicorn", "scooze.main:app", "--host", "127.0.0.1", "--port", "8000"]
-# RUN uvicorn scooze.main:app --host 127.0.0.1 --port 8000
+# CMD ["uvicorn", "scooze.main:app", "--host", "127.0.0.1", "--port", "8000"]
+# scooze run
+CMD ["run"]
 
 EXPOSE 8000
