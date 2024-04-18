@@ -24,11 +24,11 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
 The source code can be found [here](https://github.com/arcavios/scooze).
 
-See our [documentation](https://scooze.readthedocs.io/en/latest) for more information.
+See our [documentation](https://scooze.readthedocs.io/en/stable) for more information.
 
 ## Installation
 
-Install using `pip install scooze`. For more installation options, see the [Install](https://scooze.readthedocs.io/en/latest/installation) section in the documentation.
+Install using `pip install scooze`. For more installation options, see the [Install](https://scooze.readthedocs.io/en/stable/installation) section in the documentation.
 
 ## A Simple Example
 
@@ -60,11 +60,11 @@ Sideboard:
 """
 ```
 
-See [Setup](https://scooze.readthedocs.io/en/latest/setup/) and our [API Documentation](https://scooze.readthedocs.io/en/latest/dataclasses/card/) for more details.
+See [Setup](https://scooze.readthedocs.io/en/stable/setup/) and our [API Documentation](https://scooze.readthedocs.io/en/stable/dataclasses/card/) for more details.
 
 ## Contributing
 
-For guidance on setting up a development environment and how to make a contribution to scooze, see [Contributing to scooze](https://scooze.readthedocs.io/en/latest/contributing).
+For guidance on setting up a development environment and how to make a contribution to scooze, see [Contributing to scooze](https://scooze.readthedocs.io/en/stable/contributing).
 
 ## Report a Bug
 
