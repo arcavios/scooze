@@ -7,9 +7,7 @@ import os
 
 logger = logging.getLogger(__name__)
 
-config_file = Path("configs/logging_config.json")
-print("CONFIG FILE PATH")
-print(config_file)
+config_file = Path("configs/logging_config.json").absolute()
 with open(config_file) as f_in:
     logging_config = json.load(f_in)
 logging.config.dictConfig(config=logging_config)
