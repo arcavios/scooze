@@ -3,6 +3,7 @@ import logging
 import logging.config
 import sys
 from pathlib import Path
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -25,3 +26,5 @@ if DEBUG := False:
     logger.warning("DEBUG ENABLED: scooze logger warning message")
     logger.exception("DEBUG ENABLED: scooze logger exception message")
     logger.critical("DEBUG ENABLED: scooze logger critical message")
+
+MONGO_HOST = os.getenv("MONGO_HOST", "127.0.0.1")
