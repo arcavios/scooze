@@ -12,7 +12,10 @@ WORKDIR /src
 COPY . .
 RUN poetry bundle venv --python=/usr/bin/python3 --only=main /venv
 
-FROM gcr.io/distroless/python3-debian12
+# Adding :debug to the image uses the published version of the container image
+# that contains debug tools (like /bin/bash) to be able to get into the
+# container and poke around
+FROM gcr.io/distroless/python3-debian12:debug
 COPY --from=builder /venv /venv
 ENTRYPOINT ["/venv/bin/scooze"]
 
