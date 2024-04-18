@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1
 
+# ref: https://stackoverflow.com/a/57886655
+
 FROM debian:12-slim AS builder
 RUN apt-get update && \
     apt-get install --no-install-suggests --no-install-recommends --yes pipx
