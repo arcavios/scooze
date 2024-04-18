@@ -1,9 +1,9 @@
 import json
 import logging
 import logging.config
+import os
 import sys
 from pathlib import Path
-import os
 
 logger = logging.getLogger(__name__)
 

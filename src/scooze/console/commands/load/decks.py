@@ -37,6 +37,8 @@ class LoadDecksCommand(Command):
 # TODO(#145): Can remove this once the command uses ScoozeApi
 def load_all_decks(decks_dir: str):
     pass
+
+
 #     files = os.listdir(decks_dir)
 #     try:
 #         for file_path in files:
@@ -59,6 +61,8 @@ def load_all_decks(decks_dir: str):
 # TODO(#145): Can remove this once the command uses ScoozeApi
 def load_test_decks():
     pass
+
+
 #     try:
 #         with open("./data/test/pioneer_decks.jsonl") as decks_file:
 #             # print("Inserting test decks into the database...")
