@@ -12,9 +12,7 @@ class Version(NamedTuple):
 
 class ScoozeSettings(BaseSettings):
     version: Version = (1, 0, 7)
-    logger.error("mongo host " + MONGO_HOST)
-    # mongo_dsn: str = f"mongodb://{MONGO_HOST}:27017"
-    mongo_dsn: str = f"mongodb://mongodb:27017"
+    mongo_dsn: str = f"mongodb://{MONGO_HOST}:27017"
     mongo_db: str = "scooze"
 
     testing: bool = False
