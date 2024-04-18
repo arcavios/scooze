@@ -13,8 +13,8 @@ from pydantic.alias_generators import to_camel
 from scooze.catalogs import CostSymbol, Format
 from scooze.enum import ExtendedEnum
 
-DEFAULT_BULK_FILE_DIR = str(Path("./data/bulk"))
-DEFAULT_DECKS_DIR = str(Path("./data/decks"))
+DEFAULT_BULK_FILE_DIR = str(Path.home() / "scooze" / "data" / "bulk")
+DEFAULT_DECKS_DIR = str(Path.home() / "scooze" / "data" / "decks")
 
 ## Generic Types
 T = TypeVar("T")  # generic type
