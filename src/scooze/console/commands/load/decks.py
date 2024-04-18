@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 import ijson
 from cleo.commands.command import Command
@@ -58,7 +59,7 @@ def load_all_decks(decks_dir: str):
 # TODO(#145): Can remove this once the command uses ScoozeApi
 def load_test_decks():
     try:
-        with open("./data/test/pioneer_decks.jsonl") as decks_file:
+        with (Path("./data") / "test" / "pioneer_decks.jsonl").open() as decks_file:
             # print("Inserting test decks into the database...")
             json_list = list(decks_file)
             decks = [DeckModel.model_validate(json.loads(deck_json)) for deck_json in json_list]
