@@ -30,7 +30,7 @@
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
             "formatter": "json",
-            "filename": "logs/scooze.log.jsonl",
+            "filename": "scooze.log.jsonl",
             "maxBytes": 20000000,
             "backupCount": 10
         }
