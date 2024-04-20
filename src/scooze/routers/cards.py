@@ -127,7 +127,7 @@ async def get_cards_by(
 
 
 @router.delete("/delete/all", summary="Delete all cards")
-async def delete_cards_all() -> JSONResponse:#
+async def delete_cards_all() -> JSONResponse:
     """
     Deletes all cards in the database.
 

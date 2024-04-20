@@ -1,6 +1,6 @@
 from typing import Any
 
-from beanie import PydanticObjectId, Text
+from beanie import PydanticObjectId
 from scooze import logger
 from scooze.card import CardT, FullCard
 from scooze.errors import BulkAddError
@@ -66,10 +66,7 @@ async def get_cards_by(
     prop_name, vals = _normalize_for_ids(property_name, values)
     skip = (page - 1) * page_size if paginated else 0
     limit = page_size if paginated else None
-    if prop_name == "name":
-        card_models = await CardModel.find({"$text": [{"name": v} for v in vals]}, skip=skip, limit=limit, fuzzy={})
-    else:
-        card_models = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
+    card_models = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
 
     return [card_class.from_model(m) for m in card_models]
 
