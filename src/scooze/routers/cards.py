@@ -30,6 +30,7 @@ async def cards_root(limit: int = 3) -> list[CardModel]:
         HTTPException: 404 - No cards found in the database.
     """
 
+    # TODO: See if we can use this syntax: https://beanie-odm.dev/tutorial/aggregation/
     cards = await CardModel.aggregate([{"$sample": {"size": limit}}], projection_model=CardModel).to_list()
 
     if cards is None or not cards:

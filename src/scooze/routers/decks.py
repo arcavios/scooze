@@ -1,6 +1,7 @@
 from typing import Any
 
 from beanie import PydanticObjectId
+from beanie.operators import In
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from scooze.models.deck import DeckModel, DeckModelData
@@ -97,7 +98,7 @@ async def get_decks_by(
 
     skip = (page - 1) * page_size if paginated else 0
     limit = page_size if paginated else None
-    decks = await DeckModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
+    decks = await DeckModel.find(In(getattr(DeckModel, prop_name), [v for v in vals])).skip(skip).limit(limit).to_list()
 
     if len(decks) == 0:
         raise HTTPException(status_code=404, detail="Decks not found.")
