@@ -517,61 +517,62 @@ class CardModelData(ScoozeBaseModel):
 
     @field_validator("all_parts", mode="before")
     @classmethod
-    def all_parts_validator(cls, vals):
+    def _validate_all_parts(cls, vals):
         if vals is not None and all(isinstance(v, RelatedCard) for v in vals):
             vals = [RelatedCardModel.model_validate(v.__dict__) for v in vals]
         return vals
 
     @field_validator("card_faces", mode="before")
     @classmethod
-    def card_faces_validator(cls, vals):
+    def _validate_card_faces(cls, vals):
         if vals is not None and all(isinstance(v, CardFace | FullCardFace) for v in vals):
             vals = [CardFaceModel.model_validate(v.__dict__) for v in vals]
         return vals
 
     @field_validator("image_uris", mode="before")
     @classmethod
-    def image_uris_validator(cls, v):
+    def _validate_image_uris(cls, v):
         if isinstance(v, ImageUris):
             v = ImageUrisModel.model_validate(v.__dict__)
         return v
 
     @field_validator("preview", mode="before")
     @classmethod
-    def preview_validator(cls, v):
+    def _validate_preview(cls, v):
         if isinstance(v, Preview):
             v = PreviewModel.model_validate(v.__dict__)
         return v
 
     @field_validator("prices", mode="before")
     @classmethod
-    def prices_validator(cls, v):
+    def _validate_prices(cls, v):
         if isinstance(v, Prices):
             v = PricesModel.model_validate(v.__dict__)
         return v
 
     @field_validator("purchase_uris", mode="before")
     @classmethod
-    def purchase_uris_validator(cls, v):
+    def _validate_purchase_uris(cls, v):
         if isinstance(v, PurchaseUris):
             v = PurchaseUrisModel.model_validate(v.__dict__)
         return v
 
     @field_validator("related_uris", mode="before")
     @classmethod
-    def related_uris_validator(cls, v):
+    def _validate_related_uris(cls, v):
         if isinstance(v, RelatedUris):
             v = RelatedUrisModel.model_validate(v.__dict__)
         return v
 
     @field_validator("produced_mana", mode="wrap")
-    def _validate_produced_colors(cls, val: Any | None, next_: Callable[[Any], Any], ctx: ValidationInfo) -> Any:
+    def _validate_produced_mana(cls, val: Any | None, next_: Callable[[Any], Any], ctx: ValidationInfo) -> Any:
         """
-        TODO: get this to work?
-        Skip normal validation for silver bordered cards.
+        Skip validation for exceptional cards.
         """
 
-        if ctx.data.get("border_color") == BorderColor.SILVER:
+        # Sole Performer has `produced_mana = ["T"]`, so we won't validate it.
+        if ctx.data.get("name") == "Sole Performer":
+            print("validated sole performer")
             return val
 
         return next_(val)
@@ -581,7 +582,7 @@ class CardModelData(ScoozeBaseModel):
     # region Serializers
 
     @field_serializer("released_at")
-    def serialize_date(self, dt_field: date):
+    def _serialize_date(self, dt_field: date):
         return super().serialize_date(dt_field=dt_field)
 
     @field_serializer(
@@ -596,7 +597,7 @@ class CardModelData(ScoozeBaseModel):
         "produced_mana",
         "promo_types",
     )
-    def serialize_set(self, set_field: set[Any]):
+    def _serialize_set(self, set_field: set[Any]):
         return super().serialize_set(set_field=set_field)
 
     # endregion
