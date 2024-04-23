@@ -7,7 +7,7 @@ from pathlib import Path
 
 # region Environment Variables
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("SCOOZE_DEBUG", "False") == "True"
 
 # endregion
 
