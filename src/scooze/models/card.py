@@ -9,6 +9,7 @@ from pydantic import (
     field_serializer,
     field_validator,
 )
+from scooze import logger
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
@@ -572,7 +573,7 @@ class CardModelData(ScoozeBaseModel):
 
         # Sole Performer has `produced_mana = ["T"]`, so we won't validate it.
         if ctx.data.get("name") == "Sole Performer":
-            print("validated sole performer")
+            logger.info("Skipping field validation for 'produced_mana' for Sole Performer.")
             return val
 
         return next_(val)
