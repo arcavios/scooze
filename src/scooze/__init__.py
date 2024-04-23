@@ -5,7 +5,14 @@ import os
 import sys
 from pathlib import Path
 
+# region Environment Variables
+
 DEBUG = os.getenv("DEBUG", "False") == "True"
+
+# endregion
+
+
+# region Set Up Logging
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +22,7 @@ with open(config_file) as f_in:
 logging.config.dictConfig(config=logging_config)
 # TODO(py3.12): Python 3.12 supports QueueHandler for non-blocking logging
 
-# NOTE: Use this flag to test scooze library logging. Reads from environment variable $DEBUG
+# NOTE: Allow DEBUG logging if the flag is set
 if DEBUG:
     logger.setLevel(logging.DEBUG)
     stdout_handler = logging.StreamHandler(stream=sys.stdout)
@@ -28,3 +35,5 @@ if DEBUG:
     # logger.warning("DEBUG ENABLED: scooze logger warning message")
     # logger.exception("DEBUG ENABLED: scooze logger exception message")
     # logger.critical("DEBUG ENABLED: scooze logger critical message")
+
+# endregion
