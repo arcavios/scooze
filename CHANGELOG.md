@@ -16,6 +16,10 @@
 - Renamed DeckPart to CardList ([#281](https://github.com/arcavios/scooze/pull/281))
 - Use `pathlib` for consistent cross-OS file paths ([#222](https://github.com/arcavios/scooze/pull/222))
 
+#### Fixed
+
+- Skip validation for Sole Performer ([#297](https://github.com/arcavios/scooze/pull/222))
+
 ### [1.0.7] - 2024-03-02
 
 [GitHub Release](https://github.com/arcavios/scooze/releases/tag/v1.0.7)
