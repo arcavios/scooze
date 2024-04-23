@@ -6,6 +6,7 @@
 
 - Logging for the scooze CLI ([#277](https://github.com/arcavios/scooze/pull/277))
 - Regression tests for validating Scryfall bulkdata ([#278](https://github.com/arcavios/scooze/pull/278))
+- Add `scooze save cards` to the scooze CLI ([#287](https://github.com/arcavios/scooze/pull/287))
 - Add `spree` to supported `FrameEffect`s ([#293](https://github.com/arcavios/scooze/pull/293))
 
 #### Changed

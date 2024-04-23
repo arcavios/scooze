@@ -16,6 +16,8 @@ if TYPE_CHECKING:
 COMMANDS = [
     "delete",
     "run",
+    # Save commands
+    "save cards",
     # Load commands
     "load cards",
     "load decks",
