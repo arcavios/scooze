@@ -18,6 +18,11 @@
 - Default to home/scooze for storage of bulk data and logs ([#294](https://github.com/arcavios/scooze/pull/294))
 
 
+#### Fixed
+
+- Skip validation for Sole Performer ([#297](https://github.com/arcavios/scooze/pull/222))
+
+
 ### [1.0.7] - 2024-03-02
 
 [GitHub Release](https://github.com/arcavios/scooze/releases/tag/v1.0.7)
