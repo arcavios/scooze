@@ -8,7 +8,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # TODO: move this to utils or the top of this file as an ENV var or something?
-package_root = Path(__file__).parent.parent
+package_root = Path(__file__).parent
 
 config_file = package_root / "configs/logging_config.json"
 with config_file.open() as f_in:
