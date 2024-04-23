@@ -15,10 +15,11 @@
 - Refactored the bulkdata API endpoints ([#279](https://github.com/arcavios/scooze/pull/279))
 - Renamed DeckPart to CardList ([#281](https://github.com/arcavios/scooze/pull/281))
 - Use `pathlib` for consistent cross-OS file paths ([#222](https://github.com/arcavios/scooze/pull/222))
+- Default to home/scooze for storage of bulk data and logs ([#294](https://github.com/arcavios/scooze/pull/294))
+
 
 #### Fixed
 
-- Use paths relative to package root for logging, and home dir for data ([#294](https://github.com/arcavios/scooze/pull/294))
 
 ### [1.0.7] - 2024-03-02
 
