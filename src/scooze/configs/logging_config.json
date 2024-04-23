@@ -27,7 +27,7 @@
             "stream": "ext://sys.stderr"
         },
         "file": {
-            "class": "logging.handlers.RotatingFileHandler",
+            "class": "scooze.utils.ScoozeRotatingFileHandler",
             "level": "DEBUG",
             "formatter": "json",
             "filename": "scooze.log.jsonl",

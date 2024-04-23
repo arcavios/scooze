@@ -4,6 +4,7 @@ import logging
 import re
 from collections import Counter
 from datetime import date, datetime
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from sys import maxsize
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
@@ -55,6 +56,34 @@ LOG_RECORD_BUILTIN_ATTRS = {
     "threadName",
     "taskName",
 }
+
+
+class ScoozeRotatingFileHandler(RotatingFileHandler):
+    """
+    Simple RotatingFileHandler that writes to the home directory.
+    """
+
+    def __init__(
+        self,
+        filename: str,
+        mode: str = "a",
+        maxBytes: int = 0,
+        backupCount: int = 0,
+        encoding: str | None = None,
+        delay: bool = False,
+        errors: str | None = None,
+    ):
+        path = Path.home() / "scooze" / "logs" / filename
+        path.mkdir()
+        super(ScoozeRotatingFileHandler, self).__init__(
+            filename=path / filename,
+            mode=mode,
+            maxBytes=maxBytes,
+            backupCount=backupCount,
+            encoding=encoding,
+            delay=delay,
+            errors=errors,
+        )
 
 
 class JsonLoggingFormatter(logging.Formatter):
