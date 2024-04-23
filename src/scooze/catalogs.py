@@ -121,6 +121,7 @@ class FrameEffect(ExtendedEnum, StrEnum):
     SHATTEREDGLASS = auto()
     SHOWCASE = auto()
     SNOW = auto()
+    SPREE = auto()
     TEXTLESS = auto()
     TOMBSTONE = auto()
 
