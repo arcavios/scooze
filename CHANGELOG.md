@@ -18,7 +18,7 @@
 
 #### Fixed
 
-- Use paths relative to package root for logging and bulk data ([#294](https://github.com/arcavios/scooze/pull/294))
+- Use paths relative to package root for logging, and home dir for data ([#294](https://github.com/arcavios/scooze/pull/294))
 
 ### [1.0.7] - 2024-03-02
 
