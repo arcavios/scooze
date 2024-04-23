@@ -1,7 +1,7 @@
 from datetime import date
-from typing import Any
+from typing import Any, Callable
 
-from pydantic import AliasChoices, ConfigDict, Field, field_serializer, field_validator
+from pydantic import AliasChoices, ConfigDict, Field, ValidationInfo, field_serializer, field_validator
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
@@ -556,6 +556,18 @@ class CardModelData(ScoozeBaseModel):
         if isinstance(v, RelatedUris):
             v = RelatedUrisModel.model_validate(v.__dict__)
         return v
+
+    @field_validator("produced_mana", mode="wrap")
+    def _validate_produced_colors(cls, val: Any | None, next_: Callable[[Any], Any], ctx: ValidationInfo) -> Any:
+        """
+        TODO: get this to work?
+        Skip normal validation for silver bordered cards.
+        """
+
+        if ctx.data.get("border_color") == BorderColor.SILVER:
+            return val
+
+        return next_(val)
 
     # endregion
 
