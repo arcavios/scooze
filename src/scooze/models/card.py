@@ -1,7 +1,14 @@
 from datetime import date
 from typing import Any, Callable
 
-from pydantic import AliasChoices, ConfigDict, Field, ValidationInfo, field_serializer, field_validator
+from pydantic import (
+    AliasChoices,
+    ConfigDict,
+    Field,
+    ValidationInfo,
+    field_serializer,
+    field_validator,
+)
 from scooze.cardparts import (
     CardFace,
     FullCardFace,
