@@ -1,6 +1,8 @@
 from typing import Any
 
+from scooze import logger
 from beanie import PydanticObjectId
+from beanie.operators import In, Or, Text
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from scooze.models.card import CardModel, CardModelData
@@ -28,6 +30,7 @@ async def cards_root(limit: int = 3) -> list[CardModel]:
         HTTPException: 404 - No cards found in the database.
     """
 
+    # TODO: See if we can use this syntax: https://beanie-odm.dev/tutorial/aggregation/
     cards = await CardModel.aggregate([{"$sample": {"size": limit}}], projection_model=CardModel).to_list()
 
     if cards is None or not cards:
@@ -100,7 +103,20 @@ async def get_cards_by(
 
     skip = (page - 1) * page_size if paginated else 0
     limit = page_size if paginated else None
-    cards = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
+    logger.info("Inside get_cards_by.")
+
+    if prop_name == "name":
+        # in hindsight this doesn't make a lot of sense.
+        # TEXT fuzzy will do a logical or on all the terms in the query, so 
+        # it doesn't really make sense to look for a list of names in this way .. 
+        # we can hack something together but not sure if it's worth implementing or 
+        # if this should only live in the fine_one methods? 
+        # SBWH it _should_ be here, but we should talk about how that looks
+        first_v = vals[0]
+        cards = await CardModel.find(Text(first_v)).skip(skip).limit(limit).to_list()
+    else:
+        #cards = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
+        cards = await CardModel.find(In(getattr(CardModel, prop_name), [v for v in vals])).skip(skip).limit(limit).to_list()
 
     if len(cards) == 0:
         raise HTTPException(status_code=404, detail="Cards not found.")

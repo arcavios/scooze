@@ -1,5 +1,8 @@
 from datetime import date
-from typing import Any
+from typing import Any, Annotated
+
+from beanie import Indexed
+import pymongo
 
 from pydantic import AliasChoices, ConfigDict, Field, field_serializer, field_validator
 from scooze.cardparts import (
@@ -277,7 +280,7 @@ class CardModelData(ScoozeBaseModel):
         default=None,
         description='Mana cost, as string of mana symbols. (e.g. "{1}{W}{U}{B}{R}{G}")',
     )
-    name: str | None = Field(
+    name: Annotated[str, Indexed(str, index_type=pymongo.TEXT) | None] = Field(
         default=None,
         description="This card's name.",
     )
@@ -614,3 +617,9 @@ class CardModel(ScoozeDocument, CardModelData):
         bson_encoders = {
             date: encode_date,
         }
+        indexes = [
+            pymongo.IndexModel(
+                [("name", pymongo.TEXT)],
+                name="card_name",
+            ),
+        ]

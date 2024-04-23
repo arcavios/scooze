@@ -1,0 +1,13 @@
+services:
+  scooze:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_HOST=mongodb
+    ports:
+      - "8000:8000"
+  mongodb:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
