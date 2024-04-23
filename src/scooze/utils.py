@@ -73,8 +73,8 @@ class ScoozeRotatingFileHandler(RotatingFileHandler):
         delay: bool = False,
         errors: str | None = None,
     ):
-        path = Path.home() / "scooze" / "logs" / filename
-        path.mkdir()
+        path = Path.home() / "scooze" / "logs"
+        path.mkdir(parents=True, exist_ok=True)
         super(ScoozeRotatingFileHandler, self).__init__(
             filename=path / filename,
             mode=mode,
