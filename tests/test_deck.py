@@ -405,6 +405,7 @@ def test_add_card_cmdr_many(cmdr_part, card_omnath_locus_of_creation):
     cmdr_part.add_card(card=card_omnath_locus_of_creation, quantity=2)
     assert deck.cmdr == cmdr_part
 
+
 def test_add_cards_main(main_modern_4c, cards):
     deck = Deck[OracleCard](archetype="test_add_cards_main", main=main_modern_4c)
     deck.add_cards(cards=cards, in_the=InThe.MAIN)
@@ -417,6 +418,7 @@ def test_add_cards_side(side_modern_4c, cards):
     deck.add_cards(cards=cards, in_the=InThe.SIDE)
     side_modern_4c.add_cards(cards=cards)
     assert deck.side == side_modern_4c
+
 
 def test_add_cards_cmdr(cmdr_part, cards):
     deck = Deck[OracleCard](archetype="test_add_cards_cmdr", cmdr=cmdr_part)

@@ -59,7 +59,9 @@ def test_archetype(archetype):
 
 def test_format(main_cards):
     deck = DeckModel.model_construct(archetype="test_format", format=Format.MODERN, main=main_cards)
-    assert deck.format is Format.
+    assert deck.format is Format.MODERN
+
+
 def test_format_validation():
     with pytest.raises(ValueError) as _:
         DeckModel.model_validate({"archetype": "test_format_validation", "format": "not a real format"})

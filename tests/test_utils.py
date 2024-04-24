@@ -346,6 +346,7 @@ def test_fmt_none_max_card_quantity():
 
 # region Test Format Deck Size
 
+
 # region Main.
 def test_fmt_alchemy_main_size(main_size_60):
     assert main_size(Format.ALCHEMY) == main_size_60
