@@ -1,7 +1,10 @@
+import datetime as dt
+import json
 import logging
 import re
 from collections import Counter
 from datetime import date, datetime
+from pathlib import Path
 from sys import maxsize
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
@@ -10,8 +13,8 @@ from pydantic.alias_generators import to_camel
 from scooze.catalogs import CostSymbol, Format
 from scooze.enum import ExtendedEnum
 
-DEFAULT_BULK_FILE_DIR = "./data/bulk"
-DEFAULT_DECKS_DIR = "./data/decks"
+DEFAULT_BULK_FILE_DIR = str(Path("./data/bulk"))
+DEFAULT_DECKS_DIR = str(Path("./data/decks"))
 
 ## Generic Types
 T = TypeVar("T")  # generic type
@@ -24,6 +27,84 @@ FloatableT = TypeVar("FloatableT", float, int, str)  # type that can normalize t
 ## String formatting
 DATE_FORMAT = "%Y-%m-%d"
 
+# region Logging Utils
+
+# NOTE: LogRecord objects. Subject to change; see https://docs.python.org/3/library/logging.html#logrecord-objects
+LOG_RECORD_BUILTIN_ATTRS = {
+    "args",
+    "asctime",
+    "created",
+    "exc_info",
+    "exc_text",
+    "filename",
+    "funcName",
+    "levelname",
+    "levelno",
+    "lineno",
+    "module",
+    "msecs",
+    "message",
+    "msg",
+    "name",
+    "pathname",
+    "process",
+    "processName",
+    "relativeCreated",
+    "stack_info",
+    "thread",
+    "threadName",
+    "taskName",
+}
+
+
+class JsonLoggingFormatter(logging.Formatter):
+    """
+    Simple logging Formatter to generate json lines output.
+    """
+
+    def __init__(self, *, fmt_keys: dict[str, str] | None = None):
+        super().__init__()
+        self.fmt_keys = fmt_keys if fmt_keys is not None else {}
+
+    # TODO(py3.12): Python 3.12 typing has an override wrapper
+    # @override
+    def format(self, record: logging.LogRecord) -> str:
+        message = self._prepare_log_dict(record)
+        return json.dumps(message, default=str)
+
+    def _prepare_log_dict(self, record: logging.LogRecord):
+        always_fields = {
+            "message": record.getMessage(),
+            "timestamp": dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).isoformat(),
+        }
+
+        if record.exc_info is not None:
+            always_fields["exc_info"] = self.formatException(record.exc_info)
+
+        if record.stack_info is not None:
+            always_fields["stack_info"] = self.formatStack(record.stack_info)
+
+        # fmt: off
+        # disable black formatter
+        message = {
+            key: msg_val
+            if (msg_val := always_fields.pop(val, None)) is not None
+            else getattr(record, val)
+            for key, val in self.fmt_keys.items()
+        }
+        # fmt: on
+        message.update(always_fields)
+
+        # Handle extras
+        for key, val in record.__dict__.items():
+            if key not in LOG_RECORD_BUILTIN_ATTRS:
+                message[key] = val
+
+        return message
+
+
+# endregion
+
 
 def encode_date(dt: date) -> str:
     return dt.strftime(format=DATE_FORMAT)
@@ -34,17 +115,6 @@ def to_lower_camel(string: str) -> str:
         return string
 
     return to_camel(string)
-
-
-def scooze_logger() -> logging.Logger:
-    """
-    Helper function to get the scooze logger.
-
-    Use the default logging functionality here without any filters, formatters,
-    or handlers, so users can make informed decisions about their own logging.
-    """
-
-    return logging.getLogger("scooze")
 
 
 # region Deck Format Helpers

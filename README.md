@@ -1,6 +1,6 @@
 # scooze
 
-[![CI](https://img.shields.io/github/actions/workflow/status/arcavios/scooze/pytest.yml?branch=dev&logo=github&label=CI)](https://github.com/arcavios/scooze/actions?query=event%3Apush+branch%3Adev+workflow%3Apytest)
+[![CI](https://img.shields.io/github/actions/workflow/status/arcavios/scooze/ci.yml?branch=dev&logo=github&label=CI)](https://github.com/arcavios/scooze/actions?query=event%3Apush+branch%3Adev+workflow%3A%22Continuous+Integration%22)
 [![pypi](https://img.shields.io/pypi/v/scooze.svg)](https://pypi.python.org/pypi/scooze)
 [![versions](https://img.shields.io/pypi/pyversions/scooze.svg)](https://github.com/arcavios/scooze)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/arcavios/scooze/blob/dev/LICENSE)
@@ -22,11 +22,13 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
 ## Help
 
-See our [documentation](https://scooze.readthedocs.io/en/latest) for more information.
+The source code can be found [here](https://github.com/arcavios/scooze).
+
+See our [documentation](https://scooze.readthedocs.io/en/stable) for more information.
 
 ## Installation
 
-Install using `pip install scooze`. For more installation options, see the [Install](https://scooze.readthedocs.io/en/latest/installation) section in the documentation.
+Install using `pip install scooze`. For more installation options, see the [Install](https://scooze.readthedocs.io/en/stable/installation) section in the documentation.
 
 ## A Simple Example
 
@@ -58,11 +60,11 @@ Sideboard:
 """
 ```
 
-See [Setup](https://scooze.readthedocs.io/en/latest/setup/) and our [API Documentation](https://scooze.readthedocs.io/en/latest/dataclasses/card/) for more details.
+See [Setup](https://scooze.readthedocs.io/en/stable/setup/) and our [API Documentation](https://scooze.readthedocs.io/en/stable/dataclasses/card/) for more details.
 
 ## Contributing
 
-For guidance on setting up a development environment and how to make a contribution to scooze, see [Contributing to scooze](https://scooze.readthedocs.io/en/latest/contributing).
+For guidance on setting up a development environment and how to make a contribution to scooze, see [Contributing to scooze](https://scooze.readthedocs.io/en/stable/contributing).
 
 ## Report a Bug
 
