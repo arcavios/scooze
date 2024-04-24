@@ -32,6 +32,7 @@ app = FastAPI(
     title="scooze",
     summary="REST API for interacting with MongoDB for Magic: the Gathering tournaments, decklists, and cards.",
     lifespan=lifespan,
+    version=CONFIG.version,
 )
 
 
