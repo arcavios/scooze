@@ -52,6 +52,15 @@ class CardList(ComparableObject, Generic[CardT]):
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
 
+    def filter(self, func: function) -> Self:
+        """
+        TODO: filter out cards based on the given filter function
+
+        could probably extend this to have a few "default" filters that are available to users.
+        """
+
+        pass
+
     def add_card(self, card: CardT, quantity: int = 1) -> None:
         """
         Add a given quantity of a given card to this CardList.
