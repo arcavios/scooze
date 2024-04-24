@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="scooze",
-    summary="REST API for interacting with MongoDB for Magic: the Gathering tournaments, decklists, and cards.",
+    summary="REST API for interacting with Magic: the Gathering cards, decks, and tournaments.",
     lifespan=lifespan,
     version=CONFIG.version,
 )
