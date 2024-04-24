@@ -1,6 +1,6 @@
 from collections import Counter
 from sys import maxsize
-from typing import Generic, Self
+from typing import Callable, Generic, Self
 
 from scooze.card import CardT
 from scooze.utils import ComparableObject, DictDiff
@@ -52,7 +52,7 @@ class CardList(ComparableObject, Generic[CardT]):
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
 
-    def filter(self, func: function) -> Self:
+    def filter(self, func: Callable) -> Self:
         """
         TODO: filter out cards based on the given filter function
 
