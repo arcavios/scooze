@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Any
 
 from beanie import PydanticObjectId
@@ -9,7 +10,7 @@ from scooze.utils import to_lower_camel
 router = APIRouter(
     prefix="/decks",
     tags=["decks"],
-    responses={404: {"description": "Decks Not Found"}},
+    responses={HTTPStatus.NOT_FOUND: {"description": "Decks Not Found"}},
 )
 
 
@@ -31,7 +32,7 @@ async def decks_root(limit: int = 3) -> list[DeckModel]:
     decks = await DeckModel.aggregate([{"$sample": {"size": limit}}], projection_model=DeckModel).to_list()
 
     if decks is None or not decks:
-        raise HTTPException(status_code=404, detail="No decks found in the database.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="No decks found in the database.")
 
     return decks
 
@@ -59,7 +60,7 @@ async def add_decks(decks: list[DeckModelData]) -> JSONResponse:
         insert_result = await DeckModel.insert_many(decks_to_insert)
         return JSONResponse(f"Created {len(insert_result.inserted_ids)} deck(s).")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to create new decks.")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Failed to create new decks.")
 
 
 @router.post("/by", summary="Get decks by property")
@@ -100,7 +101,7 @@ async def get_decks_by(
     decks = await DeckModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
 
     if len(decks) == 0:
-        raise HTTPException(status_code=404, detail="Decks not found.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Decks not found.")
 
     return decks
 
@@ -123,6 +124,6 @@ async def delete_decks_all() -> JSONResponse:
     delete_result = await DeckModel.delete_all()
 
     if delete_result is None:
-        raise HTTPException(status_code=400, detail="Decks weren't deleted.")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Decks weren't deleted.")
 
     return JSONResponse(f"Deleted {delete_result.deleted_count} deck(s).")

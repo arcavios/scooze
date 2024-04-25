@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from beanie import PydanticObjectId
 from bson.errors import InvalidId
 from fastapi import APIRouter, Depends
@@ -8,7 +10,7 @@ from scooze.models.card import CardModel, CardModelData
 router = APIRouter(
     prefix="/card",
     tags=["card"],
-    responses={404: {"description": "Card Not Found"}},
+    responses={HTTPStatus.NOT_FOUND: {"description": "Card Not Found"}},
 )
 
 
@@ -29,7 +31,7 @@ def _validate_card_id(card_id: str) -> PydanticObjectId:
     try:
         return PydanticObjectId(card_id)
     except InvalidId:
-        raise HTTPException(status_code=422, detail="Must give a valid ID.")
+        raise HTTPException(status_code=HTTPStatus.UNPROCESSABLE_ENTITY, detail="Must give a valid ID.")
 
 
 @router.get("/", summary="Get a card at random")
@@ -47,7 +49,7 @@ async def card_root() -> CardModel:
     cards = await CardModel.aggregate([{"$sample": {"size": 1}}], projection_model=CardModel).to_list()
 
     if cards is None or not cards:
-        raise HTTPException(status_code=404, detail="No cards found in the database.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="No cards found in the database.")
 
     return cards[0]
 
@@ -76,7 +78,7 @@ async def add_card(card_data: CardModelData) -> CardModel:
 
         return await card.create()
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to create a new card. Error: {e}")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Failed to create a new card. Error: {e}")
 
 
 # Read
@@ -101,7 +103,7 @@ async def get_card_by_id(card_id: PydanticObjectId = Depends(_validate_card_id))
     card = await CardModel.get(card_id)
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Card with ID {card_id} not found.")
 
     return card
 
@@ -126,7 +128,7 @@ async def get_card_by_name(card_name: str) -> CardModel:
     card = await CardModel.find_one({"name": card_name})
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with name '{card_name}' not found.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Card with name '{card_name}' not found.")
 
     return card
 
@@ -159,7 +161,7 @@ async def update_card(card_req: CardModel, card_id: PydanticObjectId = Depends(_
     card = await CardModel.get(card_id)
 
     if card is None:
-        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Card with ID {card_id} not found.")
 
     # NOTE: This could be slightly less verbose by chaining a la CardModel.get().update() but
     # the typing gets weird from things on Beanie's end so I broke it up like this
@@ -167,7 +169,7 @@ async def update_card(card_req: CardModel, card_id: PydanticObjectId = Depends(_
     updated_card = await CardModel.get(card_id)
 
     if updated_card is None:
-        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found post-update.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Card with ID {card_id} not found post-update.")
 
     return updated_card
 
@@ -195,11 +197,11 @@ async def delete_card_by_id(card_id: PydanticObjectId = Depends(_validate_card_i
     card_to_delete = await CardModel.get(card_id)
 
     if card_to_delete is None:
-        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f"Card with ID {card_id} not found.")
 
     delete_result = await card_to_delete.delete()
 
     if delete_result is None:
-        raise HTTPException(status_code=400, detail=f"Card with ID {card_id} not deleted.")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Card with ID {card_id} not deleted.")
 
     return JSONResponse(f"Card with ID {card_id} deleted.")
