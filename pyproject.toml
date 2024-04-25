@@ -34,7 +34,7 @@ fastapi = ">=0.100.0, <1.0.0"
 frozendict = "^2.3.8"
 ijson = "^3.2.3"
 motor = "^3.2.0"
-pydantic = ">=2.0.0, <2.7.0"
+pydantic = ">=2.0.0"
 pydantic-settings = "^2.0.0"
 python = ">=3.11, <4"
 requests = "^2.31.0"
@@ -69,20 +69,4 @@ scooze = "scooze.console.cli:run_cli"
 # addopts = "-m 'not slow'"
 addopts = "-W ignore::DeprecationWarning -m 'not context'"
 asyncio_mode = "auto"
-markers = [
-    "slow: expected to be slow",
-    "context: related to managed context",
-    "card_quantity: related to card max quantity allowed per format",
-    "dict_diff: related to DictDiff in utils",
-    "deck_diff: related to Deck.diff()",
-    "deck_size: related to deck size per format",
-    "deck_add_cards: related to Deck.add_card() and Deck.add_cards()",
-    "deck_remove_cards: related to Deck.remove_card() and Deck.remove_cards()",
-    "deck_count: related to Deck.count()",
-    "deck_export: related to exporting a Deck as text or some other format",
-    "deck_validation: related to forcing ValidationErrors from Pydantic",
-    "router_card: related to /card routes",
-    "router_cards: related to /cards routes",
-    "router_deck: related to /deck routes",
-    "router_decks: related to /decks routes",
-]
+markers = ["slow: expected to be slow", "context: related to managed context"]
