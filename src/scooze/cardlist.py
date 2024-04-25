@@ -5,6 +5,10 @@ from typing import Callable, Generic, Self
 from scooze.card import CardT
 from scooze.utils import ComparableObject, DictDiff
 
+# TODO: move this somewhere else
+def arena_only():
+    return True
+
 
 class CardList(ComparableObject, Generic[CardT]):
     """
@@ -59,7 +63,7 @@ class CardList(ComparableObject, Generic[CardT]):
         could probably extend this to have a few "default" filters that are available to users.
         """
 
-        pass
+        return filter(func, self.cards)
 
     def add_card(self, card: CardT, quantity: int = 1) -> None:
         """
