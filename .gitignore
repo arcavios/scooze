@@ -7,8 +7,7 @@ __pycache__/
 *$py.class
 
 # Logs
-*.log
-*.log.jsonl
+*.log.*
 
 # Test coverage
 *.coverage
