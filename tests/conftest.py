@@ -599,6 +599,12 @@ def card_force_of_negation(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def card_forceful_cultivator(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "ba3b7de0-9c22-4d25-9b15-6de4e252f9a5")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_forest(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "ecd6d8fb-780c-446c-a8bf-93386b22fe95")
     return OracleCard.from_json(card_json)
@@ -641,6 +647,12 @@ def card_leyline_binding(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
+def card_lonis_genetics_expert(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "59813845-48c9-4af2-8beb-91d58aac09ee")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
 def card_minamo_school_at_waters_edge(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "7536292c-da25-41c8-ba28-1e35758a7f3d")
     return OracleCard.from_json(card_json)
@@ -679,6 +691,12 @@ def card_prismatic_ending(cards_json) -> OracleCard:
 @pytest.fixture(scope="session")
 def card_raugrin_triome(cards_json) -> OracleCard:
     card_json = get_card_json(cards_json, "02138fbb-3962-4348-8d31-faaefba0b8b2")
+    return OracleCard.from_json(card_json)
+
+
+@pytest.fixture(scope="session")
+def card_river_boa(cards_json) -> OracleCard:
+    card_json = get_card_json(cards_json, "2e9d5aaf-b7e8-4676-aec8-7d29a0169a2c")
     return OracleCard.from_json(card_json)
 
 

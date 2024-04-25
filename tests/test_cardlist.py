@@ -3,7 +3,7 @@ from sys import maxsize
 
 import pytest
 from scooze.card import Card
-from scooze.cardlist import CardList
+from scooze.cardlist import CardList, arena_only
 from scooze.utils import DictDiff
 
 # region Fixtures
@@ -94,6 +94,22 @@ def test_diff(
             card_wear_tear: (1, 0),
         }
     )
+
+
+def test_filter_arena_only(card_aether_gust, card_dovins_veto, card_forceful_cultivator):
+    # https://scryfall.com/card/yneo/29/forceful-cultivator
+    card_list = CardList(cards=Counter({card_aether_gust: 1, card_dovins_veto: 1, card_forceful_cultivator: 4}))
+    assert card_list.filter(arena_only) == CardList(Counter({card_forceful_cultivator: 4}))
+
+
+def test_filter_mtgo_only(card_river_boa):
+    # https://scryfall.com/card/vis/118/river-boa
+    pass
+
+
+def test_filter_paper_only(card_lonis_genetics_expert):
+    # https://scryfall.com/card/clu/37/lonis-genetics-expert
+    pass
 
 
 @pytest.mark.deck_add_cards
