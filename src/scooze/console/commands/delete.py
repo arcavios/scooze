@@ -41,7 +41,6 @@ class DeleteCommand(Command):
         for collection in to_delete:
             self.delete_collection(collection)
 
-
     def delete_collection(self, coll: DbCollection):
         if self.confirm(f"Delete existing {coll}?"):
             print(f"Deleting all {coll} from your local database...")
