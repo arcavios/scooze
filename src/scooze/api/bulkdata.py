@@ -64,8 +64,14 @@ def _try_validate_card(card_json: dict) -> CardModel | None:
     """
 
     try:
-        card = CardModelData.model_validate(card_json)
-        return CardModel.model_validate(card.model_dump())
+        # TODO: is this an appropriate solution? we moved the serialization to the model only so when we dump the data, it's still untouched object data
+        # TODO: if this makes sense, we will need to adjust any place where we are creating a CardModel to use this approach. Perhaps we can write a helper?
+        # card = CardModelData.model_validate(card_json)
+        # return CardModel.model_validate(card.model_dump())
+        data = CardModelData.model_validate(card_json)
+        cm = CardModel.model_construct(**data.model_dump())
+        print(cm)
+        return cm
 
     except ValidationError as e:
         cli_logger.exception(

@@ -580,6 +580,14 @@ class CardModelData(ScoozeBaseModel):
 
     # endregion
 
+    # TODO(#46): add Card field validators
+
+
+class CardModel(ScoozeDocument, CardModelData):
+    """
+    A database representation of a scooze Card.
+    """
+
     # region Serializers
 
     @field_serializer("released_at")
@@ -602,14 +610,6 @@ class CardModelData(ScoozeBaseModel):
         return super().serialize_set(set_field=set_field)
 
     # endregion
-
-    # TODO(#46): add Card field validators
-
-
-class CardModel(ScoozeDocument, CardModelData):
-    """
-    A database representation of a scooze Card.
-    """
 
     model_config = ConfigDict(
         json_schema_extra={
