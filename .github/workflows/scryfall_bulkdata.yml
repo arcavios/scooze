@@ -1,16 +1,16 @@
 name: Scryfall Bulkdata Validation
 
-on:
-  push:
-    branches: [dev]
-  # Every Monday at 07:00 UTC
-  schedule:
-    - cron: "0 7 * * 1"
+on: [push]
+  # push:
+  #   branches: [dev]
+  # # Every Monday at 07:00 UTC
+  # schedule:
+  #   - cron: "0 7 * * 1"
 
 jobs:
   scryfall-bulkdata:
     env:
-      LOG_DIR: "logs/scooze.log.jsonl"
+      LOG_DIR: "~/scooze/logs/scooze.log.jsonl"
     strategy:
       fail-fast: false
       matrix:
