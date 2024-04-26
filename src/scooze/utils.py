@@ -4,17 +4,15 @@ import logging
 import re
 from collections import Counter
 from datetime import date, datetime
-from pathlib import Path
+from logging.handlers import RotatingFileHandler
 from sys import maxsize
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
 from pydantic.alias_generators import to_camel
 from scooze.catalogs import CostSymbol, Format
+from scooze.config import CONFIG
 from scooze.enum import ExtendedEnum
-
-DEFAULT_BULK_FILE_DIR = str(Path("./data/bulk"))
-DEFAULT_DECKS_DIR = str(Path("./data/decks"))
 
 ## Generic Types
 T = TypeVar("T")  # generic type
@@ -55,6 +53,34 @@ LOG_RECORD_BUILTIN_ATTRS = {
     "threadName",
     "taskName",
 }
+
+
+class ScoozeRotatingFileHandler(RotatingFileHandler):
+    """
+    Simple RotatingFileHandler that writes to the home directory.
+    """
+
+    def __init__(
+        self,
+        filename: str,
+        mode: str = "a",
+        maxBytes: int = 0,
+        backupCount: int = 0,
+        encoding: str | None = None,
+        delay: bool = False,
+        errors: str | None = None,
+    ):
+        path = CONFIG.logs_dir
+        path.mkdir(parents=True, exist_ok=True)
+        super(ScoozeRotatingFileHandler, self).__init__(
+            filename=path / filename,
+            mode=mode,
+            maxBytes=maxBytes,
+            backupCount=backupCount,
+            encoding=encoding,
+            delay=delay,
+            errors=errors,
+        )
 
 
 class JsonLoggingFormatter(logging.Formatter):
