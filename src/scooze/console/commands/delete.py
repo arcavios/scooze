@@ -43,11 +43,11 @@ class DeleteCommand(Command):
 
     def delete_collection(self, coll: DbCollection):
         if self.confirm(f"Delete existing {coll}?"):
-            print(f"Deleting all {coll} from your local database...")
+            self.line(f"Deleting all {coll} from your local database...")
             match coll:
                 case DbCollection.CARDS:
                     with ScoozeApi() as s:
                         s.delete_cards_all()
                 case DbCollection.DECKS:
                     # TODO(#145): Use the ScoozeApi for this
-                    print("Can't delete decks yet")
+                    self.line("Can't delete decks yet.")
