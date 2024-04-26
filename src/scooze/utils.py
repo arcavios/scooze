@@ -5,17 +5,14 @@ import re
 from collections import Counter
 from datetime import date, datetime
 from logging.handlers import RotatingFileHandler
-from pathlib import Path
 from sys import maxsize
 from typing import Any, Hashable, Iterable, Mapping, Self, Type, TypeVar
 
 from frozendict import frozendict
 from pydantic.alias_generators import to_camel
 from scooze.catalogs import CostSymbol, Format
+from scooze.config import CONFIG
 from scooze.enum import ExtendedEnum
-
-DEFAULT_BULK_FILE_DIR = str(Path.home() / "scooze" / "data" / "bulk")
-DEFAULT_DECKS_DIR = str(Path.home() / "scooze" / "data" / "decks")
 
 ## Generic Types
 T = TypeVar("T")  # generic type
@@ -73,7 +70,7 @@ class ScoozeRotatingFileHandler(RotatingFileHandler):
         delay: bool = False,
         errors: str | None = None,
     ):
-        path = Path.home() / "scooze" / "logs"
+        path = CONFIG.logs_dir
         path.mkdir(parents=True, exist_ok=True)
         super(ScoozeRotatingFileHandler, self).__init__(
             filename=path / filename,

@@ -10,7 +10,7 @@ on:
 jobs:
   scryfall-bulkdata:
     env:
-      LOG_DIR: "~/scooze/logs/scooze.log.jsonl"
+      LOG_DIR: "~/.scooze/logs/scooze.log.jsonl"
     strategy:
       fail-fast: false
       matrix:

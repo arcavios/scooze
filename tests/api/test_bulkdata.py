@@ -26,7 +26,7 @@ class TestBulkDataWithEmptyDatabase:
         result = await bulk_api.load_card_file(file_type=file_type, bulk_file_dir=bulk_file_dir)
         assert result == 9
 
-    @patch("scooze.api.bulkdata.open")
+    @patch("pathlib.Path.open")
     async def test_load_card_file_bad(
         self,
         mock_open: MagicMock,
