@@ -5,7 +5,7 @@ from cleo.helpers import option
 from scooze.api import ScoozeApi
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
-from scooze.utils import DEFAULT_BULK_FILE_DIR
+from scooze.config import CONFIG
 
 
 class LoadCardsCommand(Command):
@@ -20,8 +20,8 @@ class LoadCardsCommand(Command):
         option("test", description="The Power 9, for testing purposes."),
         option(
             "bulk-data-dir",
-            description="Directory to store bulk files, used with load cards.",
-            default=DEFAULT_BULK_FILE_DIR,
+            description="Directory to load bulk files from.",
+            default=CONFIG.bulk_file_dir,
             value_required=True,
             flag=False,
         ),
@@ -42,7 +42,7 @@ class LoadCardsCommand(Command):
         load_all = self.option("all")
         load_test = self.option("test") and not load_all
 
-        if self.option("all"):
+        if load_all:
             to_load.append(ScryfallBulkFile.ALL)
         else:
             if self.option("oracle"):

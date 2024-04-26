@@ -5,8 +5,8 @@ from pathlib import Path
 import ijson
 from cleo.commands.command import Command
 from cleo.helpers import option
+from scooze.config import CONFIG
 from scooze.models.deck import DeckModel
-from scooze.utils import DEFAULT_DECKS_DIR
 
 
 class LoadDecksCommand(Command):
@@ -19,7 +19,7 @@ class LoadDecksCommand(Command):
         option(
             "decks-dir",
             description="Directory to store deck files, used with load decks.",
-            default=DEFAULT_DECKS_DIR,
+            default=CONFIG.decks_dir,
             value_required=True,
             flag=False,
         ),

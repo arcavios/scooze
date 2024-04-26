@@ -6,12 +6,22 @@
 
 - Logging for the scooze CLI ([#277](https://github.com/arcavios/scooze/pull/277))
 - Regression tests for validating Scryfall bulkdata ([#278](https://github.com/arcavios/scooze/pull/278))
+- Add `scooze save cards` to the scooze CLI ([#287](https://github.com/arcavios/scooze/pull/287))
+- Add `spree` to supported `FrameEffect`s ([#293](https://github.com/arcavios/scooze/pull/293))
 
 #### Changed
 
 - Using Beanie for decks ([#272](https://github.com/arcavios/scooze/pull/272))
 - Refactored the bulkdata API endpoints ([#279](https://github.com/arcavios/scooze/pull/279))
 - Renamed DeckPart to CardList ([#281](https://github.com/arcavios/scooze/pull/281))
+- Use `pathlib` for consistent cross-OS file paths ([#222](https://github.com/arcavios/scooze/pull/222))
+- Default to home/scooze for storage of bulk data and logs ([#294](https://github.com/arcavios/scooze/pull/294))
+
+
+#### Fixed
+
+- Skip validation for Sole Performer ([#297](https://github.com/arcavios/scooze/pull/222))
+
 
 ### [1.0.7] - 2024-03-02
 
