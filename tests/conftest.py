@@ -2,6 +2,7 @@ import asyncio
 import json
 from collections import Counter
 from datetime import date, datetime, timezone
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -119,13 +120,28 @@ def get_cardmodel_from_json(card_json: dict) -> CardModel:
 
 
 @pytest.fixture(scope="session")
-def cards_json() -> list[str]:
+def path_test_data_dir() -> Path:
+    return Path("./data/test")
+
+
+@pytest.fixture(scope="session")
+def path_test_cards(path_test_data_dir) -> Path:
+    return path_test_data_dir / "test_cards.jsonl"
+
+
+@pytest.fixture(scope="session")
+def path_4c_cards(path_test_data_dir) -> Path:
+    return path_test_data_dir / "4c_cards.jsonl"
+
+
+@pytest.fixture(scope="session")
+def cards_json(path_test_cards, path_4c_cards) -> list[str]:
     json_list = []
 
-    with open("./data/test/test_cards.jsonl", "r", encoding="utf8") as json_file:
+    with path_test_cards.open(mode="r", encoding="utf8") as json_file:
         json_list.extend(list(json_file))
 
-    with open("./data/test/4c_cards.jsonl", "r", encoding="utf8") as json_file:
+    with path_4c_cards.open(mode="r", encoding="utf8") as json_file:
         json_list.extend(list(json_file))
 
     return json_list
@@ -221,6 +237,7 @@ def json_anaconda_portal(cards_json) -> dict:
 
 
 # endregion
+
 
 # region CardModels
 
@@ -366,6 +383,7 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
 
 # endregion
 
+
 # region Oracle text
 
 
@@ -419,7 +437,6 @@ def oracle_zndrsplt_eye_of_wisdom() -> str:
 
 
 # region Test OracleCards
-
 
 # Cards are sorted alphabetically
 

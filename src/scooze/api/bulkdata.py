@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import ijson
 from pydantic_core import ValidationError
-from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
 from scooze.console import logger as cli_logger
 from scooze.models.card import CardModel, CardModelData
@@ -21,13 +22,13 @@ async def load_card_file(file_type: ScryfallBulkFile, bulk_file_dir: str, show_p
         The total number of cards loaded into the database.
     """
 
-    file_path = f"{bulk_file_dir}/{file_type}.json"
+    file_path = Path(bulk_file_dir) / f"{file_type}.json"
     batch_size = 5000
     current_batch_count = 0
     results_count = 0
     current_batch: list[CardModel] = []
 
-    with open(file_path, "rb") as cards_file:
+    with file_path.open(mode="rb") as cards_file:
         card_jsons = ijson.items(cards_file, "item")
 
         async def load_batch(batch: list[CardModel]) -> int:

@@ -1,11 +1,9 @@
-import os
-from urllib.error import (  # TODO(#153): This allows for autolinking to the HTTPError documentation, but it's bloat, right?
-    HTTPError,
-)
+from pathlib import Path
+from urllib.error import HTTPError  # import HTTPError for linking in docs
 
 import requests
 from scooze.catalogs import ScryfallBulkFile
-from scooze.utils import DEFAULT_BULK_FILE_DIR
+from scooze.config import CONFIG
 
 SCRYFALL_BULK_INFO_ENDPOINT = "https://api.scryfall.com/bulk-data"
 
@@ -13,7 +11,7 @@ SCRYFALL_BULK_INFO_ENDPOINT = "https://api.scryfall.com/bulk-data"
 def download_bulk_data_file(
     uri: str,
     bulk_file_type: ScryfallBulkFile | None = None,
-    bulk_file_dir: str = DEFAULT_BULK_FILE_DIR,
+    bulk_file_dir: Path = CONFIG.bulk_file_dir,
 ) -> None:
     """
     Download a single bulk data file from Scryfall.
@@ -22,8 +20,8 @@ def download_bulk_data_file(
         uri: Location of bulk data file (generally found from bulk info
             endpoint).
         bulk_file_type: Type of bulk file, used to set filename.
-        bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
-            not specified.
+        bulk_file_dir: Directory to save bulk files. Defaults to
+        `~/.scooze/data/bulk` if not specified.
 
     Raises:
         HTTPError: If request for bulk file not successful.
@@ -32,24 +30,25 @@ def download_bulk_data_file(
     # TODO(#74): flag for check vs existing file; don't overwrite with same file or older version
     with requests.get(uri, stream=True) as r:
         r.raise_for_status()
-        os.makedirs(bulk_file_dir, exist_ok=True)
-        file_name = f"{bulk_file_dir}/{bulk_file_type}.json"
-        with open(file_name, "wb") as f:
+        bulk_file_dir.mkdir(parents=True, exist_ok=True)
+        file = bulk_file_dir / f"{bulk_file_type}.json"
+        with file.open(mode="wb") as f:
             for chunk in r.iter_content(chunk_size=None):
                 f.write(chunk)
 
 
 def download_bulk_data_file_by_type(
     bulk_file_type: ScryfallBulkFile | None = None,
-    bulk_file_dir: str = DEFAULT_BULK_FILE_DIR,
+    bulk_file_dir: str = CONFIG.bulk_file_dir,
 ) -> None:
     """
-    Get a bulk data file from Scryfall, specified by file type (from among ScryfallBulkFile).
+    Get a bulk data file from Scryfall, specified by file type
+    (from among ScryfallBulkFile).
 
     Args:
         bulk_file_type: Type of bulk file, used to set filename.
-        bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
-            not specified.
+        bulk_file_dir: Directory to save bulk files. Defaults to
+        `~/.scooze/data/bulk` if not specified.
 
     Raises:
         HTTPError: If request for bulk file not successful.
@@ -67,14 +66,14 @@ def download_bulk_data_file_by_type(
 
 
 def download_all_bulk_data_files(
-    bulk_file_dir: str = DEFAULT_BULK_FILE_DIR,
+    bulk_file_dir: str = CONFIG.bulk_file_dir,
 ) -> None:
     """
     Download all supported Scryfall bulk data files to local filesystem.
 
     Args:
-        bulk_file_dir: Directory to save bulk files. Defaults to `./data/bulk` if
-            not specified.
+        bulk_file_dir: Directory to save bulk files. Defaults to
+        `~/.scooze/data/bulk` if not specified.
 
     Raises:
         HTTPError: If request for bulk file not successful.
