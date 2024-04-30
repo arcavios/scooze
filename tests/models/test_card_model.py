@@ -1,7 +1,7 @@
 from datetime import date
 
 from httpx import AsyncClient
-from scooze.card import FullCard
+from scooze.card import Card
 from scooze.catalogs import (
     BorderColor,
     Color,
@@ -483,7 +483,7 @@ def test_cardmodeldata_from_json_variation(json_anaconda_portal):
 
 
 def _test_from_card_helper(input_json):
-    card = FullCard.from_json(input_json)
+    card = Card.from_json(input_json)
     model_from_card = CardModelData.model_validate(card.__dict__)
     model_from_json = CardModelData.model_validate(input_json)
     assert model_from_card == model_from_json
@@ -506,7 +506,7 @@ def test_cardmodeldata_from_card_transform_planeswalker(json_arlinn_the_packs_ho
 
 
 def test_cardmodeldata_from_card_reversible(json_zndrsplt_eye_of_wisdom):
-    card = FullCard.from_json(json_zndrsplt_eye_of_wisdom)
+    card = Card.from_json(json_zndrsplt_eye_of_wisdom)
     model_from_card = CardModelData.model_validate(card.__dict__)
     model_from_json = CardModelData.model_validate(json_zndrsplt_eye_of_wisdom)
 

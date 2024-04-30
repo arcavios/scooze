@@ -47,7 +47,7 @@ class ImageUris(HashableObject):
 
 class CardFace(HashableObject):
     """
-    An object for a single face of a multi-faced FullCard.
+    An object for a single face of a multi-faced Card.
     Multi-faced cards include MDFCs, split cards, aftermath, etc;
     see [here](https://scryfall.com/docs/api/cards#card-face-objects)
 

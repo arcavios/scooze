@@ -1,8 +1,7 @@
 from datetime import date
 
 from beanie import PydanticObjectId
-from httpx import AsyncClient
-from scooze.card import Card, FullCard, OracleCard
+from scooze.card import Card
 from scooze.catalogs import (
     BorderColor,
     Color,
@@ -18,14 +17,13 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.models.card import CardModel, CardModelData
 
 # region Magic Methods
 
 
 def test_no_mutable_defaults():
-    full_card_1 = FullCard()
-    full_card_2 = FullCard()
+    full_card_1 = Card()
+    full_card_2 = Card()
     assert id(full_card_1.purchase_uris) != id(full_card_2.purchase_uris)
     assert id(full_card_1.related_uris) != id(full_card_2.related_uris)
 
@@ -49,38 +47,6 @@ def test_card_ne():
     assert card != card3
 
 
-def test_oraclecard_eq():
-    card = OracleCard(name="Test Card")
-    card2 = OracleCard(name="Test Card")
-    card3 = OracleCard(name="Another Card")
-    assert card == card2
-    assert not card == card3
-
-
-def test_oraclecard_ne():
-    card = OracleCard(name="Test Card")
-    card2 = OracleCard(name="Test Card")
-    card3 = OracleCard(name="Another Card")
-    assert not card != card2
-    assert card != card3
-
-
-def test_fullcard_eq():
-    card = FullCard(name="Test Card")
-    card2 = FullCard(name="Test Card")
-    card3 = FullCard(name="Another Card")
-    assert card == card2
-    assert not card == card3
-
-
-def test_fullcard_ne():
-    card = FullCard(name="Test Card")
-    card2 = FullCard(name="Test Card")
-    card3 = FullCard(name="Another Card")
-    assert not card != card2
-    assert card != card3
-
-
 # endregion
 
 # region Hash
@@ -90,26 +56,9 @@ def test_card_hash(json_anaconda_7ed_foil, json_anaconda_portal):
     a7 = Card.from_json(json_anaconda_7ed_foil)
     assert {a7: "value"}[a7] == "value"
     ap = Card.from_json(json_anaconda_portal)
-    assert hash(a7) == hash(ap)  # all Card-level fields are the same
+    # TODO(#309) - write tests to check that two cards with the same oracle fields have the same hash
+    # assert hash(a7) == hash(ap)  # all Card-level fields are the same
     a7_clone = Card.from_json(json_anaconda_7ed_foil)
-    assert hash(a7) == hash(a7_clone)
-
-
-def test_oraclecard_hash(json_anaconda_7ed_foil, json_anaconda_portal):
-    a7 = OracleCard.from_json(json_anaconda_7ed_foil)
-    assert {a7: "value"}[a7] == "value"
-    ap = OracleCard.from_json(json_anaconda_portal)
-    assert hash(a7) != hash(ap)
-    a7_clone = OracleCard.from_json(json_anaconda_7ed_foil)
-    assert hash(a7) == hash(a7_clone)
-
-
-def test_fullcard_hash(json_anaconda_7ed_foil, json_anaconda_portal):
-    a7 = FullCard.from_json(json_anaconda_7ed_foil)
-    assert {a7: "value"}[a7] == "value"
-    ap = FullCard.from_json(json_anaconda_portal)
-    assert hash(a7) != hash(ap)
-    a7_clone = FullCard.from_json(json_anaconda_7ed_foil)
     assert hash(a7) == hash(a7_clone)
 
 
@@ -119,41 +68,134 @@ def test_fullcard_hash(json_anaconda_7ed_foil, json_anaconda_portal):
 
 # region Class Methods
 
+def test_oracle_text_without_reminder(json_anaconda_portal):
+    card = Card.from_json(json_anaconda_portal)
+    assert card.oracle_text == "Swampwalk (This creature can't be blocked as long as defending player controls a Swamp.)"
+    assert Card.oracle_text_without_reminder(card.oracle_text) == "Swampwalk"
 
-def test_oraclecard_oracle_text_without_reminder(json_arlinn_the_packs_hope):
-    card = OracleCard.from_json(json_arlinn_the_packs_hope)
+def test_reversible_oracle_text_without_reminder(json_arlinn_the_packs_hope):
+    card = Card.from_json(json_arlinn_the_packs_hope)
     front = card.card_faces[0]
     assert front.oracle_text.startswith(
         "Daybound (If a player casts no spells during their own turn, it becomes night next turn.)\n"
     )
-    assert OracleCard.oracle_text_without_reminder(front.oracle_text).startswith("Daybound\n")
-
-
-def test_fullcard_oracle_text_without_reminder(json_arlinn_the_packs_hope):
-    card = FullCard.from_json(json_arlinn_the_packs_hope)
-    front = card.card_faces[0]
-    assert front.oracle_text.startswith(
-        "Daybound (If a player casts no spells during their own turn, it becomes night next turn.)\n"
-    )
-    assert FullCard.oracle_text_without_reminder(front.oracle_text).startswith("Daybound\n")
+    assert Card.oracle_text_without_reminder(front.oracle_text).startswith("Daybound\n")
 
 
 # region json -> Card Object
 
-# region Card
-
 
 def test_card_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
     card = Card.from_json(json_ancestral_recall)
+    assert card.all_parts is None
+    assert card.arena_id is None
+    assert card.artist == "Ryan Pancoast"
+    assert card.artist_ids == tuple(["89cc9475-dda2-4d13-bf88-54b92867a25c"])
+    assert card.attraction_lights is None
+    assert card.booster is True
+    assert card.border_color is BorderColor.BLACK
+    assert card.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
+    assert card.card_faces is None
+    assert card.cardmarket_id is None
     assert card.cmc == 1.0
+    assert card.collector_number == "1"
     assert card.color_identity == {Color.BLUE}
+    assert card.color_indicator is None
     assert card.colors == {Color.BLUE}
+    assert card.content_warning is False
+    assert card.digital is True
+    assert card.edhrec_rank is None
+    assert card.finishes == {Finish.NONFOIL, Finish.FOIL}
+    assert card.flavor_name is None
+    assert card.flavor_text is None
+    assert card.frame is Frame._2015
+    assert card.frame_effects is None
+    assert card.full_art is False
+    assert card.games == {Game.MTGO}
+    assert card.hand_modifier is None
+    assert card.highres_image is True
+    assert card.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
+    assert card.image_status is ImageStatus.HIGHRES_SCAN
+
+    # ImageUris
+    assert card.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert card.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert card.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert card.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert card.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert card.image_uris.small.startswith("https://cards.scryfall.io/small/")
+
+    assert card.keywords == frozenset()
+    assert card.lang is Language.ENGLISH
+    assert card.layout is Layout.NORMAL
     assert card.legalities == legalities_ancestral_recall
+    assert card.life_modifier is None
+    assert card.loyalty is None
     assert card.mana_cost == "{U}"
+    assert card.mtgo_foil_id == 53178
+    assert card.mtgo_id == 53177
+    assert card.multiverse_ids == tuple([382841])
     assert card.name == "Ancestral Recall"
+    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
+    assert card.oracle_text == "Target player draws three cards."
+    assert card.oversized is False
+    assert card.penny_rank is None
     assert card.power is None
+    assert card.preview is None
+
+    # Prices
+    assert card.prices.eur is None
+    assert card.prices.eur_foil is None
+    assert card.prices.tix == 1.9
+    assert card.prices.usd is None
+    assert card.prices.usd_etched is None
+    assert card.prices.usd_foil is None
+
+    assert card.printed_name is None
+    assert card.printed_text is None
+    assert card.printed_type_line is None
+    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert card.produced_mana is None
+    assert card.promo is False
+    assert card.promo_types is None
+
+    # PurchaseUris
+    assert card.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
+    assert card.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
+    assert card.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
+
+    assert card.rarity is Rarity.BONUS
+
+    # RelatedUris
+    assert card.related_uris.edhrec.startswith("https://edhrec.com/")
+    assert card.related_uris.gatherer.startswith("https://gatherer.wizards.com/")
+    assert card.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
+    assert card.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
+
+    assert card.released_at == date(year=2014, month=6, day=16)
+    assert card.reprint is True
+    assert card.reserved is True
+    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
+    assert card.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
+    assert card.scryfall_set_uri.startswith("https://scryfall.com/sets/")
+    assert card.scryfall_uri.startswith("https://scryfall.com/card/")
+    assert card.security_stamp is SecurityStamp.OVAL
+    assert card.set_code == "vma"
+    assert card.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
+    assert card.set_name == "Vintage Masters"
+    assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert card.set_type is SetType.MASTERS
+    assert card.set_uri.startswith("https://api.scryfall.com/sets/")
+    assert card.story_spotlight is False
+    assert card.tcgplayer_etched_id is None
+    assert card.tcgplayer_id is None
+    assert card.textless is False
     assert card.toughness is None
     assert card.type_line == "Instant"
+    assert card.uri.startswith("https://api.scryfall.com/cards/")
+    assert card.variation is False
+    assert card.variation_of is None
+    assert card.watermark is None
 
 
 def test_card_from_json_creature(json_mystic_snake):
@@ -163,15 +205,6 @@ def test_card_from_json_creature(json_mystic_snake):
     assert card.power == "2"
     assert card.toughness == "2"
     assert card.type_line == "Creature — Snake"
-
-
-def test_card_from_json_costless(json_ancestral_visions):
-    card = Card.from_json(json_ancestral_visions)
-    assert card.cmc == 0.0
-    assert card.color_identity == {Color.BLUE}
-    assert card.colors == {Color.BLUE}
-    assert card.mana_cost == ""
-    assert card.type_line == "Sorcery"
 
 
 def test_card_from_json_token(json_snake_token, legalities_token):
@@ -187,46 +220,19 @@ def test_card_from_json_token(json_snake_token, legalities_token):
     assert card.type_line == "Token Creature — Snake"
 
 
-# endregion
-
-# region OracleCard
-
-
-def test_oraclecard_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
-    card = OracleCard.from_json(json_ancestral_recall)
-    assert card.card_faces is None
-    assert card.cmc == 1.0
+def test_card_from_json_costless(json_ancestral_visions):
+    card = Card.from_json(json_ancestral_visions)
+    assert card.cmc == 0.0
     assert card.color_identity == {Color.BLUE}
-    assert card.color_indicator is None
     assert card.colors == {Color.BLUE}
-    assert card.edhrec_rank is None
-    assert card.hand_modifier is None
-    assert card.keywords == frozenset()
-    assert card.legalities == legalities_ancestral_recall
-    assert card.life_modifier is None
-    assert card.loyalty is None
-    assert card.mana_cost == "{U}"
-    assert card.name == "Ancestral Recall"
-    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
-    assert card.oracle_text == "Target player draws three cards."
-    assert card.penny_rank is None
-    assert card.power is None
-    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert card.produced_mana is None
-    assert card.reserved is True
-    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
-    assert card.toughness is None
-    assert card.type_line == "Instant"
-
-
-def test_oraclecard_from_json_costless(json_ancestral_visions):
-    card = OracleCard.from_json(json_ancestral_visions)
+    assert card.mana_cost == ""
+    assert card.type_line == "Sorcery"
     assert card.color_indicator == {Color.BLUE}
     assert card.keywords == {"Suspend"}
 
 
-def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro, oracle_tales_of_master_seshiro):
-    card = OracleCard.from_json(json_tales_of_master_seshiro)
+def test_card_from_json_transform_saga(json_tales_of_master_seshiro, oracle_tales_of_master_seshiro):
+    card = Card.from_json(json_tales_of_master_seshiro)
     assert len(card.card_faces) == 2
     front, back = card.card_faces
 
@@ -257,128 +263,10 @@ def test_oraclecard_from_json_transform_saga(json_tales_of_master_seshiro, oracl
     assert back.type_line == "Enchantment Creature — Snake Warrior"
 
 
-# endregion
-
-# region FullCard
-
-
-def test_fullcard_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
-    card = FullCard.from_json(json_ancestral_recall)
-    assert card.all_parts is None
-    assert card.arena_id is None
-    assert card.artist == "Ryan Pancoast"
-    assert card.artist_ids == tuple(["89cc9475-dda2-4d13-bf88-54b92867a25c"])
-    assert card.attraction_lights is None
-    assert card.booster is True
-    assert card.border_color is BorderColor.BLACK
-    assert card.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
-    assert card.card_faces is None
-    assert card.cardmarket_id is None
-    assert card.cmc == 1.0
-    assert card.collector_number == "1"
-    assert card.color_identity == {Color.BLUE}
-    assert card.color_indicator is None
-    assert card.colors == {Color.BLUE}
-    assert card.content_warning is False
-    assert card.digital is True
-    assert card.edhrec_rank is None
-    assert card.finishes == {Finish.NONFOIL, Finish.FOIL}
-    assert card.flavor_name is None
-    assert card.flavor_text is None
-    assert card.frame is Frame._2015
-    assert card.frame_effects is None
-    assert card.full_art is False
-    assert card.games == {Game.MTGO}
-    assert card.hand_modifier is None
-    assert card.highres_image is True
-    assert card.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
-    assert card.image_status is ImageStatus.HIGHRES_SCAN
-
-    # ImageUris
-    assert card.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
-    assert card.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
-    assert card.image_uris.large.startswith("https://cards.scryfall.io/large/")
-    assert card.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
-    assert card.image_uris.png.startswith("https://cards.scryfall.io/png/")
-    assert card.image_uris.small.startswith("https://cards.scryfall.io/small/")
-
-    assert card.keywords == frozenset()
-    assert card.lang is Language.ENGLISH
-    assert card.layout is Layout.NORMAL
-    assert card.legalities == legalities_ancestral_recall
-    assert card.life_modifier is None
-    assert card.loyalty is None
-    assert card.mana_cost == "{U}"
-    assert card.mtgo_foil_id == 53178
-    assert card.mtgo_id == 53177
-    assert card.multiverse_ids == tuple([382841])
-    assert card.name == "Ancestral Recall"
-    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
-    assert card.oracle_text == "Target player draws three cards."
-    assert card.oversized is False
-    assert card.penny_rank is None
-    assert card.power is None
-    assert card.preview is None
-
-    # Prices
-    assert card.prices.eur is None
-    assert card.prices.eur_foil is None
-    assert card.prices.tix == 1.9
-    assert card.prices.usd is None
-    assert card.prices.usd_etched is None
-    assert card.prices.usd_foil is None
-
-    assert card.printed_name is None
-    assert card.printed_text is None
-    assert card.printed_type_line is None
-    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert card.produced_mana is None
-    assert card.promo is False
-    assert card.promo_types is None
-
-    # PurchaseUris
-    assert card.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
-    assert card.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
-    assert card.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
-
-    assert card.rarity is Rarity.BONUS
-
-    # RelatedUris
-    assert card.related_uris.edhrec.startswith("https://edhrec.com/")
-    assert card.related_uris.gatherer.startswith("https://gatherer.wizards.com/")
-    assert card.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
-    assert card.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
-
-    assert card.released_at == date(year=2014, month=6, day=16)
-    assert card.reprint is True
-    assert card.reserved is True
-    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
-    assert card.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
-    assert card.scryfall_set_uri.startswith("https://scryfall.com/sets/")
-    assert card.scryfall_uri.startswith("https://scryfall.com/card/")
-    assert card.security_stamp is SecurityStamp.OVAL
-    assert card.set_code == "vma"
-    assert card.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
-    assert card.set_name == "Vintage Masters"
-    assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert card.set_type is SetType.MASTERS
-    assert card.set_uri.startswith("https://api.scryfall.com/sets/")
-    assert card.story_spotlight is False
-    assert card.tcgplayer_etched_id is None
-    assert card.tcgplayer_id is None
-    assert card.textless is False
-    assert card.toughness is None
-    assert card.type_line == "Instant"
-    assert card.uri.startswith("https://api.scryfall.com/cards/")
-    assert card.variation is False
-    assert card.variation_of is None
-    assert card.watermark is None
-
-
-def test_fullcard_from_json_transform_planeswalker(
+def test_card_from_json_transform_planeswalker(
     json_arlinn_the_packs_hope, oracle_arlinn_daybound, oracle_arlinn_nightbound
 ):
-    card = FullCard.from_json(json_arlinn_the_packs_hope)
+    card = Card.from_json(json_arlinn_the_packs_hope)
     assert len(card.card_faces) == 2
     front, back = card.card_faces
 
@@ -444,8 +332,8 @@ def test_fullcard_from_json_transform_planeswalker(
     assert back.watermark is None
 
 
-def test_fullcard_from_json_digital(json_urzas_construction_drone):
-    card = FullCard.from_json(json_urzas_construction_drone)
+def test_card_from_json_digital(json_urzas_construction_drone):
+    card = Card.from_json(json_urzas_construction_drone)
     assert card.digital is True
     assert card.games == {Game.ARENA}
     assert card.highres_image is False
@@ -453,10 +341,10 @@ def test_fullcard_from_json_digital(json_urzas_construction_drone):
     assert card.keywords == {"Conjure", "Seek"}
 
 
-def test_fullcard_from_json_reversible(
+def test_card_from_json_reversible(
     json_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
 ):
-    card = FullCard.from_json(json_zndrsplt_eye_of_wisdom)
+    card = Card.from_json(json_zndrsplt_eye_of_wisdom)
 
     # all_parts (RelatedCards)
     assert len(card.all_parts) == 2
@@ -638,57 +526,154 @@ def test_fullcard_from_json_reversible(
     assert card.watermark is None
 
 
-def test_fullcard_from_json_watermark(json_anaconda_7ed_foil):
-    card = FullCard.from_json(json_anaconda_7ed_foil)
+def test_card_from_json_watermark(json_anaconda_7ed_foil):
+    card = Card.from_json(json_anaconda_7ed_foil)
     assert card.watermark == "wotc"
 
 
-def test_fullcard_from_json_non_english(json_python_spanish):
-    card = FullCard.from_json(json_python_spanish)
+def test_card_from_json_non_english(json_python_spanish):
+    card = Card.from_json(json_python_spanish)
     assert card.printed_name == "Pitón"
 
 
-def test_fullcard_from_json_flavor(json_elessar_the_elfstone):
-    card = FullCard.from_json(json_elessar_the_elfstone)
+def test_card_from_json_flavor(json_elessar_the_elfstone):
+    card = Card.from_json(json_elessar_the_elfstone)
     assert card.flavor_name == "Elessar, the Elfstone"
     assert card.flavor_text == "Aragorn took the green stone and held it up, and there came a green fire from his hand."
     assert card.name == "Cloudstone Curio"
 
 
-def test_fullcard_from_json_attraction(json_trash_bin):
-    card = FullCard.from_json(json_trash_bin)
+def test_card_from_json_attraction(json_trash_bin):
+    card = Card.from_json(json_trash_bin)
     assert card.attraction_lights == {2, 6}
 
 
-def test_fullcard_from_json_variation(json_anaconda_portal):
-    card = FullCard.from_json(json_anaconda_portal)
+def test_card_from_json_variation(json_anaconda_portal):
+    card = Card.from_json(json_anaconda_portal)
     assert card.variation is True
     assert card.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda
 
 
 # endregion
 
-# endregion
 
 # region CardModel -> Card Object
-
-# region CardModel -> Card
-
 
 def test_card_from_cardmodel_instant(api_client, cardmodel_ancestral_recall, legalities_ancestral_recall):
     fake_id = PydanticObjectId()
     cardmodel_ancestral_recall.id = fake_id
     card = Card.from_model(cardmodel_ancestral_recall)
     assert card.scooze_id == fake_id
+
+    assert card.all_parts is None
+    assert card.arena_id is None
+    assert card.artist == "Ryan Pancoast"
+    assert card.artist_ids == tuple(["89cc9475-dda2-4d13-bf88-54b92867a25c"])
+    assert card.attraction_lights is None
+    assert card.booster is True
+    assert card.border_color is BorderColor.BLACK
+    assert card.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
+    assert card.card_faces is None
+    assert card.cardmarket_id is None
     assert card.cmc == 1.0
+    assert card.collector_number == "1"
     assert card.color_identity == {Color.BLUE}
+    assert card.color_indicator is None
     assert card.colors == {Color.BLUE}
+    assert card.content_warning is False
+    assert card.digital is True
+    assert card.edhrec_rank is None
+    assert card.finishes == {Finish.NONFOIL, Finish.FOIL}
+    assert card.flavor_name is None
+    assert card.flavor_text is None
+    assert card.frame is Frame._2015
+    assert card.frame_effects is None
+    assert card.full_art is False
+    assert card.games == {Game.MTGO}
+    assert card.hand_modifier is None
+    assert card.highres_image is True
+    assert card.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
+    assert card.image_status is ImageStatus.HIGHRES_SCAN
+
+    # ImageUris
+    assert card.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    assert card.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    assert card.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    assert card.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    assert card.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    assert card.image_uris.small.startswith("https://cards.scryfall.io/small/")
+
+    assert card.keywords == frozenset()
+    assert card.lang is Language.ENGLISH
+    assert card.layout is Layout.NORMAL
     assert card.legalities == legalities_ancestral_recall
+    assert card.life_modifier is None
+    assert card.loyalty is None
     assert card.mana_cost == "{U}"
+    assert card.mtgo_foil_id == 53178
+    assert card.mtgo_id == 53177
+    assert card.multiverse_ids == tuple([382841])
     assert card.name == "Ancestral Recall"
+    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
+    assert card.oracle_text == "Target player draws three cards."
+    assert card.oversized is False
+    assert card.penny_rank is None
     assert card.power is None
+    assert card.preview is None
+
+    # Prices
+    assert card.prices.eur is None
+    assert card.prices.eur_foil is None
+    assert card.prices.tix == 1.9
+    assert card.prices.usd is None
+    assert card.prices.usd_etched is None
+    assert card.prices.usd_foil is None
+
+    assert card.printed_name is None
+    assert card.printed_text is None
+    assert card.printed_type_line is None
+    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert card.produced_mana is None
+    assert card.promo is False
+    assert card.promo_types is None
+
+    # PurchaseUris
+    assert card.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
+    assert card.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
+    assert card.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
+
+    assert card.rarity is Rarity.BONUS
+
+    # RelatedUris
+    assert card.related_uris.edhrec.startswith("https://edhrec.com/")
+    assert card.related_uris.gatherer.startswith("https://gatherer.wizards.com/")
+    assert card.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
+    assert card.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
+
+    assert card.released_at == date(year=2014, month=6, day=16)
+    assert card.reprint is True
+    assert card.reserved is True
+    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
+    assert card.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
+    assert card.scryfall_set_uri.startswith("https://scryfall.com/sets/")
+    assert card.scryfall_uri.startswith("https://scryfall.com/card/")
+    assert card.security_stamp is SecurityStamp.OVAL
+    assert card.set_code == "vma"
+    assert card.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
+    assert card.set_name == "Vintage Masters"
+    assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    assert card.set_type is SetType.MASTERS
+    assert card.set_uri.startswith("https://api.scryfall.com/sets/")
+    assert card.story_spotlight is False
+    assert card.tcgplayer_etched_id is None
+    assert card.tcgplayer_id is None
+    assert card.textless is False
     assert card.toughness is None
     assert card.type_line == "Instant"
+    assert card.uri.startswith("https://api.scryfall.com/cards/")
+    assert card.variation is False
+    assert card.variation_of is None
+    assert card.watermark is None
 
 
 def test_card_from_cardmodel_creature(api_client, cardmodel_mystic_snake):
@@ -703,47 +688,12 @@ def test_card_from_cardmodel_creature(api_client, cardmodel_mystic_snake):
     assert card.type_line == "Creature — Snake"
 
 
-# endregion
-
-# region CardModel -> OracleCard
-
-
-def test_oraclecard_from_cardmodel_instant(api_client, cardmodel_ancestral_recall, legalities_ancestral_recall):
-    fake_id = PydanticObjectId()
-    cardmodel_ancestral_recall.id = fake_id
-    card = OracleCard.from_model(cardmodel_ancestral_recall)
-    assert card.scooze_id == fake_id
-    assert card.card_faces is None
-    assert card.cmc == 1.0
-    assert card.color_identity == {Color.BLUE}
-    assert card.color_indicator is None
-    assert card.colors == {Color.BLUE}
-    assert card.edhrec_rank is None
-    assert card.hand_modifier is None
-    assert card.keywords == frozenset()
-    assert card.legalities == legalities_ancestral_recall
-    assert card.life_modifier is None
-    assert card.loyalty is None
-    assert card.mana_cost == "{U}"
-    assert card.name == "Ancestral Recall"
-    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
-    assert card.oracle_text == "Target player draws three cards."
-    assert card.penny_rank is None
-    assert card.power is None
-    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert card.produced_mana is None
-    assert card.reserved is True
-    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
-    assert card.toughness is None
-    assert card.type_line == "Instant"
-
-
-def test_oraclecard_from_cardmodel_transform_saga(
+def test_card_from_cardmodel_transform_saga(
     api_client, cardmodel_tales_of_master_seshiro, oracle_tales_of_master_seshiro
 ):
     fake_id = PydanticObjectId()
     cardmodel_tales_of_master_seshiro.id = fake_id
-    card = OracleCard.from_model(cardmodel_tales_of_master_seshiro)
+    card = Card.from_model(cardmodel_tales_of_master_seshiro)
     assert card.scooze_id == fake_id
     assert len(card.card_faces) == 2
     front, back = card.card_faces
@@ -775,134 +725,12 @@ def test_oraclecard_from_cardmodel_transform_saga(
     assert back.type_line == "Enchantment Creature — Snake Warrior"
 
 
-# endregion
-
-# region CardModel -> FullCard
-
-
-def test_fullcard_from_cardmodel_instant(api_client, cardmodel_ancestral_recall, legalities_ancestral_recall):
-    fake_id = PydanticObjectId()
-    cardmodel_ancestral_recall.id = fake_id
-    card = FullCard.from_model(cardmodel_ancestral_recall)
-    assert card.scooze_id == fake_id
-
-    assert card.all_parts is None
-    assert card.arena_id is None
-    assert card.artist == "Ryan Pancoast"
-    assert card.artist_ids == tuple(["89cc9475-dda2-4d13-bf88-54b92867a25c"])
-    assert card.attraction_lights is None
-    assert card.booster is True
-    assert card.border_color is BorderColor.BLACK
-    assert card.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
-    assert card.card_faces is None
-    assert card.cardmarket_id is None
-    assert card.cmc == 1.0
-    assert card.collector_number == "1"
-    assert card.color_identity == {Color.BLUE}
-    assert card.color_indicator is None
-    assert card.colors == {Color.BLUE}
-    assert card.content_warning is False
-    assert card.digital is True
-    assert card.edhrec_rank is None
-    assert card.finishes == {Finish.NONFOIL, Finish.FOIL}
-    assert card.flavor_name is None
-    assert card.flavor_text is None
-    assert card.frame is Frame._2015
-    assert card.frame_effects is None
-    assert card.full_art is False
-    assert card.games == {Game.MTGO}
-    assert card.hand_modifier is None
-    assert card.highres_image is True
-    assert card.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
-    assert card.image_status is ImageStatus.HIGHRES_SCAN
-
-    # ImageUris
-    assert card.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
-    assert card.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
-    assert card.image_uris.large.startswith("https://cards.scryfall.io/large/")
-    assert card.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
-    assert card.image_uris.png.startswith("https://cards.scryfall.io/png/")
-    assert card.image_uris.small.startswith("https://cards.scryfall.io/small/")
-
-    assert card.keywords == frozenset()
-    assert card.lang is Language.ENGLISH
-    assert card.layout is Layout.NORMAL
-    assert card.legalities == legalities_ancestral_recall
-    assert card.life_modifier is None
-    assert card.loyalty is None
-    assert card.mana_cost == "{U}"
-    assert card.mtgo_foil_id == 53178
-    assert card.mtgo_id == 53177
-    assert card.multiverse_ids == tuple([382841])
-    assert card.name == "Ancestral Recall"
-    assert card.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
-    assert card.oracle_text == "Target player draws three cards."
-    assert card.oversized is False
-    assert card.penny_rank is None
-    assert card.power is None
-    assert card.preview is None
-
-    # Prices
-    assert card.prices.eur is None
-    assert card.prices.eur_foil is None
-    assert card.prices.tix == 1.9
-    assert card.prices.usd is None
-    assert card.prices.usd_etched is None
-    assert card.prices.usd_foil is None
-
-    assert card.printed_name is None
-    assert card.printed_text is None
-    assert card.printed_type_line is None
-    assert card.prints_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert card.produced_mana is None
-    assert card.promo is False
-    assert card.promo_types is None
-
-    # PurchaseUris
-    assert card.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
-    assert card.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
-    assert card.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
-
-    assert card.rarity is Rarity.BONUS
-
-    # RelatedUris
-    assert card.related_uris.edhrec.startswith("https://edhrec.com/")
-    assert card.related_uris.gatherer.startswith("https://gatherer.wizards.com/")
-    assert card.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
-    assert card.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
-
-    assert card.released_at == date(year=2014, month=6, day=16)
-    assert card.reprint is True
-    assert card.reserved is True
-    assert card.rulings_uri.startswith("https://api.scryfall.com/cards/")
-    assert card.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
-    assert card.scryfall_set_uri.startswith("https://scryfall.com/sets/")
-    assert card.scryfall_uri.startswith("https://scryfall.com/card/")
-    assert card.security_stamp is SecurityStamp.OVAL
-    assert card.set_code == "vma"
-    assert card.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
-    assert card.set_name == "Vintage Masters"
-    assert card.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert card.set_type is SetType.MASTERS
-    assert card.set_uri.startswith("https://api.scryfall.com/sets/")
-    assert card.story_spotlight is False
-    assert card.tcgplayer_etched_id is None
-    assert card.tcgplayer_id is None
-    assert card.textless is False
-    assert card.toughness is None
-    assert card.type_line == "Instant"
-    assert card.uri.startswith("https://api.scryfall.com/cards/")
-    assert card.variation is False
-    assert card.variation_of is None
-    assert card.watermark is None
-
-
-def test_fullcard_from_cardmodel_transform_planeswalker(
+def test_card_from_cardmodel_transform_planeswalker(
     api_client, cardmodel_arlinn_the_packs_hope, oracle_arlinn_daybound, oracle_arlinn_nightbound
 ):
     fake_id = PydanticObjectId()
     cardmodel_arlinn_the_packs_hope.id = fake_id
-    card = FullCard.from_model(cardmodel_arlinn_the_packs_hope)
+    card = Card.from_model(cardmodel_arlinn_the_packs_hope)
     assert card.scooze_id == fake_id
     assert len(card.card_faces) == 2
     front, back = card.card_faces
@@ -969,12 +797,12 @@ def test_fullcard_from_cardmodel_transform_planeswalker(
     assert back.watermark is None
 
 
-def test_fullcard_from_cardmodel_reversible(
+def test_card_from_cardmodel_reversible(
     api_client, cardmodel_zndrsplt_eye_of_wisdom, legalities_zndrsplt_eye_of_wisdom, oracle_zndrsplt_eye_of_wisdom
 ):
     fake_id = PydanticObjectId()
     cardmodel_zndrsplt_eye_of_wisdom.id = fake_id
-    card = FullCard.from_model(cardmodel_zndrsplt_eye_of_wisdom)
+    card = Card.from_model(cardmodel_zndrsplt_eye_of_wisdom)
     assert card.scooze_id == fake_id
 
     # all_parts (RelatedCards)
@@ -1157,44 +985,44 @@ def test_fullcard_from_cardmodel_reversible(
     assert card.watermark is None
 
 
-def test_fullcard_from_cardmodel_watermark(cardmodel_anaconda_7ed_foil):
+def test_card_from_cardmodel_watermark(cardmodel_anaconda_7ed_foil):
     fake_id = PydanticObjectId()
     cardmodel_anaconda_7ed_foil.id = fake_id
-    card = FullCard.from_model(cardmodel_anaconda_7ed_foil)
+    card = Card.from_model(cardmodel_anaconda_7ed_foil)
     assert card.scooze_id == fake_id
     assert card.watermark == "wotc"
 
 
-def test_fullcard_from_cardmodel_non_english(cardmodel_python_spanish):
+def test_card_from_cardmodel_non_english(cardmodel_python_spanish):
     fake_id = PydanticObjectId()
     cardmodel_python_spanish.id = fake_id
-    card = FullCard.from_model(cardmodel_python_spanish)
+    card = Card.from_model(cardmodel_python_spanish)
     assert card.scooze_id == fake_id
     assert card.printed_name == "Pitón"
 
 
-def test_fullcard_from_cardmodel_flavor(cardmodel_elessar_the_elfstone):
+def test_card_from_cardmodel_flavor(cardmodel_elessar_the_elfstone):
     fake_id = PydanticObjectId()
     cardmodel_elessar_the_elfstone.id = fake_id
-    card = FullCard.from_model(cardmodel_elessar_the_elfstone)
+    card = Card.from_model(cardmodel_elessar_the_elfstone)
     assert card.scooze_id == fake_id
     assert card.flavor_name == "Elessar, the Elfstone"
     assert card.flavor_text == "Aragorn took the green stone and held it up, and there came a green fire from his hand."
     assert card.name == "Cloudstone Curio"
 
 
-def test_fullcard_from_cardmodel_attraction(cardmodel_trash_bin):
+def test_card_from_cardmodel_attraction(cardmodel_trash_bin):
     fake_id = PydanticObjectId()
     cardmodel_trash_bin.id = fake_id
-    card = FullCard.from_model(cardmodel_trash_bin)
+    card = Card.from_model(cardmodel_trash_bin)
     assert card.scooze_id == fake_id
     assert card.attraction_lights == {2, 6}
 
 
-def test_fullcard_from_cardmodel_variation(cardmodel_anaconda_portal):
+def test_card_from_cardmodel_variation(cardmodel_anaconda_portal):
     fake_id = PydanticObjectId()
     cardmodel_anaconda_portal.id = fake_id
-    card = FullCard.from_model(cardmodel_anaconda_portal)
+    card = Card.from_model(cardmodel_anaconda_portal)
     assert card.scooze_id == fake_id
     assert card.variation is True
     assert card.variation_of == "0a2012ad-6425-4935-83af-fc7309ec2ece"  # Anaconda
@@ -1202,7 +1030,6 @@ def test_fullcard_from_cardmodel_variation(cardmodel_anaconda_portal):
 
 # endregion
 
-# endregion
 
 # endregion
 
@@ -1210,32 +1037,27 @@ def test_fullcard_from_cardmodel_variation(cardmodel_anaconda_portal):
 
 
 def test_is_double_sided_transform(json_arlinn_the_packs_hope):
-    card = OracleCard.from_json(json_arlinn_the_packs_hope)
+    card = Card.from_json(json_arlinn_the_packs_hope)
     assert card.is_double_sided()
 
 
 def test_is_double_sided_reversible(json_zndrsplt_eye_of_wisdom):
-    card = OracleCard.from_json(json_zndrsplt_eye_of_wisdom)
+    card = Card.from_json(json_zndrsplt_eye_of_wisdom)
     assert card.is_double_sided()
 
 
 def test_total_words(json_ancestral_recall):
-    card = OracleCard.from_json(json_ancestral_recall)
+    card = Card.from_json(json_ancestral_recall)
     assert card.total_words() == 5
 
 
 def test_total_words_transform(json_arlinn_the_packs_hope):
-    card = OracleCard.from_json(json_arlinn_the_packs_hope)
+    card = Card.from_json(json_arlinn_the_packs_hope)
     assert card.total_words() == 62
 
 
-def test_oraclecard_total_words_reversible(json_zndrsplt_eye_of_wisdom):
-    card = OracleCard.from_json(json_zndrsplt_eye_of_wisdom)
-    assert card.total_words() == 64
-
-
-def test_fullcard_total_words_reversible(json_zndrsplt_eye_of_wisdom):
-    card = FullCard.from_json(json_zndrsplt_eye_of_wisdom)
+def test_card_total_words_reversible(json_zndrsplt_eye_of_wisdom):
+    card = Card.from_json(json_zndrsplt_eye_of_wisdom)
     assert card.total_words() == 32
 
 

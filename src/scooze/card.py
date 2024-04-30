@@ -34,6 +34,7 @@ from scooze.catalogs import (
 from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
 
+# TODO(#309): Add functionality to Card to get only the values for an "OracleCard"
 
 class Card(HashableObject):
     """
@@ -296,7 +297,7 @@ class Card(HashableObject):
         self.type_line = type_line
 
         # Oracle Fields
-        self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=CardFace)
+        self.card_faces = CardNormalizer.to_card_faces(card_faces)
         self.color_indicator = CardNormalizer.to_frozenset(color_indicator, convert_to_enum=Color)
         self.edhrec_rank = edhrec_rank
         self.hand_modifier = hand_modifier
@@ -461,13 +462,13 @@ class Card(HashableObject):
         if self.is_double_sided():
             word_count = sum(
                 [
-                    len(re.findall(pattern_words, OracleCard.oracle_text_without_reminder(face.oracle_text)))
+                    len(re.findall(pattern_words, Card.oracle_text_without_reminder(face.oracle_text)))
                     for face in self.card_faces
                 ]
             )
         # Non-MDFC
         else:
-            word_count = len(re.findall(pattern_words, OracleCard.oracle_text_without_reminder(self.oracle_text)))
+            word_count = len(re.findall(pattern_words, Card.oracle_text_without_reminder(self.oracle_text)))
 
         # Don't double count reversible card text
         return int(word_count / (2 if self.layout is Layout.REVERSIBLE_CARD else 1))
@@ -513,7 +514,7 @@ class CardNormalizer(CardPartsNormalizer):
             A tuple[CardFace].
         """
 
-        if card_faces is None or all(isinstance(card_face) for card_face in card_faces):
+        if card_faces is None:
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
             return tuple(CardFace.from_json(card_face) for card_face in card_faces)

@@ -15,7 +15,7 @@ class CardList(ComparableObject):
     """
 
     def __init__(self, cards: Counter[Card] = None):
-        self.cards = cards if cards is not None else Counter()
+        self.cards = cards if cards is not None else Counter[Card]()
 
     def __getitem__(self, key: Card):
         return self.cards[key]
@@ -84,7 +84,7 @@ class CardList(ComparableObject):
         """
 
         # using counterA - counterB results in a new Counter with only positive results
-        self.cards = self.cards - Counter({card: quantity})
+        self.cards = self.cards - Counter[Card]({card: quantity})
 
     def remove_cards(self, cards: Counter[Card]) -> None:
         """

@@ -35,15 +35,15 @@ class DeckModelData(ScoozeBaseModel):
         description="The date this Deck was played.",
     )
     main: Counter[ObjectIdT] = Field(
-        default=Counter(),
+        default=Counter[ObjectIdT](),
         description="The main deck. Typically 60 cards minimum.",
     )
     side: Counter[ObjectIdT] = Field(
-        default=Counter(),
+        default=Counter[ObjectIdT](),
         description="The sideboard. Typically 15 cards maximum.",
     )
     cmdr: Counter[ObjectIdT] = Field(
-        default=Counter(),
+        default=Counter[ObjectIdT](),
         description="The command zone. Typically 1 or 2 cards in Commander formats.",
     )
 

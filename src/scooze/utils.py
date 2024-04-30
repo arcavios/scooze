@@ -678,7 +678,7 @@ def parse_symbols(cost: str) -> Counter[CostSymbol]:
 
     # find all symbols of form {W}, {W/P}, etc
     symbols = [CostSymbol(s) for s in re.findall("{([^}]+)}", cost)]
-    return Counter(symbols)
+    return Counter[CostSymbol](symbols)
 
 
 # endregion

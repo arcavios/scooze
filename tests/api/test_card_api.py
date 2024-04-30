@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import scooze.api.card as card_api
 from beanie import PydanticObjectId
-from scooze.card import Card, FullCard, OracleCard
+from scooze.card import Card
 from scooze.errors import BulkAddError
 from scooze.models.card import CardModel, CardModelData
 
@@ -21,43 +21,43 @@ class TestCardApiWithPopulatedDatabase:
         await CardModel.delete_all()
 
     async def test_get_base_card(self, recall_base: Card):
-        result: Card = await card_api.get_card_by(property_name="name", value=recall_base.name, card_class=Card)
+        result: Card = await card_api.get_card_by(property_name="name", value=recall_base.name)
         recall_base.scooze_id = result.scooze_id  # recall_base doesn't start with a scooze ID
         assert result == recall_base
 
-    async def test_get_oracle_card(self, recall_oracle: OracleCard):
-        result: OracleCard = await card_api.get_card_by(
-            property_name="name", value=recall_oracle.name, card_class=OracleCard
+    async def test_get_oracle_card(self, recall_oracle: Card):
+        result: Card = await card_api.get_card_by(
+            property_name="name", value=recall_oracle.name
         )
         recall_oracle.scooze_id = result.scooze_id  # recall_oracle doesn't start with a scooze ID
         assert result == recall_oracle
 
-    async def test_get_full_card(self, recall_full: FullCard):
-        result: FullCard = await card_api.get_card_by(property_name="name", value=recall_full.name, card_class=FullCard)
+    async def test_get_full_card(self, recall_full: Card):
+        result: Card = await card_api.get_card_by(property_name="name", value=recall_full.name)
         recall_full.scooze_id = result.scooze_id  # recall_full doesn't start with a scooze ID
         assert result == recall_full
 
     async def test_get_card_bad(self):
-        result = await card_api.get_card_by(property_name="name", value="This is not a card name", card_class=Card)
+        result = await card_api.get_card_by(property_name="name", value="This is not a card name")
         assert result is None
 
     async def test_get_base_cards(self, cards_base: list[Card]):
         data = [CardModelData.model_validate(card.__dict__) for card in cards_base]
         models = [CardModel.model_validate(card_data.model_dump()) for card_data in data]
         names = [model.name for model in models]
-        results: list[Card] = await card_api.get_cards_by(property_name="name", values=names, card_class=Card)
+        results: list[Card] = await card_api.get_cards_by(property_name="name", values=names)
         assert len(cards_base) == len(results)
         for item in zip(cards_base, results):
             card, result = item
             result.scooze_id = card.scooze_id
             assert card == result
 
-    async def test_get_oracle_cards(self, cards_oracle: list[OracleCard]):
+    async def test_get_oracle_cards(self, cards_oracle: list[Card]):
         data = [CardModelData.model_validate(card.__dict__) for card in cards_oracle]
         models = [CardModel.model_validate(card_data.model_dump()) for card_data in data]
         names = [model.name for model in models]
-        results: list[OracleCard] = await card_api.get_cards_by(
-            property_name="name", values=names, card_class=OracleCard
+        results: list[Card] = await card_api.get_cards_by(
+            property_name="name", values=names
         )
         assert len(cards_oracle) == len(results)
         for item in zip(cards_oracle, results):
@@ -65,11 +65,11 @@ class TestCardApiWithPopulatedDatabase:
             result.scooze_id = card.scooze_id
             assert card == result
 
-    async def test_get_full_cards(self, cards_full: list[FullCard]):
+    async def test_get_full_cards(self, cards_full: list[Card]):
         data = [CardModelData.model_validate(card.__dict__) for card in cards_full]
         models = [CardModel.model_validate(card_data.model_dump()) for card_data in data]
         names = [model.name for model in models]
-        results: list[FullCard] = await card_api.get_cards_by(property_name="name", values=names, card_class=FullCard)
+        results: list[Card] = await card_api.get_cards_by(property_name="name", values=names)
         assert len(cards_full) == len(results)
         for item in zip(cards_full, results):
             card, result = item
@@ -78,12 +78,12 @@ class TestCardApiWithPopulatedDatabase:
 
     async def test_get_all_cards_base(self):
         total_cards = await CardModel.count()
-        results = await card_api.get_cards_all(card_class=Card)
+        results = await card_api.get_cards_all()
         assert len(results) == total_cards
 
     async def test_get_cards_bad(self):
         results = await card_api.get_cards_by(
-            property_name="name", values=["Not a card name", "Also not a card name"], card_class=Card
+            property_name="name", values=["Not a card name", "Also not a card name"]
         )
         assert results == []
 
@@ -163,12 +163,12 @@ class TestCardApiWithEmptyDatabase:
         for result in results:
             assert PydanticObjectId.is_valid(result)
 
-    async def test_add_oracle_cards(self, cards_oracle: list[OracleCard]):
+    async def test_add_oracle_cards(self, cards_oracle: list[Card]):
         results = await card_api.add_cards(cards=cards_oracle)
         for result in results:
             assert PydanticObjectId.is_valid(result)
 
-    async def test_add_full_cards(self, cards_full: list[FullCard]):
+    async def test_add_full_cards(self, cards_full: list[Card]):
         results = await card_api.add_cards(cards=cards_full)
         for result in results:
             assert PydanticObjectId.is_valid(result)
