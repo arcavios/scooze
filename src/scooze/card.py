@@ -36,6 +36,7 @@ from scooze.utils import FloatableT, HashableObject
 
 # TODO(#309): Add functionality to Card to get only the values for an "OracleCard"
 
+
 class Card(HashableObject):
     """
     A Card object that supports all fields available from Scryfall's JSON data.
@@ -422,7 +423,6 @@ class Card(HashableObject):
         """
 
         return cls(**model.model_dump())
-
 
     @classmethod
     def oracle_text_without_reminder(cls, oracle_text: str) -> str:

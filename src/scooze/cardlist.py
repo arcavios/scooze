@@ -1,8 +1,8 @@
 from collections import Counter
 from sys import maxsize
 from typing import Self
-from scooze.card import Card
 
+from scooze.card import Card
 from scooze.utils import ComparableObject, DictDiff
 
 

@@ -1025,9 +1025,7 @@ def side_modern_4c_str(
 
 @pytest.fixture
 def deck_modern_4c(archetype_modern_4c, main_modern_4c, side_modern_4c) -> Deck:
-    return Deck(
-        archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c
-    )
+    return Deck(archetype=archetype_modern_4c, format=Format.MODERN, main=main_modern_4c, side=side_modern_4c)
 
 
 # endregion

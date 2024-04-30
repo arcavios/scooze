@@ -252,9 +252,7 @@ def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
 
 
 def test_export_default_attractions(main_modern_4c, main_modern_4c_str, attraction_part):
-    deck = Deck(
-        archetype="test_export_default_attractions", main=main_modern_4c, attractions=attraction_part
-    )
+    deck = Deck(archetype="test_export_default_attractions", main=main_modern_4c, attractions=attraction_part)
     assert deck.export() == f"Deck:\n{main_modern_4c_str}\nAttractions:\n{attraction_part}"
 
 

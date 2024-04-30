@@ -68,10 +68,14 @@ def test_card_hash(json_anaconda_7ed_foil, json_anaconda_portal):
 
 # region Class Methods
 
+
 def test_oracle_text_without_reminder(json_anaconda_portal):
     card = Card.from_json(json_anaconda_portal)
-    assert card.oracle_text == "Swampwalk (This creature can't be blocked as long as defending player controls a Swamp.)"
+    assert (
+        card.oracle_text == "Swampwalk (This creature can't be blocked as long as defending player controls a Swamp.)"
+    )
     assert Card.oracle_text_without_reminder(card.oracle_text) == "Swampwalk"
+
 
 def test_reversible_oracle_text_without_reminder(json_arlinn_the_packs_hope):
     card = Card.from_json(json_arlinn_the_packs_hope)
@@ -558,6 +562,7 @@ def test_card_from_json_variation(json_anaconda_portal):
 
 
 # region CardModel -> Card Object
+
 
 def test_card_from_cardmodel_instant(api_client, cardmodel_ancestral_recall, legalities_ancestral_recall):
     fake_id = PydanticObjectId()

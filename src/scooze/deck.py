@@ -5,11 +5,11 @@ from typing import Generic, Self
 
 import scooze.utils as utils
 from scooze import logger
+from scooze.card import Card
 from scooze.cardlist import CardList
 from scooze.catalogs import Format, Legality
 from scooze.enum import ExtendedEnum
 from scooze.utils import ComparableObject, DictDiff
-from scooze.card import Card
 
 # region Deck Helpers
 

@@ -26,9 +26,7 @@ class TestCardApiWithPopulatedDatabase:
         assert result == recall_base
 
     async def test_get_oracle_card(self, recall_oracle: Card):
-        result: Card = await card_api.get_card_by(
-            property_name="name", value=recall_oracle.name
-        )
+        result: Card = await card_api.get_card_by(property_name="name", value=recall_oracle.name)
         recall_oracle.scooze_id = result.scooze_id  # recall_oracle doesn't start with a scooze ID
         assert result == recall_oracle
 
@@ -56,9 +54,7 @@ class TestCardApiWithPopulatedDatabase:
         data = [CardModelData.model_validate(card.__dict__) for card in cards_oracle]
         models = [CardModel.model_validate(card_data.model_dump()) for card_data in data]
         names = [model.name for model in models]
-        results: list[Card] = await card_api.get_cards_by(
-            property_name="name", values=names
-        )
+        results: list[Card] = await card_api.get_cards_by(property_name="name", values=names)
         assert len(cards_oracle) == len(results)
         for item in zip(cards_oracle, results):
             card, result = item
@@ -82,9 +78,7 @@ class TestCardApiWithPopulatedDatabase:
         assert len(results) == total_cards
 
     async def test_get_cards_bad(self):
-        results = await card_api.get_cards_by(
-            property_name="name", values=["Not a card name", "Also not a card name"]
-        )
+        results = await card_api.get_cards_by(property_name="name", values=["Not a card name", "Also not a card name"])
         assert results == []
 
 
