@@ -17,7 +17,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.enum import DbCollection
+from scooze.extended_enum import DbCollection
 from scooze.models.card import CardModel, CardModelData
 
 # region eq and ne

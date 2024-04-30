@@ -8,7 +8,7 @@ from scooze import logger
 from scooze.card import CardT
 from scooze.cardlist import CardList
 from scooze.catalogs import Format, Legality
-from scooze.enum import ExtendedEnum
+from scooze.extended_enum import ExtendedEnum
 from scooze.utils import ComparableObject, DictDiff
 
 # region Deck Helpers
