@@ -110,6 +110,7 @@ def test_filter_paper_only(card_lonis_genetics_expert):
     # https://scryfall.com/card/clu/37/lonis-genetics-expert
     pass
 
+
 def test_add_card_one(some_cards, card_veil_of_summer):
     card_list = CardList(cards=some_cards)
     card_list.add_card(card=card_veil_of_summer)
