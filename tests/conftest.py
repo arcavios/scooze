@@ -10,7 +10,7 @@ from asgi_lifespan import LifespanManager
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from mongomock_motor import AsyncMongoMockClient
-from scooze.card import OracleCard
+from scooze.card import FullCard, OracleCard
 from scooze.cardlist import CardList
 from scooze.catalogs import Format, Legality
 from scooze.config import CONFIG
@@ -616,9 +616,9 @@ def card_force_of_negation(cards_json) -> OracleCard:
 
 
 @pytest.fixture(scope="session")
-def card_forceful_cultivator(cards_json) -> OracleCard:
+def card_forceful_cultivator(cards_json) -> FullCard:
     card_json = get_card_json(cards_json, "ba3b7de0-9c22-4d25-9b15-6de4e252f9a5")
-    return OracleCard.from_json(card_json)
+    return FullCard.from_json(card_json)
 
 
 @pytest.fixture(scope="session")

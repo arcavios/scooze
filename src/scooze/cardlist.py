@@ -64,6 +64,8 @@ class CardList(ComparableObject, Generic[CardT]):
         could probably extend this to have a few "default" filters that are available to users.
         """
 
+        # TODO: can't use filter exactly like this for a dict
+
         return CardList(Counter(filter(func, self.cards)))
 
     def add_card(self, card: CardT, quantity: int = 1) -> None:
