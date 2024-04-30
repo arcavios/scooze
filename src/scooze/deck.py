@@ -5,11 +5,11 @@ from typing import Generic, Self
 
 import scooze.utils as utils
 from scooze import logger
-from scooze.card import CardT
 from scooze.cardlist import CardList
 from scooze.catalogs import Format, Legality
 from scooze.enum import ExtendedEnum
 from scooze.utils import ComparableObject, DictDiff
+from scooze.card import Card
 
 # region Deck Helpers
 
@@ -94,31 +94,31 @@ class DeckDiff(ComparableObject):
 # endregion
 
 
-class Deck(ComparableObject, Generic[CardT]):
+class Deck(ComparableObject):
     """
     A class to represent a deck of Magic: the Gathering cards.
 
     Attributes:
         archetype (str | None): The archetype of this Deck.
         format (Format): The format legality of the cards in this Deck.
-        main (CardList[CardT]): The main deck. Typically 60 cards minimum.
-        side (CardList[CardT]): The sideboard. Typically 15 cards maximum.
-        cmdr (CardList[CardT]): The command zone. Typically 1 or 2 cards in Commander formats.
-        attractions (CardList[CardT]): The attraction deck.
-        stickers (CardList[CardT]): The sticker deck.
-        companion (CardT | None): This deck's companion (if applicable).
+        main (CardList): The main deck. Typically 60 cards minimum.
+        side (CardList): The sideboard. Typically 15 cards maximum.
+        cmdr (CardList): The command zone. Typically 1 or 2 cards in Commander formats.
+        attractions (CardList): The attraction deck.
+        stickers (CardList): The sticker deck.
+        companion (Card | None): This deck's companion (if applicable).
     """
 
     def __init__(
         self,
         archetype: str | None = None,
         format: Format = Format.NONE,
-        main: CardList[CardT] | None = None,
-        side: CardList[CardT] | None = None,
-        cmdr: CardList[CardT] | None = None,
-        attractions: CardList[CardT] | None = None,
-        stickers: CardList[CardT] | None = None,
-        companion: CardT | None = None,
+        main: CardList | None = None,
+        side: CardList | None = None,
+        cmdr: CardList | None = None,
+        attractions: CardList | None = None,
+        stickers: CardList | None = None,
+        companion: Card | None = None,
     ):
         self.archetype = archetype
         self.format = format
@@ -132,10 +132,11 @@ class Deck(ComparableObject, Generic[CardT]):
         self.companion = companion
 
     @property
-    def cards(self) -> Counter[CardT]:
+    def cards(self) -> Counter[Card]:
         """
         Get this Deck as a collection of cards.
         """
+
         return self.main.cards + self.side.cards + self.cmdr.cards + self.attractions.cards + self.stickers.cards
 
     def __str__(self):
@@ -361,7 +362,7 @@ class Deck(ComparableObject, Generic[CardT]):
 
     # region Mutating Methods
 
-    def add_card(self, card: CardT, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
+    def add_card(self, card: Card, quantity: int = 1, in_the: InThe = InThe.MAIN) -> None:
         """
         Add a given quantity of a given card to this Deck.
 
@@ -386,7 +387,7 @@ class Deck(ComparableObject, Generic[CardT]):
                 logger.info("Failed to add card.", extra={"card": card})
                 logger.warning(f'in_the "{in_the}" not found. Must be one of {InThe.list()}')
 
-    def add_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
+    def add_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
         """
         Add the given cards to this Deck.
 
@@ -407,7 +408,7 @@ class Deck(ComparableObject, Generic[CardT]):
             case InThe.STICKERS:
                 self.stickers.add_cards(cards)
 
-    def remove_card(self, card: CardT, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
+    def remove_card(self, card: Card, quantity: int = maxsize, in_the: InThe = InThe.MAIN) -> None:
         """
         Remove a given quantity of a given card from this Deck. If quantity is
         not provided, removes all copies.
@@ -434,7 +435,7 @@ class Deck(ComparableObject, Generic[CardT]):
                 logger.info("Failed to remove card.", extra={"card": card})
                 logger.warning(f'in_the "{in_the}" not found. Must be one of {InThe.list()}')
 
-    def remove_cards(self, cards: Counter[CardT], in_the: InThe = InThe.MAIN) -> None:
+    def remove_cards(self, cards: Counter[Card], in_the: InThe = InThe.MAIN) -> None:
         """
         Remove the given cards from this Deck.
 
