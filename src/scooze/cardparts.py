@@ -47,68 +47,6 @@ class ImageUris(HashableObject):
 
 class CardFace(HashableObject):
     """
-    An object for a single face of a multi-faced OracleCard. Contains only
-    fields that are consistent between card prints.
-    Multi-faced cards include MDFCs, split cards, aftermath, etc;
-    see [here](https://scryfall.com/docs/api/cards#card-face-objects)
-
-    Attributes:
-        name (str | None): Name of this face.
-        cmc (float | None): Mana value of this face.
-        color_indicator (frozenset[Color] | None): Color indicator on this
-            face, if any.
-        colors (frozenset[Color] | None): Colors of this face.
-        loyalty (str | None): Starting planeswalker loyalty of this face, if
-            any.
-        mana_cost (str | None): Mana cost of this face.
-        oracle_id (str | None): Oracle ID of this face, for reversible cards.
-        oracle_text (str | None): Oracle text of this face, if any.
-        power (str | None): Power of this face, if any.
-        toughness (str | None): Toughness of this face, if any.
-        type_line (str | None): Type line of this face, if any.
-    """
-
-    def __init__(
-        self,
-        name: str | None = None,
-        cmc: FloatableT | None = None,
-        color_indicator: Iterable[Color] | None = None,
-        colors: Iterable[Color] | None = None,
-        loyalty: str | None = None,
-        mana_cost: str | None = None,
-        oracle_id: str | None = None,
-        oracle_text: str | None = None,
-        power: str | None = None,
-        toughness: str | None = None,
-        type_line: str | None = None,
-        # kwargs
-        **kwargs,
-    ):
-        self.name = name
-        self.cmc = CardPartsNormalizer.to_float(cmc)
-        self.color_indicator = CardPartsNormalizer.to_frozenset(color_indicator)
-        self.colors = CardPartsNormalizer.to_frozenset(colors)
-        self.loyalty = loyalty
-        self.mana_cost = mana_cost
-        self.oracle_id = oracle_id
-        self.oracle_text = oracle_text
-        self.power = power
-        self.toughness = toughness
-        self.type_line = type_line
-
-        if kwargs:
-            logger.debug("kwargs found", extra=kwargs)
-
-    @classmethod
-    def from_json(cls, data: dict | str) -> Self:
-        if isinstance(data, dict):
-            return cls(**data)
-        elif isinstance(data, str):
-            return cls(**json.loads(data))
-
-
-class FullCardFace(CardFace):
-    """
     An object for a single face of a multi-faced FullCard.
     Multi-faced cards include MDFCs, split cards, aftermath, etc;
     see [here](https://scryfall.com/docs/api/cards#card-face-objects)
@@ -170,6 +108,9 @@ class FullCardFace(CardFace):
         # kwargs
         **kwargs,
     ):
+        if kwargs:
+            logger.debug("kwargs found", extra=kwargs)
+
         self.name = name
         self.artist = artist
         self.artist_id = artist_id
@@ -192,8 +133,12 @@ class FullCardFace(CardFace):
         self.type_line = type_line
         self.watermark = watermark
 
-        if kwargs:
-            logger.debug("kwargs found", extra=kwargs)
+    @classmethod
+    def from_json(cls, data: dict | str) -> Self:
+        if isinstance(data, dict):
+            return cls(**data)
+        elif isinstance(data, str):
+            return cls(**json.loads(data))
 
 
 class Prices(HashableObject):
