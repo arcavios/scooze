@@ -1,26 +1,26 @@
 from collections import Counter
 from sys import maxsize
-from typing import Generic, Self
+from typing import Self
+from scooze.card import Card
 
-from scooze.card import CardT
 from scooze.utils import ComparableObject, DictDiff
 
 
-class CardList(ComparableObject, Generic[CardT]):
+class CardList(ComparableObject):
     """
     A class to represent a list of cards, generally as a part of a deck.
 
     Attributes:
-        cards (Counter[CardT]): The cards in this CardList.
+        cards (Counter[Card]): The cards in this CardList.
     """
 
-    def __init__(self, cards: Counter[CardT] = None):
+    def __init__(self, cards: Counter[Card] = None):
         self.cards = cards if cards is not None else Counter()
 
-    def __getitem__(self, key: CardT):
+    def __getitem__(self, key: Card):
         return self.cards[key]
 
-    def __setitem__(self, key: CardT, value: int):
+    def __setitem__(self, key: Card, value: int):
         self.cards[key] = value
 
     def __len__(self):
@@ -52,7 +52,7 @@ class CardList(ComparableObject, Generic[CardT]):
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
 
-    def add_card(self, card: CardT, quantity: int = 1) -> None:
+    def add_card(self, card: Card, quantity: int = 1) -> None:
         """
         Add a given quantity of a given card to this CardList.
 
@@ -63,7 +63,7 @@ class CardList(ComparableObject, Generic[CardT]):
 
         self.cards.update({card: quantity})
 
-    def add_cards(self, cards: Counter[CardT]) -> None:
+    def add_cards(self, cards: Counter[Card]) -> None:
         """
         Add the given cards to this CardList.
 
@@ -73,7 +73,7 @@ class CardList(ComparableObject, Generic[CardT]):
 
         self.cards.update(cards)
 
-    def remove_card(self, card: CardT, quantity: int = maxsize) -> None:
+    def remove_card(self, card: Card, quantity: int = maxsize) -> None:
         """
         Remove a given quantity of a given card from this Deck. If quantity is
         not provided, removes all copies.
@@ -86,7 +86,7 @@ class CardList(ComparableObject, Generic[CardT]):
         # using counterA - counterB results in a new Counter with only positive results
         self.cards = self.cards - Counter({card: quantity})
 
-    def remove_cards(self, cards: Counter[CardT]) -> None:
+    def remove_cards(self, cards: Counter[Card]) -> None:
         """
         Remove the given cards from this CardList.
 
