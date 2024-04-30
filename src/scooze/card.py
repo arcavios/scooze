@@ -103,6 +103,7 @@ class Card(HashableObject):
         Args:
             data: Some JSON to create a scooze Card from.
         """
+
         if isinstance(data, dict):
             return cls(**data)
         elif isinstance(data, str):
@@ -116,6 +117,7 @@ class Card(HashableObject):
         Args:
             model: A CardModel to create a scooze Card from.
         """
+
         return cls(**model.model_dump())
 
 

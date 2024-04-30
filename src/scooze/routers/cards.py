@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Any
 
 from beanie import PydanticObjectId
@@ -9,7 +10,7 @@ from scooze.utils import to_lower_camel
 router = APIRouter(
     prefix="/cards",
     tags=["cards"],
-    responses={404: {"description": "Cards Not Found"}},
+    responses={HTTPStatus.NOT_FOUND: {"description": "Cards Not Found"}},
 )
 
 
@@ -31,7 +32,7 @@ async def cards_root(limit: int = 3) -> list[CardModel]:
     cards = await CardModel.aggregate([{"$sample": {"size": limit}}], projection_model=CardModel).to_list()
 
     if cards is None or not cards:
-        raise HTTPException(status_code=404, detail="No cards found in the database.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="No cards found in the database.")
 
     return cards
 
@@ -59,7 +60,7 @@ async def add_cards(cards: list[CardModelData]) -> JSONResponse:
         insert_result = await CardModel.insert_many(cards_to_insert)
         return JSONResponse(f"Created {len(insert_result.inserted_ids)} card(s).")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to create new cards. Error: {e}")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Failed to create new cards. Error: {e}")
 
 
 # Read
@@ -103,7 +104,7 @@ async def get_cards_by(
     cards = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
 
     if len(cards) == 0:
-        raise HTTPException(status_code=404, detail="Cards not found.")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Cards not found.")
 
     return cards
 
@@ -126,6 +127,6 @@ async def delete_cards_all() -> JSONResponse:
     delete_result = await CardModel.delete_all()
 
     if delete_result is None:
-        raise HTTPException(status_code=400, detail="Cards weren't deleted.")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Cards weren't deleted.")
 
     return JSONResponse(f"Deleted {delete_result.deleted_count} card(s).")

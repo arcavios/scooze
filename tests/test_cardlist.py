@@ -60,7 +60,6 @@ def test_total(main_modern_4c):
     assert main_modern_4c.total() == 60
 
 
-@pytest.mark.deck_diff
 def test_diff(
     side_modern_4c,
     some_cards,
@@ -111,8 +110,6 @@ def test_filter_paper_only(card_lonis_genetics_expert):
     # https://scryfall.com/card/clu/37/lonis-genetics-expert
     pass
 
-
-@pytest.mark.deck_add_cards
 def test_add_card_one(some_cards, card_veil_of_summer):
     card_list = CardList(cards=some_cards)
     card_list.add_card(card=card_veil_of_summer)
@@ -120,7 +117,6 @@ def test_add_card_one(some_cards, card_veil_of_summer):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_many(some_cards, card_veil_of_summer):
     card_list = CardList(cards=some_cards)
     card_list.add_card(card=card_veil_of_summer, quantity=3)
@@ -128,7 +124,6 @@ def test_add_card_many(some_cards, card_veil_of_summer):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_add_cards
 def test_add_cards(some_cards):
     card_list = CardList(cards=some_cards)
     card_list.add_cards(some_cards)
@@ -136,7 +131,6 @@ def test_add_cards(some_cards):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_one(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void, quantity=1)
@@ -144,7 +138,6 @@ def test_remove_card_one(some_cards, card_chalice_of_the_void):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_many(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void, quantity=3)
@@ -152,7 +145,6 @@ def test_remove_card_many(some_cards, card_chalice_of_the_void):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_all(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void)
@@ -160,7 +152,6 @@ def test_remove_card_all(some_cards, card_chalice_of_the_void):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_cards(some_cards):
     card_list = CardList(cards=some_cards)
     card_list.remove_cards(some_cards)

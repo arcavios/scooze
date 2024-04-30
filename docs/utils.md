@@ -3,6 +3,7 @@
         filters:
             - "!to_lower_camel"
             - "!JsonNormalizer"
+            - "!ScoozeRotatingFileHandler"
             - "!JsonLoggingFormatter"
 
 ::: scooze.enum

@@ -27,10 +27,10 @@
             "stream": "ext://sys.stderr"
         },
         "file": {
-            "class": "logging.handlers.RotatingFileHandler",
+            "class": "scooze.utils.ScoozeRotatingFileHandler",
             "level": "DEBUG",
             "formatter": "json",
-            "filename": "logs/scooze.log.jsonl",
+            "filename": "scooze.log.jsonl",
             "maxBytes": 20000000,
             "backupCount": 10
         }

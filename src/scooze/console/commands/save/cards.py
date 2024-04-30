@@ -2,7 +2,7 @@ from cleo.commands.command import Command
 from cleo.helpers import option
 from scooze.bulkdata import download_bulk_data_file_by_type
 from scooze.catalogs import ScryfallBulkFile
-from scooze.utils import DEFAULT_BULK_FILE_DIR
+from scooze.config import CONFIG
 
 
 class SaveCardsCommand(Command):
@@ -18,7 +18,7 @@ class SaveCardsCommand(Command):
         option(
             "bulk-data-dir",
             description="Directory to store bulk files.",
-            default=DEFAULT_BULK_FILE_DIR,
+            default=CONFIG.bulk_file_dir,
             value_required=True,
             flag=False,
         ),
