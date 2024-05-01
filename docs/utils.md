@@ -6,6 +6,6 @@
             - "!ScoozeRotatingFileHandler"
             - "!JsonLoggingFormatter"
 
-::: scooze.extended_enum
+::: scooze.enums
     options:
         inherited_members: false
