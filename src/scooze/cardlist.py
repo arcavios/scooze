@@ -34,6 +34,7 @@ class CardList(ComparableObject):
             return ""
 
     # region Metadata about list
+
     def total(self) -> int:
         """
         The number of cards in this CardList.
@@ -44,12 +45,13 @@ class CardList(ComparableObject):
     def count_pips(self) -> Counter[CostSymbol]:
         """
         Returns:
-            A mapping of Colors to how many times they appear as mana symbols in costs of cards in this DeckPart.
+            A mapping of Colors to how many times they appear as mana symbols in costs of cards in this CardList.
         """
+
         counts = Counter()
-        for card, num in self.cards.items():
+        for card, q in self.cards.items():
             for symbol, count in card.mana_symbols().items():
-                counts.update({symbol: count * num})
+                counts.update({symbol: count * q})
         # filter only to colors and colorless (not generic)
         return Counter({color: count for color, count in counts.items() if color in Color.list()})
 

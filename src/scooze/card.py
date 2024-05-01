@@ -454,6 +454,7 @@ class Card(HashableObject):
         """
         A mapping of CostSymbols to how many times those symbols appear in this card's mana cost.
         """
+
         return parse_symbols(self.mana_cost)
 
     def total_words(self) -> int:
