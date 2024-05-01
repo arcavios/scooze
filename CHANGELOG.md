@@ -4,6 +4,7 @@
 
 #### Added
 
+- Add count_pips for Deck and CardList ([#251](https://github.com/arcavios/scooze/pull/251))
 - Logging for the scooze CLI ([#277](https://github.com/arcavios/scooze/pull/277))
 - Regression tests for validating Scryfall bulkdata ([#278](https://github.com/arcavios/scooze/pull/278))
 - Add `scooze save cards` to the scooze CLI ([#287](https://github.com/arcavios/scooze/pull/287))
@@ -32,7 +33,6 @@
 
 - Start Docker container if exists, but not running ([#243](https://github.com/arcavios/scooze/pull/243))
 - Add basic logging to some of our modules ([#249](https://github.com/arcavios/scooze/pull/249))
-- Add count_pips for Deck and DeckPart ([#251](https://github.com/arcavios/scooze/pull/251))
 
 #### Changed
 
