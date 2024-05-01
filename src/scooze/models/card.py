@@ -573,7 +573,7 @@ class CardModelData(ScoozeBaseModel):
         # Sole Performer has `produced_mana = ["T"]`, so we won't validate it.
         if ctx.data.get("name") == "Sole Performer":
             logger.info("Skipping field validation for 'produced_mana' for Sole Performer.")
-            return val
+            return None
 
         return next_(val)
 
