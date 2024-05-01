@@ -11,7 +11,7 @@ from scooze.utils import DictDiff
 
 @pytest.fixture
 def some_cards(card_chalice_of_the_void, card_hallowed_moonlight, card_veil_of_summer) -> Counter[Card]:
-    cards = Counter(
+    cards = Counter[Card](
         {
             card_chalice_of_the_void: 4,
             card_hallowed_moonlight: 2,
@@ -119,21 +119,21 @@ def test_add_cards(some_cards):
 def test_remove_card_one(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void, quantity=1)
-    some_cards = some_cards - Counter({card_chalice_of_the_void: 1})
+    some_cards = some_cards - Counter[Card]({card_chalice_of_the_void: 1})
     assert card_list.cards == some_cards
 
 
 def test_remove_card_many(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void, quantity=3)
-    some_cards = some_cards - Counter({card_chalice_of_the_void: 3})
+    some_cards = some_cards - Counter[Card]({card_chalice_of_the_void: 3})
     assert card_list.cards == some_cards
 
 
 def test_remove_card_all(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void)
-    some_cards = some_cards - Counter({card_chalice_of_the_void: maxsize})
+    some_cards = some_cards - Counter[Card]({card_chalice_of_the_void: maxsize})
     assert card_list.cards == some_cards
 
 

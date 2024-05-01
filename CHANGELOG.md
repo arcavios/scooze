@@ -11,16 +11,17 @@
 
 #### Changed
 
+- Use `pathlib` for consistent cross-OS file paths ([#222](https://github.com/arcavios/scooze/pull/222))
 - Using Beanie for decks ([#272](https://github.com/arcavios/scooze/pull/272))
 - Refactored the bulkdata API endpoints ([#279](https://github.com/arcavios/scooze/pull/279))
 - Renamed DeckPart to CardList ([#281](https://github.com/arcavios/scooze/pull/281))
-- Use `pathlib` for consistent cross-OS file paths ([#222](https://github.com/arcavios/scooze/pull/222))
 - Default to home/scooze for storage of bulk data and logs ([#294](https://github.com/arcavios/scooze/pull/294))
-
+- Refactored Card dataclasses to there is only one representation of a card. It has fields for all relevant data ([#310](https://github.com/arcavios/scooze/pull/310))
 
 #### Fixed
 
-- Skip validation for Sole Performer ([#297](https://github.com/arcavios/scooze/pull/222))
+- Skip validation for Sole Performer ([#297](https://github.com/arcavios/scooze/pull/297))
+- Rename `enum.py` to `enums.py` to avoid Python default package conflicts ([#308](https://github.com/arcavios/scooze/pull/308))
 
 
 ### [1.0.7] - 2024-03-02

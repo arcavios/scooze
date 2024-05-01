@@ -12,7 +12,7 @@ from frozendict import frozendict
 from pydantic.alias_generators import to_camel
 from scooze.catalogs import CostSymbol, Format
 from scooze.config import CONFIG
-from scooze.enum import ExtendedEnum
+from scooze.enums import ExtendedEnum
 
 ## Generic Types
 T = TypeVar("T")  # generic type
@@ -678,7 +678,7 @@ def parse_symbols(cost: str) -> Counter[CostSymbol]:
 
     # find all symbols of form {W}, {W/P}, etc
     symbols = [CostSymbol(s) for s in re.findall("{([^}]+)}", cost)]
-    return Counter(symbols)
+    return Counter[CostSymbol](symbols)
 
 
 # endregion
