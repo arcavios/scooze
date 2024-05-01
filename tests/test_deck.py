@@ -3,7 +3,7 @@ from collections import Counter
 from copy import deepcopy
 
 import pytest
-from scooze.card import OracleCard
+from scooze.card import Card
 from scooze.cardlist import CardList
 from scooze.catalogs import Format
 from scooze.deck import Deck, DeckDiff, DecklistFormatter, InThe
@@ -17,8 +17,8 @@ def cards(
     card_boseiju_who_endures,
     card_omnath_locus_of_creation,
     card_prismatic_ending,
-) -> Counter[OracleCard]:
-    return Counter[OracleCard](
+) -> Counter[Card]:
+    return Counter[Card](
         {
             card_boseiju_who_endures: 1,
             card_omnath_locus_of_creation: 1,
@@ -28,8 +28,8 @@ def cards(
 
 
 @pytest.fixture
-def cmdr_cards(card_omnath_locus_of_creation, card_supreme_verdict) -> Counter[OracleCard]:
-    return Counter[OracleCard](
+def cmdr_cards(card_omnath_locus_of_creation, card_supreme_verdict) -> Counter[Card]:
+    return Counter[Card](
         {
             card_omnath_locus_of_creation: 1,
             card_supreme_verdict: 1,
@@ -38,8 +38,8 @@ def cmdr_cards(card_omnath_locus_of_creation, card_supreme_verdict) -> Counter[O
 
 
 @pytest.fixture
-def cmdr_part(cmdr_cards) -> CardList[OracleCard]:
-    return CardList[OracleCard](cards=cmdr_cards)
+def cmdr_part(cmdr_cards) -> CardList:
+    return CardList(cards=cmdr_cards)
 
 
 @pytest.fixture
@@ -54,8 +54,8 @@ def attraction_cards(
     attraction_ferris_wheel,
     attraction_foam_weapons_kiosk,
     attraction_fortune_teller,
-) -> Counter[OracleCard]:
-    return Counter[OracleCard](
+) -> Counter[Card]:
+    return Counter[Card](
         {
             attraction_balloon_stand: 1,
             attraction_bounce_chamber: 1,
@@ -72,8 +72,8 @@ def attraction_cards(
 
 
 @pytest.fixture
-def attraction_part(attraction_cards) -> CardList[OracleCard]:
-    return CardList[OracleCard](cards=attraction_cards)
+def attraction_part(attraction_cards) -> CardList:
+    return CardList(cards=attraction_cards)
 
 
 @pytest.fixture
@@ -88,8 +88,8 @@ def sticker_cards(
     sticker_eldrazi_guacamole_tightrope,
     sticker_elemental_time_flamingo,
     sticker_eternal_acrobat_toast,
-) -> Counter[OracleCard]:
-    return Counter[OracleCard](
+) -> Counter[Card]:
+    return Counter[Card](
         {
             sticker_ancestral_hotdog_minotaur: 1,
             sticker_carnival_elephant_meteor: 1,
@@ -106,8 +106,8 @@ def sticker_cards(
 
 
 @pytest.fixture
-def sticker_part(sticker_cards) -> CardList[OracleCard]:
-    return CardList[OracleCard](cards=sticker_cards)
+def sticker_part(sticker_cards) -> CardList:
+    return CardList(cards=sticker_cards)
 
 
 @pytest.fixture
@@ -131,27 +131,27 @@ def test_no_mutable_defaults():
 
 
 def test_archetype(archetype_modern_4c):
-    deck = Deck[OracleCard](archetype=archetype_modern_4c)
+    deck = Deck(archetype=archetype_modern_4c)
     assert deck.archetype == archetype_modern_4c
 
 
 def test_format():
-    deck = Deck[OracleCard](archetype="test_format", format=Format.MODERN)
+    deck = Deck(archetype="test_format", format=Format.MODERN)
     assert deck.format is Format.MODERN
 
 
 def test_main(main_modern_4c):
-    deck = Deck[OracleCard](archetype="test_main", main=main_modern_4c)
+    deck = Deck(archetype="test_main", main=main_modern_4c)
     assert deck.main == main_modern_4c
 
 
 def test_side(side_modern_4c):
-    deck = Deck[OracleCard](archetype="test_main", side=side_modern_4c)
+    deck = Deck(archetype="test_main", side=side_modern_4c)
     assert deck.side == side_modern_4c
 
 
 def test_cmdr(cmdr_part):
-    deck = Deck[OracleCard](archetype="test_cmdr", cmdr=cmdr_part)
+    deck = Deck(archetype="test_cmdr", cmdr=cmdr_part)
     assert deck.cmdr == cmdr_part
 
 
@@ -205,7 +205,7 @@ def test_diff_side(deck_modern_4c, card_kaheera_the_orphanguard, dictdiff_empty)
 
 
 def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, card_supreme_verdict, dictdiff_empty):
-    other = Deck[OracleCard](
+    other = Deck(
         archetype=deck_modern_4c.archetype,
         format=deck_modern_4c.format,
         main=deck_modern_4c.main,
@@ -224,7 +224,7 @@ def test_diff_cmdr(deck_modern_4c, cmdr_part, card_omnath_locus_of_creation, car
 
 
 def test_decklist_equals(deck_modern_4c, main_modern_4c, side_modern_4c, card_omnath_locus_of_creation):
-    deck = Deck[OracleCard](
+    deck = Deck(
         archetype="test_decklist_equals",
         format=Format.NONE,
         main=deepcopy(main_modern_4c),
@@ -242,36 +242,34 @@ def test_export_default(deck_modern_4c, main_modern_4c_str, side_modern_4c_str):
 
 
 def test_export_default_no_side(main_modern_4c, main_modern_4c_str):
-    deck = Deck[OracleCard](archetype="test_export_default_no_side", main=main_modern_4c)
+    deck = Deck(archetype="test_export_default_no_side", main=main_modern_4c)
     assert deck.export() == f"Deck:\n{main_modern_4c_str}"
 
 
 def test_export_default_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
-    deck = Deck[OracleCard](archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
+    deck = Deck(archetype="test_export_default_cmdr", main=main_modern_4c, cmdr=cmdr_part)
     assert deck.export() == f"Commander(s):\n{cmdr_part}\nDeck:\n{main_modern_4c_str}"
 
 
 def test_export_default_attractions(main_modern_4c, main_modern_4c_str, attraction_part):
-    deck = Deck[OracleCard](
-        archetype="test_export_default_attractions", main=main_modern_4c, attractions=attraction_part
-    )
+    deck = Deck(archetype="test_export_default_attractions", main=main_modern_4c, attractions=attraction_part)
     assert deck.export() == f"Deck:\n{main_modern_4c_str}\nAttractions:\n{attraction_part}"
 
 
 def test_export_default_stickers(main_modern_4c, main_modern_4c_str, sticker_part):
-    deck = Deck[OracleCard](archetype="test_export_default_attractions", main=main_modern_4c, stickers=sticker_part)
+    deck = Deck(archetype="test_export_default_attractions", main=main_modern_4c, stickers=sticker_part)
     assert deck.export() == f"Deck:\n{main_modern_4c_str}\nStickers:\n{sticker_part}"
 
 
 def test_export_arena(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
+    deck = Deck(archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c)
     assert deck.export(DecklistFormatter.ARENA) == f"Deck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
 
 
 def test_export_arena_companion(
     main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, card_kaheera_the_orphanguard
 ):
-    deck = Deck[OracleCard](
+    deck = Deck(
         archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, companion=card_kaheera_the_orphanguard
     )
     assert (
@@ -281,7 +279,7 @@ def test_export_arena_companion(
 
 
 def test_export_arena_companion(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str, cmdr_part):
-    deck = Deck[OracleCard](archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, cmdr=cmdr_part)
+    deck = Deck(archetype="test_export_arena", main=main_modern_4c, side=side_modern_4c, cmdr=cmdr_part)
     assert (
         deck.export(DecklistFormatter.ARENA)
         == f"Commander\n{cmdr_part}\nDeck\n{main_modern_4c_str}\nSideboard\n{side_modern_4c_str}"
@@ -289,12 +287,12 @@ def test_export_arena_companion(main_modern_4c, side_modern_4c, main_modern_4c_s
 
 
 def test_export_mtgo(main_modern_4c, side_modern_4c, main_modern_4c_str, side_modern_4c_str):
-    deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
+    deck = Deck(archetype="test_export_mtgo", main=main_modern_4c, side=side_modern_4c)
     assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n{side_modern_4c_str}"
 
 
 def test_export_mtgo_cmdr(main_modern_4c, main_modern_4c_str, cmdr_part):
-    deck = Deck[OracleCard](archetype="test_export_mtgo", main=main_modern_4c, cmdr=cmdr_part)
+    deck = Deck(archetype="test_export_mtgo", main=main_modern_4c, cmdr=cmdr_part)
     assert deck.export(DecklistFormatter.MTGO) == f"{main_modern_4c_str}\n{cmdr_part}"
 
 
@@ -330,8 +328,8 @@ def test_is_legal(deck_modern_4c):
 def test_is_legal_attractions_stickers(
     card_forest, attraction_part, sticker_part, attraction_balloon_stand, sticker_ancestral_hotdog_minotaur
 ):
-    main = CardList[OracleCard](Counter[OracleCard]({card_forest: 60}))
-    deck = Deck[OracleCard](
+    main = CardList(Counter[Card]({card_forest: 60}))
+    deck = Deck(
         archetype="test_is_legal_attractions_stickers", main=main, attractions=attraction_part, stickers=sticker_part
     )
     assert deck.is_legal(Format.LEGACY)
@@ -365,133 +363,133 @@ def test_total_words(deck_modern_4c):
 
 
 def test_add_card_main_one(main_modern_4c, card_boseiju_who_endures):
-    deck = Deck[OracleCard](archetype="test_add_card_main_one", main=main_modern_4c)
+    deck = Deck(archetype="test_add_card_main_one", main=main_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=1, in_the=InThe.MAIN)
     main_modern_4c.add_card(card=card_boseiju_who_endures, quantity=1)
     assert deck.main == main_modern_4c
 
 
 def test_add_card_main_many(main_modern_4c, card_boseiju_who_endures):
-    deck = Deck[OracleCard](archetype="test_add_card_main_many", main=main_modern_4c)
+    deck = Deck(archetype="test_add_card_main_many", main=main_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=2, in_the=InThe.MAIN)
     main_modern_4c.add_card(card=card_boseiju_who_endures, quantity=2)
     assert deck.main == main_modern_4c
 
 
 def test_add_card_side_one(side_modern_4c, card_boseiju_who_endures):
-    deck = Deck[OracleCard](archetype="test_add_card_side_one", side=side_modern_4c)
+    deck = Deck(archetype="test_add_card_side_one", side=side_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=1, in_the=InThe.SIDE)
     side_modern_4c.add_card(card=card_boseiju_who_endures, quantity=1)
     assert deck.side == side_modern_4c
 
 
 def test_add_card_side_many(side_modern_4c, card_boseiju_who_endures):
-    deck = Deck[OracleCard](archetype="test_add_card_side_many", side=side_modern_4c)
+    deck = Deck(archetype="test_add_card_side_many", side=side_modern_4c)
     deck.add_card(card=card_boseiju_who_endures, quantity=2, in_the=InThe.SIDE)
     side_modern_4c.add_card(card=card_boseiju_who_endures, quantity=2)
     assert deck.side == side_modern_4c
 
 
 def test_add_card_cmdr_one(cmdr_part, card_omnath_locus_of_creation):
-    deck = Deck[OracleCard](archetype="test_add_card_cmdr_one", cmdr=cmdr_part)
+    deck = Deck(archetype="test_add_card_cmdr_one", cmdr=cmdr_part)
     deck.add_card(card=card_omnath_locus_of_creation, quantity=1, in_the=InThe.CMDR)
     cmdr_part.add_card(card=card_omnath_locus_of_creation, quantity=1)
     assert deck.cmdr == cmdr_part
 
 
 def test_add_card_cmdr_many(cmdr_part, card_omnath_locus_of_creation):
-    deck = Deck[OracleCard](archetype="test_add_card_cmdr_many", cmdr=cmdr_part)
+    deck = Deck(archetype="test_add_card_cmdr_many", cmdr=cmdr_part)
     deck.add_card(card=card_omnath_locus_of_creation, quantity=2, in_the=InThe.CMDR)
     cmdr_part.add_card(card=card_omnath_locus_of_creation, quantity=2)
     assert deck.cmdr == cmdr_part
 
 
 def test_add_cards_main(main_modern_4c, cards):
-    deck = Deck[OracleCard](archetype="test_add_cards_main", main=main_modern_4c)
+    deck = Deck(archetype="test_add_cards_main", main=main_modern_4c)
     deck.add_cards(cards=cards, in_the=InThe.MAIN)
     main_modern_4c.add_cards(cards=cards)
     assert deck.main == main_modern_4c
 
 
 def test_add_cards_side(side_modern_4c, cards):
-    deck = Deck[OracleCard](archetype="test_add_cards_side", side=side_modern_4c)
+    deck = Deck(archetype="test_add_cards_side", side=side_modern_4c)
     deck.add_cards(cards=cards, in_the=InThe.SIDE)
     side_modern_4c.add_cards(cards=cards)
     assert deck.side == side_modern_4c
 
 
 def test_add_cards_cmdr(cmdr_part, cards):
-    deck = Deck[OracleCard](archetype="test_add_cards_cmdr", cmdr=cmdr_part)
+    deck = Deck(archetype="test_add_cards_cmdr", cmdr=cmdr_part)
     deck.add_cards(cards=cards, in_the=InThe.CMDR)
     cmdr_part.add_cards(cards=cards)
     assert deck.cmdr == cmdr_part
 
 
 def test_remove_card_main_one(main_modern_4c, card_boseiju_who_endures):
-    deck = Deck[OracleCard](archetype="test_remove_card_main_one", main=main_modern_4c)
+    deck = Deck(archetype="test_remove_card_main_one", main=main_modern_4c)
     deck.remove_card(card=card_boseiju_who_endures, quantity=1, in_the=InThe.MAIN)
     main_modern_4c.remove_card(card=card_boseiju_who_endures, quantity=1)
     assert deck.main == main_modern_4c
 
 
 def test_remove_card_main_many(main_modern_4c, card_omnath_locus_of_creation):
-    deck = Deck[OracleCard](archetype="test_remove_card_main_many", main=main_modern_4c)
+    deck = Deck(archetype="test_remove_card_main_many", main=main_modern_4c)
     deck.remove_card(card=card_omnath_locus_of_creation, quantity=2, in_the=InThe.MAIN)
     main_modern_4c.remove_card(card=card_omnath_locus_of_creation, quantity=2)
     assert deck.main == main_modern_4c
 
 
 def test_remove_card_main_all(main_modern_4c, card_omnath_locus_of_creation):
-    deck = Deck[OracleCard](archetype="test_remove_card_main_all", main=main_modern_4c)
+    deck = Deck(archetype="test_remove_card_main_all", main=main_modern_4c)
     deck.remove_card(card=card_omnath_locus_of_creation, in_the=InThe.MAIN)
     main_modern_4c.remove_card(card=card_omnath_locus_of_creation)
     assert deck.main == main_modern_4c
 
 
 def test_remove_card_side_one(side_modern_4c, card_chalice_of_the_void):
-    deck = Deck[OracleCard](archetype="test_remove_card_side_one", side=side_modern_4c)
+    deck = Deck(archetype="test_remove_card_side_one", side=side_modern_4c)
     deck.remove_card(card=card_chalice_of_the_void, quantity=1, in_the=InThe.SIDE)
     side_modern_4c.remove_card(card=card_chalice_of_the_void, quantity=1)
     assert deck.side == side_modern_4c
 
 
 def test_remove_card_side_many(side_modern_4c, card_chalice_of_the_void):
-    deck = Deck[OracleCard](archetype="test_remove_card_side_many", side=side_modern_4c)
+    deck = Deck(archetype="test_remove_card_side_many", side=side_modern_4c)
     deck.remove_card(card=card_chalice_of_the_void, quantity=2, in_the=InThe.SIDE)
     side_modern_4c.remove_card(card=card_chalice_of_the_void, quantity=2)
     assert deck.side == side_modern_4c
 
 
 def test_remove_card_side_all(side_modern_4c, card_chalice_of_the_void):
-    deck = Deck[OracleCard](archetype="test_remove_card_side_all", side=side_modern_4c)
+    deck = Deck(archetype="test_remove_card_side_all", side=side_modern_4c)
     deck.remove_card(card=card_chalice_of_the_void, in_the=InThe.SIDE)
     side_modern_4c.remove_card(card=card_chalice_of_the_void)
     assert deck.side == side_modern_4c
 
 
 def test_remove_card_cmdr(cmdr_part, card_omnath_locus_of_creation):
-    deck = Deck[OracleCard](archetype="test_remove_card_cmdr", cmdr=cmdr_part)
+    deck = Deck(archetype="test_remove_card_cmdr", cmdr=cmdr_part)
     deck.remove_card(card=card_omnath_locus_of_creation, quantity=1, in_the=InThe.CMDR)
     cmdr_part.remove_card(card=card_omnath_locus_of_creation, quantity=1)
     assert deck.cmdr == cmdr_part
 
 
 def test_remove_cards_main(main_modern_4c, cards):
-    deck = Deck[OracleCard](archetype="test_remove_cards_main", main=main_modern_4c)
+    deck = Deck(archetype="test_remove_cards_main", main=main_modern_4c)
     deck.remove_cards(cards=cards, in_the=InThe.MAIN)
     main_modern_4c.remove_cards(cards=cards)
     assert deck.main == main_modern_4c
 
 
 def test_remove_cards_side(side_modern_4c, cards):
-    deck = Deck[OracleCard](archetype="test_remove_cards_side", side=side_modern_4c)
+    deck = Deck(archetype="test_remove_cards_side", side=side_modern_4c)
     deck.remove_cards(cards=cards, in_the=InThe.SIDE)
     side_modern_4c.remove_cards(cards=cards)
     assert deck.side == side_modern_4c
 
 
 def test_remove_cards_cmdr(cmdr_part, cmdr_cards):
-    deck = Deck[OracleCard](archetype="test_remove_cards_cmdr", cmdr=cmdr_part)
+    deck = Deck(archetype="test_remove_cards_cmdr", cmdr=cmdr_part)
     deck.remove_cards(cards=cmdr_cards, in_the=InThe.CMDR)
     cmdr_part.remove_cards(cards=cmdr_cards)
     assert deck.cmdr == cmdr_part

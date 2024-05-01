@@ -12,7 +12,6 @@ from pydantic import (
 from scooze import logger
 from scooze.cardparts import (
     CardFace,
-    FullCardFace,
     ImageUris,
     Preview,
     Prices,
@@ -526,7 +525,7 @@ class CardModelData(ScoozeBaseModel):
     @field_validator("card_faces", mode="before")
     @classmethod
     def _validate_card_faces(cls, vals):
-        if vals is not None and all(isinstance(v, CardFace | FullCardFace) for v in vals):
+        if vals is not None and all(isinstance(v, CardFace) for v in vals):
             vals = [CardFaceModel.model_validate(v.__dict__) for v in vals]
         return vals
 
