@@ -4,6 +4,7 @@ from sys import maxsize
 import pytest
 from scooze.card import Card
 from scooze.cardlist import CardList
+from scooze.catalogs import Color
 from scooze.utils import DictDiff
 
 # region Fixtures
@@ -142,3 +143,9 @@ def test_remove_cards(some_cards):
     card_list.remove_cards(some_cards)
     some_cards = some_cards - some_cards
     assert card_list.cards == some_cards
+
+
+def test_count_pips(some_cards):
+    card_list = CardList(cards=some_cards)
+    expected = Counter[Card]({Color.GREEN: 1, Color.WHITE: 2})
+    assert card_list.count_pips() == expected

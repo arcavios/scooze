@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 from scooze.card import Card
 from scooze.cardlist import CardList
-from scooze.catalogs import Format
+from scooze.catalogs import Color, Format
 from scooze.deck import Deck, DeckDiff, DecklistFormatter, InThe
 from scooze.utils import DictDiff
 
@@ -357,6 +357,11 @@ def test_total_cmc(deck_modern_4c):
 
 def test_total_words(deck_modern_4c):
     assert deck_modern_4c.total_words() == 2118
+
+
+def test_total_pips(deck_modern_4c):
+    expected = Counter[Card]({Color.WHITE: 29, Color.BLUE: 29, Color.BLACK: 0, Color.RED: 8, Color.GREEN: 9})
+    assert deck_modern_4c.total_pips() == expected
 
 
 # region Mutating Methods

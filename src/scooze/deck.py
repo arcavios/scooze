@@ -187,7 +187,7 @@ class Deck(ComparableObject):
         return sum([c.cmc * q for c, q in self.cards.items()])
 
     def total_pips(self) -> Counter[CostSymbol]:
-        return sum([p.count_pips() for p in [self.main, self.side, self.cmdr]], Counter)
+        return sum([p.count_pips() for p in [self.main, self.side, self.cmdr]], Counter())
 
     def total_words(self) -> int:
         """
