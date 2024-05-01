@@ -1,10 +1,10 @@
-from scooze.card import CardT
+from scooze.card import Card
 from scooze.deck import Deck
 
-# TODO(#145): need to support creating Deck[CardT] from model
+# TODO(#145): need to support creating Deck from model
 
 
-def get_deck_by(property_name: str, value, card_class: CardT) -> Deck[CardT]:
+def get_deck_by(property_name: str, value) -> Deck:
     raise NotImplementedError()
 
 

@@ -5,7 +5,6 @@ from unittest.mock import MagicMock, patch
 import pytest
 from beanie import PydanticObjectId
 from httpx import AsyncClient
-from scooze.card import OracleCard
 from scooze.cardlist import CardList
 from scooze.models.card import CardModel, CardModelData
 from scooze.models.deck import DeckModel, DeckModelData
@@ -21,8 +20,8 @@ class TestDeckRouterWithPopulatedDatabase:
         self,
         cards_json: list[str],
         archetype_modern_4c: str,
-        main_modern_4c: CardList[OracleCard],
-        side_modern_4c: CardList[OracleCard],
+        main_modern_4c: CardList,
+        side_modern_4c: CardList,
         today: date,
     ):
         for card_json in cards_json:

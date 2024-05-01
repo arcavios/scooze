@@ -2,7 +2,7 @@ from typing import Any
 
 from beanie import PydanticObjectId
 from scooze import logger
-from scooze.card import CardT, FullCard
+from scooze.card import Card
 from scooze.errors import BulkAddError
 from scooze.models.card import CardModel, CardModelData
 from scooze.utils import to_lower_camel
@@ -18,14 +18,13 @@ def _normalize_for_ids(property_name: str, value, is_many: bool = False) -> tupl
             return to_lower_camel(property_name), value
 
 
-async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -> CardT:
+async def get_card_by(property_name: str, value: Any) -> Card:
     """
     Search the database for the first card that matches the given criteria.
 
     Args:
         property_name: The property to check.
         value: The value to match on.
-        card_class: The type of card to return.
 
     Returns:
         The first matching card, or None if none were found.
@@ -35,17 +34,16 @@ async def get_card_by(property_name: str, value, card_class: CardT = FullCard) -
     card_model = await CardModel.find_one({prop_name: val})
 
     if card_model is not None:
-        return card_class.from_model(card_model)
+        return Card.from_model(card_model)
 
 
 async def get_cards_by(
     property_name: str,
     values: list[Any],
-    card_class: CardT = FullCard,
     paginated: bool = False,
     page: int = 1,
     page_size: int = 10,
-) -> list[CardT]:
+) -> list[Card]:
     """
     Search the database for cards matching the given criteria, with options for
     pagination.
@@ -53,7 +51,6 @@ async def get_cards_by(
     Args:
         property_name: The property to check.
         values: A list of values to match on.
-        card_class: The type of card object to return.
         paginated: Whether to paginate the results.
         page: The page to look at, if paginated.
         page_size: The size of each page, if paginated.
@@ -68,10 +65,10 @@ async def get_cards_by(
     limit = page_size if paginated else None
     card_models = await CardModel.find({"$or": [{prop_name: v} for v in vals]}, skip=skip, limit=limit).to_list()
 
-    return [card_class.from_model(m) for m in card_models]
+    return [Card.from_model(m) for m in card_models]
 
 
-async def get_cards_all(card_class: CardT = FullCard) -> list[CardT]:
+async def get_cards_all() -> list[Card]:
     """
     Get all cards from the database. WARNING: may be extremely large.
 
@@ -81,10 +78,10 @@ async def get_cards_all(card_class: CardT = FullCard) -> list[CardT]:
 
     card_models = await CardModel.find_all().to_list()
 
-    return [card_class.from_model(m) for m in card_models]
+    return [Card.from_model(m) for m in card_models]
 
 
-async def add_card(card: CardT) -> PydanticObjectId:
+async def add_card(card: Card) -> PydanticObjectId:
     """
     Add a card to the database.
 
@@ -107,7 +104,7 @@ async def add_card(card: CardT) -> PydanticObjectId:
         logger.exception("Failed to add card.", extra={"card": card}, exc_info=e)
 
 
-async def add_cards(cards: list[CardT]) -> list[PydanticObjectId]:
+async def add_cards(cards: list[Card]) -> list[PydanticObjectId]:
     """
     Add a list of cards to the database.
 

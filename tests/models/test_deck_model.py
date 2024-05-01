@@ -16,7 +16,7 @@ def archetype() -> str:
 
 @pytest.fixture
 def main_cards() -> Counter[ObjectIdT]:
-    main_cards = Counter(
+    main_cards = Counter[ObjectIdT](
         {
             ObjectId(): 2,
             ObjectId(): 2,
@@ -28,7 +28,7 @@ def main_cards() -> Counter[ObjectIdT]:
 
 @pytest.fixture
 def side_cards() -> Counter[ObjectIdT]:
-    side_cards = Counter(
+    side_cards = Counter[ObjectIdT](
         {
             ObjectId(): 1,
             ObjectId(): 2,
@@ -41,7 +41,7 @@ def side_cards() -> Counter[ObjectIdT]:
 
 @pytest.fixture
 def cmdr_cards() -> Counter[ObjectIdT]:
-    cmdr_cards = Counter(
+    cmdr_cards = Counter[ObjectIdT](
         {
             ObjectId(): 1,
         }
