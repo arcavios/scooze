@@ -1,7 +1,7 @@
 from cleo.commands.command import Command
 from cleo.helpers import argument
 from scooze.api import ScoozeApi
-from scooze.enum import DbCollection
+from scooze.enums import DbCollection
 
 ACCEPTED_DELETE_ARGS = {
     "all",

@@ -35,7 +35,7 @@ from scooze.catalogs import (
     SecurityStamp,
     SetType,
 )
-from scooze.enum import DbCollection
+from scooze.enums import DbCollection
 from scooze.models.cardparts import (
     CardFaceModel,
     ImageUrisModel,
