@@ -2,7 +2,7 @@ from enum import StrEnum, auto
 from functools import cache
 from typing import FrozenSet
 
-from scooze.enum import ExtendedEnum
+from scooze.enums import ExtendedEnum
 
 # region Card Enums
 

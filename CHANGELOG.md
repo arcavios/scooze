@@ -20,7 +20,8 @@
 
 #### Fixed
 
-- Skip validation for Sole Performer ([#297](https://github.com/arcavios/scooze/pull/222))
+- Skip validation for Sole Performer ([#297](https://github.com/arcavios/scooze/pull/297))
+- Rename `enum.py` to `enums.py` to avoid Python default package conflicts ([#308](https://github.com/arcavios/scooze/pull/308))
 
 
 ### [1.0.7] - 2024-03-02
