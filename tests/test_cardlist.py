@@ -11,7 +11,7 @@ from scooze.utils import DictDiff
 
 @pytest.fixture
 def some_cards(card_chalice_of_the_void, card_hallowed_moonlight, card_veil_of_summer) -> Counter[Card]:
-    cards = Counter(
+    cards = Counter[Card](
         {
             card_chalice_of_the_void: 4,
             card_hallowed_moonlight: 2,
@@ -60,7 +60,6 @@ def test_total(main_modern_4c):
     assert main_modern_4c.total() == 60
 
 
-@pytest.mark.deck_diff
 def test_diff(
     side_modern_4c,
     some_cards,
@@ -96,7 +95,6 @@ def test_diff(
     )
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_one(some_cards, card_veil_of_summer):
     card_list = CardList(cards=some_cards)
     card_list.add_card(card=card_veil_of_summer)
@@ -104,7 +102,6 @@ def test_add_card_one(some_cards, card_veil_of_summer):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_add_cards
 def test_add_card_many(some_cards, card_veil_of_summer):
     card_list = CardList(cards=some_cards)
     card_list.add_card(card=card_veil_of_summer, quantity=3)
@@ -112,7 +109,6 @@ def test_add_card_many(some_cards, card_veil_of_summer):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_add_cards
 def test_add_cards(some_cards):
     card_list = CardList(cards=some_cards)
     card_list.add_cards(some_cards)
@@ -120,31 +116,27 @@ def test_add_cards(some_cards):
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_one(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void, quantity=1)
-    some_cards = some_cards - Counter({card_chalice_of_the_void: 1})
+    some_cards = some_cards - Counter[Card]({card_chalice_of_the_void: 1})
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_many(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void, quantity=3)
-    some_cards = some_cards - Counter({card_chalice_of_the_void: 3})
+    some_cards = some_cards - Counter[Card]({card_chalice_of_the_void: 3})
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_card_all(some_cards, card_chalice_of_the_void):
     card_list = CardList(cards=some_cards)
     card_list.remove_card(card=card_chalice_of_the_void)
-    some_cards = some_cards - Counter({card_chalice_of_the_void: maxsize})
+    some_cards = some_cards - Counter[Card]({card_chalice_of_the_void: maxsize})
     assert card_list.cards == some_cards
 
 
-@pytest.mark.deck_remove_cards
 def test_remove_cards(some_cards):
     card_list = CardList(cards=some_cards)
     card_list.remove_cards(some_cards)

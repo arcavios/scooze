@@ -1,14 +1,13 @@
 import json
 import re
 from datetime import date
-from typing import Iterable, Mapping, Self, TypeVar
+from typing import Iterable, Mapping, Self
 
 from beanie import PydanticObjectId
 from scooze import logger
 from scooze.cardparts import (
     CardFace,
     CardPartsNormalizer,
-    FullCardFace,
     ImageUris,
     Preview,
     Prices,
@@ -35,240 +34,10 @@ from scooze.catalogs import (
 from scooze.models.card import CardModel
 from scooze.utils import FloatableT, HashableObject
 
-## Generic Types
-CardFaceT = TypeVar("CardFaceT", bound=CardFace)  # generic CardFace type
+# TODO(#309): Add functionality to Card to get only the values for an "OracleCard"
 
 
 class Card(HashableObject):
-    """
-    A basic Card object with minimal fields. Contains all information you might
-    use to sort a decklist.
-
-    Attributes:
-        name (str | None): This card's name.
-        scooze_id (PydanticObjectId | None): A unique identifier for a document
-            in a scooze database.
-        cmc (float | None): This card's mana value/converted mana cost.
-        color_identity (frozenset[Color] | None): This card's color identity,
-            for Commander variant deckbuilding.
-        colors (frozenset[Color] | None): This card's colors.
-        legalities (frozendict[Format, Legality] | None): Formats and the
-            legality status of this card in them.
-        mana_cost (str | None): Mana cost, as string of mana symbols.
-            (e.g. "{1}{W}{U}{B}{R}{G}")
-        power (str | None): Power of this card, if applicable.
-        toughness (str | None): Toughness of this card, if applicable.
-        type_line (str | None): This card's type line. (e.g. "Creature — Ooze")
-    """
-
-    def __init__(
-        self,
-        name: str | None = None,
-        cmc: FloatableT | None = None,
-        color_identity: Iterable[Color] | None = None,
-        colors: Iterable[Color] | None = None,
-        legalities: Mapping[Format, Legality] | None = None,
-        mana_cost: str | None = None,
-        power: str | None = None,
-        toughness: str | None = None,
-        type_line: str | None = None,
-        # kwargs
-        **kwargs,
-    ):
-        self.scooze_id = CardNormalizer.to_id(id_like=kwargs.get("id"))
-
-        self.name = name
-        self.cmc = CardNormalizer.to_float(cmc)
-        self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
-        self.colors = CardNormalizer.to_frozenset(colors, convert_to_enum=Color)
-        self.legalities = CardNormalizer.to_frozendict(
-            legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality
-        )
-        self.mana_cost = mana_cost
-        self.power = power
-        self.toughness = toughness
-        self.type_line = type_line
-
-        if kwargs:
-            logger.debug("kwargs found", extra=kwargs)
-
-    def __str__(self):
-        return self.name
-
-    @classmethod
-    def from_json(cls, data: dict | str) -> Self:
-        """
-        Create a new Card with the given JSON.
-
-        Args:
-            data: Some JSON to create a scooze Card from.
-        """
-        if isinstance(data, dict):
-            return cls(**data)
-        elif isinstance(data, str):
-            return cls(**json.loads(data))
-
-    @classmethod
-    def from_model(cls, model: CardModel) -> Self:
-        """
-        Create a new Card with the given `CardModel`.
-
-        Args:
-            model: A CardModel to create a scooze Card from.
-        """
-        return cls(**model.model_dump())
-
-
-class OracleCard(Card):
-    """
-    A Card object containing all information about a unique card in Magic.
-    All information in this class is print-agnostic.
-
-    Attributes:
-        name (str | None): This card's name.
-        scooze_id (PydanticObjectId | None): A unique identifier for a document
-            in a scooze database.
-        card_faces (tuple[CardFaceT] | None): All component CardFaces of this
-            card, for multifaced cards.
-        cmc (float | None): This card's mana value/converted mana cost.
-        color_identity (frozenset[Color] | None): This card's color identity,
-            for Commander variant deckbuilding.
-        color_indicator (frozenset[Color] | None): The colors in this card's
-            color indicator, if it has one.
-        colors (frozenset[Color] | None): This card's colors.
-        edhrec_rank (int | None): This card's rank/popularity on EDHREC, if
-            applicable.
-        hand_modifier (str | None): This card's Vanguard hand size modifier, if
-            applicable.
-        keywords (frozenset[str] | None): Keywords and keyword actions this
-            card uses.
-        legalities (frozendict[Format, Legality] | None): Formats and the
-            legality status of this card in them.
-        life_modifier (str | None): This card's Vanguard life modifier value,
-            if applicable.
-        loyalty (str | None): This card's starting planeswalker loyalty, if
-            applicable.
-        mana_cost (str | None): Mana cost, as string of mana symbols.
-            (e.g. "{1}{W}{U}{B}{R}{G}")
-        oracle_id (str | None): A UUID for this card's oracle identity; shared
-            across prints of the same card but not same-named objects with
-            different gameplay properties.
-        oracle_text (str | None): This card's oracle text, if any.
-        penny_rank (int | None): This card's rank/popularity on Penny Dreadful.
-        power (str | None): Power of this card, if applicable.
-        prints_search_uri (str | None): A link to begin paginating through all
-            prints of this card in Scryfall's API.
-        produced_mana (frozenset[Color] | None): Which colors of mana this card
-            can produce.
-        reserved (bool | None): Whether this card is on the Reserved List.
-        rulings_uri (str | None): A link to rulings for this card in Scryfall's
-            API.
-        toughness (str | None): Toughness of this card, if applicable.
-        type_line (str | None): This card's type line. (e.g. "Creature — Ooze")
-    """
-
-    def __init__(
-        self,
-        name: str | None = None,
-        card_faces: Iterable[CardFace] | None = None,
-        cmc: FloatableT | None = None,
-        color_identity: Iterable[Color] | None = None,
-        color_indicator: Iterable[Color] | None = None,
-        colors: Iterable[Color] | None = None,
-        edhrec_rank: int | None = None,
-        hand_modifier: str | None = None,
-        keywords: Iterable[str] = None,
-        legalities: Mapping[Format, Legality] = None,
-        life_modifier: str | None = None,
-        loyalty: str | None = None,
-        mana_cost: str | None = None,
-        oracle_id: str | None = None,
-        oracle_text: str | None = None,
-        penny_rank: int | None = None,
-        power: str | None = None,
-        prints_search_uri: str | None = None,
-        produced_mana: Iterable[Color] | None = None,
-        reserved: bool | None = None,
-        rulings_uri: str | None = None,
-        toughness: str | None = None,
-        type_line: str | None = None,
-        # kwargs
-        **kwargs,
-    ):
-        super().__init__(
-            name=name,
-            cmc=cmc,
-            color_identity=color_identity,
-            colors=colors,
-            legalities=legalities,
-            mana_cost=mana_cost,
-            power=power,
-            toughness=toughness,
-            type_line=type_line,
-            **kwargs,
-        )
-        self.scooze_id = CardNormalizer.to_id(id_like=kwargs.get("id"))
-
-        self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=CardFace)
-        self.color_indicator = CardNormalizer.to_frozenset(color_indicator, convert_to_enum=Color)
-        self.edhrec_rank = edhrec_rank
-        self.hand_modifier = hand_modifier
-        self.keywords = CardNormalizer.to_frozenset(keywords)
-        self.life_modifier = life_modifier
-        self.loyalty = loyalty
-        self.oracle_id = oracle_id
-        self.oracle_text = oracle_text
-        self.penny_rank = penny_rank
-        self.prints_search_uri = prints_search_uri
-        self.produced_mana = CardNormalizer.to_frozenset(produced_mana, convert_to_enum=Color)
-        self.reserved = reserved
-        self.rulings_uri = rulings_uri
-
-    @classmethod
-    def oracle_text_without_reminder(cls, oracle_text: str) -> str:
-        """
-        Provide the given oracle text with reminder text removed.
-
-        Note:
-            This is a class method because cards with two unique faces won't
-            know which face you'd want. Instead you simply pass the text from
-            which you want to trim reminder text.
-
-        Args:
-            oracle_text: The oracle text of a card.
-        """
-
-        pattern_reminder = r" ?\([^()]+\) ?"  # text between parens ()
-        return re.sub(pattern_reminder, "", oracle_text)
-
-    def is_double_sided(self) -> bool:
-        """
-        Determine if this is a double-sided card.
-        """
-
-        return self.card_faces is not None
-
-    def total_words(self) -> int:
-        """
-        The number of words in this card's oracle text (excludes reminder text).
-        """
-
-        pattern_words = r"([a-zA-Z0-9+/{}']+)"  # words on a card
-
-        # MDFC
-        if self.is_double_sided():
-            return sum(
-                [
-                    len(re.findall(pattern_words, OracleCard.oracle_text_without_reminder(face.oracle_text)))
-                    for face in self.card_faces
-                ]
-            )
-        # Non-MDFC
-        else:
-            return len(re.findall(pattern_words, OracleCard.oracle_text_without_reminder(self.oracle_text)))
-
-
-class FullCard(OracleCard):
     """
     A Card object that supports all fields available from Scryfall's JSON data.
     Represents a specific printing of a card.
@@ -305,7 +74,7 @@ class FullCard(OracleCard):
 
         all_parts (tuple[RelatedCard] | None): RelatedCards for tokens/meld
             pairs/other associated parts to this card, if applicable.
-        card_faces (tuple[CardFaceT] | None): All component CardFaces of this
+        card_faces (tuple[CardFace] | None): All component CardFaces of this
             card, for multifaced cards.
         cmc (float | None): This card's mana value/converted mana cost.
         color_identity (frozenset[Color] | None): This card's color identity,
@@ -439,7 +208,7 @@ class FullCard(OracleCard):
         uri: str | None = None,
         # Gameplay Fields
         all_parts: Iterable[RelatedCard] | None = None,
-        card_faces: Iterable[FullCardFace] | None = None,
+        card_faces: Iterable[CardFace] | None = None,
         cmc: FloatableT | None = None,
         color_identity: Iterable[Color] | None = None,
         color_indicator: Iterable[Color] | None = None,
@@ -509,33 +278,42 @@ class FullCard(OracleCard):
         # kwargs
         **kwargs,
     ):
-        super().__init__(
-            name=name,
-            card_faces=None,  # will be overridden with FullCardFaces
-            cmc=0,  # will be overridden with reversible card logic
-            color_identity=color_identity,
-            color_indicator=color_indicator,
-            colors=colors,
-            edhrec_rank=edhrec_rank,
-            hand_modifier=hand_modifier,
-            keywords=keywords,
-            legalities=legalities,
-            life_modifier=life_modifier,
-            loyalty=loyalty,
-            mana_cost=mana_cost,
-            oracle_id=oracle_id,
-            oracle_text=oracle_text,
-            penny_rank=penny_rank,
-            power=power,
-            prints_search_uri=prints_search_uri,
-            produced_mana=produced_mana,
-            reserved=reserved,
-            rulings_uri=rulings_uri,
-            toughness=toughness,
-            type_line=type_line,
-            **kwargs,
-        )
         self.scooze_id = CardNormalizer.to_id(id_like=kwargs.get("id"))
+
+        if kwargs:
+            logger.debug("kwargs found", extra=kwargs)
+
+        # region Basic Fields
+
+        self.name = name
+        self.cmc = CardNormalizer.to_float(cmc)
+        self.color_identity = CardNormalizer.to_frozenset(color_identity, convert_to_enum=Color)
+        self.colors = CardNormalizer.to_frozenset(colors, convert_to_enum=Color)
+        self.legalities = CardNormalizer.to_frozendict(
+            legalities, convert_key_to_enum=Format, convert_value_to_enum=Legality
+        )
+        self.mana_cost = mana_cost
+        self.power = power
+        self.toughness = toughness
+        self.type_line = type_line
+
+        # Oracle Fields
+        self.card_faces = CardNormalizer.to_card_faces(card_faces)
+        self.color_indicator = CardNormalizer.to_frozenset(color_indicator, convert_to_enum=Color)
+        self.edhrec_rank = edhrec_rank
+        self.hand_modifier = hand_modifier
+        self.keywords = CardNormalizer.to_frozenset(keywords)
+        self.life_modifier = life_modifier
+        self.loyalty = loyalty
+        self.oracle_id = oracle_id
+        self.oracle_text = oracle_text
+        self.penny_rank = penny_rank
+        self.prints_search_uri = prints_search_uri
+        self.produced_mana = CardNormalizer.to_frozenset(produced_mana, convert_to_enum=Color)
+        self.reserved = reserved
+        self.rulings_uri = rulings_uri
+
+        # endregion
 
         # region Core Fields
 
@@ -556,7 +334,7 @@ class FullCard(OracleCard):
         # region Gameplay Fields
 
         self.all_parts = CardNormalizer.to_all_parts(all_parts)
-        self.card_faces = CardNormalizer.to_card_faces(card_faces, card_face_class=FullCardFace)
+        self.card_faces = CardNormalizer.to_card_faces(card_faces)
         # NOTE: Reversible cards currently have the same oracle card on both sides;
         # will need to change this if this changes.
         if layout == Layout.REVERSIBLE_CARD:
@@ -618,14 +396,82 @@ class FullCard(OracleCard):
 
         # endregion
 
-    def total_words(self) -> int:
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def from_json(cls, data: dict | str) -> Self:
         """
-        The number of words in this card's oracle text (excludes reminder
-        text).
+        Create a new Card with the given JSON.
+
+        Args:
+            data: Some JSON to create a scooze Card from.
         """
 
+        if isinstance(data, dict):
+            return cls(**data)
+        elif isinstance(data, str):
+            return cls(**json.loads(data))
+
+    @classmethod
+    def from_model(cls, model: CardModel) -> Self:
+        """
+        Create a new Card with the given `CardModel`.
+
+        Args:
+            model: A CardModel to create a scooze Card from.
+        """
+
+        return cls(**model.model_dump())
+
+    @classmethod
+    def oracle_text_without_reminder(cls, oracle_text: str) -> str:
+        """
+        Provide the given oracle text with reminder text removed.
+
+        Note:
+            This is a class method because cards with two unique faces won't
+            know which face you'd want. Instead you simply pass the text from
+            which you want to trim reminder text.
+
+        Args:
+            oracle_text: The oracle text of a card.
+        """
+
+        pattern_reminder = r" ?\([^()]+\) ?"  # text between parens ()
+        return re.sub(pattern_reminder, "", oracle_text)
+
+    def is_double_sided(self) -> bool:
+        """
+        Determine if this is a double-sided card.
+        """
+
+        return self.card_faces is not None
+
+    def total_words(self) -> int:
+        """
+        The number of words in this card's oracle text
+        (excludes reminder text).
+        """
+
+        pattern_words = r"([a-zA-Z0-9+/{}']+)"  # words on a card
+
+        word_count: int
+
+        # MDFC
+        if self.is_double_sided():
+            word_count = sum(
+                [
+                    len(re.findall(pattern_words, Card.oracle_text_without_reminder(face.oracle_text)))
+                    for face in self.card_faces
+                ]
+            )
+        # Non-MDFC
+        else:
+            word_count = len(re.findall(pattern_words, Card.oracle_text_without_reminder(self.oracle_text)))
+
         # Don't double count reversible card text
-        return int(super().total_words() / (2 if self.layout is Layout.REVERSIBLE_CARD else 1))
+        return int(word_count / (2 if self.layout is Layout.REVERSIBLE_CARD else 1))
 
 
 class CardNormalizer(CardPartsNormalizer):
@@ -656,26 +502,22 @@ class CardNormalizer(CardPartsNormalizer):
     @classmethod
     def to_card_faces(
         cls,
-        card_faces: Iterable[CardFaceT] | Iterable[dict] | None,
-        card_face_class: type[CardFaceT] = CardFace,
-    ) -> tuple[CardFaceT] | None:
+        card_faces: Iterable[CardFace] | Iterable[dict] | None,
+    ) -> tuple[CardFace] | None:
         """
         Normalize card_faces from JSON.
 
         Args:
-            card_faces: A Iterable[F] or Iterable[JSON] to normalize. F is of
-                type CardFace or FullCardFace.
-            card_face_class: A CardFace class to create an instance of.
-                (one of CardFace or FullCardFace)
+            card_faces: An Iterable[CardFace] to normalize.
 
         Returns:
-            A tuple[F] where F is of type CardFace or FullCardFace.
+            A tuple[CardFace].
         """
 
-        if card_faces is None or all(isinstance(card_face, card_face_class) for card_face in card_faces):
+        if card_faces is None:
             return card_faces
         elif all(isinstance(card_face, dict) for card_face in card_faces):
-            return tuple(card_face_class.from_json(card_face) for card_face in card_faces)
+            return tuple(CardFace.from_json(card_face) for card_face in card_faces)
 
     @classmethod
     def to_id(cls, id_like: PydanticObjectId | str | None) -> PydanticObjectId | None:
@@ -727,9 +569,3 @@ class CardNormalizer(CardPartsNormalizer):
             return prices
         elif isinstance(prices, dict):
             return Prices(**prices)
-
-
-CardT = TypeVar("CardT", bound=Card)
-"""
-A TypeVar for representing Generic Card types.
-"""

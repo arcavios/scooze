@@ -1,7 +1,7 @@
 from cleo.commands.command import Command
 from cleo.helpers import argument
 from scooze.api import ScoozeApi
-from scooze.enum import DbCollection
+from scooze.enums import DbCollection
 
 ACCEPTED_DELETE_ARGS = {
     "all",
@@ -39,17 +39,15 @@ class DeleteCommand(Command):
             self.line(f"No valid collections were given. Ignored the following: <fg=cyan>{extra_args}</>")
 
         for collection in to_delete:
-            delete_collection(collection)
+            self.delete_collection(collection)
 
-
-def delete_collection(coll: DbCollection):
-    clean = input(f"Delete existing {coll}? [y/N] ") in "yY"
-    if clean:
-        print(f"Deleting all {coll} from your local database...")
-        match coll:
-            case DbCollection.CARDS:
-                with ScoozeApi() as s:
-                    s.delete_cards_all()
-            case DbCollection.DECKS:
-                # TODO(#145): Use the ScoozeApi for this
-                print("Can't delete decks yet")
+    def delete_collection(self, coll: DbCollection):
+        if self.confirm(f"Delete existing {coll}?"):
+            self.line(f"Deleting all {coll} from your local database...")
+            match coll:
+                case DbCollection.CARDS:
+                    with ScoozeApi() as s:
+                        s.delete_cards_all()
+                case DbCollection.DECKS:
+                    # TODO(#145): Use the ScoozeApi for this
+                    self.line("Can't delete decks yet.")

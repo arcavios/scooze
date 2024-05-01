@@ -7,7 +7,7 @@ import scooze.api.bulkdata as bulkdata_api
 import scooze.api.card as card_api
 from beanie import PydanticObjectId, init_beanie
 from scooze.api.utils import _check_for_safe_context, _safe_cache
-from scooze.card import CardT, FullCard
+from scooze.card import Card
 from scooze.catalogs import ScryfallBulkFile
 from scooze.config import CONFIG
 from scooze.models.card import CardModel
@@ -28,8 +28,7 @@ class ScoozeApi(AbstractContextManager):
         ```
     """
 
-    def __init__(self, card_class: type[CardT] = FullCard):
-        self.card_class = card_class
+    def __init__(self):
         self.safe_context = False
 
     def __enter__(self):
@@ -48,7 +47,7 @@ class ScoozeApi(AbstractContextManager):
 
     @_safe_cache
     @_check_for_safe_context
-    def get_card_by(self, property_name: str, value: Any) -> CardT:
+    def get_card_by(self, property_name: str, value: Any) -> Card:
         """
         Search the database for the first card that matches the given criteria.
 
@@ -64,7 +63,7 @@ class ScoozeApi(AbstractContextManager):
         """
 
         return asyncio.get_event_loop().run_until_complete(
-            card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
+            card_api.get_card_by(property_name=property_name, value=value)
         )
 
     @_check_for_safe_context
@@ -75,7 +74,7 @@ class ScoozeApi(AbstractContextManager):
         paginated: bool = False,
         page: int = 1,
         page_size: int = 10,
-    ) -> list[CardT]:
+    ) -> list[Card]:
         """
         Search the database for cards matching the given criteria, with options for
         pagination.
@@ -99,7 +98,6 @@ class ScoozeApi(AbstractContextManager):
             card_api.get_cards_by(
                 property_name=property_name,
                 values=values,
-                card_class=self.card_class,
                 paginated=paginated,
                 page=page,
                 page_size=page_size,
@@ -110,7 +108,7 @@ class ScoozeApi(AbstractContextManager):
 
     @cache
     @_check_for_safe_context
-    def get_card_by_name(self, name: str) -> CardT:
+    def get_card_by_name(self, name: str) -> Card:
         """
         Search the database for a card with the given name.
 
@@ -128,13 +126,12 @@ class ScoozeApi(AbstractContextManager):
             card_api.get_card_by(
                 property_name="name",
                 value=name,
-                card_class=self.card_class,
             )
         )
 
     @cache
     @_check_for_safe_context
-    def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
+    def get_card_by_oracle_id(self, oracle_id: str) -> Card:
         """
         Search the database for a card with the given Oracle ID.
 
@@ -152,13 +149,12 @@ class ScoozeApi(AbstractContextManager):
             card_api.get_card_by(
                 property_name="oracle_id",
                 value=oracle_id,
-                card_class=self.card_class,
             )
         )
 
     @cache
     @_check_for_safe_context
-    def get_card_by_scryfall_id(self, scryfall_id: str) -> CardT:
+    def get_card_by_scryfall_id(self, scryfall_id: str) -> Card:
         """
         Search the database for a card with the given Scryfall ID.
 
@@ -176,7 +172,6 @@ class ScoozeApi(AbstractContextManager):
             card_api.get_card_by(
                 property_name="scryfall_id",
                 value=scryfall_id,
-                card_class=self.card_class,
             )
         )
 
@@ -185,7 +180,7 @@ class ScoozeApi(AbstractContextManager):
     # region Convenience methods for multiple card lookup
 
     @_check_for_safe_context
-    def get_cards_by_set(self, set_code: str) -> list[CardT]:
+    def get_cards_by_set(self, set_code: str) -> list[Card]:
         """
          Search the database for all cards in the given set.
          Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
@@ -205,12 +200,11 @@ class ScoozeApi(AbstractContextManager):
             card_api.get_cards_by(
                 property_name="set",
                 values=[set_code],
-                card_class=self.card_class,
             )
         )
 
     @_check_for_safe_context
-    def get_cards_all(self) -> list[CardT]:
+    def get_cards_all(self) -> list[Card]:
         """
         Get all cards from the database. WARNING: may be extremely large.
 
@@ -221,14 +215,14 @@ class ScoozeApi(AbstractContextManager):
             RuntimeError: If used outside a `with` context.
         """
 
-        return asyncio.get_event_loop().run_until_complete(card_api.get_cards_all(self.card_class))
+        return asyncio.get_event_loop().run_until_complete(card_api.get_cards_all())
 
     # TODO(#146): add function get_cards_by_format (format, legality)
 
     # endregion
 
     @_check_for_safe_context
-    def add_card(self, card: CardT) -> PydanticObjectId:
+    def add_card(self, card: Card) -> PydanticObjectId:
         """
         Add a card to the database.
 
@@ -245,7 +239,7 @@ class ScoozeApi(AbstractContextManager):
         return asyncio.get_event_loop().run_until_complete(card_api.add_card(card=card))
 
     @_check_for_safe_context
-    def add_cards(self, cards: list[CardT]) -> list[PydanticObjectId]:
+    def add_cards(self, cards: list[Card]) -> list[PydanticObjectId]:
         """
         Add a list of cards to the database.
 
@@ -343,8 +337,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         ```
     """
 
-    def __init__(self, card_class: type[CardT] = FullCard):
-        self.card_class = card_class
+    def __init__(self):
         self.safe_context = False
 
     async def __aenter__(self):
@@ -361,7 +354,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
     @_safe_cache
     @_check_for_safe_context
-    async def get_card_by(self, property_name: str, value: Any) -> CardT:
+    async def get_card_by(self, property_name: str, value: Any) -> Card:
         """
         Search the database for the first card that matches the given criteria.
 
@@ -376,7 +369,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
             RuntimeError: If used outside an `async with` context.
         """
 
-        return await card_api.get_card_by(property_name=property_name, value=value, card_class=self.card_class)
+        return await card_api.get_card_by(property_name=property_name, value=value)
 
     @_check_for_safe_context
     async def get_cards_by(
@@ -386,7 +379,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         paginated: bool = False,
         page: int = 1,
         page_size: int = 10,
-    ) -> list[CardT]:
+    ) -> list[Card]:
         """
         Search the database for cards matching the given criteria, with options for
         pagination.
@@ -409,7 +402,6 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.get_cards_by(
             property_name=property_name,
             values=values,
-            card_class=self.card_class,
             paginated=paginated,
             page=page,
             page_size=page_size,
@@ -419,7 +411,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
 
     @cache
     @_check_for_safe_context
-    async def get_card_by_name(self, name: str) -> CardT:
+    async def get_card_by_name(self, name: str) -> Card:
         """
         Search the database for a card with the given name.
 
@@ -436,12 +428,11 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.get_card_by(
             property_name="name",
             value=name,
-            card_class=self.card_class,
         )
 
     @cache
     @_check_for_safe_context
-    async def get_card_by_oracle_id(self, oracle_id: str) -> CardT:
+    async def get_card_by_oracle_id(self, oracle_id: str) -> Card:
         """
         Search the database for a card with the given Oracle ID.
 
@@ -458,12 +449,11 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.get_card_by(
             property_name="oracle_id",
             value=oracle_id,
-            card_class=self.card_class,
         )
 
     @cache
     @_check_for_safe_context
-    async def get_card_by_scryfall_id(self, scryfall_id: str) -> CardT:
+    async def get_card_by_scryfall_id(self, scryfall_id: str) -> Card:
         """
         Search the database for a card with the given Scryfall ID.
 
@@ -480,7 +470,6 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.get_card_by(
             property_name="scryfall_id",
             value=scryfall_id,
-            card_class=self.card_class,
         )
 
     # endregion
@@ -488,7 +477,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
     # region Convenience methods for multiple card lookup
 
     @_check_for_safe_context
-    async def get_cards_by_set(self, set_code: str) -> list[CardT]:
+    async def get_cards_by_set(self, set_code: str) -> list[Card]:
         """
         Search the database for all cards in the given set.
         Expects the 3-letter [set code](https://en.wikipedia.org/wiki/List_of_Magic:_The_Gathering_sets)
@@ -507,11 +496,10 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.get_cards_by(
             property_name="set",
             values=[set_code],
-            card_class=self.card_class,
         )
 
     @_check_for_safe_context
-    async def get_cards_all(self) -> list[CardT]:
+    async def get_cards_all(self) -> list[Card]:
         """
         Get all cards from the database. WARNING: may be extremely large.
 
@@ -522,14 +510,14 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
             RuntimeError: If used outside an `async with` context.
         """
 
-        return await card_api.get_cards_all(self.card_class)
+        return await card_api.get_cards_all()
 
     # TODO(#146): add function get_cards_by_format (format, legality)
 
     # endregion
 
     @_check_for_safe_context
-    async def add_card(self, card: CardT) -> PydanticObjectId:
+    async def add_card(self, card: Card) -> PydanticObjectId:
         """
         Add a card to the database.
 
@@ -546,7 +534,7 @@ class AsyncScoozeApi(AbstractAsyncContextManager):
         return await card_api.add_card(card=card)
 
     @_check_for_safe_context
-    async def add_cards(self, cards: list[CardT]) -> list[PydanticObjectId]:
+    async def add_cards(self, cards: list[Card]) -> list[PydanticObjectId]:
         """
         Add a list of cards to the database.
 

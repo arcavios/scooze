@@ -1,10 +1,10 @@
 from datetime import date
+from http import HTTPStatus
 from unittest.mock import MagicMock, patch
 
 import pytest
 from beanie import PydanticObjectId
 from httpx import AsyncClient
-from scooze.card import OracleCard
 from scooze.cardlist import CardList
 from scooze.models.card import CardModel, CardModelData
 from scooze.models.deck import DeckModel, DeckModelData
@@ -20,8 +20,8 @@ class TestDeckRouterWithPopulatedDatabase:
         self,
         cards_json: list[str],
         archetype_modern_4c: str,
-        main_modern_4c: CardList[OracleCard],
-        side_modern_4c: CardList[OracleCard],
+        main_modern_4c: CardList,
+        side_modern_4c: CardList,
         today: date,
     ):
         for card_json in cards_json:
@@ -49,13 +49,13 @@ class TestDeckRouterWithPopulatedDatabase:
 
     async def test_decks_root(self, api_client: AsyncClient):
         response = await api_client.get("/decks/")
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         for deck_resp in response.json():
             assert PydanticObjectId.is_valid(deck_resp["_id"])
 
     async def test_decks_root_with_limit(self, api_client: AsyncClient):
         response = await api_client.get("/decks/", params={"limit": 1})
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         response_json = response.json()
         assert len(response_json) == 1
         for deck_resp in response_json:
@@ -64,27 +64,27 @@ class TestDeckRouterWithPopulatedDatabase:
     async def test_get_decks_by_archetype(self, api_client: AsyncClient, archetype_modern_4c: str):
         decks = await DeckModel.find({}, limit=1).to_list()
         response = await api_client.post("/decks/by?property_name=archetype", json=[archetype_modern_4c])
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         response_json_archetypes = [deck_obj["archetype"] for deck_obj in response.json()]
         for deck in decks:
             assert deck.archetype in response_json_archetypes
 
     async def test_get_decks_by_none_found(self, api_client: AsyncClient):
         response = await api_client.post("/decks/by?property_name=archetype", json=["Grixis Death's Shadow"])
-        assert response.status_code == 404
+        assert response.status_code == HTTPStatus.NOT_FOUND
         assert response.json()["detail"] == "Decks not found."
 
     async def test_delete_decks(self, api_client: AsyncClient):
         num_decks = await DeckModel.count()
         response = await api_client.delete("/decks/delete/all")
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert response.json() == f"Deleted {num_decks} deck(s)."
 
     @patch("scooze.routers.decks.DeckModel.delete_all")
     async def test_delete_decks_not_deleted(self, mock_delete_all: MagicMock, api_client: AsyncClient):
         mock_delete_all.return_value = None
         response = await api_client.delete("/decks/delete/all")
-        assert response.status_code == 400
+        assert response.status_code == HTTPStatus.BAD_REQUEST
         assert response.json()["detail"] == "Decks weren't deleted."
 
 
@@ -95,5 +95,5 @@ class TestDecksRouterWithEmptyDatabase:
 
     async def test_decks_root_no_decks(self, api_client: AsyncClient):
         response = await api_client.get("/decks/")
-        assert response.status_code == 404
+        assert response.status_code == HTTPStatus.NOT_FOUND
         assert response.json()["detail"] == "No decks found in the database."

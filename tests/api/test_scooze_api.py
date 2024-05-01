@@ -37,7 +37,7 @@ class TestScoozeApiWithPopulatedDatabase:
         mock_connect: MagicMock,
         recall_base: Card,
     ):
-        async with AsyncScoozeApi(card_class=Card) as s:
+        async with AsyncScoozeApi() as s:
             card = await s.get_card_by(property_name="name", value="Ancestral Recall")
             recall_base.scooze_id = card.scooze_id
             assert card == recall_base
@@ -62,7 +62,7 @@ class TestScoozeApiWithPopulatedDatabase:
         mock_connect: MagicMock,
         recall_base: Card,
     ):
-        with ScoozeApi(card_class=Card) as s:
+        with ScoozeApi() as s:
             card: Card = s.get_card_by(property_name="name", value="Ancestral Recall")
             recall_base.scooze_id = card.scooze_id
             assert card == recall_base

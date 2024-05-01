@@ -3,8 +3,9 @@
         filters:
             - "!to_lower_camel"
             - "!JsonNormalizer"
+            - "!ScoozeRotatingFileHandler"
             - "!JsonLoggingFormatter"
 
-::: scooze.enum
+::: scooze.enums
     options:
         inherited_members: false

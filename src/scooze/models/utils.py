@@ -8,12 +8,6 @@ from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 from scooze.utils import DATE_FORMAT, to_lower_camel
 
-# region Private Utility Functions
-
-
-# endregion
-
-
 # region Public Utility Classes
 
 
