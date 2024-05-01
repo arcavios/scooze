@@ -1,13 +1,13 @@
 from collections import Counter
 from enum import StrEnum, auto
 from sys import maxsize
-from typing import Generic, Self
+from typing import Self
 
 import scooze.utils as utils
 from scooze import logger
 from scooze.card import Card
 from scooze.cardlist import CardList
-from scooze.catalogs import Format, Legality
+from scooze.catalogs import CostSymbol, Format, Legality
 from scooze.enums import ExtendedEnum
 from scooze.utils import ComparableObject, DictDiff
 
@@ -143,8 +143,9 @@ class Deck(ComparableObject):
         decklist = self.export()
         return f"""Archetype: {self.archetype}\n""" f"""Format: {self.format}\n""" f"""Decklist:\n{decklist}\n"""
 
+    # region Deck statistics
+
     # TODO(#112): Add type filters.
-    # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
     def average_cmc(self) -> float:
         """
         The average mana value of cards in this Deck.
@@ -168,6 +169,35 @@ class Deck(ComparableObject):
         if total_cards > 0:
             return self.total_words() / self.total_cards()
         return 0
+
+    def total_cards(self) -> int:
+        """
+        The number of cards in this Deck.
+        """
+
+        return (
+            self.main.total() + self.side.total() + self.cmdr.total() + self.attractions.total() + self.stickers.total()
+        )
+
+    def total_cmc(self) -> float:
+        """
+        The total mana value of cards in this Deck.
+        """
+
+        return sum([c.cmc * q for c, q in self.cards.items()])
+
+    def total_pips(self) -> Counter[CostSymbol]:
+        return sum([p.count_pips() for p in [self.main, self.side, self.cmdr]], Counter)
+
+    def total_words(self) -> int:
+        """
+        The number of words across all oracle text on all cards in this Deck
+        (excludes reminder text).
+        """
+
+        return sum([c.total_words() * q for c, q in self.cards.items()])
+
+    # endregion
 
     def diff(self, other: Self) -> DeckDiff:
         """
@@ -333,32 +363,6 @@ class Deck(ComparableObject):
                 return False
 
         return True
-
-    def total_cards(self) -> int:
-        """
-        The number of cards in this Deck.
-        """
-
-        return (
-            self.main.total() + self.side.total() + self.cmdr.total() + self.attractions.total() + self.stickers.total()
-        )
-
-    def total_cmc(self) -> float:
-        """
-        The total mana value of cards in this Deck.
-        """
-
-        # TODO(#113): Reversible cards do not have a top-level cmc. Assign one?
-
-        return sum([c.cmc * q for c, q in self.cards.items()])
-
-    def total_words(self) -> int:
-        """
-        The number of words across all oracle text on all cards in this Deck
-        (excludes reminder text).
-        """
-
-        return sum([c.total_words() * q for c, q in self.cards.items()])
 
     # region Mutating Methods
 

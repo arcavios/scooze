@@ -1,5 +1,6 @@
 import json
 import re
+from collections import Counter
 from datetime import date
 from typing import Iterable, Mapping, Self
 
@@ -18,6 +19,7 @@ from scooze.cardparts import (
 from scooze.catalogs import (
     BorderColor,
     Color,
+    CostSymbol,
     Finish,
     Format,
     Frame,
@@ -32,7 +34,7 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.models.card import CardModel
-from scooze.utils import FloatableT, HashableObject
+from scooze.utils import FloatableT, HashableObject, parse_symbols
 
 # TODO(#309): Add functionality to Card to get only the values for an "OracleCard"
 
@@ -447,6 +449,12 @@ class Card(HashableObject):
         """
 
         return self.card_faces is not None
+
+    def mana_symbols(self) -> Counter[CostSymbol]:
+        """
+        A mapping of CostSymbols to how many times those symbols appear in this card's mana cost.
+        """
+        return parse_symbols(self.mana_cost)
 
     def total_words(self) -> int:
         """
