@@ -25,7 +25,7 @@ class Version(NamedTuple):
 
 class ScoozeSettings(BaseSettings):
     _version: Version = Version(*tuple(importlib.metadata.version("scooze").split(".")))
-    mongo_dsn: str = "mongodb://{MONGO_HOST}:27017"
+    mongo_dsn: str = f"mongodb://{MONGO_HOST}:27017"
     mongo_db: str = "scooze"
 
     debug: bool = DEBUG
