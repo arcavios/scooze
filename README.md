@@ -24,7 +24,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
 The source code can be found [here](https://github.com/arcavios/scooze).
 
-See our [documentation](https://scooze.readthedocs.io/en/stable) for more information.
+See our [documentation](https://scooze.readthedocs.io/en/stable/) for more information.
 
 ## Installation
 
