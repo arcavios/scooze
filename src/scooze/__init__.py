@@ -1,34 +1,70 @@
-import json
-import logging
-import logging.config
-import sys
-
+from scooze.card import Card
+from scooze.cardlist import CardList
+from scooze.cardparts import (
+    CardFace,
+    ImageUris,
+    Preview,
+    Prices,
+    PurchaseUris,
+    RelatedCard,
+    RelatedUris,
+)
 from scooze.config import CONFIG
+from scooze.deck import Deck, DeckDiff, DecklistFormatter, InThe
+from scooze.utils import (
+    attractions_size,
+    cmdr_size,
+    main_size,
+    max_card_quantity,
+    max_relentless_quantity,
+    side_size,
+    stickers_size,
+)
+from scooze.catalogs import *
 
-# region Set Up Logging
+__all__ = (
+    "CONFIG",
+    # dataclasses
+    "CardFace",
+    "ImageUris",
+    "Preview",
+    "Prices",
+    "PurchaseUris",
+    "RelatedCard",
+    "RelatedUris",
+    "Card",
+    "CardList",
+    "InThe",
+    "DecklistFormatter",
+    "DeckDiff",
+    "Deck",
+    # utils
+    "max_relentless_quantity",
+    "max_card_quantity",
+    "main_size",
+    "side_size",
+    "cmdr_size",
+    "attractions_size",
+    "stickers_size",
+    # catalogs
+    "BorderColor",
+    "Color",
+    "Component",
+    "Finish",
+    "Format",
+    "Frame",
+    "FrameEffect",
+    "Game",
+    "ImageStatus",
+    "Language",
+    "Layout",
+    "Legality",
+    "Rarity",
+    "ScryfallBulkFile",
+    "SecurityStamp",
+    "SetType",
+    "CostSymbol",
+)
 
-logger = logging.getLogger(__name__)
-
-
-config_file = CONFIG.package_root / "configs" / "logging_config.json"
-with config_file.open() as f_in:
-    logging_config = json.load(f_in)
-logging.config.dictConfig(config=logging_config)
-
-# TODO(py3.12): Python 3.12 supports QueueHandler for non-blocking logging
-
-# NOTE: Allow DEBUG logging if the flag is set
-if CONFIG.debug:
-    logger.setLevel(logging.DEBUG)
-    stdout_handler = logging.StreamHandler(stream=sys.stdout)
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    stdout_handler.setFormatter(formatter)
-    logger.addHandler(stdout_handler)
-
-    logger.debug("scooze SCOOZE_DEBUG flag enabled!")
-    # logger.info("SCOOZE_DEBUG ENABLED: scooze logger info message")
-    # logger.warning("SCOOZE_DEBUG ENABLED: scooze logger warning message")
-    # logger.exception("SCOOZE_DEBUG ENABLED: scooze logger exception message")
-    # logger.critical("SCOOZE_DEBUG ENABLED: scooze logger critical message")
-
-# endregion
+# TODO: what other modules should be importable directly with `from scooze import X`
+# TODO: set up __all__ in the __init__.py for the other sub-packages so we can do things like `from scooze.api import BulkdataApi` or whatever

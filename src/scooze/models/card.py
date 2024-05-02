@@ -9,7 +9,7 @@ from pydantic import (
     field_serializer,
     field_validator,
 )
-from scooze import logger
+from scooze.logger import logger
 from scooze.cardparts import (
     CardFace,
     ImageUris,

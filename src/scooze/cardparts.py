@@ -2,7 +2,7 @@ import json
 from datetime import date
 from typing import Iterable, Mapping, Self
 
-from scooze import logger
+from scooze.logger import logger
 from scooze.catalogs import Color, Component, Layout
 from scooze.utils import FloatableT, HashableObject, JsonNormalizer
 
@@ -141,6 +141,32 @@ class CardFace(HashableObject):
             return cls(**json.loads(data))
 
 
+class Preview(HashableObject):
+    """
+    An object for information about where and when a card was previewed.
+
+    Attributes:
+        previewed_at (date | None): Date/time of preview being shown or added to Scryfall.
+        source (str | None): Name of preview source.
+        source_uri (str | None): Location of preview source.
+    """
+
+    def __init__(
+        self,
+        previewed_at: date | None = None,
+        source: str | None = None,
+        source_uri: str | None = None,
+        # kwargs
+        **kwargs,
+    ):
+        self.previewed_at = CardPartsNormalizer.to_date(previewed_at)
+        self.source = source
+        self.source_uri = source_uri
+
+        if kwargs:
+            logger.debug("kwargs found", extra=kwargs)
+
+
 class Prices(HashableObject):
     """
     An object for all price data associated with a Card object.
@@ -171,32 +197,6 @@ class Prices(HashableObject):
         self.eur = CardPartsNormalizer.to_float(eur)
         self.eur_foil = CardPartsNormalizer.to_float(eur_foil)
         self.tix = CardPartsNormalizer.to_float(tix)
-
-        if kwargs:
-            logger.debug("kwargs found", extra=kwargs)
-
-
-class Preview(HashableObject):
-    """
-    An object for information about where and when a card was previewed.
-
-    Attributes:
-        previewed_at (date | None): Date/time of preview being shown or added to Scryfall.
-        source (str | None): Name of preview source.
-        source_uri (str | None): Location of preview source.
-    """
-
-    def __init__(
-        self,
-        previewed_at: date | None = None,
-        source: str | None = None,
-        source_uri: str | None = None,
-        # kwargs
-        **kwargs,
-    ):
-        self.previewed_at = CardPartsNormalizer.to_date(previewed_at)
-        self.source = source
-        self.source_uri = source_uri
 
         if kwargs:
             logger.debug("kwargs found", extra=kwargs)

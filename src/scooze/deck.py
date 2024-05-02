@@ -4,7 +4,7 @@ from sys import maxsize
 from typing import Self
 
 import scooze.utils as utils
-from scooze import logger
+from scooze.logger import logger
 from scooze.card import Card
 from scooze.cardlist import CardList
 from scooze.catalogs import CostSymbol, Format, Legality

@@ -1,7 +1,7 @@
 from typing import Any
 
 from beanie import PydanticObjectId
-from scooze import logger
+from scooze.logger import logger
 from scooze.card import Card
 from scooze.errors import BulkAddError
 from scooze.models.card import CardModel, CardModelData

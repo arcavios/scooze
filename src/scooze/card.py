@@ -5,7 +5,7 @@ from datetime import date
 from typing import Iterable, Mapping, Self
 
 from beanie import PydanticObjectId
-from scooze import logger
+from scooze.logger import logger
 from scooze.cardparts import (
     CardFace,
     CardPartsNormalizer,
