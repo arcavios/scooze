@@ -1,9 +1,9 @@
 from typing import Any
 
 from beanie import PydanticObjectId
-from scooze.logger import logger
 from scooze.card import Card
 from scooze.errors import BulkAddError
+from scooze.logger import logger
 from scooze.models.card import CardModel, CardModelData
 from scooze.utils import to_lower_camel
 

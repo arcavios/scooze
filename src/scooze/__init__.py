@@ -9,6 +9,7 @@ from scooze.cardparts import (
     RelatedCard,
     RelatedUris,
 )
+from scooze.catalogs import *
 from scooze.config import CONFIG
 from scooze.deck import Deck, DeckDiff, DecklistFormatter, InThe
 from scooze.utils import (
@@ -20,7 +21,6 @@ from scooze.utils import (
     side_size,
     stickers_size,
 )
-from scooze.catalogs import *
 
 __all__ = (
     "CONFIG",

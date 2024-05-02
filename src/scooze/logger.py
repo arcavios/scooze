@@ -5,7 +5,6 @@ import sys
 
 from scooze.config import CONFIG
 
-
 # region Set Up Logging
 
 logger = logging.getLogger(__name__)

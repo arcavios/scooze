@@ -2,8 +2,8 @@ import json
 from datetime import date
 from typing import Iterable, Mapping, Self
 
-from scooze.logger import logger
 from scooze.catalogs import Color, Component, Layout
+from scooze.logger import logger
 from scooze.utils import FloatableT, HashableObject, JsonNormalizer
 
 
