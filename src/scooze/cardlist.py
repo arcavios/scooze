@@ -51,9 +51,9 @@ class CardList(ComparableObject):
         counts = Counter()
         for card, q in self.cards.items():
             for symbol, count in card.mana_symbols().items():
+                # filter only to colors and colorless (not generic)
                 if symbol in Color.list():
                     counts.update({symbol: count * q})
-        # filter only to colors and colorless (not generic)
         return counts
 
     # endregion
