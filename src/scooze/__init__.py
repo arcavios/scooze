@@ -59,6 +59,7 @@ __all__ = (
     # enums
     "DbCollection",
     # bulkdata
+    "BulkAddError",
     "SCRYFALL_BULK_INFO_ENDPOINT",
     "download_all_bulk_data_files",
     "download_bulk_data_file",
@@ -73,3 +74,5 @@ __all__ = (
     "stickers_size",
     "parse_symbols",
 )
+
+# TODO: do we want to put the ScoozeApis importable from top level scooze? or are we happy with from scooze.api import ScoozeApi
