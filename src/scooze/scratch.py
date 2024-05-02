@@ -1,7 +1,7 @@
 # TODO: delete this file
 
 from scooze import Card, Deck, Color, Game
-from scooze.catalogs import Format
+from scooze.catalogs import Format # demonstrate that you can still import this way if you want
 from scooze.logger import logger
 
 card = Card("Hello World")
