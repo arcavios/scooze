@@ -44,8 +44,8 @@ class CardList(ComparableObject):
 
     def count_pips(self) -> Counter[CostSymbol]:
         """
-        Returns:
-            A mapping of Colors to how many times they appear as mana symbols in costs of cards in this CardList.
+        A mapping of Colors to how many times they appear as mana symbols in
+        costs of cards in this CardList.
         """
 
         counts = Counter()

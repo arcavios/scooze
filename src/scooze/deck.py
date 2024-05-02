@@ -186,8 +186,13 @@ class Deck(ComparableObject):
 
         return sum([c.cmc * q for c, q in self.cards.items()])
 
-    def total_pips(self) -> Counter[CostSymbol]:
-        return sum([p.count_pips() for p in [self.main, self.side, self.cmdr]], Counter())
+    def count_pips(self) -> Counter[CostSymbol]:
+        """
+        A mapping of Colors to how many times they appear as mana symbols in
+        costs of cards in this Deck.
+        """
+
+        return sum([part.count_pips() for part in [self.main, self.side, self.cmdr]], Counter())
 
     def total_words(self) -> int:
         """
