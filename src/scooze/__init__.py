@@ -19,7 +19,6 @@ from scooze.catalogs import *
 from scooze.config import CONFIG
 from scooze.deck import Deck, DeckDiff, DecklistFormatter, InThe
 from scooze.enums import DbCollection
-from scooze.errors import *
 from scooze.utils import *
 
 __all__ = (
@@ -59,7 +58,6 @@ __all__ = (
     # enums
     "DbCollection",
     # bulkdata
-    "BulkAddError",
     "SCRYFALL_BULK_INFO_ENDPOINT",
     "download_all_bulk_data_files",
     "download_bulk_data_file",
