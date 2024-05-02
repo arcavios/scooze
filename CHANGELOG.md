@@ -18,7 +18,7 @@
 - Renamed DeckPart to CardList ([#281](https://github.com/arcavios/scooze/pull/281))
 - Default to home/scooze for storage of bulk data and logs ([#294](https://github.com/arcavios/scooze/pull/294))
 - Refactored Card dataclasses so there is only one representation of a card ([#310](https://github.com/arcavios/scooze/pull/310))
-- Developers can import directly from the package and sub-package levels ([#316](https://github.com/arcavios/scooze/pull/316))
+- Developers can import modules directly from the package and sub-package levels ([#316](https://github.com/arcavios/scooze/pull/316))
 
 #### Fixed
 
