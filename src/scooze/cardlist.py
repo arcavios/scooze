@@ -3,6 +3,7 @@ from sys import maxsize
 from typing import Self
 
 from scooze.card import Card
+from scooze.catalogs import Color, CostSymbol
 from scooze.utils import ComparableObject, DictDiff
 
 
@@ -32,12 +33,30 @@ class CardList(ComparableObject):
         else:
             return ""
 
+    # region Metadata about list
+
     def total(self) -> int:
         """
         The number of cards in this CardList.
         """
 
         return self.cards.total()
+
+    def count_pips(self) -> Counter[CostSymbol]:
+        """
+        A mapping of Colors to how many times they appear as mana symbols in
+        costs of cards in this CardList.
+        """
+
+        counts = Counter()
+        for card, q in self.cards.items():
+            for symbol, count in card.mana_symbols().items():
+                # filter only to colors and colorless (not generic)
+                if symbol in Color.list():
+                    counts.update({symbol: count * q})
+        return counts
+
+    # endregion
 
     def diff(self, other: Self) -> DictDiff:
         """
@@ -51,6 +70,8 @@ class CardList(ComparableObject):
         """
 
         return DictDiff.get_diff(self.cards, other.cards, NO_KEY=0)
+
+    # region Modify list contents
 
     def add_card(self, card: Card, quantity: int = 1) -> None:
         """
@@ -96,3 +117,5 @@ class CardList(ComparableObject):
 
         # using counterA - counterB results in a new Counter with only positive results
         self.cards = self.cards - cards
+
+    # endregion
