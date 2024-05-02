@@ -177,6 +177,34 @@ class CardFaceModel(ScoozeBaseModel):
     # endregion
 
 
+class PreviewModel(ScoozeBaseModel):
+    """
+    A model for information about where and when a card was previewed.
+
+    Attributes:
+        previewed_at: Date/time of preview being shown or added to Scryfall.
+        source: Name of preview source.
+        source_uri: Location of preview source.
+    """
+
+    previewed_at: date | None = Field(
+        default=None,
+        description="Date/time of preview being shown or added to Scryfall.",
+    )
+    source: str | None = Field(
+        default=None,
+        description="Name of preview source.",
+    )
+    source_uri: str | None = Field(
+        default=None,
+        description="Location of preview source.",
+    )
+
+    @field_serializer("previewed_at")
+    def serialize_date(self, dt_field: date):
+        return super().serialize_date(dt_field=dt_field)
+
+
 class PricesModel(ScoozeBaseModel):
     """
     A model for all price data associated with a `CardModel`.
@@ -214,34 +242,6 @@ class PricesModel(ScoozeBaseModel):
         default=None,
         description="Price in MTGO tix, from Cardhoarder.",
     )
-
-
-class PreviewModel(ScoozeBaseModel):
-    """
-    A model for information about where and when a card was previewed.
-
-    Attributes:
-        previewed_at: Date/time of preview being shown or added to Scryfall.
-        source: Name of preview source.
-        source_uri: Location of preview source.
-    """
-
-    previewed_at: date | None = Field(
-        default=None,
-        description="Date/time of preview being shown or added to Scryfall.",
-    )
-    source: str | None = Field(
-        default=None,
-        description="Name of preview source.",
-    )
-    source_uri: str | None = Field(
-        default=None,
-        description="Location of preview source.",
-    )
-
-    @field_serializer("previewed_at")
-    def serialize_date(self, dt_field: date):
-        return super().serialize_date(dt_field=dt_field)
 
 
 class PurchaseUrisModel(ScoozeBaseModel):

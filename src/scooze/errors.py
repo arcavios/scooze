@@ -1,4 +1,4 @@
-__all__ = "BulkAddError"
+__all__ = ("BulkAddError",)
 
 
 class BulkAddError(BaseException):
