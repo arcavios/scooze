@@ -20,6 +20,7 @@ from scooze.config import CONFIG
 from scooze.deck import Deck, DeckDiff, DecklistFormatter, InThe
 from scooze.enums import DbCollection
 from scooze.utils import *
+from scooze.api import ScoozeApi, AsyncScoozeApi
 
 __all__ = (
     "CONFIG",
@@ -55,6 +56,9 @@ __all__ = (
     "SecurityStamp",
     "SetType",
     "CostSymbol",
+    #api
+    "ScoozeApi",
+    "AsyncScoozeApi",
     # enums
     "DbCollection",
     # bulkdata
@@ -72,5 +76,3 @@ __all__ = (
     "stickers_size",
     "parse_symbols",
 )
-
-# TODO: do we want to put the ScoozeApis importable from top level scooze? or are we happy with from scooze.api import ScoozeApi
