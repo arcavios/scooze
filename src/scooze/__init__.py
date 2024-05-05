@@ -1,3 +1,4 @@
+from scooze.api import AsyncScoozeApi, ScoozeApi
 from scooze.bulkdata import (
     SCRYFALL_BULK_INFO_ENDPOINT,
     download_all_bulk_data_files,
@@ -20,7 +21,6 @@ from scooze.config import CONFIG
 from scooze.deck import Deck, DeckDiff, DecklistFormatter, InThe
 from scooze.enums import DbCollection
 from scooze.utils import *
-from scooze.api import ScoozeApi, AsyncScoozeApi
 
 __all__ = (
     "CONFIG",
@@ -56,7 +56,7 @@ __all__ = (
     "SecurityStamp",
     "SetType",
     "CostSymbol",
-    #api
+    # api
     "ScoozeApi",
     "AsyncScoozeApi",
     # enums
