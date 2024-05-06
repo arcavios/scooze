@@ -36,25 +36,23 @@ To take advantage of all the features scooze has to offer, you'll need to decide
 
 Make sure [Docker](https://www.docker.com/products/docker-desktop/) is running.
 
-You can write a simple `docker-compose.yml` file that looks something like this...
+!!! Example "Using scooze in your docker-compose.yml"
 
-``` yaml
-services:
-  scooze:
-    image: "arcavios/scooze:latest"
-    environment:
-      - MONGO_HOST=mongodb
-    ports:
-      - "8000:8000"
-  mongodb:
-    image: "mongo:latest"
-    ports:
-      - "27017:27017"
-```
+    ``` yaml
+    services:
+    scooze:
+        image: "arcavios/scooze:latest"
+        environment:
+        - MONGO_HOST=mongodb
+        ports:
+        - "8000:8000"
+    mongodb:
+        image: "mongo:latest"
+        ports:
+        - "27017:27017"
+    ```
 
-This will automatically call `scooze run` for you, so you can skip the ["Starting the REST API"](#starting-the-rest-api) section.
-
-After this, you can continue to ["Using The CLI"](#using-the-cli) below.
+This will automatically call `scooze run` for you, so you can skip the ["Starting the REST API"](#starting-the-rest-api) section. After this, you can continue to ["Using The CLI"](#using-the-cli) below.
 
 ### Option 2: Running Local MongoDB
 
