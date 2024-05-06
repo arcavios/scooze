@@ -34,17 +34,25 @@ To take advantage of all the features scooze has to offer, you'll need to decide
 
 ### Option 1: Using Docker
 
-TODO: update docker setup docs
-
 Make sure [Docker](https://www.docker.com/products/docker-desktop/) is running.
 
-???+ Note
+You can write a simple `docker-compose.yml` file that looks something like this...
 
-    This will pull the latest MongoDB issued image for your hardware, and spin up a container with port 27017 bound to the host's port 27017.
-
-``` shell
-scooze setup docker
+``` yaml
+services:
+  scooze:
+    image: "ibroadband/scooze:latest"
+    environment:
+      - MONGO_HOST=mongodb
+    ports:
+      - "8000:8000"
+  mongodb:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
 ```
+
+This will automatically call `scooze run` for you, so you can skip the ["Starting the REST API"](#starting-the-rest-api) section.
 
 After this, you can continue to ["Using The CLI"](#using-the-cli) below.
 
@@ -63,7 +71,15 @@ Run the MongoDB server like this:
 mongod --dbpath path/to/db/
 ```
 
-## TODO: add section about running uvicorn / swagger docs / REST API and how to use it
+## Starting the REST API
+
+scooze does not come pre-loaded with any data. You can load data from Scryfall by using the CLI as described in [the section below](#using-the-cli). For a simple UI to interact with your database, you can start the REST API with
+
+``` shell
+scooze run
+```
+
+then visit [localhost:8000](http://localhost:8000) (this port is configurable in your `docker-compose.yml`)
 
 ## Using the CLI
 
