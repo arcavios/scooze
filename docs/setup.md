@@ -52,7 +52,7 @@ Make sure [Docker](https://www.docker.com/products/docker-desktop/) is running.
         - "27017:27017"
     ```
 
-This will automatically call `scooze run` for you, so you can skip the ["Starting the REST API"](#starting-the-rest-api) section. After this, you can continue to ["Using The CLI"](#using-the-cli) below.
+This will automatically call `scooze run` to start the REST API for you, so you can skip to ["Using The CLI"](#using-the-cli) below.
 
 ### Option 2: Running Local MongoDB
 
