@@ -18,7 +18,7 @@ jobs:
         python-version: ${{ fromJson(vars.PYTHON_VERSION) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Chck out repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
@@ -50,8 +50,8 @@ jobs:
       - name: Load Scryfall bulkdata
         run: |
           source .venv/bin/activate
-          echo "scooze setup docker"
-          scooze setup docker
+          echo "docker compose up -d"
+          docker compose up -d
           echo "scooze load cards --all --force-download --concise"
           scooze load cards --all --force-download --concise
 

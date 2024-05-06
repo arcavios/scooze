@@ -1,4 +1,4 @@
-scooze can be used without a database to gain access to robust data models for representing cards, decks, and tournaments.
+scooze can be used without a database to gain access to robust data models for representing cards and decks.
 
 !!! Example "Using scooze for its data models"
 

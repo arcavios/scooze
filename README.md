@@ -6,15 +6,14 @@
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/arcavios/scooze/blob/dev/LICENSE)
 [![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://pydantic.dev)
 
-A flexible data layer for applications working with Magic: the Gathering cards, decks, and tournaments.
+A flexible data layer for applications working with Magic: the Gathering cards and decks.
 
 ## Features
 
-📊 Robust data models for representing Magic: the Gathering cards, decks, and tournaments
+📊 Robust data models for representing Magic: the Gathering cards and decks
 
 - Cards - follows the Scryfall standard
 - Decks - main deck/sideboard/command zone, format legality, average words, and more
-- Tournaments - coming soon!
 
 🎛️ CLI to manage a local database of [Scryfall](https://scryfall.com/docs/api/bulk-data) data
 
@@ -24,7 +23,7 @@ A flexible data layer for applications working with Magic: the Gathering cards, 
 
 The source code can be found [here](https://github.com/arcavios/scooze).
 
-See our [documentation](https://scooze.readthedocs.io/en/stable) for more information.
+See our [documentation](https://scooze.readthedocs.io/en/stable/) for more information.
 
 ## Installation
 
@@ -33,9 +32,7 @@ Install using `pip install scooze`. For more installation options, see the [Inst
 ## A Simple Example
 
 ``` python
-from scooze.card import Card
-from scooze.deck import Deck, InThe
-from scooze.catalogs import Format
+from scooze import Card, Deck, Format, InThe
 
 deck = Deck()
 card1 = Card("Python")
