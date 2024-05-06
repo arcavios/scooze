@@ -32,7 +32,7 @@ Install using `pip install scooze`. For more installation options, see the [Inst
 ## A Simple Example
 
 ``` python
-from scooze.card import Card, Deck, Format, InThe
+from scooze import Card, Deck, Format, InThe
 
 deck = Deck()
 card1 = Card("Python")
