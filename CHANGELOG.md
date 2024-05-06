@@ -2,6 +2,8 @@
 
 ### [2.0.0] - 2024-05-06
 
+[GitHub Release](https://github.com/arcavios/scooze/releases/tag/v2.0.0)
+
 #### Added
 
 - Add count_pips for Deck and CardList ([#251](https://github.com/arcavios/scooze/pull/251))
