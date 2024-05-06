@@ -3,9 +3,7 @@ scooze can be used without a database to gain access to robust data models for r
 !!! Example "Using scooze for its data models"
 
     ``` python
-    from scooze.card import Card
-    from scooze.deck import Deck, InThe
-    from scooze.catalogs import Format
+    from scooze import Card, Deck, Format, InThe
 
     deck = Deck()
     card1 = Card("Python")
@@ -36,7 +34,9 @@ To take advantage of all the features scooze has to offer, you'll need to decide
 
 ### Option 1: Using Docker
 
-Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is running.
+TODO: update docker setup docs
+
+Make sure [Docker](https://www.docker.com/products/docker-desktop/) is running.
 
 ???+ Note
 
@@ -55,13 +55,15 @@ Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/
 
 ???+ note
 
-    Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `./data/db`
+    Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`
 
 Run the MongoDB server like this:
 
 ``` shell
 mongod --dbpath path/to/db/
 ```
+
+## TODO: add section about running uvicorn / swagger docs / REST API and how to use it
 
 ## Using the CLI
 
@@ -72,7 +74,6 @@ Run the scooze command line interface tool to add some data to your local databa
     ``` shell
     scooze -h
     scooze load cards --oracle
-    scooze run
     ```
 
 ## Using scooze in Your Code
@@ -82,8 +83,7 @@ Now that you've got some cards in your database, you can use it in your own code
 !!! Example "Using scooze in your code"
 
     ``` python
-    from scooze.api import ScoozeApi
-    from scooze.catalogs import Color
+    from scooze import Color, ScoozeApi
 
     with ScoozeApi() as s:
         # get 10 arbitrary green cards
