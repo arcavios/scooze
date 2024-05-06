@@ -9,7 +9,6 @@ from pydantic import (
     field_serializer,
     field_validator,
 )
-from scooze import logger
 from scooze.cardparts import (
     CardFace,
     ImageUris,
@@ -36,6 +35,7 @@ from scooze.catalogs import (
     SetType,
 )
 from scooze.enums import DbCollection
+from scooze.logger import logger
 from scooze.models.cardparts import (
     CardFaceModel,
     ImageUrisModel,
