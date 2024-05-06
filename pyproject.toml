@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "scooze"
-version = "1.0.7"
+version = "2.0.0"
 description = "A flexible data layer for applications working with Magic: the Gathering cards and decks."
 authors = [
     "Alexander Gimmi <iambroadband@gmail.com>",
