@@ -3,9 +3,7 @@ scooze can be used without a database to gain access to robust data models for r
 !!! Example "Using scooze for its data models"
 
     ``` python
-    from scooze.card import Card
-    from scooze.deck import Deck, InThe
-    from scooze.catalogs import Format
+    from scooze import Card, Deck, Format, InThe
 
     deck = Deck()
     card1 = Card("Python")
@@ -36,17 +34,25 @@ To take advantage of all the features scooze has to offer, you'll need to decide
 
 ### Option 1: Using Docker
 
-Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is running.
+Make sure [Docker](https://www.docker.com/products/docker-desktop/) is running.
 
-???+ Note
+!!! Example "Using scooze in your docker-compose.yml"
 
-    This will pull the latest MongoDB issued image for your hardware, and spin up a container with port 27017 bound to the host's port 27017.
+    ``` yaml
+    services:
+    scooze:
+        image: "arcavios/scooze:latest"
+        environment:
+        - MONGO_HOST=mongodb
+        ports:
+        - "8000:8000"
+    mongodb:
+        image: "mongo:latest"
+        ports:
+        - "27017:27017"
+    ```
 
-``` shell
-scooze setup docker
-```
-
-After this, you can continue to ["Using The CLI"](#using-the-cli) below.
+This will automatically call `scooze run` to start the REST API for you, so you can skip to ["Using The CLI"](#using-the-cli) below.
 
 ### Option 2: Running Local MongoDB
 
@@ -55,13 +61,23 @@ Download and install [MongoDB](https://www.mongodb.com/docs/manual/installation/
 
 ???+ note
 
-    Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `./data/db`
+    Your local database can be stored wherever you want, but make sure you create the directory first. This is commonly stored at `/data/db`
 
 Run the MongoDB server like this:
 
 ``` shell
 mongod --dbpath path/to/db/
 ```
+
+### Option 2, Part 2: Starting the REST API
+
+scooze does not come pre-loaded with any data. You can load data from Scryfall by using the CLI as described in [the section below](#using-the-cli). For a simple UI to interact with your database, you can start the REST API with
+
+``` shell
+scooze run
+```
+
+then visit [localhost:8000](http://localhost:8000) (this port is configurable in your `docker-compose.yml`)
 
 ## Using the CLI
 
@@ -72,7 +88,6 @@ Run the scooze command line interface tool to add some data to your local databa
     ``` shell
     scooze -h
     scooze load cards --oracle
-    scooze run
     ```
 
 ## Using scooze in Your Code
@@ -82,8 +97,7 @@ Now that you've got some cards in your database, you can use it in your own code
 !!! Example "Using scooze in your code"
 
     ``` python
-    from scooze.api import ScoozeApi
-    from scooze.catalogs import Color
+    from scooze import Color, ScoozeApi
 
     with ScoozeApi() as s:
         # get 10 arbitrary green cards
