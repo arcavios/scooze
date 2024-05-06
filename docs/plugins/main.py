@@ -26,7 +26,7 @@ def on_page_markdown(markdown: str, page: Page, config: Config, files: Files) ->
 
 
 maintainers_template = Template(
-"""
+    """
 <div class="user-list user-list-center">
     {% for user in people.maintainers %}
     <div class="user">
