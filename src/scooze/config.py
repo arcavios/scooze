@@ -8,6 +8,7 @@ from pydantic_settings import BaseSettings
 # region Flags
 
 DEBUG = os.getenv("SCOOZE_DEBUG", "False") == "True"
+MONGO_HOST = os.getenv("MONGO_HOST", "127.0.0.1")
 PACKAGE_ROOT = Path(__file__).parent
 DEFAULT_BULK_FILE_DIR = Path.home() / ".scooze" / "data" / "bulk"
 DEFAULT_DECKS_DIR = Path.home() / ".scooze" / "data" / "decks"
@@ -24,7 +25,7 @@ class Version(NamedTuple):
 
 class ScoozeSettings(BaseSettings):
     _version: Version = Version(*tuple(importlib.metadata.version("scooze").split(".")))
-    mongo_dsn: str = "mongodb://127.0.0.1:27017"
+    mongo_dsn: str = f"mongodb://{MONGO_HOST}:27017"
     mongo_db: str = "scooze"
 
     debug: bool = DEBUG
