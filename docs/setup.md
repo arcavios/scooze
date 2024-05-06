@@ -41,7 +41,7 @@ You can write a simple `docker-compose.yml` file that looks something like this.
 ``` yaml
 services:
   scooze:
-    image: "ibroadband/scooze:latest"
+    image: "arcavios/scooze:latest"
     environment:
       - MONGO_HOST=mongodb
     ports:
@@ -71,7 +71,7 @@ Run the MongoDB server like this:
 mongod --dbpath path/to/db/
 ```
 
-## Starting the REST API
+### Option 2, Part 2: Starting the REST API
 
 scooze does not come pre-loaded with any data. You can load data from Scryfall by using the CLI as described in [the section below](#using-the-cli). For a simple UI to interact with your database, you can start the REST API with
 
