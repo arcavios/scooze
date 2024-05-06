@@ -29,7 +29,6 @@ src_paths = ["scooze", "tests"]
 [tool.poetry.dependencies]
 beanie = "^1.23.0"
 cleo = "^2.0.1"
-docker = "^6.1.3"
 fastapi = ">=0.100.0, <1.0.0"
 frozendict = "^2.3.8"
 ijson = "^3.2.3"

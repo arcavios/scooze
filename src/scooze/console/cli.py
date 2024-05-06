@@ -21,12 +21,6 @@ COMMANDS = [
     # Load commands
     "load cards",
     "load decks",
-    # Setup commands
-    "setup docker",
-    "setup local",
-    # Teardown commands
-    "teardown docker",
-    "teardown local",
 ]
 
 
