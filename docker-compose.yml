@@ -1,5 +1,6 @@
 services:
   scooze:
+    # image: "arcavios/scooze:latest"
     build:
       context: .
       dockerfile: Dockerfile
