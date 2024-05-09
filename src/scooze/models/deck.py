@@ -10,7 +10,7 @@ from scooze.utils import cmdr_size, encode_date, main_size, side_size
 
 class DeckModelData(ScoozeBaseModel):
     """
-    A data model to represent a deck of Magic: the Gathering cards.
+    A data model to represent a deck of Magic: The Gathering cards.
 
     Attributes:
         archetype: The archetype of this DeckModel.

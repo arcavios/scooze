@@ -96,7 +96,7 @@ class DeckDiff(ComparableObject):
 
 class Deck(ComparableObject):
     """
-    A class to represent a deck of Magic: the Gathering cards.
+    A class to represent a deck of Magic: The Gathering cards.
 
     Attributes:
         archetype (str | None): The archetype of this Deck.

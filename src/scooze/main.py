@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="scooze",
-    summary="REST API for interacting with Magic: the Gathering cards and decks.",
+    summary="REST API for interacting with Magic: The Gathering cards and decks.",
     lifespan=lifespan,
     version=CONFIG.version,
 )

@@ -6,11 +6,11 @@
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/arcavios/scooze/blob/dev/LICENSE)
 [![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://pydantic.dev)
 
-A flexible data layer for applications working with Magic: the Gathering cards and decks.
+A flexible data layer for applications working with Magic: The Gathering cards and decks.
 
 ## Features
 
-📊 Robust data models for representing Magic: the Gathering cards and decks
+📊 Robust data models for representing Magic: The Gathering cards and decks
 
 - Cards - follows the Scryfall standard
 - Decks - main deck/sideboard/command zone, format legality, average words, and more

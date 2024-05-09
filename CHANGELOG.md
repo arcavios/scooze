@@ -125,7 +125,7 @@
 
 #### Added
 
-- Create a model for representing Magic: the Gathering decks ([#20](https://github.com/arcavios/scooze/pull/20), [#31](https://github.com/arcavios/scooze/pull/31))
+- Create a model for representing Magic: The Gathering decks ([#20](https://github.com/arcavios/scooze/pull/20), [#31](https://github.com/arcavios/scooze/pull/31))
 - Add support for downloading bulk data files from Scryfall ([#44](https://github.com/arcavios/scooze/pull/44), [#73](https://github.com/arcavios/scooze/pull/73))
 - Create helpers for converting between Cards and CardModels (from the database) ([#80](https://github.com/arcavios/scooze/pull/80))
 - Create enums for miscellaneous card parts (e.g. Color, Frame, etc.) ([#87](https://github.com/arcavios/scooze/pull/87))

@@ -79,7 +79,7 @@ class Finish(ExtendedEnum, StrEnum):
 
 class Format(ExtendedEnum, StrEnum):
     """
-    A Magic: the Gathering competitive format.
+    A Magic: The Gathering competitive format.
     """
 
     ALCHEMY = auto()
