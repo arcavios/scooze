@@ -13,7 +13,9 @@ hide:
         poetry --version
         ```
 
-2. [Fork](https://github.com/arcavios/scooze/fork) and clone the scooze GitHub repo
+2. Install [Docker](https://www.docker.com/products/docker-desktop/) and [MongoDB](https://www.mongodb.com/docs/manual/installation/).
+
+3. [Fork](https://github.com/arcavios/scooze/fork) and clone the scooze GitHub repo
 
     ??? Info "More Info About Forking"
         GitHub has some great resources for learning more about getting started with forking [here](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
@@ -24,9 +26,11 @@ hide:
     poetry install
     ```
 
-3. You're ready to develop!
+4. You're ready to develop!
 
-4. When you have changes you'd like the team to review, please submit a pull request!
+    To run
+
+5. When you have changes you'd like the team to review, please submit a pull request!
 
 ## Report a Bug
 
