@@ -1,5 +1,12 @@
 # Change Log
 
+### [DEVELOPMENT] - UNRELEASED
+
+#### Added
+
+- Add support for hybrid colorless mana symbols ([#323](https://github.com/arcavios/scooze/pull/323))
+
+
 ### [2.0.0] - 2024-05-06
 
 [GitHub Release](https://github.com/arcavios/scooze/releases/tag/v2.0.0)
