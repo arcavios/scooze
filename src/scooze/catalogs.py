@@ -381,6 +381,12 @@ class CostSymbol(ExtendedEnum, StrEnum):
     HYBRID_RW = "R/W"
     HYBRID_GU = "G/U"
 
+    HYBRID_CW = "C/W"
+    HYBRID_CU = "C/U"
+    HYBRID_CB = "C/B"
+    HYBRID_CR = "C/R"
+    HYBRID_CG = "C/G"
+
     PHYREXIAN_WHITE = "W/P"
     PHYREXIAN_BLUE = "U/P"
     PHYREXIAN_BLACK = "B/P"
@@ -486,6 +492,11 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.HYBRID_BG,
                 CostSymbol.HYBRID_RW,
                 CostSymbol.HYBRID_GU,
+                CostSymbol.HYBRID_CW,
+                CostSymbol.HYBRID_CU,
+                CostSymbol.HYBRID_CB,
+                CostSymbol.HYBRID_CR,
+                CostSymbol.HYBRID_CG,
                 CostSymbol.HYBRID_PHYREXIAN_WU,
                 CostSymbol.HYBRID_PHYREXIAN_UB,
                 CostSymbol.HYBRID_PHYREXIAN_BR,
