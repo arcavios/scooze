@@ -28,6 +28,7 @@ should follow the fix PR.
 - New fields in card objects (e.g. moving `foil`/`nonfoil` to `finishes`)
 - New card face combinations (e.g. reversible cards with different faces)
 - New promo types
+- New "relentless" cards or other specific deck limits
 
 
 ## Channels to monitor for changes
