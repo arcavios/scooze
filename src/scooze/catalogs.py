@@ -415,6 +415,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
     TAP = "T"
     UNTAP = "Q"
     ENERGY = "E"
+    PAWPRINT = "J"
 
     # specific to un-cards
     GENERIC_HALF = "½"
@@ -567,6 +568,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.UNTAP,
                 CostSymbol.ENERGY,
                 CostSymbol.TICKET,
+                CostSymbol.PAWPRINT,
             ]
         )
 
