@@ -36,7 +36,7 @@ motor = "^3.2.0"
 pydantic = ">=2.0.0"
 pydantic-settings = "^2.0.0"
 python = ">=3.11, <4"
-requests = "^2.31.0"
+requests = "^2.32.2"
 setuptools = "^68.2.2"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 
