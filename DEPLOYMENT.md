@@ -1,7 +1,7 @@
 # Deploying a new release
 
 - Create a release PR off `dev`
-  - Move `Development` section of changelog into section with new release number
+  - Move items under `Development` section of changelog into section with new release number
   - Update `pyproject.toml` with new release number
   - Run `poetry update` to update dependencies
   - Verify CI
