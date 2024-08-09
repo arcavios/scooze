@@ -463,6 +463,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.GENERIC_100,
                 CostSymbol.GENERIC_1000000,
                 CostSymbol.GENERIC_HALF,
+                CostSymbol.GENERIC_PHYREXIAN,
             ]
         )
 
