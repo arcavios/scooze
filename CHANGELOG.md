@@ -6,6 +6,7 @@
 
 - Add support for hybrid colorless mana symbols ([#323](https://github.com/arcavios/scooze/pull/323))
 - Add support for pawprint (modal budget) symbol ([#327](https://github.com/arcavios/scooze/pull/327))
+- Support for new symbols in BLB and MB2 ([#328](https://github.com/arcavios/scooze/pull/328))
 
 #### Docs
 

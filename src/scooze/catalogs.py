@@ -392,7 +392,8 @@ class CostSymbol(ExtendedEnum, StrEnum):
     PHYREXIAN_BLACK = "B/P"
     PHYREXIAN_RED = "R/P"
     PHYREXIAN_GREEN = "G/P"
-    GENERIC_PHYREXIAN = "P"
+    PHYREXIAN_COLORLESS = "C/P"
+    GENERIC_PHYREXIAN = "H"
 
     HYBRID_PHYREXIAN_WU = "W/U/P"
     HYBRID_PHYREXIAN_UB = "U/B/P"
@@ -415,7 +416,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
     TAP = "T"
     UNTAP = "Q"
     ENERGY = "E"
-    PAWPRINT = "J"
+    PAWPRINT = "P"
 
     # specific to un-cards
     GENERIC_HALF = "½"
@@ -429,6 +430,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
     GENERIC_INFINITY = "∞"
     GENERIC_Z = "Z"
     TICKET = "TK"
+    LEGENDARY = "L"
 
     # region Symbol groupings
 
@@ -461,6 +463,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.GENERIC_100,
                 CostSymbol.GENERIC_1000000,
                 CostSymbol.GENERIC_HALF,
+                CostSymbol.GENERIC_PHYREXIAN,
             ]
         )
 
@@ -521,6 +524,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.PHYREXIAN_BLACK,
                 CostSymbol.PHYREXIAN_RED,
                 CostSymbol.PHYREXIAN_GREEN,
+                CostSymbol.PHYREXIAN_COLORLESS,
                 CostSymbol.GENERIC_PHYREXIAN,
                 CostSymbol.HYBRID_PHYREXIAN_WU,
                 CostSymbol.HYBRID_PHYREXIAN_UB,
@@ -588,6 +592,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.GENERIC_INFINITY,
                 CostSymbol.GENERIC_Z,
                 CostSymbol.TICKET,
+                CostSymbol.LEGENDARY,
             ]
         )
 
