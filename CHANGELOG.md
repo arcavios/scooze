@@ -7,6 +7,10 @@
 - Add support for hybrid colorless mana symbols ([#323](https://github.com/arcavios/scooze/pull/323))
 - Add support for pawprint (modal budget) symbol ([#327](https://github.com/arcavios/scooze/pull/327))
 
+#### Docs
+
+- Deployment doc for releases and new sets ([#324](https://github.com/arcavios/scooze/pull/324))
+
 ### [2.0.0] - 2024-05-06
 
 [GitHub Release](https://github.com/arcavios/scooze/releases/tag/v2.0.0)
