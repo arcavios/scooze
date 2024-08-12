@@ -431,6 +431,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
     GENERIC_Z = "Z"
     TICKET = "TK"
     LEGENDARY = "L"
+    LAND_DROP = "D"
 
     # region Symbol groupings
 
@@ -573,6 +574,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.ENERGY,
                 CostSymbol.TICKET,
                 CostSymbol.PAWPRINT,
+                CostSymbol.LAND_DROP,
             ]
         )
 
@@ -593,6 +595,7 @@ class CostSymbol(ExtendedEnum, StrEnum):
                 CostSymbol.GENERIC_Z,
                 CostSymbol.TICKET,
                 CostSymbol.LEGENDARY,
+                CostSymbol.LAND_DROP,
             ]
         )
 
