@@ -3,6 +3,7 @@ name: Scryfall Bulkdata Validation
 on:
   push:
     branches: [dev, cm/scryfall-workflow-fix]
+
   # Every Monday at 07:00 UTC
 #  schedule:
 #    - cron: "0 7 * * 1"
