@@ -53,7 +53,9 @@ jobs:
           echo "docker compose up -d"
           docker compose up -d
           echo "scooze load cards --all --force-download --concise"
-          /root/.poetry/bin/venv-run scooze load cards --all --force-download --concise
+          source .venv/bin/activate
+          scooze load cards --all --force-download --concise
+
 
       - name: Get current date
         run: |
