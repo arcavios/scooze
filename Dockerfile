@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 # ref: https://stackoverflow.com/a/57886655
 
-FROM debian:12-slim AS builder
+FROM python:3-slim AS builder
 RUN apt-get update && \
     apt-get install --no-install-suggests --no-install-recommends --yes pipx
-ENV PATH="/root/.local/bin:${PATH}"
+ENV PATH="/root/.local/bin:$PATH"
 RUN pipx install poetry
 RUN pipx inject poetry poetry-plugin-bundle
 WORKDIR /src

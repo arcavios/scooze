@@ -39,6 +39,7 @@ python = ">=3.11, <4"
 requests = "^2.32.2"
 setuptools = "^72.0.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
+venv-run = "^0.2.0"
 
 [tool.poetry.group.dev.dependencies]
 asgi-lifespan = "^2.1.0"
