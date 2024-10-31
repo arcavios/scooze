@@ -8,6 +8,7 @@
 - Add support for pawprint (modal budget) symbol ([#327](https://github.com/arcavios/scooze/pull/327))
 - Support for new symbols in BLB and MB2 ([#328](https://github.com/arcavios/scooze/pull/328))
 - Add land drop symbol MB2 ([#331](https://github.com/arcavios/scooze/pull/331))
+- Add Hare Apparent to relentless list ([#333](https://github.com/arcavios/scooze/pull/333))
 
 #### Docs
 

@@ -169,6 +169,7 @@ def max_relentless_quantity(name: str) -> int:
             | "Snow-Covered Forest"
             | "Snow-Covered Wastes"
             | "Dragon's Approach"
+            | "Hare Apparent"
             | "Persistent Petitioners"
             | "Rat Colony"
             | "Relentless Rats"
