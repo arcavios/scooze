@@ -226,8 +226,8 @@ def test_nazgul_max_relentless_quantity():
 
 
 def test_relentless_max_relentless_quantity():
-    assert max_relentless_quantity("Relentless Rats") == maxsize
     assert max_relentless_quantity("Dragon's Approach") == maxsize
+    assert max_relentless_quantity("Hare Apparent") == maxsize
     assert max_relentless_quantity("Persistent Petitioners") == maxsize
     assert max_relentless_quantity("Rat Colony") == maxsize
     assert max_relentless_quantity("Relentless Rats") == maxsize
