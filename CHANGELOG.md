@@ -10,6 +10,10 @@
 - Add land drop symbol MB2 ([#331](https://github.com/arcavios/scooze/pull/331))
 - Add Hare Apparent to relentless list ([#333](https://github.com/arcavios/scooze/pull/333))
 
+#### Changed
+
+- Replace `nyxtouched` frame effect with `enchantment` ([#334](https://github.com/arcavios/scooze/pull/334))
+
 #### Docs
 
 - Deployment doc for releases and new sets ([#324](https://github.com/arcavios/scooze/pull/324))

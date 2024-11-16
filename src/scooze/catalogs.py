@@ -138,7 +138,6 @@ class FrameEffect(ExtendedEnum, StrEnum):
     LEGENDARY = auto()
     LESSON = auto()
     MIRACLE = auto()
-    NYXTOUCHED = auto()
     SHATTEREDGLASS = auto()
     SHOWCASE = auto()
     SNOW = auto()
