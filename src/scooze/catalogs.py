@@ -130,6 +130,7 @@ class FrameEffect(ExtendedEnum, StrEnum):
     COMPANION = auto()
     DEVOID = auto()
     DRAFT = auto()
+    ENCHANTMENT = auto()
     ETCHED = auto()
     EXTENDEDART = auto()
     FULLART = auto()
