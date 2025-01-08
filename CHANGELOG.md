@@ -1,6 +1,8 @@
 # Change Log
 
-### [DEVELOPMENT] - UNRELEASED
+### [2.0.1] - 2025-01-08
+
+[GitHub Release](https://github.com/arcavios/scooze/releases/tag/v2.0.1)
 
 #### Added
 
