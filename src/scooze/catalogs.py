@@ -37,6 +37,7 @@ class BorderColor(ExtendedEnum, StrEnum):
     BORDERLESS = auto()
     SILVER = auto()
     GOLD = auto()
+    YELLOW = auto()
 
 
 class Color(ExtendedEnum, StrEnum):
