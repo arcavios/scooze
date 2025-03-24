@@ -1,5 +1,11 @@
 # Change Log
 
+### dev
+
+#### Added
+
+- Add Tempest Hawk to relentless list ([#338](https://github.com/arcavios/scooze/pull/338))
+
 ### [2.0.1] - 2025-02-11
 
 [GitHub Release](https://github.com/arcavios/scooze/releases/tag/v2.0.1)
