@@ -5,6 +5,7 @@
 #### Added
 
 - Add Tempest Hawk to relentless list ([#338](https://github.com/arcavios/scooze/pull/338))
+- Add Quenya language support ([#339](https://github.com/arcavios/scooze/pull/339))
 
 ### [2.0.1] - 2025-02-11
 
