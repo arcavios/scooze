@@ -175,6 +175,7 @@ def max_relentless_quantity(name: str) -> int:
             | "Relentless Rats"
             | "Shadowborn Apostle"
             | "Slime Against Humanity"
+            | "Tempest Hawk"
             | "Templar Knight"
         ):
             return maxsize
