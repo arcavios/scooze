@@ -206,7 +206,7 @@ class Language(ExtendedEnum, StrEnum):
     ARABIC = "ar"
     HEBREW = "he"
     LATIN = "la"
-    QUENYA = "qya" # LOTR elvish script
+    QUENYA = "qya"  # LOTR elvish script
     SANSKRIT = "sa"
 
 
