@@ -19,6 +19,7 @@ from scooze.catalogs import (
 )
 from scooze.enums import DbCollection
 from scooze.models.card import CardModel, CardModelData
+import pytest
 
 # region eq and ne
 
@@ -57,117 +58,126 @@ def test_cardmodel_beanie(api_client: AsyncClient):
 # region from_json
 
 
-def test_cardmodeldata_from_json_instant(json_ancestral_recall, legalities_ancestral_recall):
-    model = CardModelData.model_validate(json_ancestral_recall)
-    assert model.all_parts is None
-    assert model.arena_id is None
-    assert model.artist == "Ryan Pancoast"
-    assert model.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
-    assert model.attraction_lights is None
-    assert model.booster is True
-    assert model.border_color is BorderColor.BLACK
-    assert model.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
-    assert model.card_faces is None
-    assert model.cardmarket_id is None
-    assert model.cmc == 1.0
-    assert model.collector_number == "1"
-    assert model.color_identity == {Color.BLUE}
-    assert model.color_indicator is None
-    assert model.colors == {Color.BLUE}
-    assert model.content_warning is False
-    assert model.digital is True
-    assert model.edhrec_rank is None
-    assert model.finishes == {Finish.NONFOIL, Finish.FOIL}
-    assert model.flavor_name is None
-    assert model.flavor_text is None
-    assert model.frame is Frame._2015
-    assert model.frame_effects is None
-    assert model.full_art is False
-    assert model.games == {Game.MTGO}
-    assert model.hand_modifier is None
-    assert model.highres_image is True
-    assert model.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
-    assert model.image_status is ImageStatus.HIGHRES_SCAN
+@pytest.mark.parametrize("card_json,expected",
+                         [
+                             ("json_ancestral_recall", "model_ancestral_recall"),
+                         ])
+def test_cardmodeldata_from_json_instant(card_json, expected, request):
+    model = CardModelData.model_validate(request.getfixturevalue(card_json))
+    expected = request.getfixturevalue(expected)
 
-    # ImageUris
-    assert model.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
-    assert model.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
-    assert model.image_uris.large.startswith("https://cards.scryfall.io/large/")
-    assert model.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
-    assert model.image_uris.png.startswith("https://cards.scryfall.io/png/")
-    assert model.image_uris.small.startswith("https://cards.scryfall.io/small/")
+    # assert model.all_parts == expected.all_parts
+    assert model == expected
 
-    assert model.keywords == set()
-    assert model.lang is Language.ENGLISH
-    assert model.layout is Layout.NORMAL
-    assert model.legalities == legalities_ancestral_recall
-    assert model.life_modifier is None
-    assert model.loyalty is None
-    assert model.mana_cost == "{U}"
-    assert model.mtgo_foil_id == 53178
-    assert model.mtgo_id == 53177
-    assert model.multiverse_ids == [382841]
-    assert model.name == "Ancestral Recall"
-    assert model.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
-    assert model.oracle_text == "Target player draws three cards."
-    assert model.oversized is False
-    assert model.penny_rank is None
-    assert model.power is None
-    assert model.preview is None
+    # assert model.all_parts is None
+    # assert model.arena_id is None
+    # assert model.artist == "Ryan Pancoast"
+    # assert model.artist_ids == ["89cc9475-dda2-4d13-bf88-54b92867a25c"]
+    # assert model.attraction_lights is None
+    # assert model.booster is True
+    # assert model.border_color is BorderColor.BLACK
+    # assert model.card_back_id == "0aeebaf5-8c7d-4636-9e82-8c27447861f7"
+    # assert model.card_faces is None
+    # assert model.cardmarket_id is None
+    # assert model.cmc == 1.0
+    # assert model.collector_number == "1"
+    # assert model.color_identity == {Color.BLUE}
+    # assert model.color_indicator is None
+    # assert model.colors == {Color.BLUE}
+    # assert model.content_warning is False
+    # assert model.digital is True
+    # assert model.edhrec_rank is None
+    # assert model.finishes == {Finish.NONFOIL, Finish.FOIL}
+    # assert model.flavor_name is None
+    # assert model.flavor_text is None
+    # assert model.frame is Frame._2015
+    # assert model.frame_effects is None
+    # assert model.full_art is False
+    # assert model.games == {Game.MTGO}
+    # assert model.hand_modifier is None
+    # assert model.highres_image is True
+    # assert model.illustration_id == "95c5ab6f-fcce-4e21-9e02-cc1d922adfae"
+    # assert model.image_status is ImageStatus.HIGHRES_SCAN
 
-    # Prices
-    assert model.prices.eur is None
-    assert model.prices.eur_foil is None
-    assert model.prices.tix == 1.9
-    assert model.prices.usd is None
-    assert model.prices.usd_etched is None
-    assert model.prices.usd_foil is None
+    # # ImageUris
+    # assert model.image_uris.art_crop.startswith("https://cards.scryfall.io/art_crop/")
+    # assert model.image_uris.border_crop.startswith("https://cards.scryfall.io/border_crop/")
+    # assert model.image_uris.large.startswith("https://cards.scryfall.io/large/")
+    # assert model.image_uris.normal.startswith("https://cards.scryfall.io/normal/")
+    # assert model.image_uris.png.startswith("https://cards.scryfall.io/png/")
+    # assert model.image_uris.small.startswith("https://cards.scryfall.io/small/")
 
-    assert model.printed_name is None
-    assert model.printed_text is None
-    assert model.printed_type_line is None
-    assert model.prints_search_uri.startswith("https://api.scryfall.com/cards/")
-    assert model.produced_mana is None
-    assert model.promo is False
-    assert model.promo_types is None
+    # assert model.keywords == set()
+    # assert model.lang is Language.ENGLISH
+    # assert model.layout is Layout.NORMAL
+    # assert model.legalities == legalities_ancestral_recall
+    # assert model.life_modifier is None
+    # assert model.loyalty is None
+    # assert model.mana_cost == "{U}"
+    # assert model.mtgo_foil_id == 53178
+    # assert model.mtgo_id == 53177
+    # assert model.multiverse_ids == [382841]
+    # assert model.name == "Ancestral Recall"
+    # assert model.oracle_id == "550c74d4-1fcb-406a-b02a-639a760a4380"
+    # assert model.oracle_text == "Target player draws three cards."
+    # assert model.oversized is False
+    # assert model.penny_rank is None
+    # assert model.power is None
+    # assert model.preview is None
 
-    # PurchaseUris
-    assert model.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
-    assert model.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
-    assert model.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
+    # # Prices
+    # assert model.prices.eur is None
+    # assert model.prices.eur_foil is None
+    # assert model.prices.tix == 1.9
+    # assert model.prices.usd is None
+    # assert model.prices.usd_etched is None
+    # assert model.prices.usd_foil is None
 
-    assert model.rarity is Rarity.BONUS
+    # assert model.printed_name is None
+    # assert model.printed_text is None
+    # assert model.printed_type_line is None
+    # assert model.prints_search_uri.startswith("https://api.scryfall.com/cards/")
+    # assert model.produced_mana is None
+    # assert model.promo is False
+    # assert model.promo_types is None
 
-    # RelatedUris
-    assert model.related_uris.edhrec.startswith("https://edhrec.com/")
-    assert model.related_uris.gatherer.startswith("https://gatherer.wizards.com/")
-    assert model.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
-    assert model.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
+    # # PurchaseUris
+    # assert model.purchase_uris.cardhoarder.startswith("https://www.cardhoarder.com/")
+    # assert model.purchase_uris.cardmarket.startswith("https://www.cardmarket.com/")
+    # assert model.purchase_uris.tcgplayer.startswith("https://www.tcgplayer.com/")
 
-    assert model.released_at == date(year=2014, month=6, day=16)
-    assert model.reprint is True
-    assert model.reserved is True
-    assert model.rulings_uri.startswith("https://api.scryfall.com/cards/")
-    assert model.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
-    assert model.scryfall_set_uri.startswith("https://scryfall.com/sets/")
-    assert model.scryfall_uri.startswith("https://scryfall.com/card/")
-    assert model.security_stamp is SecurityStamp.OVAL
-    assert model.set_code == "vma"
-    assert model.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
-    assert model.set_name == "Vintage Masters"
-    assert model.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
-    assert model.set_type is SetType.MASTERS
-    assert model.set_uri.startswith("https://api.scryfall.com/sets/")
-    assert model.story_spotlight is False
-    assert model.tcgplayer_etched_id is None
-    assert model.tcgplayer_id is None
-    assert model.textless is False
-    assert model.toughness is None
-    assert model.type_line == "Instant"
-    assert model.uri.startswith("https://api.scryfall.com/cards/")
-    assert model.variation is False
-    assert model.variation_of is None
-    assert model.watermark is None
+    # assert model.rarity is Rarity.BONUS
+
+    # # RelatedUris
+    # assert model.related_uris.edhrec.startswith("https://edhrec.com/")
+    # assert model.related_uris.gatherer.startswith("https://gatherer.wizards.com/")
+    # assert model.related_uris.tcgplayer_infinite_articles.startswith("https://infinite.tcgplayer.com/")
+    # assert model.related_uris.tcgplayer_infinite_decks.startswith("https://infinite.tcgplayer.com/")
+
+    # assert model.released_at == date(year=2014, month=6, day=16)
+    # assert model.reprint is True
+    # assert model.reserved is True
+    # assert model.rulings_uri.startswith("https://api.scryfall.com/cards/")
+    # assert model.scryfall_id == "2398892d-28e9-4009-81ec-0d544af79d2b"
+    # assert model.scryfall_set_uri.startswith("https://scryfall.com/sets/")
+    # assert model.scryfall_uri.startswith("https://scryfall.com/card/")
+    # assert model.security_stamp is SecurityStamp.OVAL
+    # assert model.set_code == "vma"
+    # assert model.set_id == "a944551a-73fa-41cd-9159-e8d0e4674403"
+    # assert model.set_name == "Vintage Masters"
+    # assert model.set_search_uri.startswith("https://api.scryfall.com/cards/search?")
+    # assert model.set_type is SetType.MASTERS
+    # assert model.set_uri.startswith("https://api.scryfall.com/sets/")
+    # assert model.story_spotlight is False
+    # assert model.tcgplayer_etched_id is None
+    # assert model.tcgplayer_id is None
+    # assert model.textless is False
+    # assert model.toughness is None
+    # assert model.type_line == "Instant"
+    # assert model.uri.startswith("https://api.scryfall.com/cards/")
+    # assert model.variation is False
+    # assert model.variation_of is None
+    # assert model.watermark is None
 
 
 def test_cardmodeldata_from_json_transform_planeswalker(
