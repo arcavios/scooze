@@ -1,5 +1,9 @@
 # Change Log
 
+### Development
+
+...
+
 ### [2.0.2] - 2025-03-29
 
 #### Added
