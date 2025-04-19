@@ -51,9 +51,6 @@ class Color(ExtendedEnum, StrEnum):
     RED = "R"
     GREEN = "G"
 
-    # Not a color, but Scryfall uses this in `produced_mana` as a type that can be produced.
-    COLORLESS = "C"
-
 
 class Component(ExtendedEnum, StrEnum):
     """

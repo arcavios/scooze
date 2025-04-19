@@ -40,6 +40,9 @@ requests = "^2.32.2"
 setuptools = "^72.0.0"
 uvicorn = { extras = ["standard"], version = "^0.23.1" }
 venv-run = "^0.2.0"
+sqlalchemy = "^2.0.40"
+psycopg = {extras = ["binary", "pool"], version = "^3.2.6"}
+sqlmodel = "^0.0.24"
 
 [tool.poetry.group.dev.dependencies]
 asgi-lifespan = "^2.1.0"
