@@ -70,7 +70,9 @@ def _try_validate_card(card_json: dict) -> CardModel | None:
 
     except ValidationError as e:
         cli_logger.exception(
-            f"{card_json['name']} not loaded due to validation error.", exc_info=e, extra={"card": card_json}
+            f"{card_json['name']} not loaded due to validation error.\nCard link: {card_json.get('scryfall_uri')}",
+            exc_info=e,
+            extra={"card": card_json},
         )
 
-        return
+        return None

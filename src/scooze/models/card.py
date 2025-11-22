@@ -62,6 +62,7 @@ class CardModelData(ScoozeBaseModel):
         mtgo_id: This card's MTGO Catalog ID, if applicable.
         mtgo_foil_id: This card's foil MTGO Catalog ID, if applicable.
         multiverse_ids: This card's multiverse IDs on Gatherer, if any.
+        resource_id: This card's resource ID on new Gatherer, if available.
         tcgplayer_id: This card's ID on TCGplayer, or `productId` in their
             system.
         tcgplayer_etched_id: This card's ID on TCGplayer, for the etched
@@ -194,6 +195,10 @@ class CardModelData(ScoozeBaseModel):
     multiverse_ids: list[int] | None = Field(
         default=None,
         description="This card's multiverse IDs on Gatherer, if any.",
+    )
+    resource_id: str | None = Field(
+        default=None,
+        description="This card's resource ID on new Gatherer, if available.",
     )
     tcgplayer_id: int | None = Field(
         default=None,

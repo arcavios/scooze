@@ -310,6 +310,7 @@ class SetType(ExtendedEnum, StrEnum):
     CORE = auto()
     DRAFT_INNOVATION = auto()
     DUEL_DECK = auto()
+    ETERNAL = auto()
     EXPANSION = auto()
     FROM_THE_VAULT = auto()
     FUNNY = auto()

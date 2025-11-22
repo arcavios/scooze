@@ -2,6 +2,13 @@
 
 ### Development
 
+#### Added
+
+- add link to card on Scryfall on validation errors ([#349](https://github.com/arcavios/scooze/pull/349))
+- add Eternal set type ([#349](https://github.com/arcavios/scooze/pull/349))
+- add Cid, Timeless Artificer to relentless list ([#349](https://github.com/arcavios/scooze/pull/349))
+- add new resource_id field ([#349](https://github.com/arcavios/scooze/pull/349))
+- 
 ...
 
 ### [2.0.2] - 2025-03-29

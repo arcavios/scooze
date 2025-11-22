@@ -58,6 +58,8 @@ class Card(HashableObject):
             applicable.
         multiverse_ids (tuple[int] | None): This card's multiverse IDs on
             Gatherer, if any.
+        resource_id (str | None): This card's resource ID on new Gatherer,
+            if available.
         tcgplayer_id (int | None): This card's ID on TCGplayer, or `productId`
             in their system.
         tcgplayer_etched_id (int | None): This card's ID on TCGplayer, for the
@@ -200,6 +202,7 @@ class Card(HashableObject):
         mtgo_id: int | None = None,
         mtgo_foil_id: int | None = None,
         multiverse_ids: Iterable[int] | None = None,
+        resource_id: str | None = None,
         tcgplayer_id: int | None = None,
         tcgplayer_etched_id: int | None = None,
         cardmarket_id: int | None = None,
@@ -325,6 +328,7 @@ class Card(HashableObject):
         self.mtgo_id = mtgo_id
         self.mtgo_foil_id = mtgo_foil_id
         self.multiverse_ids = CardNormalizer.to_tuple(multiverse_ids)
+        self.resource_id = resource_id
         self.tcgplayer_id = tcgplayer_id
         self.tcgplayer_etched_id = tcgplayer_etched_id
         self.cardmarket_id = cardmarket_id
