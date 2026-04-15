@@ -231,6 +231,7 @@ class Layout(ExtendedEnum, StrEnum):
     MODAL_DFC = auto()
     MUTATE = auto()
     PLANAR = auto()
+    PREPARE = auto()
     PROTOTYPE = auto()
     REVERSIBLE_CARD = auto()
     SAGA = auto()
