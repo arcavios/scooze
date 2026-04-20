@@ -25,8 +25,7 @@ def on_page_markdown(markdown: str, page: Page, config: Config, files: Files) ->
         return markdown
 
 
-maintainers_template = Template(
-    """
+maintainers_template = Template("""
 <div class="user-list user-list-center">
     {% for user in people.maintainers %}
     <div class="user">
@@ -39,8 +38,7 @@ maintainers_template = Template(
     </div>
     {% endfor %}
 </div>
-"""
-)
+""")
 
 
 def populate_people(markdown: str, page: Page) -> str | None:
