@@ -1,5 +1,11 @@
 # Change Log
 
+### [2.0.4] - 2026-04-20
+
+#### Added
+
+- add support for Prepare frame ([#351](https://github.com/arcavios/scooze/pull/351))
+
 ### [2.0.3] - 2025-11-22
 
 #### Added
