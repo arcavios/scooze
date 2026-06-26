@@ -84,7 +84,7 @@ class ScoozeRotatingFileHandler(RotatingFileHandler):
 
 class JsonLoggingFormatter(logging.Formatter):
     """
-    Simple logging Formatter to generate json lines output.
+    Simple logging Formatter to generate JSON lines output.
     """
 
     def __init__(self, *, fmt_keys: dict[str, str] | None = None):
@@ -463,7 +463,7 @@ def parse_symbols(cost: str) -> Counter[CostSymbol]:
         A mapping of cost symbols to the number of times they appear in that string.
     """
 
-    # find all symbols of form {W}, {W/P}, etc
+    # find all symbols of form {W}, {W/P}, etc.
     symbols = [CostSymbol(s) for s in re.findall(r"{([^}]+)}", cost)]
     return Counter[CostSymbol](symbols)
 
@@ -503,8 +503,6 @@ class HashableObject(ComparableObject, Hashable):
 
 
 # endregion
-
-# region JSON Utils
 
 
 class JsonNormalizer:
@@ -634,10 +632,6 @@ class JsonNormalizer:
         return tuple([JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in t])
 
 
-# endregion
-
-
-
 class DictDiff(ComparableObject):
     """
     Represents a diff between two dicts.
@@ -684,8 +678,6 @@ class DictDiff(ComparableObject):
         """
 
         return self.contents == {}
-
-
 
 
 # endregion
