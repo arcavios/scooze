@@ -636,7 +636,6 @@ class JsonNormalizer:
 
 # endregion
 
-# region Dict Diff
 
 
 class DictDiff(ComparableObject):
@@ -687,7 +686,6 @@ class DictDiff(ComparableObject):
         return self.contents == {}
 
 
-# endregion
 
 
 # endregion
