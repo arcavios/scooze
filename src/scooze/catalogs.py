@@ -86,6 +86,7 @@ class Format(ExtendedEnum, StrEnum):
     ALCHEMY = auto()
     BRAWL = auto()
     COMMANDER = auto()
+    COMPETITIVEBRAWL = auto()
     DUEL = auto()
     EXPLORER = auto()
     FUTURE = auto()
