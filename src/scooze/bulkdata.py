@@ -6,6 +6,8 @@ from scooze.catalogs import ScryfallBulkFile
 from scooze.config import CONFIG
 
 SCRYFALL_BULK_INFO_ENDPOINT = "https://api.scryfall.com/bulk-data"
+SCOOZE_USER_AGENT = "scooze/1.0"
+SCRYFALL_API_HEADERS = {"User-Agent": SCOOZE_USER_AGENT, "Accept": "application/json"}
 
 
 def download_bulk_data_file(
@@ -28,7 +30,7 @@ def download_bulk_data_file(
     """
 
     # TODO(#74): flag for check vs existing file; don't overwrite with same file or older version
-    with requests.get(uri, stream=True) as r:
+    with requests.get(uri, stream=True, headers=SCRYFALL_API_HEADERS) as r:
         r.raise_for_status()
         bulk_file_dir.mkdir(parents=True, exist_ok=True)
         file = bulk_file_dir / f"{bulk_file_type}.json"
@@ -56,7 +58,7 @@ def download_bulk_data_file_by_type(
 
     # get URI from Scryfall bulk endpoint
 
-    with requests.get(SCRYFALL_BULK_INFO_ENDPOINT) as bulk_metadata_request:
+    with requests.get(SCRYFALL_BULK_INFO_ENDPOINT, headers=SCRYFALL_API_HEADERS) as bulk_metadata_request:
         bulk_metadata_request.raise_for_status()
         bulk_metadata = bulk_metadata_request.json()["data"]
     bulk_files = {t["type"]: t["download_uri"] for t in bulk_metadata}
@@ -79,7 +81,7 @@ def download_all_bulk_data_files(
         HTTPError: If request for bulk file not successful.
     """
 
-    with requests.get(SCRYFALL_BULK_INFO_ENDPOINT) as bulk_metadata_request:
+    with requests.get(SCRYFALL_BULK_INFO_ENDPOINT, headers=SCRYFALL_API_HEADERS) as bulk_metadata_request:
         bulk_metadata_request.raise_for_status()
         bulk_metadata = bulk_metadata_request.json()["data"]
     bulk_files = {t["type"]: t["download_uri"] for t in bulk_metadata}
