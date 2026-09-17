@@ -64,7 +64,7 @@ class LoadCardsCommand(Command):
 
                 try:
                     self.line(
-                        f"Reading from Scryfall data in: {Path(self.option('bulk-data-dir'), bulk_file + '.json')}"
+                        f"Reading from Scryfall data in: {Path(self.option('bulk-data-dir'), bulk_file + '.jsonl')}"
                     )
                     loaded_count += s.load_card_file(
                         bulk_file, self.option("bulk-data-dir"), show_progress=not self.option("concise")
@@ -81,7 +81,7 @@ class LoadCardsCommand(Command):
                     )
 
             if load_test:
-                self.line(f"Reading from Scryfall data in: {Path('data/test/default_cards.json')}")
+                self.line(f"Reading from Scryfall data in: {Path('data/test/default_cards.jsonl')}")
                 loaded_count += s.load_card_file(
                     ScryfallBulkFile.DEFAULT, "./data/test", show_progress=not self.option("concise")
                 )
