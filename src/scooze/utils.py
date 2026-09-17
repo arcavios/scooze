@@ -196,18 +196,19 @@ def max_card_quantity(fmt: Format) -> int:
         case (
             Format.BRAWL
             | Format.COMMANDER
+            | Format.COMPETITIVEBRAWL
             | Format.DUEL
             | Format.GLADIATOR
             | Format.OATHBREAKER
             | Format.PAUPERCOMMANDER
             | Format.PREDH
             | Format.STANDARDBRAWL
+            | Format.TINYLEADERSREBORN
         ):
             return 1
 
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.HISTORIC
             | Format.LEGACY
@@ -236,12 +237,14 @@ def main_size(fmt: Format) -> tuple[int, int]:
         case Format.LIMITED:
             return 40, maxsize
 
+        case Format.TINYLEADERSREBORN:
+            return 50, 50
+
         case Format.OATHBREAKER:
             return 58, 58
 
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.HISTORIC
             | Format.LEGACY
@@ -257,7 +260,7 @@ def main_size(fmt: Format) -> tuple[int, int]:
         ):
             return 60, maxsize
 
-        case Format.BRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
+        case Format.BRAWL | Format.COMPETITIVEBRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 99, 99
 
         case Format.COMMANDER | Format.DUEL:
@@ -281,7 +284,6 @@ def side_size(fmt: Format) -> tuple[int, int]:
 
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.HISTORIC
             | Format.LEGACY
@@ -299,6 +301,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
 
         case (
             Format.BRAWL
+            | Format.COMPETITIVEBRAWL
             | Format.COMMANDER
             | Format.DUEL
             | Format.GLADIATOR
@@ -306,6 +309,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
             | Format.PAUPERCOMMANDER
             | Format.PREDH
             | Format.STANDARDBRAWL
+            | Format.TINYLEADERSREBORN
         ):
             return 0, 0
 
@@ -321,7 +325,6 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
     match fmt.value:
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
@@ -378,7 +381,6 @@ def attractions_size(fmt: Format) -> tuple[int, int]:
             Format.ALCHEMY
             | Format.BRAWL
             | Format.COMPETITIVEBRAWL
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
@@ -427,7 +429,6 @@ def stickers_size(fmt: Format) -> tuple[int, int]:
             Format.ALCHEMY
             | Format.BRAWL
             | Format.COMPETITIVEBRAWL
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
