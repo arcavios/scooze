@@ -202,9 +202,10 @@ class Language(ExtendedEnum, StrEnum):
     CHINESE_TRADITIONAL = "zht"
     PHYREXIAN = "ph"
 
-    # each used for a single promotional card
+    # used only for promos
     ANCIENT_GREEK = "grc"
     ARABIC = "ar"
+    DWARVISH = "dw"
     HEBREW = "he"
     LATIN = "la"
     QUENYA = "qya"  # LOTR elvish script
