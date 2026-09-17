@@ -1,5 +1,11 @@
 # Change Log
 
+### Development
+
+#### Changed
+
+- Update format legality list ([#354](https://github.com/arcavios/scooze/pull/354))
+
 ### [2.0.4] - 2026-04-20
 
 #### Added
