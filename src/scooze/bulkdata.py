@@ -1,3 +1,4 @@
+import gzip
 from pathlib import Path
 from urllib.error import HTTPError  # import HTTPError for linking in docs
 
@@ -33,10 +34,16 @@ def download_bulk_data_file(
     with requests.get(uri, stream=True, headers=SCRYFALL_API_HEADERS) as r:
         r.raise_for_status()
         bulk_file_dir.mkdir(parents=True, exist_ok=True)
-        file = bulk_file_dir / f"{bulk_file_type}.json"
-        with file.open(mode="wb") as f:
+
+        # Scryfall provides files as gzipped JSONL files; download archive, then extract
+        archive_file = bulk_file_dir / f"{bulk_file_type}.jsonl.gz"
+        with archive_file.open(mode="wb") as f:
             for chunk in r.iter_content(chunk_size=None):
                 f.write(chunk)
+
+        with gzip.open(archive_file, "r") as f:
+            with (bulk_file_dir / f"{bulk_file_type}.jsonl").open(mode="wb") as bulk_file:
+                bulk_file.write(f.read())
 
 
 def download_bulk_data_file_by_type(
@@ -61,7 +68,7 @@ def download_bulk_data_file_by_type(
     with requests.get(SCRYFALL_BULK_INFO_ENDPOINT, headers=SCRYFALL_API_HEADERS) as bulk_metadata_request:
         bulk_metadata_request.raise_for_status()
         bulk_metadata = bulk_metadata_request.json()["data"]
-    bulk_files = {t["type"]: t["download_uri"] for t in bulk_metadata}
+    bulk_files = {t["type"]: t["jsonl_download_uri"] for t in bulk_metadata}
     if bulk_file_type not in bulk_files:
         return
     download_bulk_data_file(bulk_files[bulk_file_type], bulk_file_type, bulk_file_dir)
@@ -84,7 +91,7 @@ def download_all_bulk_data_files(
     with requests.get(SCRYFALL_BULK_INFO_ENDPOINT, headers=SCRYFALL_API_HEADERS) as bulk_metadata_request:
         bulk_metadata_request.raise_for_status()
         bulk_metadata = bulk_metadata_request.json()["data"]
-    bulk_files = {t["type"]: t["download_uri"] for t in bulk_metadata}
+    bulk_files = {t["type"]: t["jsonl_download_uri"] for t in bulk_metadata}
 
     for bulk_type in ScryfallBulkFile.list():
         bulk_filename = bulk_files[bulk_type]
