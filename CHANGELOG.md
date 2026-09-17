@@ -2,6 +2,10 @@
 
 ### Development
 
+#### Added
+
+- support Dwarvish language ([#354](https://github.com/arcavios/scooze/pull/354))
+
 #### Changed
 
 - Update format legality list ([#354](https://github.com/arcavios/scooze/pull/354))
