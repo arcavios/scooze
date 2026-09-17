@@ -1,5 +1,11 @@
 # Change Log
 
+### Development
+
+#### Changed
+
+- move to JSONL files for bulk data ([#355](https://github.com/arcavios/scooze/pull/355))
+
 ### [2.0.4] - 2026-04-20
 
 #### Added
