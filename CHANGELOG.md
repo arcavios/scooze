@@ -5,10 +5,13 @@
 #### Added
 
 - support Dwarvish language ([#354](https://github.com/arcavios/scooze/pull/354))
+- add front_card layout ([#355](https://github.com/arcavios/scooze/pull/355))
 
 #### Changed
 
 - Update format legality list ([#354](https://github.com/arcavios/scooze/pull/354))
+- move to JSONL files for bulk data ([#355](https://github.com/arcavios/scooze/pull/355))
+
 
 ### [2.0.4] - 2026-04-20
 

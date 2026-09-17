@@ -227,6 +227,7 @@ class Layout(ExtendedEnum, StrEnum):
     DOUBLE_FACED_TOKEN = auto()
     EMBLEM = auto()
     FLIP = auto()
+    FRONT_CARD = auto()
     HOST = auto()
     LEVELER = auto()
     MELD = auto()
