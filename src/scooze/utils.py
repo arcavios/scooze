@@ -84,7 +84,7 @@ class ScoozeRotatingFileHandler(RotatingFileHandler):
 
 class JsonLoggingFormatter(logging.Formatter):
     """
-    Simple logging Formatter to generate json lines output.
+    Simple logging Formatter to generate JSON lines output.
     """
 
     def __init__(self, *, fmt_keys: dict[str, str] | None = None):
@@ -196,18 +196,19 @@ def max_card_quantity(fmt: Format) -> int:
         case (
             Format.BRAWL
             | Format.COMMANDER
+            | Format.COMPETITIVEBRAWL
             | Format.DUEL
             | Format.GLADIATOR
             | Format.OATHBREAKER
             | Format.PAUPERCOMMANDER
             | Format.PREDH
             | Format.STANDARDBRAWL
+            | Format.TINYLEADERSREBORN
         ):
             return 1
 
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.HISTORIC
             | Format.LEGACY
@@ -236,12 +237,14 @@ def main_size(fmt: Format) -> tuple[int, int]:
         case Format.LIMITED:
             return 40, maxsize
 
+        case Format.TINYLEADERSREBORN:
+            return 50, 50
+
         case Format.OATHBREAKER:
             return 58, 58
 
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.HISTORIC
             | Format.LEGACY
@@ -257,7 +260,7 @@ def main_size(fmt: Format) -> tuple[int, int]:
         ):
             return 60, maxsize
 
-        case Format.BRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
+        case Format.BRAWL | Format.COMPETITIVEBRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 99, 99
 
         case Format.COMMANDER | Format.DUEL:
@@ -281,7 +284,6 @@ def side_size(fmt: Format) -> tuple[int, int]:
 
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.HISTORIC
             | Format.LEGACY
@@ -299,6 +301,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
 
         case (
             Format.BRAWL
+            | Format.COMPETITIVEBRAWL
             | Format.COMMANDER
             | Format.DUEL
             | Format.GLADIATOR
@@ -306,6 +309,7 @@ def side_size(fmt: Format) -> tuple[int, int]:
             | Format.PAUPERCOMMANDER
             | Format.PREDH
             | Format.STANDARDBRAWL
+            | Format.TINYLEADERSREBORN
         ):
             return 0, 0
 
@@ -321,7 +325,6 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
     match fmt.value:
         case (
             Format.ALCHEMY
-            | Format.EXPLORER
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
@@ -339,10 +342,10 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
         ):
             return 0, 0
 
-        case Format.BRAWL | Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
+        case Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 1, 1
 
-        case Format.COMMANDER | Format.DUEL:
+        case Format.BRAWL | Format.COMPETITIVEBRAWL | Format.COMMANDER | Format.DUEL:
             return 1, 2  # Accounting for Partner
 
         case Format.OATHBREAKER:
@@ -377,7 +380,7 @@ def attractions_size(fmt: Format) -> tuple[int, int]:
         case (
             Format.ALCHEMY
             | Format.BRAWL
-            | Format.EXPLORER
+            | Format.COMPETITIVEBRAWL
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
@@ -425,7 +428,7 @@ def stickers_size(fmt: Format) -> tuple[int, int]:
         case (
             Format.ALCHEMY
             | Format.BRAWL
-            | Format.EXPLORER
+            | Format.COMPETITIVEBRAWL
             | Format.FUTURE
             | Format.GLADIATOR
             | Format.HISTORIC
@@ -461,7 +464,7 @@ def parse_symbols(cost: str) -> Counter[CostSymbol]:
         A mapping of cost symbols to the number of times they appear in that string.
     """
 
-    # find all symbols of form {W}, {W/P}, etc
+    # find all symbols of form {W}, {W/P}, etc.
     symbols = [CostSymbol(s) for s in re.findall(r"{([^}]+)}", cost)]
     return Counter[CostSymbol](symbols)
 
@@ -501,8 +504,6 @@ class HashableObject(ComparableObject, Hashable):
 
 
 # endregion
-
-# region JSON Utils
 
 
 class JsonNormalizer:
@@ -566,7 +567,10 @@ class JsonNormalizer:
 
     @classmethod
     def to_frozendict(
-        cls, d: Mapping[T, V] | None, convert_key_to_enum: type[E] = None, convert_value_to_enum: type[N] = None
+        cls,
+        d: Mapping[T, V] | None,
+        convert_key_to_enum: type[E] | None = None,
+        convert_value_to_enum: type[N] | None = None,
     ) -> frozendict[T | E, V | N] | None:
         """
         Normalize a frozendict.
@@ -593,7 +597,7 @@ class JsonNormalizer:
         )
 
     @classmethod
-    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: type[E] = None) -> frozenset[T | E] | None:
+    def to_frozenset(cls, s: Iterable[T] | None, convert_to_enum: type[E] | None = None) -> frozenset[T | E] | None:
         """
         Normalize a frozenset.
 
@@ -611,7 +615,7 @@ class JsonNormalizer:
         return frozenset({JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in s})
 
     @classmethod
-    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: type[E] = None) -> tuple[T | E] | None:
+    def to_tuple(cls, t: Iterable[T] | None, convert_to_enum: type[E] | None = None) -> tuple[T | E] | None:
         """
         Normalize a tuple.
 
@@ -627,11 +631,6 @@ class JsonNormalizer:
             return t
 
         return tuple([JsonNormalizer.to_enum(e=convert_to_enum, v=v) if convert_to_enum else v for v in t])
-
-
-# endregion
-
-# region Dict Diff
 
 
 class DictDiff(ComparableObject):
@@ -680,9 +679,6 @@ class DictDiff(ComparableObject):
         """
 
         return self.contents == {}
-
-
-# endregion
 
 
 # endregion

@@ -86,8 +86,8 @@ class Format(ExtendedEnum, StrEnum):
     ALCHEMY = auto()
     BRAWL = auto()
     COMMANDER = auto()
+    COMPETITIVEBRAWL = auto()
     DUEL = auto()
-    EXPLORER = auto()
     FUTURE = auto()
     GLADIATOR = auto()
     HISTORIC = auto()
@@ -104,6 +104,7 @@ class Format(ExtendedEnum, StrEnum):
     STANDARD = auto()
     STANDARDBRAWL = auto()
     TIMELESS = auto()
+    TINYLEADERSREBORN = "tlr"
     VINTAGE = auto()
     # non-Scryfall formats
     LIMITED = auto()
@@ -201,9 +202,10 @@ class Language(ExtendedEnum, StrEnum):
     CHINESE_TRADITIONAL = "zht"
     PHYREXIAN = "ph"
 
-    # each used for a single promotional card
+    # used only for promos
     ANCIENT_GREEK = "grc"
     ARABIC = "ar"
+    DWARVISH = "dw"
     HEBREW = "he"
     LATIN = "la"
     QUENYA = "qya"  # LOTR elvish script
