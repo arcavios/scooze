@@ -324,7 +324,7 @@ def legalities_ancestral_recall() -> dict[Format, Legality]:
         Format.PREDH: Legality.BANNED,
         Format.PREMODERN: Legality.NOT_LEGAL,
         Format.STANDARD: Legality.NOT_LEGAL,
-        Format.TINYLEADERSREBORN: Legality.NOT_LEGAL,  # TODO: fix in test data
+        Format.TINYLEADERSREBORN: Legality.NOT_LEGAL,  # TODO (#357): fix in test data
         Format.VINTAGE: Legality.RESTRICTED,
     }
 
