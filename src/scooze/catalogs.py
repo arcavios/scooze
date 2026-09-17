@@ -88,7 +88,6 @@ class Format(ExtendedEnum, StrEnum):
     COMMANDER = auto()
     COMPETITIVEBRAWL = auto()
     DUEL = auto()
-    EXPLORER = auto()
     FUTURE = auto()
     GLADIATOR = auto()
     HISTORIC = auto()
@@ -105,6 +104,7 @@ class Format(ExtendedEnum, StrEnum):
     STANDARD = auto()
     STANDARDBRAWL = auto()
     TIMELESS = auto()
+    TINYLEADERSREBORN = "tlr"
     VINTAGE = auto()
     # non-Scryfall formats
     LIMITED = auto()
