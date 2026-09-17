@@ -251,8 +251,10 @@ def test_fmt_alchemy_max_card_quantity():
 def test_fmt_brawl_max_card_quantity():
     assert max_card_quantity(Format.BRAWL) == 1
 
+
 def test_fmt_competitivebrawl_max_card_quantity():
     assert max_card_quantity(Format.COMPETITIVEBRAWL) == 1
+
 
 def test_fmt_commander_max_card_quantity():
     assert max_card_quantity(Format.COMMANDER) == 1
