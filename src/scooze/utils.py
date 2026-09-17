@@ -239,7 +239,7 @@ def main_size(fmt: Format) -> tuple[int, int]:
             return 40, maxsize
 
         case Format.TINYLEADERSREBORN:
-            return 50, 50
+            return 48, 49
 
         case Format.OATHBREAKER:
             return 58, 58
@@ -346,7 +346,7 @@ def cmdr_size(fmt: Format) -> tuple[int, int]:
         case Format.PAUPERCOMMANDER | Format.PREDH | Format.STANDARDBRAWL:
             return 1, 1
 
-        case Format.BRAWL | Format.COMPETITIVEBRAWL | Format.COMMANDER | Format.DUEL:
+        case Format.BRAWL | Format.COMPETITIVEBRAWL | Format.COMMANDER | Format.DUEL | Format.TINYLEADERSREBORN:
             return 1, 2  # Accounting for Partner
 
         case Format.OATHBREAKER:
