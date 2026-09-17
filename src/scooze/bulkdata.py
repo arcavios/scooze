@@ -46,7 +46,6 @@ def download_bulk_data_file(
                 bulk_file.write(f.read())
 
 
-
 def download_bulk_data_file_by_type(
     bulk_file_type: ScryfallBulkFile | None = None,
     bulk_file_dir: str = CONFIG.bulk_file_dir,

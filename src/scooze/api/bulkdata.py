@@ -1,6 +1,6 @@
+import json
 from pathlib import Path
 
-import json
 from pydantic_core import ValidationError
 from scooze.catalogs import ScryfallBulkFile
 from scooze.console import logger as cli_logger
