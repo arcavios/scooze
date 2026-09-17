@@ -146,7 +146,7 @@ def test_main(main_modern_4c):
 
 
 def test_side(side_modern_4c):
-    deck = Deck(archetype="test_main", side=side_modern_4c)
+    deck = Deck(archetype="test_side", side=side_modern_4c)
     assert deck.side == side_modern_4c
 
 
@@ -301,7 +301,6 @@ def test_is_legal(deck_modern_4c):
     assert not deck_modern_4c.is_legal(Format.BRAWL)
     assert not deck_modern_4c.is_legal(Format.COMMANDER)
     assert not deck_modern_4c.is_legal(Format.DUEL)
-    assert not deck_modern_4c.is_legal(Format.EXPLORER)
     assert not deck_modern_4c.is_legal(Format.FUTURE)
     assert not deck_modern_4c.is_legal(Format.GLADIATOR)
     assert not deck_modern_4c.is_legal(Format.HISTORIC)
@@ -318,6 +317,7 @@ def test_is_legal(deck_modern_4c):
     assert not deck_modern_4c.is_legal(Format.PREDH)
     assert not deck_modern_4c.is_legal(Format.PREMODERN)
     assert not deck_modern_4c.is_legal(Format.STANDARD)
+    assert not deck_modern_4c.is_legal(Format.TINYLEADERSREBORN)
     assert not deck_modern_4c.is_legal(Format.VINTAGE)
 
     assert deck_modern_4c.is_legal()  # self.format

@@ -251,6 +251,8 @@ def test_fmt_alchemy_max_card_quantity():
 def test_fmt_brawl_max_card_quantity():
     assert max_card_quantity(Format.BRAWL) == 1
 
+def test_fmt_competitivebrawl_max_card_quantity():
+    assert max_card_quantity(Format.COMPETITIVEBRAWL) == 1
 
 def test_fmt_commander_max_card_quantity():
     assert max_card_quantity(Format.COMMANDER) == 1
@@ -258,10 +260,6 @@ def test_fmt_commander_max_card_quantity():
 
 def test_fmt_duel_max_card_quantity():
     assert max_card_quantity(Format.DUEL) == 1
-
-
-def test_fmt_explorer_max_card_quantity():
-    assert max_card_quantity(Format.EXPLORER) == 4
 
 
 def test_fmt_future_max_card_quantity():
@@ -328,6 +326,10 @@ def test_fmt_timeless_max_card_quantity():
     assert max_card_quantity(Format.TIMELESS) == 4
 
 
+def test_fmt_tinyleadersreborn_max_card_quantity():
+    assert max_card_quantity(Format.TINYLEADERSREBORN) == 1
+
+
 def test_fmt_vintage_max_card_quantity():
     assert max_card_quantity(Format.VINTAGE) == 4
 
@@ -362,10 +364,6 @@ def test_fmt_commander_main_size(main_size_98):
 
 def test_fmt_duel_main_size(main_size_98):
     assert main_size(Format.DUEL) == main_size_98
-
-
-def test_fmt_explorer_main_size(main_size_60):
-    assert main_size(Format.EXPLORER) == main_size_60
 
 
 def test_fmt_future_main_size(main_size_60):
@@ -457,16 +455,16 @@ def test_fmt_brawl_side_size(side_size_0):
     assert side_size(Format.BRAWL) == side_size_0
 
 
+def test_fmt_competitivebrawl_side_size(side_size_0):
+    assert side_size(Format.COMPETITIVEBRAWL) == side_size_0
+
+
 def test_fmt_commander_side_size(side_size_0):
     assert side_size(Format.COMMANDER) == side_size_0
 
 
 def test_fmt_duel_side_size(side_size_0):
     assert side_size(Format.DUEL) == side_size_0
-
-
-def test_fmt_explorer_side_size(side_size_15):
-    assert side_size(Format.EXPLORER) == side_size_15
 
 
 def test_fmt_future_side_size(side_size_15):
@@ -554,8 +552,12 @@ def test_fmt_alchemy_cmdr_size(cmdr_size_0):
     assert cmdr_size(Format.ALCHEMY) == cmdr_size_0
 
 
-def test_fmt_brawl_cmdr_size(cmdr_size_1):
-    assert cmdr_size(Format.BRAWL) == cmdr_size_1
+def test_fmt_brawl_cmdr_size(cmdr_size_1_or_2):
+    assert cmdr_size(Format.BRAWL) == cmdr_size_1_or_2
+
+
+def test_fmt_competitivebrawl_cmdr_size(cmdr_size_1_or_2):
+    assert cmdr_size(Format.COMPETITIVEBRAWL) == cmdr_size_1_or_2
 
 
 def test_fmt_commander_cmdr_size(cmdr_size_1_or_2):
@@ -564,10 +566,6 @@ def test_fmt_commander_cmdr_size(cmdr_size_1_or_2):
 
 def test_fmt_duel_cmdr_size(cmdr_size_1_or_2):
     assert cmdr_size(Format.DUEL) == cmdr_size_1_or_2
-
-
-def test_fmt_explorer_cmdr_size(cmdr_size_0):
-    assert cmdr_size(Format.EXPLORER) == cmdr_size_0
 
 
 def test_fmt_future_cmdr_size(cmdr_size_0):

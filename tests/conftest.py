@@ -310,7 +310,6 @@ def legalities_ancestral_recall() -> dict[Format, Legality]:
         Format.BRAWL: Legality.NOT_LEGAL,
         Format.COMMANDER: Legality.BANNED,
         Format.DUEL: Legality.BANNED,
-        Format.EXPLORER: Legality.NOT_LEGAL,
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
@@ -325,6 +324,7 @@ def legalities_ancestral_recall() -> dict[Format, Legality]:
         Format.PREDH: Legality.BANNED,
         Format.PREMODERN: Legality.NOT_LEGAL,
         Format.STANDARD: Legality.NOT_LEGAL,
+        Format.TINYLEADERSREBORN: Legality.NOT_LEGAL, # TODO: fix in test data
         Format.VINTAGE: Legality.RESTRICTED,
     }
 
@@ -336,7 +336,6 @@ def legalities_token() -> dict[Format, Legality]:
         Format.BRAWL: Legality.NOT_LEGAL,
         Format.COMMANDER: Legality.NOT_LEGAL,
         Format.DUEL: Legality.NOT_LEGAL,
-        Format.EXPLORER: Legality.NOT_LEGAL,
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
@@ -351,6 +350,7 @@ def legalities_token() -> dict[Format, Legality]:
         Format.PREDH: Legality.NOT_LEGAL,
         Format.PREMODERN: Legality.NOT_LEGAL,
         Format.STANDARD: Legality.NOT_LEGAL,
+        Format.TINYLEADERSREBORN: Legality.NOT_LEGAL,
         Format.VINTAGE: Legality.NOT_LEGAL,
     }
 
@@ -362,7 +362,6 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
         Format.BRAWL: Legality.NOT_LEGAL,
         Format.COMMANDER: Legality.LEGAL,
         Format.DUEL: Legality.LEGAL,
-        Format.EXPLORER: Legality.NOT_LEGAL,
         Format.FUTURE: Legality.NOT_LEGAL,
         Format.GLADIATOR: Legality.NOT_LEGAL,
         Format.HISTORIC: Legality.NOT_LEGAL,
@@ -377,6 +376,7 @@ def legalities_zndrsplt_eye_of_wisdom() -> dict[Format, Legality]:
         Format.PREDH: Legality.NOT_LEGAL,
         Format.PREMODERN: Legality.NOT_LEGAL,
         Format.STANDARD: Legality.NOT_LEGAL,
+        Format.TINYLEADERSREBORN: Legality.NOT_LEGAL,
         Format.VINTAGE: Legality.LEGAL,
     }
 
