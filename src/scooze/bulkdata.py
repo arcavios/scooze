@@ -1,3 +1,4 @@
+import gzip
 from pathlib import Path
 from urllib.error import HTTPError  # import HTTPError for linking in docs
 
@@ -33,10 +34,17 @@ def download_bulk_data_file(
     with requests.get(uri, stream=True, headers=SCRYFALL_API_HEADERS) as r:
         r.raise_for_status()
         bulk_file_dir.mkdir(parents=True, exist_ok=True)
-        file = bulk_file_dir / f"{bulk_file_type}.jsonl"
-        with file.open(mode="wb") as f:
+
+        # Scryfall provides files as gzipped JSONL files; download archive, then extract
+        archive_file = bulk_file_dir / f"{bulk_file_type}.jsonl.gz"
+        with archive_file.open(mode="wb") as f:
             for chunk in r.iter_content(chunk_size=None):
                 f.write(chunk)
+
+        with gzip.open(archive_file, "r") as f:
+            with (bulk_file_dir / f"{bulk_file_type}.jsonl").open(mode="wb") as bulk_file:
+                bulk_file.write(f.read())
+
 
 
 def download_bulk_data_file_by_type(
